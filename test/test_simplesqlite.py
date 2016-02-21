@@ -945,7 +945,6 @@ class Test_SimpleSQLite_create_table_with_data:
         result = con.select(
             select="*", table=SimpleSQLite.TableConfiguration.TABLE_NAME)
         result_matrix = result.fetchall()
-        print result_matrix
         assert result_matrix == expected
 
     def test_null(self, con_null):
