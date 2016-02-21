@@ -22,6 +22,13 @@ Feature
 -  Support various data type for insertion : dictionary, namedtuple,
    list and tuple
 
+Installation
+============
+
+::
+
+    pip install SimpleSQLite
+
 Usage
 =====
 
@@ -176,8 +183,8 @@ Dependencies
 
 Python 2.5+ or 3.3+
 
--  `DataPropery <https://github.com/thombashi/DataProperty>`__
--  Used to extract data types.
+-  `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to
+   extract data types)
 -  `six <https://pypi.python.org/pypi/six/>`__
 
 Test dependencies
