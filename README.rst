@@ -1,5 +1,10 @@
 **SimpleSQLite**
 
+.. image:: https://travis-ci.org/thombashi/SimpleSQLite.svg?branch=master
+    :target: https://travis-ci.org/thombashi/SimpleSQLite
+.. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
+    :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
+
 .. contents:: Table of contents
    :backlinks: top
    :local:
@@ -22,9 +27,6 @@ Usage
 
 Create table
 ------------
-
-Sample
-~~~~~~
 
 .. code:: python
 
@@ -55,9 +57,6 @@ Sample
     query = "SELECT DISTINCT TYPEOF(attr_a),TYPEOF(attr_b),TYPEOF(attr_c),TYPEOF(attr_d),TYPEOF(attr_e) FROM sample_table"
     result = con.execute_query(query)
     print result.fetchall()
-
-Output
-~~~~~~
 
 .. code:: console
 
