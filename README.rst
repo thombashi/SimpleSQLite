@@ -1,7 +1,11 @@
 **SimpleSQLite**
 
+.. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
+   :target: https://pypi.python.org/pypi/SimpleSQLite
 .. image:: https://travis-ci.org/thombashi/SimpleSQLite.svg?branch=master
     :target: https://travis-ci.org/thombashi/SimpleSQLite
+.. image:: https://ci.appveyor.com/api/projects/status/b564t8y34lkcd1hq/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
 
