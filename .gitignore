@@ -55,11 +55,9 @@ docs/_build/
 
 # PyBuilder
 target/
-/.idea
-convert_readme.sh
 desktop.ini
 README.md
 *.ipynb
-readme_converter.py
-README_HEADER.rst
+misc/README_HEADER.rst
+misc/readme_converter.py
 upgrade.sh

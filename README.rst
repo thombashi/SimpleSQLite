@@ -13,11 +13,9 @@
    :backlinks: top
    :local:
 
-About
-=====
-
-SimpleSQLite is a python library to simplify the table creation and data
-insertion in SQLite database.
+Summary
+=======
+SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
 
 Feature
 =======
@@ -158,29 +156,10 @@ list/tuple/namedtuple
     (8, 8.8, u'ggg', 8.88, u'foobar')
     (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
-Misc
-----
+Documentation
+=============
 
-In default ``__table_configuration__`` table will automatically
-create/insert-data each time of table creation.
-``__table_configuration__`` table contains each table information, such
-as the value type of columns, columns has index or not.
-
-Sample value of ``__table_configuration__`` table is as follows.
-
-+-----------------+-------------------+---------------+--------------+
-| table\_name     | attribute\_name   | value\_type   | has\_index   |
-+=================+===================+===============+==============+
-| sample\_table   | attr\_a           | INTEGER       | 1            |
-+-----------------+-------------------+---------------+--------------+
-| sample\_table   | attr\_b           | REAL          | 0            |
-+-----------------+-------------------+---------------+--------------+
-| sample\_table   | attr\_c           | TEXT          | 0            |
-+-----------------+-------------------+---------------+--------------+
-| sample\_table   | attr\_d           | REAL          | 0            |
-+-----------------+-------------------+---------------+--------------+
-| sample\_table   | attr\_e           | TEXT          | 0            |
-+-----------------+-------------------+---------------+--------------+
+http://simplesqlite.readthedocs.org/en/latest/apis/simplesqlite.html
 
 Dependencies
 ============
@@ -197,8 +176,3 @@ Test dependencies
 -  `pytest <https://pypi.python.org/pypi/pytest>`__
 -  `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 -  `tox <https://pypi.python.org/pypi/tox>`__
-
-Documentation
-=============
-
-Under construction
