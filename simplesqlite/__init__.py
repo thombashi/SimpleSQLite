@@ -21,6 +21,11 @@ __INVALID_PATH_CHAR = '\:*?"<>|'
 
 
 def validate_file_path(file_path):
+    """
+    :param str file_path: File path to be validate.
+    :raises ValueError:
+        If ``file_path`` is empty or include invalid char (\:*?"<>|).
+    """
     if dataproperty.is_empty_string(file_path):
         raise ValueError("path is null")
 
@@ -58,7 +63,8 @@ class SqlQuery:
     @classmethod
     def sanitize(cls, query_item):
         """
-        :return: String that exclude invalid char.
+        :param str query_item: String to be sanitize.
+        :return: String that exclude invalid chars (%/()[]<>.:;'!\# -+=\n\r).
         :rtype: str
         """
 
@@ -67,6 +73,7 @@ class SqlQuery:
     @classmethod
     def to_table_str(cls, name):
         """
+        :param str name: Base name of table.
         :return: String that suitable for table name.
         :rtype: str
         """
@@ -81,6 +88,13 @@ class SqlQuery:
 
     @classmethod
     def to_attr_str(cls, name, operation_query=""):
+        """
+        :param str name: Base name of attribute.
+        :param str operation_query: 
+        :return: String that suitable for attribute name.
+        :rtype: str
+        """
+
         if cls.__RE_TO_ATTR_STR.search(name):
             sql_name = "[%s]" % (name)
         elif name == "join":
@@ -95,6 +109,16 @@ class SqlQuery:
 
     @classmethod
     def to_attr_str_list(cls, name_list, operation_query=None):
+        """
+        :param list/tuple name_list: List of attribute name.
+        :param str operation_query:
+        :return: List of string that suitable for attribute name.
+        :rtype: list
+
+        See also
+            :py:func:`to_attr_str() <simplesqlite.SqlQuery.to_attr_str>`
+        """
+
         if dataproperty.is_empty_string(operation_query):
             return map(cls.to_attr_str, name_list)
 
@@ -105,6 +129,12 @@ class SqlQuery:
 
     @classmethod
     def to_value_str(cls, value):
+        """
+        :param str value: Value associated with a key.
+        :return: String that suitable for value of a key.
+        :rtype: str
+        """
+
         if value is None:
             return "NULL"
 
@@ -120,10 +150,19 @@ class SqlQuery:
     @classmethod
     def make_select(cls, select, table, where=None, extra=None):
         """
-        SQLite query作成補助関数
+        Make SELECT query.
 
-        :return: SQLite query string
+        :param str select: Attribute for SELECT query
+        :param str table: Table name of execute query.
+        :param str where: Add WHERE clause to execute query if not ``None``
+        :param extra extra: Add additional clause to execute query if not ``None``
+        :return: Query of SQLite.
         :rtype: str
+
+        :raises ValueError: ``select`` is empty string.
+
+        See also
+            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
         """
 
         validate_table_name(table)
@@ -142,20 +181,25 @@ class SqlQuery:
         return " ".join(query_list)
 
     @classmethod
-    def make_insert(cls, table_name, insert_tuple, is_insert_many=False):
+    def make_insert(cls, table, insert_tuple, is_insert_many=False):
         """
         Make INSERT query.
 
-        :param str table_name: Table name to insert data.
+        :param str table: Table name of execute query.
         :param list/tuple insert_tuple: Insertion data.
         :param bool is_insert_many: ``True`` if inserting multiple data.
-        :return: SQLite query.
+        :return: Query of SQLite.
         :rtype: str
+
+        :raises ValueError: If ``insert_tuple`` is empty list/tuple.
+
+        See also
+            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
         """
 
-        validate_table_name(table_name)
+        validate_table_name(table)
 
-        table_name = cls.to_table_str(table_name)
+        table = cls.to_table_str(table)
 
         if dataproperty.is_empty_list_or_tuple(insert_tuple):
             raise ValueError("empty insert list/tuple")
@@ -171,10 +215,24 @@ class SqlQuery:
             ]
 
         return "INSERT INTO %s VALUES (%s)" % (
-            table_name, ",".join(value_list))
+            table, ",".join(value_list))
 
     @classmethod
     def make_update(cls, table, set_query, where=None):
+        """
+        Make UPDATE query.
+
+        :param str table: Table name of execute query.
+        :param str set_query: SET part of UPDATE query.
+        :return: Query of SQLite.
+        :rtype: str
+
+        :raises ValueError: If ``set_query`` is empty string.
+
+        See also
+            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
+        """
+
         validate_table_name(table)
         if dataproperty.is_empty_string(set_query):
             raise ValueError("SET query is null")
@@ -190,6 +248,21 @@ class SqlQuery:
 
     @classmethod
     def make_where(cls, key, value, operation="="):
+        """
+        Make part of WHERE query.
+
+        :param str key: Attribute name of the key.
+        :param str value: Value of the right hand side associated with the key.
+        :param str operation: Operator of WHERE query (default='=').
+        :return: WHERE query of SQLite.
+        :rtype: str
+
+        :raises ValueError:
+            If ``operation`` is invalid operator.
+            valid operators are as follows:
+                "=", "==", "!=", "<>", ">", ">=", "<", "<="
+        """
+
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
             raise ValueError("operation not supported: " + str(operation))
 
@@ -198,11 +271,31 @@ class SqlQuery:
 
     @classmethod
     def make_where_in(cls, key, value_list):
+        """
+        Make part of WHERE IN query.
+
+        :param str key: Attribute name of the key.
+        :param str value_list:
+            Value list of the right hand side associated with the key.
+        :return: WHERE query of SQLite.
+        :rtype: str
+        """
+
         return "%s IN (%s)" % (
             cls.to_attr_str(key), ", ".join(cls.to_value_str_list(value_list)))
 
     @classmethod
     def make_where_not_in(cls, key, value_list):
+        """
+        Make part of WHERE NOT IN query.
+
+        :param str key: Attribute name of the key.
+        :param str value_list:
+            Value list of the right hand side associated with the key.
+        :return: WHERE query of SQLite.
+        :rtype: str
+        """
+
         return "%s NOT IN (%s)" % (
             cls.to_attr_str(key), ", ".join(cls.to_value_str_list(value_list)))
 
@@ -256,9 +349,9 @@ class AttributeNotFoundError(Exception):
 
 
 class SimpleSQLite(object):
-    '''
+    """
     wrapper class of sqlite3
-    '''
+    """
 
     class TableConfiguration:
         TABLE_NAME = "__table_configuration__"
@@ -268,14 +361,29 @@ class SimpleSQLite(object):
 
     @property
     def database_path(self):
+        """
+        :return: File path of the connected database.
+        :rtype: str
+        """
+
         return self.__database_path
 
     @property
     def connection(self):
+        """
+        :return: Connection instance of the connected database.
+        :rtype: sqlite3.Connection
+        """
+
         return self.__connection
 
     @property
     def mode(self):
+        """
+        :return: Connection mode: "r"/"w"/"a".
+        :rtype: str
+        """
+
         return self.__mode
 
     def __init__(
@@ -352,6 +460,24 @@ class SimpleSQLite(object):
             self.drop_table(table)
 
     def execute_query(self, query, caller=None):
+        """
+        Execute arbitrary SQLite query.
+
+        :param str query: Query to be executed.
+        :param str tuple:
+            Caller information.
+            Retuen value of Logger.findCaller().
+        :return: Result of the query execution.
+        :rtype: sqlite3.Cursor
+
+        :raises sqlite3.OperationalError:
+            If failed to execute query.
+
+        See also
+            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
+            :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
+        """
+
         import time
 
         self.check_connection()
@@ -388,11 +514,34 @@ class SimpleSQLite(object):
         return result
 
     def select(self, select, table, where=None, extra=None):
+        """
+        Execute SELCT query.
+
+        :return: Result of the query execution.
+        :rtype: sqlite3.Cursor
+
+        See also
+            :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         query = SqlQuery.make_select(select, table, where, extra)
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
     def insert(self, table_name, insert_record):
+        """
+        Execute INSERT query.
+
+        :param str table: Table name of execute query
+        :param dict/namedtuple/list/tuple insert_record: Record to be inserted
+
+        See also
+            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
+        """
+
         self.__validate_access_permission(["w", "a"])
 
         query = SqlQuery.make_insert(table_name, self.__to_record(
@@ -400,6 +549,21 @@ class SimpleSQLite(object):
         self.execute_query(query, logging.getLogger().findCaller())
 
     def insert_many(self, table_name, insert_record_list):
+        """
+        Execute INSERT query for multiple records.
+
+        :param str table: Table name of execute query
+        :param dict/namedtuple/list/tuple insert_record: Record to be inserted
+
+        :raises sqlite3.OperationalError:
+            If failed to execute query.
+
+        See also
+            :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
+            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
+        """
+
         self.__validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
@@ -428,6 +592,18 @@ class SimpleSQLite(object):
             )
 
     def update(self, table, set_query, where=None):
+        """
+        Execute UPDATE query.
+
+        :raises sqlite3.OperationalError:
+            If failed to execute query.
+
+        See also
+            :py:func:`make_update() <simplesqlite.SqlQuery.make_update>`
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
+        """
+
         self.__validate_access_permission(["w", "a"])
         query = SqlQuery.make_update(table, set_query, where)
 
@@ -439,6 +615,16 @@ class SimpleSQLite(object):
         return self.connection.total_changes
 
     def get_value(self, select, table, where=None, extra=None):
+        """
+        Get a value from the table.
+
+        :return: Result of execution of query.
+
+        See also
+            :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         query = SqlQuery.make_select(select, table, where, extra)
         result = self.execute_query(query, logging.getLogger().findCaller())
         if result is None:
@@ -447,6 +633,15 @@ class SimpleSQLite(object):
         return result.fetchone()[0]
 
     def get_table_name_list(self):
+        """
+        :return: Table name list in the database.
+        :rtype: list
+
+        See also
+            :py:func:`check_connection() <simplesqlite.SqlQuery.check_connection>`
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         self.check_connection()
 
         query = "SELECT name FROM sqlite_master WHERE TYPE='table'"
@@ -457,6 +652,17 @@ class SimpleSQLite(object):
         return self.__get_list_from_fetch(result.fetchall())
 
     def get_attribute_name_list(self, table_name):
+        """
+        :return: Attribute name list in the table.
+        :rtype: list
+
+        :raises TableNotFoundError:
+            If ``tablename`` table not found in the database.
+
+        See also
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         if not self.has_table(table_name):
             raise TableNotFoundError("'%s' table not found in %s" % (
                 table_name, self.database_path))
@@ -467,6 +673,17 @@ class SimpleSQLite(object):
         return self.__get_list_from_fetch(result.description)
 
     def get_attribute_type_list(self, table_name):
+        """
+        :return: Attribute type list in the table.
+        :rtype: list
+
+        :raises TableNotFoundError:
+            If ``tablename`` table not found in the database.
+
+        See also
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         if not self.has_table(table_name):
             raise TableNotFoundError("'%s' table not found in %s" % (
                 table_name, self.database_path))
@@ -481,7 +698,20 @@ class SimpleSQLite(object):
 
         return result.fetchone()
 
-    def get_profile(self, get_profile_count=50):
+    def get_profile(self, profile_count=50):
+        """
+        Get profile information of query executions.
+
+        :param int profile_count:
+            Number of profile count from the longest execution time query.
+        :return:
+            Query execution profile information.
+        :rtype: (list,list)
+
+        See also
+            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        """
+
         TN_SQL_PROFILE = "sql_profile"
 
         value_matrix = []
@@ -506,7 +736,7 @@ class SimpleSQLite(object):
                     "query", "execution_time", "count"),
                 table=TN_SQL_PROFILE,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
-                    "query", "execution_time", get_profile_count))
+                    "query", "execution_time", profile_count))
         except sqlite3.OperationalError:
             return [], []
         if result is None:
@@ -515,6 +745,12 @@ class SimpleSQLite(object):
         return attribute_name_list, result.fetchall()
 
     def has_table(self, table_name):
+        """
+        :param str table_name: Table name to be tested.
+        :return: ``True`` if the database has the table.
+        :rtype: bool
+        """
+
         try:
             validate_table_name(table_name)
         except ValueError:
@@ -523,6 +759,16 @@ class SimpleSQLite(object):
         return table_name in self.get_table_name_list()
 
     def has_attribute(self, table_name, attribute_name):
+        """
+        :param str table_name: Table name that exists attribute.
+        :param str attribute_name: Attribute name to be tested.
+        :return: ``True`` if the table has the attribute.
+        :rtype: bool
+
+        See also
+            :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
+        """
+
         self.verify_table_existence(table_name)
 
         if dataproperty.is_empty_string(attribute_name):
@@ -531,6 +777,16 @@ class SimpleSQLite(object):
         return attribute_name in self.get_attribute_name_list(table_name)
 
     def has_attribute_list(self, table_name, attribute_name_list):
+        """
+        :param str table_name: Table name that exists attribute.
+        :param str attribute_name: Attribute name to be tested.
+        :return: ``True`` if the table has the all of the attribute.
+        :rtype: bool
+
+        See also
+            :py:func:`has_attribute() <simplesqlite.SimpleSQLite.has_attribute>`
+        """
+
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
             return False
 
@@ -547,6 +803,8 @@ class SimpleSQLite(object):
 
     def verify_table_existence(self, table_name):
         """
+        :param str table_name: Table name to be tested.
+
         :raises TableNotFoundError: If table not found in the database
 
         See also
@@ -563,6 +821,9 @@ class SimpleSQLite(object):
 
     def verify_attribute_existence(self, table_name, attribute_name):
         """
+        :param str table_name: Table name that exists attribute.
+        :param str attribute_name: Attribute name to be tested.
+
         :raises AttributeNotFoundError: If attribute not found in the table
 
         See also
@@ -579,6 +840,13 @@ class SimpleSQLite(object):
                 attribute_name, table_name))
 
     def drop_table(self, table_name):
+        """
+        :param str table_name: Table name to drop.
+
+        See also
+            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
+        """
+
         self.__validate_access_permission(["w", "a"])
 
         if self.has_table(table_name):
@@ -587,6 +855,14 @@ class SimpleSQLite(object):
             self.commit()
 
     def create_table(self, table_name, attribute_description_list):
+        """
+        :param str table_name: Table name to create.
+        :param str attribute_description_list:
+
+        See also
+            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
+        """
+
         self.__validate_access_permission(["w", "a"])
 
         table_name = table_name.strip()
@@ -602,7 +878,12 @@ class SimpleSQLite(object):
 
     def create_index(self, table_name, attribute_name):
         """
-        TODO: update table configuration
+        :param str table_name: Table name that exists attribute.
+        :param str attribute_name: Attribute name to create index.
+
+        See also
+            :py:func:`verify_table_existence() <SimpleSQLite.verify_table_existence>`
+            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
         """
 
         self.verify_table_existence(table_name)
@@ -625,6 +906,14 @@ class SimpleSQLite(object):
                 where=" AND ".join(where_list))
 
     def create_index_list(self, table_name, attribute_name_list):
+        """
+        :param str table_name: Table name that exists attribute.
+        :param list attribute_name_list: Attribute name list to create index.
+
+        See also
+            :py:func:`create_index() <SimpleSQLite.create_index>`
+        """
+
         self.__validate_access_permission(["w", "a"])
 
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
@@ -774,6 +1063,16 @@ class SimpleSQLite(object):
         self.__dict_query_totalexectime = {}
 
     def __validate_access_permission(self, valid_permission_list):
+        """
+        :param list/tuple valid_permission_list:
+            List of permissions that access is allowed
+        :raises ValueError: If database connection is invalid
+        :raises IOError: If invalid permission
+
+        See also
+            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
+        """
+
         self.check_connection()
 
         if dataproperty.is_empty_string(self.mode):
@@ -786,6 +1085,7 @@ class SimpleSQLite(object):
         """
         Get value type for each column.
 
+        :param list/tuple data_matrix:
         :return: { column_number : value_type }
         :rtype: dictionary
         """
@@ -862,4 +1162,9 @@ class SimpleSQLite(object):
 
 
 def connect_sqlite_db_mem():
+    """
+    :return: Instance of a in memory database
+    :rtype: SimpleSQLite
+    """
+
     return SimpleSQLite(MEMORY_DB_NAME, "w")
