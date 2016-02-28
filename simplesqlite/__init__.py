@@ -22,10 +22,11 @@ __INVALID_PATH_CHAR = '\:*?"<>|'
 
 def validate_file_path(file_path):
     """
-    :param str file_path: File path to be validate.
+    :param str file_path: File path to validate.
     :raises ValueError:
-        If ``file_path`` is empty or include invalid char (\:*?"<>|).
+        If ``file_path`` is empty or include invalid char (``\:*?"<>|``).
     """
+
     if dataproperty.is_empty_string(file_path):
         raise ValueError("path is null")
 
@@ -64,7 +65,13 @@ class SqlQuery:
     def sanitize(cls, query_item):
         """
         :param str query_item: String to be sanitize.
-        :return: String that exclude invalid chars (%/()[]<>.:;'!\# -+=\n\r).
+        :return:
+            String that exclude invalid chars.
+            Invalid operators are as follows:
+            ``"%"``, ``"/"``, ``"("``, ``")"``, ``"["``, ``"]"``,
+            ``"<"``, ``">"``, ``"."``, ``":"``, ``";"``, ``"'"``,
+            ``"!"``, ``"\"``, ``"#"``, ``"-"``, ``"+"``, ``"="``,
+            ``"\\n"``, ``"\\r"``
         :rtype: str
         """
 
@@ -131,7 +138,9 @@ class SqlQuery:
     def to_value_str(cls, value):
         """
         :param str value: Value associated with a key.
-        :return: String that suitable for value of a key.
+        :return:
+            String that suitable for value of a key.
+            Return ``"NULL"`` if the value is ``None``
         :rtype: str
         """
 
@@ -145,6 +154,15 @@ class SqlQuery:
 
     @classmethod
     def to_value_str_list(cls, value_list):
+        """
+        :param list value_list: Value list associated with a key.
+        :return: List of value that executed ``to_value_str`` method for each item.
+        :rtype: list
+
+        See also
+            :py:func:`to_value_str() <simplesqlite.SqlQuery.to_value_str>`
+        """
+
         return map(cls.to_value_str, value_list)
 
     @classmethod
@@ -253,14 +271,15 @@ class SqlQuery:
 
         :param str key: Attribute name of the key.
         :param str value: Value of the right hand side associated with the key.
-        :param str operation: Operator of WHERE query (default='=').
-        :return: WHERE query of SQLite.
+        :param str operation: Operator of WHERE query (default = ``"="``).
+        :return: Part of WHERE query of SQLite.
         :rtype: str
 
         :raises ValueError:
             If ``operation`` is invalid operator.
-            valid operators are as follows:
-                "=", "==", "!=", "<>", ">", ">=", "<", "<="
+            Valid operators are as follows:
+                ``"="``, ``"=="``, ``"!="``, ``"<>"``,
+                ``">"``, ``">="``, ``"<"``, ``"<="``
         """
 
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
@@ -277,7 +296,7 @@ class SqlQuery:
         :param str key: Attribute name of the key.
         :param str value_list:
             Value list of the right hand side associated with the key.
-        :return: WHERE query of SQLite.
+        :return: Part of WHERE query of SQLite.
         :rtype: str
         """
 
@@ -292,7 +311,7 @@ class SqlQuery:
         :param str key: Attribute name of the key.
         :param str value_list:
             Value list of the right hand side associated with the key.
-        :return: WHERE query of SQLite.
+        :return: Part of WHERE query of SQLite.
         :rtype: str
         """
 
@@ -350,7 +369,7 @@ class AttributeNotFoundError(Exception):
 
 class SimpleSQLite(object):
     """
-    wrapper class of sqlite3
+    Wrapper class of sqlite3 module.
     """
 
     class TableConfiguration:
@@ -417,7 +436,7 @@ class SimpleSQLite(object):
     def check_connection(self):
         """
         :raises NullDatabaseConnectionError:
-            if not connected to a SQLite database file.
+            If not connected to a SQLite database file.
         """
 
         if self.connection is None:
@@ -428,15 +447,15 @@ class SimpleSQLite(object):
 
     def connect(self, database_path, mode="a"):
         """
+        :param str database_path: File path of the database to be connected.
         :param str mode:
             "r": Open for read only.
             "w": Open for read/write. Delete existing tables.
             "a": Open for read/write. Append to the existing tables.
-        :raises ValueError:
-            - If ``mode`` is invalid.
+        :raises ValueError: If ``mode`` is invalid.
+        :raises sqlite3.OperationalError: If unable to open the database file.
 
         See also
-            :py:func:`__verify_sqlite_db_file() <simplesqlite.SimpleSQLite.__verify_sqlite_db_file>`
             :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
         """
 
@@ -536,10 +555,13 @@ class SimpleSQLite(object):
         :param str table: Table name of execute query
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
 
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+
         See also
+            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
-            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -555,13 +577,14 @@ class SimpleSQLite(object):
         :param str table: Table name of execute query
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
 
-        :raises sqlite3.OperationalError:
-            If failed to execute query.
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+        :raises sqlite3.OperationalError: If failed to execute query.
 
         See also
+            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
             :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
-            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -595,13 +618,16 @@ class SimpleSQLite(object):
         """
         Execute UPDATE query.
 
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         :raises sqlite3.OperationalError:
             If failed to execute query.
 
-        See also
-            :py:func:`make_update() <simplesqlite.SqlQuery.make_update>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
-            :py:func:`__validate_access_permission() <simplesqlite.SimpleSQLite.__validate_access_permission>`
+        .. seealso::
+
+            :py:meth:`check_connection`
+            :py:meth:`simplesqlite.SqlQuery.make_update`
+            :py:meth:`execute_query`
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -610,6 +636,12 @@ class SimpleSQLite(object):
         return self.execute_query(query, logging.getLogger().findCaller())
 
     def get_total_changes(self):
+        """
+        .. seealso::
+
+            :py:meth:`sqlite3.Connection.total_changes`
+        """
+
         self.check_connection()
 
         return self.connection.total_changes
@@ -620,9 +652,10 @@ class SimpleSQLite(object):
 
         :return: Result of execution of query.
 
-        See also
-            :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        .. seealso::
+
+            :py:meth:`simplesqlite.SqlQuery.make_select`
+            :py:meth:`execute_query`
         """
 
         query = SqlQuery.make_select(select, table, where, extra)
@@ -637,9 +670,10 @@ class SimpleSQLite(object):
         :return: Table name list in the database.
         :rtype: list
 
-        See also
-            :py:func:`check_connection() <simplesqlite.SqlQuery.check_connection>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        .. seealso::
+
+            :py:meth:`check_connection`
+            :py:meth:`execute_query`
         """
 
         self.check_connection()
@@ -659,8 +693,9 @@ class SimpleSQLite(object):
         :raises TableNotFoundError:
             If ``tablename`` table not found in the database.
 
-        See also
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        .. seealso::
+
+            :py:meth:`execute_query`
         """
 
         if not self.has_table(table_name):
@@ -680,8 +715,9 @@ class SimpleSQLite(object):
         :raises TableNotFoundError:
             If ``tablename`` table not found in the database.
 
-        See also
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        .. seealso::
+
+            :py:meth:`execute_query`
         """
 
         if not self.has_table(table_name):
@@ -708,8 +744,9 @@ class SimpleSQLite(object):
             Query execution profile information.
         :rtype: (list,list)
 
-        See also
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+        .. seealso::
+
+            :py:meth:`execute_query`
         """
 
         TN_SQL_PROFILE = "sql_profile"
@@ -765,8 +802,9 @@ class SimpleSQLite(object):
         :return: ``True`` if the table has the attribute.
         :rtype: bool
 
-        See also
-            :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
+        .. seealso::
+
+            :py:meth:`verify_table_existence`
         """
 
         self.verify_table_existence(table_name)
@@ -783,8 +821,9 @@ class SimpleSQLite(object):
         :return: ``True`` if the table has the all of the attribute.
         :rtype: bool
 
-        See also
-            :py:func:`has_attribute() <simplesqlite.SimpleSQLite.has_attribute>`
+        .. seealso::
+
+            :py:meth:`has_attribute`
         """
 
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
@@ -807,8 +846,9 @@ class SimpleSQLite(object):
 
         :raises TableNotFoundError: If table not found in the database
 
-        See also
-            :py:func:`validate_table_name() <SimpleSQLite.validate_table_name>`
+        .. seealso::
+
+            :py:meth:`validate_table_name`
         """
 
         validate_table_name(table_name)
@@ -826,8 +866,9 @@ class SimpleSQLite(object):
 
         :raises AttributeNotFoundError: If attribute not found in the table
 
-        See also
-            :py:func:`verify_table_existence() <SimpleSQLite.verify_table_existence>`
+        .. seealso::
+
+            :py:meth:`verify_table_existence`
         """
 
         self.verify_table_existence(table_name)
@@ -843,8 +884,8 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name to drop.
 
-        See also
-            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -859,8 +900,8 @@ class SimpleSQLite(object):
         :param str table_name: Table name to create.
         :param str attribute_description_list:
 
-        See also
-            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -881,9 +922,12 @@ class SimpleSQLite(object):
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to create index.
 
-        See also
-            :py:func:`verify_table_existence() <SimpleSQLite.verify_table_existence>`
-            :py:func:`__validate_access_permission() <SimpleSQLite.__validate_access_permission>`
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+
+        .. seealso::
+
+            :py:meth:`verify_table_existence`
         """
 
         self.verify_table_existence(table_name)
@@ -910,8 +954,9 @@ class SimpleSQLite(object):
         :param str table_name: Table name that exists attribute.
         :param list attribute_name_list: Attribute name list to create index.
 
-        See also
-            :py:func:`create_index() <SimpleSQLite.create_index>`
+        .. seealso::
+
+            :py:meth:`create_index`
         """
 
         self.__validate_access_permission(["w", "a"])
@@ -934,11 +979,13 @@ class SimpleSQLite(object):
         :param tuple index_attribute_list: Attribute name list to create index.
         :raises ValueError: If ``data_matrix`` is empty.
 
-        See also
+        .. seealso::
+
             :py:func:`__verify_value_matrix() <simplesqlite.SimpleSQLite.__verify_value_matrix>`
-            :py:func:`create_table() <simplesqlite.SimpleSQLite.create_table>`
-            :py:func:`insert_many() <simplesqlite.SimpleSQLite.insert_many>`
-            :py:func:`create_index_list() <simplesqlite.SimpleSQLite.create_index_list>`
+
+            :py:meth:`create_table`
+            :py:meth:`insert_many`
+            :py:meth:`create_index_list`
         """
 
         validate_table_name(table_name)
@@ -1005,10 +1052,11 @@ class SimpleSQLite(object):
     @staticmethod
     def __verify_sqlite_db_file(database_path):
         """
-        :raises sqlite3.OperationalError: unable to open database file
+        :raises sqlite3.OperationalError: If unable to open database file
 
-        See also
-            :py:func:`validate_file_path() <simplesqlite.validate_file_path>`
+        .. seealso::
+
+            :py:meth:`validate_file_path`
         """
 
         validate_file_path(database_path)
