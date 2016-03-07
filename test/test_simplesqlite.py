@@ -448,6 +448,51 @@ def con_null(tmpdir):
     return con
 
 
+@pytest.fixture
+def con_empty(tmpdir):
+    p = tmpdir.join("tmp_empty.db")
+    return SimpleSQLite(str(p), "w")
+
+
+class Test_append_table:
+
+    def test_normal(self, con_mix, con_empty):
+        assert copy_table(
+            con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
+
+        result = con_mix.select(select="*", table=TEST_TABLE_NAME)
+        src_data_matrix = result.fetchall()
+        result = con_empty.select(select="*", table=TEST_TABLE_NAME)
+        dst_data_matrix = result.fetchall()
+
+        assert src_data_matrix == dst_data_matrix
+
+        assert copy_table(
+            con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
+
+        result = con_mix.select(select="*", table=TEST_TABLE_NAME)
+        src_data_matrix = result.fetchall()
+        result = con_empty.select(select="*", table=TEST_TABLE_NAME)
+        dst_data_matrix = result.fetchall()
+
+        assert src_data_matrix * 2 == dst_data_matrix
+
+    def test_exception_0(self, con_mix, con_profile):
+        with pytest.raises(ValueError):
+            copy_table(
+                con_src=con_mix, con_dst=con_profile, table_name=TEST_TABLE_NAME)
+
+    def test_exception_1(self, con_mix, con_null):
+        with pytest.raises(NullDatabaseConnectionError):
+            copy_table(
+                con_src=con_mix, con_dst=con_null, table_name=TEST_TABLE_NAME)
+
+    def test_exception_2(self, con_mix, con_ro):
+        with pytest.raises(IOError):
+            copy_table(
+                con_src=con_mix, con_dst=con_ro, table_name=TEST_TABLE_NAME)
+
+
 class Test_SimpleSQLite_init:
 
     @pytest.mark.parametrize(["mode"], [
