@@ -1,8 +1,7 @@
+# encoding: utf-8
+
 '''
 @author: Tsuyoshi Hombashi
-
-:required:
-    https://pypi.python.org/pypi/pytest
 '''
 
 import itertools
@@ -951,6 +950,61 @@ class Test_SimpleSQLite_create_table_with_data:
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_table_with_data(
                 TEST_TABLE_NAME, [], [])
+
+
+class Test_SimpleSQLite_create_table_from_csv:
+
+    @pytest.mark.parametrize(
+        [
+            "csv_text",
+            "csv_filename",
+            "table_name",
+            "attr_name_list",
+            "expected_table_name",
+            "expected_attr_name_list",
+            "expected_data_matrix",
+        ],
+        [
+            [
+                "\n".join([
+                    '"attr_a","attr_b","attr_c"',
+                    '1, 4,      "a"',
+                    '2, 2.1,    "bb"',
+                    '3, 120.9,  "ccc"',
+                ]),
+                "tmp.csv",
+                "tmp",
+                [],
+                "tmp",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    [1, 4,      "a"],
+                    [2, 2.1,    "bb"],
+                    [3, 120.9,  "ccc"],
+                ],
+            ],
+        ])
+    def test_normal(
+            self, tmpdir, csv_text, csv_filename,
+            table_name, attr_name_list,
+            expected_table_name, expected_attr_name_list, expected_data_matrix):
+        p_db = tmpdir.join("tmp.db")
+        p_csv = tmpdir.join(csv_filename)
+
+        with open(str(p_csv), "w") as f:
+            f.write(csv_text)
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
+
+        # check attribute ---
+        assert expected_attr_name_list == con.get_attribute_name_list(
+            table_name)
+
+        # check data ---
+        result = con.select(select="*", table=table_name)
+        result_matrix = result.fetchall()
+        assert len(result_matrix) == 3
 
 
 class Test_SimpleSQLite_rollback:

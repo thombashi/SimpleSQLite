@@ -1027,6 +1027,63 @@ class SimpleSQLite(object):
         self.create_index_list(table_name, strip_index_attribute_list)
         self.commit()
 
+    def create_table_from_csv(
+            self, csv_path, table_name="",
+            attribute_name_list=[],
+            delimiter=",", quotechar='"', encoding="utf-8"):
+        """
+        Create table from a csv file.
+
+        :param str csv_path: Path to the csv file.
+        :param str table_name:
+            Table name to create (default="").
+            Use csv file base name as the table name if table_name is empty.
+        :param list attribute_name_list:
+            Attribute names of the table (default=[]).
+            Use first line of the csv file as attribute list
+            if attribute_name_list is empty.
+        :param str delimiter:
+            A one-character string used to separate fields. It defaults to `','`.
+        :param str quotechar:
+            A one-character string used to quote fields
+            containing special characters, such as the delimiter or quotechar,
+            or which contain new-line characters. It defaults to `'"'`.
+        :param str encoding: csv file encoding. It defaults to `'utf-8``
+
+        :raises ValueError:
+
+        .. seealso::
+
+            :py:meth:`create_table_with_data`
+            :py:meth:`csv.reader`
+        """
+
+        import csv
+
+        csv_reader = csv.reader(
+            open(csv_path, "rb"), delimiter=delimiter, quotechar=quotechar)
+
+        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
+            header_list = csv_reader.next()
+            if dataproperty.is_empty_list_or_tuple(header_list):
+                raise ValueError(
+                    "the first line does not include any data: "
+                    "the first line expected to contain header data.")
+        else:
+            header_list = attribute_name_list
+
+        data_matrix = [
+            [data.decode(encoding, "ignore") for data in row]
+            for row in csv_reader
+        ]
+
+        if dataproperty.is_empty_string(table_name):
+            # use csv filename as a table name if table_name is a empty string.
+            table_name = os.path.splitext(os.path.basename(csv_path))[0]
+            print table_name
+
+        self.create_table_with_data(table_name, header_list, data_matrix)
+
     def rollback(self):
         try:
             self.check_connection()
@@ -1072,6 +1129,12 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __verify_value_matrix(field_list, value_matrix):
+        """
+        :param list/tuple field_list:
+        :param list/tuple value_matrix: the list to test
+        :raises ValueError: 
+        """
+
         miss_match_idx_list = []
 
         for list_idx in range(len(value_matrix)):
