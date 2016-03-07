@@ -328,7 +328,7 @@ def copy_table(con_src, con_dst, table_name):
 
     value_matrix = result.fetchall()
 
-    return con_dst.create_table_with_data(
+    con_dst.create_table_with_data(
         table_name,
         con_src.get_attribute_name_list(table_name),
         value_matrix)
