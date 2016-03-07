@@ -122,8 +122,9 @@ class SqlQuery:
         :return: List of string that suitable for attribute name.
         :rtype: list
 
-        See also
-            :py:func:`to_attr_str() <simplesqlite.SqlQuery.to_attr_str>`
+        .. seealso::
+
+            :py:meth:`to_attr_str`
         """
 
         if dataproperty.is_empty_string(operation_query):
@@ -159,8 +160,9 @@ class SqlQuery:
         :return: List of value that executed ``to_value_str`` method for each item.
         :rtype: list
 
-        See also
-            :py:func:`to_value_str() <simplesqlite.SqlQuery.to_value_str>`
+        .. seealso::
+
+            :py:meth:`to_value_str`
         """
 
         return map(cls.to_value_str, value_list)
@@ -179,7 +181,8 @@ class SqlQuery:
 
         :raises ValueError: ``select`` is empty string.
 
-        See also
+        .. seealso::
+
             :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
         """
 
@@ -211,7 +214,8 @@ class SqlQuery:
 
         :raises ValueError: If ``insert_tuple`` is empty list/tuple.
 
-        See also
+        .. seealso::
+
             :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
         """
 
@@ -247,7 +251,8 @@ class SqlQuery:
 
         :raises ValueError: If ``set_query`` is empty string.
 
-        See also
+        .. seealso::
+
             :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
         """
 
@@ -320,6 +325,20 @@ class SqlQuery:
 
 
 def append_table(con_src, con_dst, table_name):
+    """
+    :param SimpleSQLite con_src: Copy source database.
+    :param SimpleSQLite con_dst: Copy destination database.
+    :param str table_name: Table name to copy.
+
+    :return: Part of WHERE query of SQLite.
+    :rtype: bool
+
+    .. seealso::
+
+        :py:meth:`simplesqlite.SimpleSQLite.verify_table_existence`
+        :py:meth:`simplesqlite.SimpleSQLite.create_table_with_data`
+    """
+
     con_src.verify_table_existence(table_name)
 
     if con_dst.has_table(table_name):
@@ -447,7 +466,8 @@ class SimpleSQLite(object):
         :raises ValueError: If ``mode`` is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
 
-        See also
+        .. seealso::
+
             :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
         """
 
@@ -484,7 +504,8 @@ class SimpleSQLite(object):
         :raises sqlite3.OperationalError:
             If failed to execute query.
 
-        See also
+        .. seealso::
+
             :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
             :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
         """
@@ -531,7 +552,8 @@ class SimpleSQLite(object):
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
 
-        See also
+        .. seealso::
+
             :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
         """
@@ -550,7 +572,8 @@ class SimpleSQLite(object):
         :raises ValueError: If database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
 
-        See also
+        .. seealso::
+
             :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
@@ -573,7 +596,8 @@ class SimpleSQLite(object):
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         :raises sqlite3.OperationalError: If failed to execute query.
 
-        See also
+        .. seealso::
+
             :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
             :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
@@ -977,8 +1001,6 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`__verify_value_matrix() <simplesqlite.SimpleSQLite.__verify_value_matrix>`
-
             :py:meth:`create_table`
             :py:meth:`insert_many`
             :py:meth:`create_index_list`
@@ -1176,7 +1198,8 @@ class SimpleSQLite(object):
         :raises ValueError: If database connection is invalid
         :raises IOError: If invalid permission
 
-        See also
+        .. seealso::
+
             :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
         """
 
