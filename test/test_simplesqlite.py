@@ -391,7 +391,7 @@ def con(tmpdir):
 
 @pytest.fixture
 def con_mix(tmpdir):
-    p = tmpdir.join("tmp.db")
+    p = tmpdir.join("tmp_mixed_data.db")
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_with_data(
@@ -407,7 +407,7 @@ def con_mix(tmpdir):
 
 @pytest.fixture
 def con_ro(tmpdir):
-    p = tmpdir.join("tmp.db")
+    p = tmpdir.join("tmp_readonly.db")
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_with_data(
@@ -441,7 +441,7 @@ def con_profile(tmpdir):
 
 @pytest.fixture
 def con_null(tmpdir):
-    p = tmpdir.join("tmp.db")
+    p = tmpdir.join("tmp_null.db")
     con = SimpleSQLite(str(p), "w")
     con.close()
 
