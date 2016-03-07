@@ -579,7 +579,7 @@ class SimpleSQLite(object):
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         query = SqlQuery.make_insert(table_name, self.__to_record(
             self.get_attribute_name_list(table_name), insert_record))
@@ -603,7 +603,7 @@ class SimpleSQLite(object):
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
         if dataproperty.is_empty_list_or_tuple(insert_record_list):
@@ -646,7 +646,7 @@ class SimpleSQLite(object):
             :py:meth:`execute_query`
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
         query = SqlQuery.make_update(table, set_query, where)
 
         return self.execute_query(query, logging.getLogger().findCaller())
@@ -908,7 +908,7 @@ class SimpleSQLite(object):
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         if self.has_table(table_name):
             query = "DROP TABLE IF EXISTS '%s'" % (table_name)
@@ -924,7 +924,7 @@ class SimpleSQLite(object):
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         table_name = table_name.strip()
         if self.has_table(table_name):
@@ -951,7 +951,7 @@ class SimpleSQLite(object):
         """
 
         self.verify_table_existence(table_name)
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         index_name = "%s_%s_index" % (
             SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
@@ -979,7 +979,7 @@ class SimpleSQLite(object):
             :py:meth:`create_index`
         """
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
             return
@@ -1008,7 +1008,7 @@ class SimpleSQLite(object):
 
         validate_table_name(table_name)
 
-        self.__validate_access_permission(["w", "a"])
+        self.validate_access_permission(["w", "a"])
 
         if dataproperty.is_empty_list_or_tuple(data_matrix):
             raise ValueError("input data is null: '%s (%s)'" % (
@@ -1191,7 +1191,7 @@ class SimpleSQLite(object):
         self.__dict_query_count = {}
         self.__dict_query_totalexectime = {}
 
-    def __validate_access_permission(self, valid_permission_list):
+    def validate_access_permission(self, valid_permission_list):
         """
         :param list/tuple valid_permission_list:
             List of permissions that access is allowed
@@ -1200,7 +1200,7 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
+            :py:func:`check_connection`
         """
 
         self.check_connection()
