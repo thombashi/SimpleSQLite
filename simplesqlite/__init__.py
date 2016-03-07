@@ -319,36 +319,28 @@ class SqlQuery:
             cls.to_attr_str(key), ", ".join(cls.to_value_str_list(value_list)))
 
 
-def copy_table(con_src, con_dst, table_name):
+def append_table(con_src, con_dst, table_name):
     con_src.verify_table_existence(table_name)
+
+    if con_dst.has_table(table_name):
+        src_attr_list = con_src.get_attribute_name_list(table_name)
+        dst_attr_list = con_dst.get_attribute_name_list(table_name)
+        if src_attr_list != dst_attr_list:
+            raise ValueError("""
+            source and destination attribute is different from each other
+              src: %s
+              dst: %s
+            """ % (str(src_attr_list), str(dst_attr_list)))
 
     result = con_src.select(select="*", table=table_name)
     if result is None:
         return False
-
     value_matrix = result.fetchall()
 
     con_dst.create_table_with_data(
         table_name,
         con_src.get_attribute_name_list(table_name),
         value_matrix)
-
-
-def append_table(con_src, con_dst, table_name):
-    con_src.verify_table_existence(table_name)
-
-    result = con_src.select(select="*", table=table_name)
-    if result is None:
-        return False
-
-    value_matrix = [value_list for value_list in result.fetchall()]
-
-    if not con_dst.has_table(table_name):
-        con_dst.create_table_with_data(
-            table_name, con_src.get_attribute_name_list(table_name),
-            value_matrix)
-    else:
-        con_dst.insert_many(table_name, value_matrix)
 
     return True
 
