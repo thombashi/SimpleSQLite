@@ -467,7 +467,7 @@ class Test_append_table:
 
         assert src_data_matrix == dst_data_matrix
 
-        assert copy_table(
+        assert append_table(
             con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
 
         result = con_mix.select(select="*", table=TEST_TABLE_NAME)
@@ -479,17 +479,17 @@ class Test_append_table:
 
     def test_exception_0(self, con_mix, con_profile):
         with pytest.raises(ValueError):
-            copy_table(
+            append_table(
                 con_src=con_mix, con_dst=con_profile, table_name=TEST_TABLE_NAME)
 
     def test_exception_1(self, con_mix, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            copy_table(
+            append_table(
                 con_src=con_mix, con_dst=con_null, table_name=TEST_TABLE_NAME)
 
     def test_exception_2(self, con_mix, con_ro):
         with pytest.raises(IOError):
-            copy_table(
+            append_table(
                 con_src=con_mix, con_dst=con_ro, table_name=TEST_TABLE_NAME)
 
 
