@@ -663,7 +663,11 @@ class SimpleSQLite(object):
         if result is None:
             return None
 
-        return result.fetchone()[0]
+        fetch = result.fetchone()
+        if fetch is None:
+            return None
+
+        return fetch[0]
 
     def get_table_name_list(self):
         """
