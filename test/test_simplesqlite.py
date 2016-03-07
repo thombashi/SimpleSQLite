@@ -457,7 +457,7 @@ def con_empty(tmpdir):
 class Test_append_table:
 
     def test_normal(self, con_mix, con_empty):
-        assert copy_table(
+        assert append_table(
             con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
 
         result = con_mix.select(select="*", table=TEST_TABLE_NAME)
