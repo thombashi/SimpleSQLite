@@ -340,6 +340,7 @@ def append_table(con_src, con_dst, table_name):
     """
 
     con_src.verify_table_existence(table_name)
+    con_dst.validate_access_permission(["w", "a"])
 
     if con_dst.has_table(table_name):
         src_attr_list = con_src.get_attribute_name_list(table_name)
