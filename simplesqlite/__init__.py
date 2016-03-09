@@ -1076,26 +1076,34 @@ class SimpleSQLite(object):
         import csv
 
         csv_reader = csv.reader(
-            open(csv_path, "rb"), delimiter=delimiter, quotechar=quotechar)
-
-        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
-            header_list = csv_reader.next()
-            if dataproperty.is_empty_list_or_tuple(header_list):
-                raise ValueError(
-                    "the first line does not include any data: "
-                    "the first line expected to contain header data.")
-        else:
-            header_list = attribute_name_list
+            open(csv_path, "r"), delimiter=delimiter, quotechar=quotechar)
 
         data_matrix = [
-            [data.decode(encoding, "ignore") for data in row]
+            [
+                six.b(data).decode(encoding, "ignore")
+                if not dataproperty.is_float(data) else data
+                for data in row
+            ]
             for row in csv_reader
         ]
+
+        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
+            header_list = data_matrix[0]
+
+            if any([
+                dataproperty.is_empty_string(header) for header in header_list
+            ]):
+                raise ValueError(
+                    "the first line include empty string: "
+                    "the first line expected to contain header data.")
+
+            data_matrix = data_matrix[1:]
+        else:
+            header_list = attribute_name_list
 
         if dataproperty.is_empty_string(table_name):
             # use csv filename as a table name if table_name is a empty string.
             table_name = os.path.splitext(os.path.basename(csv_path))[0]
-            print table_name
 
         self.create_table_with_data(table_name, header_list, data_matrix)
 
