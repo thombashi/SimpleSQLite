@@ -634,7 +634,7 @@ class SimpleSQLite(object):
                 "  records=%s\n" % (record_list[:2])
             )
 
-    def update(self, table, set_query, where=None):
+    def update(self, table_name, set_query, where=None):
         """
         Execute UPDATE query.
 
@@ -651,7 +651,7 @@ class SimpleSQLite(object):
         """
 
         self.validate_access_permission(["w", "a"])
-        query = SqlQuery.make_update(table, set_query, where)
+        query = SqlQuery.make_update(table_name, set_query, where)
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
@@ -666,7 +666,7 @@ class SimpleSQLite(object):
 
         return self.connection.total_changes
 
-    def get_value(self, select, table, where=None, extra=None):
+    def get_value(self, select, table_name, where=None, extra=None):
         """
         Get a value from the table.
 
@@ -678,7 +678,7 @@ class SimpleSQLite(object):
             :py:meth:`execute_query`
         """
 
-        query = SqlQuery.make_select(select, table, where, extra)
+        query = SqlQuery.make_select(select, table_name, where, extra)
         result = self.execute_query(query, logging.getLogger().findCaller())
         if result is None:
             return None
@@ -967,7 +967,7 @@ class SimpleSQLite(object):
                 SqlQuery.make_where("attribute_name", attribute_name),
             ]
             self.update(
-                table=self.TableConfiguration.TABLE_NAME,
+                table_name=self.TableConfiguration.TABLE_NAME,
                 set_query="has_index = 1",
                 where=" AND ".join(where_list))
 

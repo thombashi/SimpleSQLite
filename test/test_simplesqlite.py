@@ -603,9 +603,11 @@ class Test_SimpleSQLite_insert:
         [NamedTupleEx(5, 6, 7), (5, 6)]
     ])
     def test_normal(self, con, value, expeted):
-        assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
+        assert con.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 3
+        assert con.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -614,9 +616,11 @@ class Test_SimpleSQLite_insert:
         [[5, 6.6, "c"], (5, 6.6, "c")],
     ])
     def test_mix(self, con_mix, value, expeted):
-        assert con_mix.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
+        assert con_mix.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con_mix.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 3
+        assert con_mix.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -675,9 +679,11 @@ class Test_SimpleSQLite_insert_many:
             (11, 12),
         ]
 
-        assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
+        assert con.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
         con.insert_many(TEST_TABLE_NAME, value)
-        assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 5
+        assert con.get_value(
+            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
         assert result_tuple == expected
@@ -714,9 +720,10 @@ class Test_SimpleSQLite_update:
     def test_normal(self, con):
         table_name = TEST_TABLE_NAME
         where = SqlQuery.make_where("attr_b", 2)
-        con.update(table=table_name, set_query="attr_a = 100", where=where)
+        con.update(
+            table_name=table_name, set_query="attr_a = 100", where=where)
         assert con.get_value(
-            select="attr_a", table=table_name, where=where) == 100
+            select="attr_a", table_name=table_name, where=where) == 100
 
     @pytest.mark.parametrize(["table_name", "set_query", "expected"], [
         [TEST_TABLE_NAME, "", ValueError],
@@ -731,16 +738,16 @@ class Test_SimpleSQLite_update:
     ])
     def test_exception(self, con, table_name, set_query, expected):
         with pytest.raises(expected):
-            con.update(table=table_name, set_query=set_query)
+            con.update(table_name=table_name, set_query=set_query)
 
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
             con_ro.update(
-                table=TEST_TABLE_NAME, set_query="attr_a = 100")
+                table_name=TEST_TABLE_NAME, set_query="attr_a = 100")
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.update(table=TEST_TABLE_NAME, set_query="hoge")
+            con_null.update(table_name=TEST_TABLE_NAME, set_query="hoge")
 
 
 class Test_SimpleSQLite_get_total_changes:
