@@ -208,7 +208,7 @@ Insert list/tuple/namedtuple
 Documentation
 =============
 
-http://simplesqlite.readthedocs.org/en/latest/apis/simplesqlite.html
+http://simplesqlite.readthedocs.org/en/stable/apis/simplesqlite.html
 
 Dependencies
 ============
