@@ -555,10 +555,12 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:func:`verify_table_existence`
             :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
         """
 
+        self.verify_table_existence(table_name)
         query = SqlQuery.make_select(select, table_name, where, extra)
 
         return self.execute_query(query, logging.getLogger().findCaller())
@@ -575,12 +577,13 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
+            :py:func:`check_connection`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:func:`execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
+        self.verify_table_existence(table_name)
 
         query = SqlQuery.make_insert(table_name, self.__to_record(
             self.get_attribute_name_list(table_name), insert_record))
@@ -599,8 +602,8 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
-            :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
+            :py:func:`check_connection`
+            :py:func:`verify_table_existence`
             :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
         """
 

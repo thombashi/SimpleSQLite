@@ -563,7 +563,7 @@ class Test_SimpleSQLite_select:
         ["not_exist_attr", TEST_TABLE_NAME, sqlite3.OperationalError],
         ["", TEST_TABLE_NAME, ValueError],
         [None, TEST_TABLE_NAME, ValueError],
-        ["attr_a", "not_exist_table", sqlite3.OperationalError],
+        ["attr_a", "not_exist_table", TableNotFoundError],
         ["attr_a", "", ValueError],
         ["attr_a", None, ValueError],
         ["", "", ValueError],
