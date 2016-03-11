@@ -352,7 +352,7 @@ def append_table(con_src, con_dst, table_name):
               dst: %s
             """ % (str(src_attr_list), str(dst_attr_list)))
 
-    result = con_src.select(select="*", table=table_name)
+    result = con_src.select(select="*", table_name=table_name)
     if result is None:
         return False
     value_matrix = result.fetchall()
@@ -461,15 +461,15 @@ class SimpleSQLite(object):
         """
         :param str database_path: File path of the database to be connected.
         :param str mode:
-            "r": Open for read only.
-            "w": Open for read/write. Delete existing tables.
-            "a": Open for read/write. Append to the existing tables.
+            ``"r"``: Open for read only.
+            ``"w"``: Open for read/write. Delete existing tables.
+            ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError: If ``mode`` is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
 
         .. seealso::
 
-            :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
+            :py:meth:`validate_file_path`
         """
 
         self.close()
@@ -507,8 +507,8 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
-            :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
+            :py:meth:`check_connection`
+            :py:meth:`validate_file_path`
         """
 
         import time
@@ -546,7 +546,7 @@ class SimpleSQLite(object):
 
         return result
 
-    def select(self, select, table, where=None, extra=None):
+    def select(self, select, table_name, where=None, extra=None):
         """
         Execute SELCT query.
 
@@ -555,11 +555,13 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:meth:`verify_table_existence`
+            :py:meth:`make_select() <simplesqlite.SqlQuery.make_select>`
+            :py:meth:`execute_query`
         """
 
-        query = SqlQuery.make_select(select, table, where, extra)
+        self.verify_table_existence(table_name)
+        query = SqlQuery.make_select(select, table_name, where, extra)
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
@@ -567,7 +569,7 @@ class SimpleSQLite(object):
         """
         Execute INSERT query.
 
-        :param str table: Table name of execute query
+        :param str table_name: Table name of execute query
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
 
         :raises ValueError: If database connection is invalid.
@@ -575,12 +577,13 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
-            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:meth:`check_connection`
+            :py:meth:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:meth:`execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
+        self.verify_table_existence(table_name)
 
         query = SqlQuery.make_insert(table_name, self.__to_record(
             self.get_attribute_name_list(table_name), insert_record))
@@ -599,9 +602,9 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
-            :py:func:`verify_table_existence() <simplesqlite.SimpleSQLite.verify_table_existence>`
-            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:meth:`check_connection`
+            :py:meth:`verify_table_existence`
+            :py:meth:`make_insert() <simplesqlite.SqlQuery.make_insert>`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -631,7 +634,7 @@ class SimpleSQLite(object):
                 "  records=%s\n" % (record_list[:2])
             )
 
-    def update(self, table, set_query, where=None):
+    def update(self, table_name, set_query, where=None):
         """
         Execute UPDATE query.
 
@@ -643,12 +646,15 @@ class SimpleSQLite(object):
         .. seealso::
 
             :py:meth:`check_connection`
+            :py:meth:`verify_table_existence`
             :py:meth:`simplesqlite.SqlQuery.make_update`
             :py:meth:`execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
-        query = SqlQuery.make_update(table, set_query, where)
+        self.verify_table_existence(table_name)
+
+        query = SqlQuery.make_update(table_name, set_query, where)
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
@@ -663,7 +669,7 @@ class SimpleSQLite(object):
 
         return self.connection.total_changes
 
-    def get_value(self, select, table, where=None, extra=None):
+    def get_value(self, select, table_name, where=None, extra=None):
         """
         Get a value from the table.
 
@@ -675,7 +681,9 @@ class SimpleSQLite(object):
             :py:meth:`execute_query`
         """
 
-        query = SqlQuery.make_select(select, table, where, extra)
+        self.verify_table_existence(table_name)
+
+        query = SqlQuery.make_select(select, table_name, where, extra)
         result = self.execute_query(query, logging.getLogger().findCaller())
         if result is None:
             return None
@@ -716,12 +724,11 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:meth:`verify_table_existence`
             :py:meth:`execute_query`
         """
 
-        if not self.has_table(table_name):
-            raise TableNotFoundError("'%s' table not found in %s" % (
-                table_name, self.database_path))
+        self.verify_table_existence(table_name)
 
         query = "SELECT * FROM '%s'" % (table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
@@ -738,12 +745,11 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:meth:`verify_table_existence`
             :py:meth:`execute_query`
         """
 
-        if not self.has_table(table_name):
-            raise TableNotFoundError("'%s' table not found in %s" % (
-                table_name, self.database_path))
+        self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attribute_name_list(table_name)
         query = "SELECT DISTINCT %s FROM '%s'" % (
@@ -792,7 +798,7 @@ class SimpleSQLite(object):
             result = con_tmp.select(
                 select="%s,SUM(%s),SUM(%s)" % (
                     "query", "execution_time", "count"),
-                table=TN_SQL_PROFILE,
+                table_name=TN_SQL_PROFILE,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
                     "query", "execution_time", profile_count))
         except sqlite3.OperationalError:
@@ -966,7 +972,7 @@ class SimpleSQLite(object):
                 SqlQuery.make_where("attribute_name", attribute_name),
             ]
             self.update(
-                table=self.TableConfiguration.TABLE_NAME,
+                table_name=self.TableConfiguration.TABLE_NAME,
                 set_query="has_index = 1",
                 where=" AND ".join(where_list))
 
@@ -1209,7 +1215,7 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection`
+            :py:meth:`check_connection`
         """
 
         self.check_connection()
