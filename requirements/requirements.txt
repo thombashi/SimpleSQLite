@@ -1,2 +1,2 @@
-DataProperty
+DataProperty>=0.2.0
 six<=1.8.0
