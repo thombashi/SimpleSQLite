@@ -352,7 +352,7 @@ def append_table(con_src, con_dst, table_name):
               dst: %s
             """ % (str(src_attr_list), str(dst_attr_list)))
 
-    result = con_src.select(select="*", table=table_name)
+    result = con_src.select(select="*", table_name=table_name)
     if result is None:
         return False
     value_matrix = result.fetchall()
@@ -546,7 +546,7 @@ class SimpleSQLite(object):
 
         return result
 
-    def select(self, select, table, where=None, extra=None):
+    def select(self, select, table_name, where=None, extra=None):
         """
         Execute SELCT query.
 
@@ -559,7 +559,7 @@ class SimpleSQLite(object):
             :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
         """
 
-        query = SqlQuery.make_select(select, table, where, extra)
+        query = SqlQuery.make_select(select, table_name, where, extra)
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
@@ -567,7 +567,7 @@ class SimpleSQLite(object):
         """
         Execute INSERT query.
 
-        :param str table: Table name of execute query
+        :param str table_name: Table name of execute query
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
 
         :raises ValueError: If database connection is invalid.
@@ -790,7 +790,7 @@ class SimpleSQLite(object):
             result = con_tmp.select(
                 select="%s,SUM(%s),SUM(%s)" % (
                     "query", "execution_time", "count"),
-                table=TN_SQL_PROFILE,
+                table_name=TN_SQL_PROFILE,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
                     "query", "execution_time", profile_count))
         except sqlite3.OperationalError:
