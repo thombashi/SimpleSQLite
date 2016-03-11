@@ -646,11 +646,14 @@ class SimpleSQLite(object):
         .. seealso::
 
             :py:meth:`check_connection`
+            :py:func:`verify_table_existence`
             :py:meth:`simplesqlite.SqlQuery.make_update`
             :py:meth:`execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
+        self.verify_table_existence(table_name)
+
         query = SqlQuery.make_update(table_name, set_query, where)
 
         return self.execute_query(query, logging.getLogger().findCaller())
@@ -674,9 +677,12 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:func:`verify_table_existence`
             :py:meth:`simplesqlite.SqlQuery.make_select`
             :py:meth:`execute_query`
         """
+
+        self.verify_table_existence(table_name)
 
         query = SqlQuery.make_select(select, table_name, where, extra)
         result = self.execute_query(query, logging.getLogger().findCaller())
