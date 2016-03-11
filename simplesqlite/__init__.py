@@ -469,7 +469,7 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
+            :py:meth:`validate_file_path`
         """
 
         self.close()
@@ -507,8 +507,8 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection() <simplesqlite.SimpleSQLite.check_connection>`
-            :py:func:`validate_file_path() <simplesqlite.SimpleSQLite.validate_file_path>`
+            :py:meth:`check_connection`
+            :py:meth:`validate_file_path`
         """
 
         import time
@@ -555,9 +555,9 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`verify_table_existence`
-            :py:func:`make_select() <simplesqlite.SqlQuery.make_select>`
-            :py:func:`execute_query() <simplesqlite.SimpleSQLite.execute_query>`
+            :py:meth:`verify_table_existence`
+            :py:meth:`make_select() <simplesqlite.SqlQuery.make_select>`
+            :py:meth:`execute_query`
         """
 
         self.verify_table_existence(table_name)
@@ -577,9 +577,9 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection`
-            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
-            :py:func:`execute_query`
+            :py:meth:`check_connection`
+            :py:meth:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:meth:`execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -602,9 +602,9 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection`
-            :py:func:`verify_table_existence`
-            :py:func:`make_insert() <simplesqlite.SqlQuery.make_insert>`
+            :py:meth:`check_connection`
+            :py:meth:`verify_table_existence`
+            :py:meth:`make_insert() <simplesqlite.SqlQuery.make_insert>`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -646,7 +646,7 @@ class SimpleSQLite(object):
         .. seealso::
 
             :py:meth:`check_connection`
-            :py:func:`verify_table_existence`
+            :py:meth:`verify_table_existence`
             :py:meth:`simplesqlite.SqlQuery.make_update`
             :py:meth:`execute_query`
         """
@@ -677,7 +677,6 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`verify_table_existence`
             :py:meth:`simplesqlite.SqlQuery.make_select`
             :py:meth:`execute_query`
         """
@@ -1216,7 +1215,7 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:func:`check_connection`
+            :py:meth:`check_connection`
         """
 
         self.check_connection()
