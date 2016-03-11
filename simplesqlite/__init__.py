@@ -716,12 +716,11 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:meth:`verify_table_existence`
             :py:meth:`execute_query`
         """
 
-        if not self.has_table(table_name):
-            raise TableNotFoundError("'%s' table not found in %s" % (
-                table_name, self.database_path))
+        self.verify_table_existence(table_name)
 
         query = "SELECT * FROM '%s'" % (table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
@@ -738,12 +737,11 @@ class SimpleSQLite(object):
 
         .. seealso::
 
+            :py:meth:`verify_table_existence`
             :py:meth:`execute_query`
         """
 
-        if not self.has_table(table_name):
-            raise TableNotFoundError("'%s' table not found in %s" % (
-                table_name, self.database_path))
+        self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attribute_name_list(table_name)
         query = "SELECT DISTINCT %s FROM '%s'" % (
