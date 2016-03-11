@@ -80,7 +80,7 @@ Create table from csv file
 Input: sample\_data.csv
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: csv
+::
 
     "attr_a","attr_b","attr_c"
     1,4,"a"
