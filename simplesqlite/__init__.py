@@ -461,9 +461,9 @@ class SimpleSQLite(object):
         """
         :param str database_path: File path of the database to be connected.
         :param str mode:
-            "r": Open for read only.
-            "w": Open for read/write. Delete existing tables.
-            "a": Open for read/write. Append to the existing tables.
+            ``"r"``: Open for read only.
+            ``"w"``: Open for read/write. Delete existing tables.
+            ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError: If ``mode`` is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
 
