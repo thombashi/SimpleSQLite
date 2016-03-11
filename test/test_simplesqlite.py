@@ -460,9 +460,9 @@ class Test_append_table:
         assert append_table(
             con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
 
-        result = con_mix.select(select="*", table=TEST_TABLE_NAME)
+        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         src_data_matrix = result.fetchall()
-        result = con_empty.select(select="*", table=TEST_TABLE_NAME)
+        result = con_empty.select(select="*", table_name=TEST_TABLE_NAME)
         dst_data_matrix = result.fetchall()
 
         assert src_data_matrix == dst_data_matrix
@@ -470,9 +470,9 @@ class Test_append_table:
         assert append_table(
             con_src=con_mix, con_dst=con_empty, table_name=TEST_TABLE_NAME)
 
-        result = con_mix.select(select="*", table=TEST_TABLE_NAME)
+        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         src_data_matrix = result.fetchall()
-        result = con_empty.select(select="*", table=TEST_TABLE_NAME)
+        result = con_empty.select(select="*", table_name=TEST_TABLE_NAME)
         dst_data_matrix = result.fetchall()
 
         assert src_data_matrix * 2 == dst_data_matrix
@@ -556,7 +556,7 @@ class Test_SimpleSQLite_check_connection:
 class Test_SimpleSQLite_select:
 
     def test_smoke(self, con):
-        result = con.select(select="*", table=TEST_TABLE_NAME)
+        result = con.select(select="*", table_name=TEST_TABLE_NAME)
         assert result is not None
 
     @pytest.mark.parametrize(["attr", "table_name", "expected"], [
@@ -573,11 +573,11 @@ class Test_SimpleSQLite_select:
     ])
     def test_exception(self, con, attr, table_name, expected):
         with pytest.raises(expected):
-            con.select(select=attr, table=table_name)
+            con.select(select=attr, table_name=table_name)
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.select(select="*", table=TEST_TABLE_NAME)
+            con_null.select(select="*", table_name=TEST_TABLE_NAME)
 
 
 class Test_SimpleSQLite_insert:
@@ -606,7 +606,7 @@ class Test_SimpleSQLite_insert:
         assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, insert_record=value)
         assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 3
-        result = con.select(select="*", table=TEST_TABLE_NAME)
+        result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
 
@@ -617,7 +617,7 @@ class Test_SimpleSQLite_insert:
         assert con_mix.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, insert_record=value)
         assert con_mix.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 3
-        result = con_mix.select(select="*", table=TEST_TABLE_NAME)
+        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
 
@@ -678,7 +678,7 @@ class Test_SimpleSQLite_insert_many:
         assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 2
         con.insert_many(TEST_TABLE_NAME, value)
         assert con.get_value(select="COUNT(*)", table=TEST_TABLE_NAME) == 5
-        result = con.select(select="*", table=TEST_TABLE_NAME)
+        result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
         assert result_tuple == expected
 
@@ -975,7 +975,7 @@ class Test_SimpleSQLite_create_table_with_data:
         con.commit()
 
         # check data ---
-        result = con.select(select="*", table=table_name)
+        result = con.select(select="*", table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
@@ -987,7 +987,7 @@ class Test_SimpleSQLite_create_table_with_data:
         ]
 
         result = con.select(
-            select="*", table=SimpleSQLite.TableConfiguration.TABLE_NAME)
+            select="*", table_name=SimpleSQLite.TableConfiguration.TABLE_NAME)
         result_matrix = result.fetchall()
         assert result_matrix == expected
 
@@ -1047,7 +1047,7 @@ class Test_SimpleSQLite_create_table_from_csv:
             table_name)
 
         # check data ---
-        result = con.select(select="*", table=table_name)
+        result = con.select(select="*", table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
