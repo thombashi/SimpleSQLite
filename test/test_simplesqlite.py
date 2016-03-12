@@ -296,22 +296,6 @@ class Test_SqlQuery_make_update:
         with pytest.raises(expected):
             SqlQuery.make_update(table, set_query, where)
 
-    """
-    @pytest.mark.parametrize(
-        ["select", "table", "where", "extra", "expected"], [
-            ["A", None, None, None, ValueError],
-            [None, None, None, None, ValueError],
-            [None, "B", None, None, TypeError],
-            [nan, None, None, None, ValueError],
-            [nan, nan, None, None, ValueError],
-            [nan, nan, nan, None, ValueError],
-            [nan, nan, nan, nan, ValueError],
-        ])
-    def test_exception(self, select, table, where, extra, expected):
-        with pytest.raises(expected):
-            SqlQuery.make_select(select, table, where, extra)
-    """
-
 
 class Test_SqlQuery_make_where:
 
