@@ -6,11 +6,6 @@
 
 
 from __future__ import absolute_import
-import logging
-import os
-import re
-import sys
-import sqlite3
 
 import dataproperty
 
@@ -71,7 +66,14 @@ def append_table(con_src, con_dst, table_name):
     return True
 
 
-# class ---
+def connect_sqlite_db_mem():
+    """
+    :return: Instance of a in memory database
+    :rtype: SimpleSQLite
+    """
+
+    return SimpleSQLite(MEMORY_DB_NAME, "w")
+
 
 class NullDatabaseConnectionError(Exception):
     pass
@@ -83,12 +85,3 @@ class TableNotFoundError(Exception):
 
 class AttributeNotFoundError(Exception):
     pass
-
-
-def connect_sqlite_db_mem():
-    """
-    :return: Instance of a in memory database
-    :rtype: SimpleSQLite
-    """
-
-    return SimpleSQLite(MEMORY_DB_NAME, "w")
