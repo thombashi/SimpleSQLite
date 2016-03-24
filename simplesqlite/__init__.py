@@ -1241,8 +1241,9 @@ class SimpleSQLite(object):
             dataproperty.Typecode.STRING: "TEXT",
         }
 
-        col_prop_list = dataproperty.PropertyExtractor.extract_column_property_list(
-            [], data_matrix)
+        prop_extractor = dataproperty.PropertyExtractor()
+        prop_extractor.data_matrix = data_matrix
+        col_prop_list = prop_extractor.extract_column_property_list()
 
         return dict([
             [col, TYPENAME_TABLE[col_prop.typecode]]
