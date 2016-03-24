@@ -779,6 +779,9 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_db_path(database_path):
+        if dataproperty.is_empty_string(database_path):
+            raise ValueError("null path")
+
         if database_path == simplesqlite.MEMORY_DB_NAME:
             return
 
