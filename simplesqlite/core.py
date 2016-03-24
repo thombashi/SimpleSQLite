@@ -12,6 +12,7 @@ import sqlite3
 import sys
 
 import dataproperty
+import pathvalidate
 import six
 from six.moves import range
 
@@ -106,12 +107,8 @@ class SimpleSQLite(object):
             ``"r"``: Open for read only.
             ``"w"``: Open for read/write. Delete existing tables.
             ``"a"``: Open for read/write. Append to the existing tables.
-        :raises ValueError: If ``mode`` is invalid.
+        :raises ValueError: If ``database_path`` is invalid or ``mode`` is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
-
-        .. seealso::
-
-            :py:meth:`validate_file_path`
         """
 
         self.close()
@@ -119,7 +116,7 @@ class SimpleSQLite(object):
         if mode == "r":
             self.__verify_sqlite_db_file(database_path)
         elif mode in ["w", "a"]:
-            simplesqlite.validate_file_path(database_path)
+            self.__validate_db_path(database_path)
         else:
             raise ValueError("unknown connection mode: " + mode)
 
@@ -150,7 +147,6 @@ class SimpleSQLite(object):
         .. seealso::
 
             :py:meth:`.check_connection`
-            :py:meth:`validate_file_path`
         """
 
         import time
@@ -782,16 +778,18 @@ class SimpleSQLite(object):
         self.__initialize_connection()
 
     @staticmethod
-    def __verify_sqlite_db_file(database_path):
+    def __validate_db_path(database_path):
+        if database_path == simplesqlite.MEMORY_DB_NAME:
+            return
+
+        pathvalidate.validate_filename(os.path.basename(database_path))
+
+    def __verify_sqlite_db_file(self, database_path):
         """
         :raises sqlite3.OperationalError: If unable to open database file
-
-        .. seealso::
-
-            :py:meth:`validate_file_path`
         """
 
-        simplesqlite.validate_file_path(database_path)
+        self.__validate_db_path(database_path)
         if not os.path.isfile(os.path.realpath(database_path)):
             raise IOError("file not found: " + database_path)
 

@@ -18,28 +18,6 @@ from .core import SimpleSQLite
 
 
 MEMORY_DB_NAME = ":memory:"
-__INVALID_PATH_CHAR = '\:*?"<>|'
-
-
-def validate_file_path(file_path):
-    """
-    :param str file_path: File path to validate.
-    :raises ValueError:
-        If ``file_path`` is empty or include invalid char (``\:*?"<>|``).
-    """
-
-    if dataproperty.is_empty_string(file_path):
-        raise ValueError("path is null")
-
-    if file_path == MEMORY_DB_NAME:
-        return
-
-    match = re.search("[%s]" % (
-        re.escape(__INVALID_PATH_CHAR)), os.path.basename(file_path))
-    if match is not None:
-        raise ValueError(
-            "invalid char found in file name: '%s'" % (
-                re.escape(match.group())))
 
 
 def validate_table_name(name):

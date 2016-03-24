@@ -15,6 +15,7 @@ import pytest
 from six.moves import range
 
 from simplesqlite import *
+from simplesqlite.sqlquery import SqlQuery
 
 
 nan = float("nan")
@@ -502,7 +503,11 @@ class Test_SimpleSQLite_init:
     ] + [
         arg_list
         for arg_list in itertools.product(
-            [None, nan, ""], ["r", "w", "a"], [ValueError])
+            [None, nan], ["r", "w", "a"], [AttributeError])
+    ] + [
+        arg_list
+        for arg_list in itertools.product(
+            [""], ["r", "w", "a"], [ValueError])
     ])
     def test_exception_1(self, value, mode, expected):
         with pytest.raises(expected):
