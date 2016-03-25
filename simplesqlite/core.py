@@ -22,7 +22,7 @@ from .sqlquery import SqlQuery
 
 class SimpleSQLite(object):
     """
-    Wrapper class of sqlite3 module.
+    Wrapper class of ``sqlite3`` module.
     """
 
     class TableConfiguration:
@@ -54,6 +54,10 @@ class SimpleSQLite(object):
         """
         :return: Connection mode: "r"/"w"/"a".
         :rtype: str
+
+        .. seealso::
+
+            :py:meth:`.connect`
         """
 
         return self.__mode
@@ -107,7 +111,8 @@ class SimpleSQLite(object):
             ``"r"``: Open for read only.
             ``"w"``: Open for read/write. Delete existing tables.
             ``"a"``: Open for read/write. Append to the existing tables.
-        :raises ValueError: If ``database_path`` is invalid or ``mode`` is invalid.
+        :raises ValueError:
+            If ``database_path`` is invalid or ``mode`` is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
         """
 
@@ -135,14 +140,12 @@ class SimpleSQLite(object):
         Execute arbitrary SQLite query.
 
         :param str query: Query to be executed.
-        :param str tuple:
+        :param tuple caller:
             Caller information.
-            Retuen value of Logger.findCaller().
+            Expects the return value of Logger.findCaller() method.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
-
-        :raises sqlite3.OperationalError:
-            If failed to execute query.
+        :raises sqlite3.OperationalError: If failed to execute query.
 
         .. seealso::
 
@@ -188,6 +191,8 @@ class SimpleSQLite(object):
         """
         Execute SELCT query.
 
+        :param str select: Attribute for SELECT query
+        :param str table_name: Table name of execute query.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
 
@@ -207,9 +212,8 @@ class SimpleSQLite(object):
         """
         Execute INSERT query.
 
-        :param str table_name: Table name of execute query
+        :param str table_name: Table name of execute query.
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
-
         :raises ValueError: If database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
 
@@ -231,9 +235,9 @@ class SimpleSQLite(object):
         """
         Execute INSERT query for multiple records.
 
-        :param str table: Table name of execute query
-        :param dict/namedtuple/list/tuple insert_record: Record to be inserted
-
+        :param str table: Table name of execute query.
+        :param dict/namedtuple/list/tuple insert_record:
+            Records to be inserted.
         :raises ValueError: If database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         :raises sqlite3.OperationalError: If failed to execute query.
@@ -276,10 +280,11 @@ class SimpleSQLite(object):
         """
         Execute UPDATE query.
 
+        :param str table_name: Table name of execute query.
+        :param str set_query:
         :raises ValueError: If database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
-        :raises sqlite3.OperationalError:
-            If failed to execute query.
+        :raises sqlite3.OperationalError: If failed to execute query.
 
         .. seealso::
 
@@ -311,6 +316,8 @@ class SimpleSQLite(object):
         """
         Get a value from the table.
 
+        :param str select: Attribute for SELECT query
+        :param str table_name: Table name of execute query.
         :return: Result of execution of query.
 
         .. seealso::
@@ -334,7 +341,7 @@ class SimpleSQLite(object):
 
     def get_table_name_list(self):
         """
-        :return: Table name list in the database.
+        :return: List of table names in the database.
         :rtype: list
 
         .. seealso::
@@ -354,9 +361,8 @@ class SimpleSQLite(object):
 
     def get_attribute_name_list(self, table_name):
         """
-        :return: Attribute name list in the table.
+        :return: List of attribute names in the table.
         :rtype: list
-
         :raises TableNotFoundError:
             If ``tablename`` table not found in the database.
 
@@ -375,9 +381,8 @@ class SimpleSQLite(object):
 
     def get_attribute_type_list(self, table_name):
         """
-        :return: Attribute type list in the table.
+        :return: List of attribute names in the table.
         :rtype: list
-
         :raises TableNotFoundError:
             If ``tablename`` table not found in the database.
 
@@ -401,7 +406,7 @@ class SimpleSQLite(object):
 
     def get_profile(self, profile_count=50):
         """
-        Get profile information of query executions.
+        Get profile of query execution time.
 
         :param int profile_count:
             Number of profile count from the longest execution time query.
@@ -508,7 +513,6 @@ class SimpleSQLite(object):
     def verify_table_existence(self, table_name):
         """
         :param str table_name: Table name to be tested.
-
         :raises TableNotFoundError: If table not found in the database
 
         .. seealso::
@@ -528,7 +532,6 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to be tested.
-
         :raises AttributeNotFoundError: If attribute not found in the table
 
         .. seealso::
@@ -548,8 +551,7 @@ class SimpleSQLite(object):
     def drop_table(self, table_name):
         """
         :param str table_name: Table name to drop.
-
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
@@ -563,8 +565,7 @@ class SimpleSQLite(object):
     def create_table(self, table_name, attribute_description_list):
         """
         :param str table_name: Table name to create.
-        :param str attribute_description_list:
-
+        :param list attribute_description_list: List of table description.
         :raises ValueError: If database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
@@ -586,8 +587,7 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to create index.
-
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
 
         .. seealso::
@@ -617,7 +617,8 @@ class SimpleSQLite(object):
     def create_index_list(self, table_name, attribute_name_list):
         """
         :param str table_name: Table name that exists attribute.
-        :param list attribute_name_list: Attribute name list to create index.
+        :param list attribute_name_list:
+            List of attribute names to create indices.
 
         .. seealso::
 
@@ -636,12 +637,13 @@ class SimpleSQLite(object):
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=()):
         """
-        Create table if not exists. And insert data to the created table.
+        Create a table if not exists. And insert data to the created table.
 
         :param str table_name: Table name to create.
-        :param list attribute_name_list: Attribute names of the table.
+        :param list attribute_name_list: List of attribute names of the table.
         :param dict/namedtuple/list/tuple data_matrix: Data to be inserted.
-        :param tuple index_attribute_list: Attribute name list to create index.
+        :param tuple index_attribute_list:
+            List of attribute names of create indices.
         :raises ValueError: If ``data_matrix`` is empty.
 
         .. seealso::
@@ -691,23 +693,23 @@ class SimpleSQLite(object):
             attribute_name_list=[],
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
-        Create table from a csv file.
+        Create a table from a csv file.
 
         :param str csv_path: Path to the csv file.
         :param str table_name:
-            Table name to create (default="").
-            Use csv file base name as the table name if table_name is empty.
+            Table name to create.
+            Use csv file base name as the table name if the value is empty.
         :param list attribute_name_list:
-            Attribute names of the table (default=[]).
+            Attribute names of the table.
             Use first line of the csv file as attribute list
             if attribute_name_list is empty.
         :param str delimiter:
-            A one-character string used to separate fields. It defaults to `','`.
+            A one-character string used to separate fields.
         :param str quotechar:
             A one-character string used to quote fields
             containing special characters, such as the delimiter or quotechar,
-            or which contain new-line characters. It defaults to `'"'`.
-        :param str encoding: csv file encoding. It defaults to `'utf-8``
+            or which contain new-line characters.
+        :param str encoding: csv file encoding.
 
         :raises ValueError:
 
@@ -752,6 +754,12 @@ class SimpleSQLite(object):
         self.create_table_with_data(table_name, header_list, data_matrix)
 
     def rollback(self):
+        """
+        .. seealso::
+
+            :py:meth:`sqlite3.Connection.rollback`
+        """
+
         try:
             self.check_connection()
         except simplesqlite.NullDatabaseConnectionError:
@@ -760,6 +768,12 @@ class SimpleSQLite(object):
         self.connection.rollback()
 
     def commit(self):
+        """
+        .. seealso::
+
+            :py:meth:`sqlite3.Connection.commit`
+        """
+
         try:
             self.check_connection()
         except simplesqlite.NullDatabaseConnectionError:
@@ -768,6 +782,14 @@ class SimpleSQLite(object):
         self.connection.commit()
 
     def close(self):
+        """
+        Commit and close the connection.
+
+        .. seealso::
+
+            :py:meth:`sqlite3.Connection.close`
+        """
+
         try:
             self.check_connection()
         except simplesqlite.NullDatabaseConnectionError:

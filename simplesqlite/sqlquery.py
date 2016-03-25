@@ -16,6 +16,10 @@ import simplesqlite as sql
 
 
 class SqlQuery:
+    """
+    Support class for making SQLite query.
+    """
+
     __RE_SANITIZE = re.compile("[%s]" % (re.escape("%/()[]<>.:;'!\# -+=\n\r")))
     __RE_TABLE_STR = re.compile("[%s]" % (re.escape("%()-+/.")))
     __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("[%()-+/.]")))
@@ -28,6 +32,8 @@ class SqlQuery:
     @classmethod
     def sanitize(cls, query_item):
         """
+        Sanitize SQLite query with empty char.
+
         :param str query_item: String to be sanitize.
         :return:
             String that exclude invalid chars.
@@ -61,7 +67,8 @@ class SqlQuery:
     def to_attr_str(cls, name, operation_query=""):
         """
         :param str name: Base name of attribute.
-        :param str operation_query: 
+        :param str operation_query:
+            Used as a SQLite function if the value is not empty.
         :return: String that suitable for attribute name.
         :rtype: str
         """
@@ -79,11 +86,12 @@ class SqlQuery:
         return sql_name
 
     @classmethod
-    def to_attr_str_list(cls, name_list, operation_query=None):
+    def to_attr_str_list(cls, name_list, operation_query=""):
         """
-        :param list/tuple name_list: List of attribute name.
+        :param list/tuple name_list: List of attribute names.
         :param str operation_query:
-        :return: List of string that suitable for attribute name.
+            Used as a SQLite function if the value is not empty.
+        :return: List of strings that suitable for attribute name.
         :rtype: list
 
         .. seealso::
@@ -120,8 +128,9 @@ class SqlQuery:
     @classmethod
     def to_value_str_list(cls, value_list):
         """
-        :param list value_list: Value list associated with a key.
-        :return: List of value that executed ``to_value_str`` method for each item.
+        :param list value_list: List of values associated with a key.
+        :return:
+            List of value that executed ``to_value_str`` method for each item.
         :rtype: list
 
         .. seealso::
@@ -136,10 +145,14 @@ class SqlQuery:
         """
         Make SELECT query.
 
-        :param str select: Attribute for SELECT query
+        :param str select: Attribute for SELECT query.
         :param str table: Table name of execute query.
-        :param str where: Add WHERE clause to execute query if not ``None``
-        :param extra extra: Add additional clause to execute query if not ``None``
+        :param str where:
+            Add WHERE clause to execute query,
+            if the value is not ``None``.
+        :param extra extra:
+            Add additional clause to execute query,
+            if the value is not ``None``.
         :return: Query of SQLite.
         :rtype: str
 
@@ -147,7 +160,7 @@ class SqlQuery:
 
         .. seealso::
 
-            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
+            :py:func:`simplesqlite.validate_table_name`
         """
 
         sql.validate_table_name(table)
@@ -172,15 +185,16 @@ class SqlQuery:
 
         :param str table: Table name of execute query.
         :param list/tuple insert_tuple: Insertion data.
-        :param bool is_insert_many: ``True`` if inserting multiple data.
+        :param bool is_insert_many:
+            Make query that insert multiple data at once,
+            if the value is ``True``.
         :return: Query of SQLite.
         :rtype: str
-
         :raises ValueError: If ``insert_tuple`` is empty list/tuple.
 
         .. seealso::
 
-            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
+            :py:func:`simplesqlite.validate_table_name`
         """
 
         sql.validate_table_name(table)
@@ -210,14 +224,16 @@ class SqlQuery:
 
         :param str table: Table name of execute query.
         :param str set_query: SET part of UPDATE query.
+        :param str where:
+            Add WHERE clause to execute query,
+            if the value is not ``None``.
         :return: Query of SQLite.
         :rtype: str
-
         :raises ValueError: If ``set_query`` is empty string.
 
         .. seealso::
 
-            :py:func:`validate_table_name() <simplesqlite.validate_table_name>`
+            :py:func:`simplesqlite.validate_table_name`
         """
 
         sql.validate_table_name(table)
@@ -240,7 +256,7 @@ class SqlQuery:
 
         :param str key: Attribute name of the key.
         :param str value: Value of the right hand side associated with the key.
-        :param str operation: Operator of WHERE query (default = ``"="``).
+        :param str operation: Operator of WHERE query.
         :return: Part of WHERE query of SQLite.
         :rtype: str
 
@@ -264,7 +280,7 @@ class SqlQuery:
 
         :param str key: Attribute name of the key.
         :param str value_list:
-            Value list of the right hand side associated with the key.
+            List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str
         """
@@ -279,7 +295,7 @@ class SqlQuery:
 
         :param str key: Attribute name of the key.
         :param str value_list:
-            Value list of the right hand side associated with the key.
+            List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str
         """
