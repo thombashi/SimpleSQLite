@@ -25,12 +25,6 @@ class SimpleSQLite(object):
     Wrapper class of ``sqlite3`` module.
     """
 
-    class TableConfiguration:
-        TABLE_NAME = "__table_configuration__"
-        ATTRIBUTE_NAME_LIST = [
-            "table_name", "attribute_name", "value_type", "has_index",
-        ]
-
     @property
     def database_path(self):
         """
@@ -604,16 +598,6 @@ class SimpleSQLite(object):
                 index_name, SqlQuery.to_table_str(table_name), attribute_name)
         self.execute_query(query, logging.getLogger().findCaller())
 
-        if self.__is_create_table_config:
-            where_list = [
-                SqlQuery.make_where("table_name", table_name),
-                SqlQuery.make_where("attribute_name", attribute_name),
-            ]
-            self.update(
-                table_name=self.TableConfiguration.TABLE_NAME,
-                set_query="has_index = 1",
-                where=" AND ".join(where_list))
-
     def create_index_list(self, table_name, attribute_name_list):
         """
         :param str table_name: Table name that exists attribute.
@@ -668,20 +652,11 @@ class SimpleSQLite(object):
             set(attribute_name_list).intersection(set(index_attribute_list)))
         attr_description_list = []
 
-        table_config_matrix = []
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attribute_name_list[col]
             attr_description_list.append(
                 "'%s' %s" % (attr_name, value_type))
-
-            table_config_matrix.append([
-                table_name,
-                attr_name,
-                value_type,
-                attr_name in strip_index_attribute_list,
-            ])
-        self.__create_table_config(table_config_matrix)
 
         self.create_table(table_name, attr_description_list)
         self.insert_many(table_name, data_matrix)
@@ -951,22 +926,3 @@ class SimpleSQLite(object):
             self.__to_record(attr_name_list, record)
             for record in data_matrix
         ]
-
-    def __create_table_config(self, table_config_matrix):
-        if not self.__is_create_table_config:
-            return
-
-        attr_description_list = []
-        for attr_name in self.TableConfiguration.ATTRIBUTE_NAME_LIST:
-            if attr_name == "has_index":
-                data_type = "INTEGER"
-            else:
-                data_type = "TEXT"
-
-            attr_description_list.append("'%s' %s" % (attr_name, data_type))
-
-        table_name = self.TableConfiguration.TABLE_NAME
-        if not self.has_table(table_name):
-            self.create_table(table_name, attr_description_list)
-
-        self.insert_many(table_name, table_config_matrix)

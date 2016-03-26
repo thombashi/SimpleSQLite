@@ -418,9 +418,7 @@ class Test_SimpleSQLite_get_total_changes:
 class Test_SimpleSQLite_get_table_name_list:
 
     def test_normal(self, con):
-        expected = set([
-            SimpleSQLite.TableConfiguration.TABLE_NAME, TEST_TABLE_NAME
-        ])
+        expected = set([TEST_TABLE_NAME])
 
         assert set(con.get_table_name_list()) == expected
 
@@ -640,18 +638,6 @@ class Test_SimpleSQLite_create_table_with_data:
         result = con.select(select="*", table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
-
-        # check table config ---
-        expected = [
-            (table_name, 'attr_a', 'INTEGER', 1),
-            (table_name, 'attr_b', 'REAL', 0),
-            (table_name, 'attr_c', 'TEXT', 0),
-        ]
-
-        result = con.select(
-            select="*", table_name=SimpleSQLite.TableConfiguration.TABLE_NAME)
-        result_matrix = result.fetchall()
-        assert result_matrix == expected
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
