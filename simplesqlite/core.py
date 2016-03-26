@@ -445,6 +445,72 @@ class SimpleSQLite(object):
 
         return attribute_name_list, result.fetchall()
 
+    def get_sqlite_master(self):
+        """
+        Get sqlite_master table information as a list of dictionaries.
+
+        :return: sqlite_master table information.
+        :rtype: list
+
+        :Examples:
+
+            .. code:: python
+
+                import json
+                from simplesqlite import SimpleSQLite
+
+                con = SimpleSQLite("sample.sqlite", "w")
+                data_matrix = [
+                    [1, 1.1, "aaa", 1,   1],
+                    [2, 2.2, "bbb", 2.2, 2.2],
+                    [3, 3.3, "ccc", 3,   "ccc"],
+                ]
+                con.create_table_with_data(
+                    table_name="sample_table",
+                    attribute_name_list=["a", "b", "c", "d", "e"],
+                    data_matrix=data_matrix,
+                    index_attribute_list=["a"])
+                print(json.dumps(con.get_sqlite_master(), indent=4))
+
+            .. parsed-literal::
+
+                [
+                    {
+                        "tbl_name": "sample_table",
+                        "sql": "CREATE TABLE 'sample_table' ('a' INTEGER, 'b' REAL, 'c' TEXT, 'd' REAL, 'e' TEXT)",
+                        "type": "table",
+                        "name": "sample_table",
+                        "rootpage": 2
+                    },
+                    {
+                        "tbl_name": "sample_table",
+                        "sql": "CREATE INDEX sample_table_a_index ON sample_table('a')",
+                        "type": "index",
+                        "name": "sample_table_a_index",
+                        "rootpage": 3
+                    }
+                ]
+
+        .. seealso::
+
+            :py:meth:`.check_connection`
+        """
+
+        self.check_connection()
+
+        old_row_factory = self.connection.row_factory
+        self.connection.row_factory = sqlite3.Row
+
+        sqlite_master_list = []
+        result = self.execute_query("select * from sqlite_master")
+        for item in result.fetchall():
+            sqlite_master_list.append(
+                dict([[key, item[key]] for key in item.keys()]))
+
+        self.connection.row_factory = old_row_factory
+
+        return sqlite_master_list
+
     def has_table(self, table_name):
         """
         :param str table_name: Table name to be tested.
