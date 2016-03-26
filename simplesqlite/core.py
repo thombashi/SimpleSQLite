@@ -23,6 +23,16 @@ from .sqlquery import SqlQuery
 class SimpleSQLite(object):
     """
     Wrapper class of ``sqlite3`` module.
+
+    :param str database_path: File path of the database to be connected.
+    :param str mode: Open mode.
+    :param bool profile:
+        Recording SQL query execution time profile, if the value is True.
+
+    .. seealso::
+
+        :py:meth:`.connect`
+        :py:meth:`.get_profile`
     """
 
     @property
