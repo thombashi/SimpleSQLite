@@ -52,7 +52,7 @@ class SimpleSQLite(object):
     @property
     def mode(self):
         """
-        :return: Connection mode: "r"/"w"/"a".
+        :return: Connection mode: ``"r"``/``"w"``/``"a"``.
         :rtype: str
 
         .. seealso::
