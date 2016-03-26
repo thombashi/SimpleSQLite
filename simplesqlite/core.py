@@ -762,7 +762,7 @@ class SimpleSQLite(object):
             or which contain new-line characters.
         :param str encoding: csv file encoding.
 
-        :raises ValueError:
+        :raises ValueError: If the csv data is invalid
 
         .. seealso::
 
