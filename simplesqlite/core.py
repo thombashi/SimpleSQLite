@@ -413,15 +413,18 @@ class SimpleSQLite(object):
         Get profile of query execution time.
 
         :param int profile_count:
-            Number of profile count from the longest execution time query.
-        :return:
-            Query execution profile information.
-        :rtype: (list,list)
+            Number of profiles to retrieve,
+            counted from the top query in descending order by
+            cumulative execution time.
+        :return: Profile information for each query.
+        :rtype: list of namedtuple
 
         .. seealso::
 
             :py:meth:`.execute_query`
         """
+
+        from collections import namedtuple
 
         TN_SQL_PROFILE = "sql_profile"
 
@@ -430,8 +433,7 @@ class SimpleSQLite(object):
             for query, execute_time
             in six.iteritems(self.__dict_query_totalexectime)
         ]
-
-        attribute_name_list = ["query", "execution_time", "count"]
+        attribute_name_list = ("query", "cumulative_time", "count")
         con_tmp = simplesqlite.connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
@@ -439,21 +441,23 @@ class SimpleSQLite(object):
                 attribute_name_list,
                 data_matrix=value_matrix)
         except ValueError:
-            return [], []
+            return []
 
         try:
             result = con_tmp.select(
-                select="%s,SUM(%s),SUM(%s)" % (
-                    "query", "execution_time", "count"),
+                select="%s,SUM(%s),SUM(%s)" % attribute_name_list,
                 table_name=TN_SQL_PROFILE,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
-                    "query", "execution_time", profile_count))
+                    "query", "cumulative_time", profile_count))
         except sqlite3.OperationalError:
-            return [], []
+            return []
         if result is None:
-            return [], []
+            return []
 
-        return attribute_name_list, result.fetchall()
+        SqliteProfile = namedtuple(
+            "SqliteProfile", " ".join(attribute_name_list))
+
+        return [SqliteProfile(*profile) for profile in result.fetchall()]
 
     def get_sqlite_master(self):
         """
