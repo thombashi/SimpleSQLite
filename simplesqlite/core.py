@@ -23,13 +23,17 @@ from .sqlquery import SqlQuery
 class SimpleSQLite(object):
     """
     Wrapper class of ``sqlite3`` module.
-    """
 
-    class TableConfiguration:
-        TABLE_NAME = "__table_configuration__"
-        ATTRIBUTE_NAME_LIST = [
-            "table_name", "attribute_name", "value_type", "has_index",
-        ]
+    :param str database_path: File path of the database to be connected.
+    :param str mode: Open mode.
+    :param bool profile:
+        Recording SQL query execution time profile, if the value is True.
+
+    .. seealso::
+
+        :py:meth:`.connect`
+        :py:meth:`.get_profile`
+    """
 
     @property
     def database_path(self):
@@ -52,7 +56,7 @@ class SimpleSQLite(object):
     @property
     def mode(self):
         """
-        :return: Connection mode: "r"/"w"/"a".
+        :return: Connection mode: ``"r"``/``"w"``/``"a"``.
         :rtype: str
 
         .. seealso::
@@ -409,25 +413,27 @@ class SimpleSQLite(object):
         Get profile of query execution time.
 
         :param int profile_count:
-            Number of profile count from the longest execution time query.
-        :return:
-            Query execution profile information.
-        :rtype: (list,list)
+            Number of profiles to retrieve,
+            counted from the top query in descending order by
+            cumulative execution time.
+        :return: Profile information for each query.
+        :rtype: list of namedtuple
 
         .. seealso::
 
             :py:meth:`.execute_query`
         """
 
+        from collections import namedtuple
+
         TN_SQL_PROFILE = "sql_profile"
 
-        value_matrix = []
-        for query, execute_time in six.iteritems(self.__dict_query_totalexectime):
-            call_count = self.__dict_query_count.get(query, 0)
-            value_list = [query, execute_time, call_count]
-            value_matrix.append(value_list)
-
-        attribute_name_list = ["query", "execution_time", "count"]
+        value_matrix = [
+            [query, execute_time, self.__dict_query_count.get(query, 0)]
+            for query, execute_time
+            in six.iteritems(self.__dict_query_totalexectime)
+        ]
+        attribute_name_list = ("query", "cumulative_time", "count")
         con_tmp = simplesqlite.connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
@@ -435,21 +441,89 @@ class SimpleSQLite(object):
                 attribute_name_list,
                 data_matrix=value_matrix)
         except ValueError:
-            return [], []
+            return []
 
         try:
             result = con_tmp.select(
-                select="%s,SUM(%s),SUM(%s)" % (
-                    "query", "execution_time", "count"),
+                select="%s,SUM(%s),SUM(%s)" % attribute_name_list,
                 table_name=TN_SQL_PROFILE,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
-                    "query", "execution_time", profile_count))
+                    "query", "cumulative_time", profile_count))
         except sqlite3.OperationalError:
-            return [], []
+            return []
         if result is None:
-            return [], []
+            return []
 
-        return attribute_name_list, result.fetchall()
+        SqliteProfile = namedtuple(
+            "SqliteProfile", " ".join(attribute_name_list))
+
+        return [SqliteProfile(*profile) for profile in result.fetchall()]
+
+    def get_sqlite_master(self):
+        """
+        Get sqlite_master table information as a list of dictionaries.
+
+        :return: sqlite_master table information.
+        :rtype: list
+
+        :Examples:
+
+            .. code:: python
+
+                import json
+                from simplesqlite import SimpleSQLite
+
+                con = SimpleSQLite("sample.sqlite", "w")
+                data_matrix = [
+                    [1, 1.1, "aaa", 1,   1],
+                    [2, 2.2, "bbb", 2.2, 2.2],
+                    [3, 3.3, "ccc", 3,   "ccc"],
+                ]
+                con.create_table_with_data(
+                    table_name="sample_table",
+                    attribute_name_list=["a", "b", "c", "d", "e"],
+                    data_matrix=data_matrix,
+                    index_attribute_list=["a"])
+                print(json.dumps(con.get_sqlite_master(), indent=4))
+
+            .. parsed-literal::
+
+                [
+                    {
+                        "tbl_name": "sample_table",
+                        "sql": "CREATE TABLE 'sample_table' ('a' INTEGER, 'b' REAL, 'c' TEXT, 'd' REAL, 'e' TEXT)",
+                        "type": "table",
+                        "name": "sample_table",
+                        "rootpage": 2
+                    },
+                    {
+                        "tbl_name": "sample_table",
+                        "sql": "CREATE INDEX sample_table_a_index ON sample_table('a')",
+                        "type": "index",
+                        "name": "sample_table_a_index",
+                        "rootpage": 3
+                    }
+                ]
+
+        .. seealso::
+
+            :py:meth:`.check_connection`
+        """
+
+        self.check_connection()
+
+        old_row_factory = self.connection.row_factory
+        self.connection.row_factory = sqlite3.Row
+
+        sqlite_master_list = []
+        result = self.execute_query("select * from sqlite_master")
+        for item in result.fetchall():
+            sqlite_master_list.append(
+                dict([[key, item[key]] for key in item.keys()]))
+
+        self.connection.row_factory = old_row_factory
+
+        return sqlite_master_list
 
     def has_table(self, table_name):
         """
@@ -604,16 +678,6 @@ class SimpleSQLite(object):
                 index_name, SqlQuery.to_table_str(table_name), attribute_name)
         self.execute_query(query, logging.getLogger().findCaller())
 
-        if self.__is_create_table_config:
-            where_list = [
-                SqlQuery.make_where("table_name", table_name),
-                SqlQuery.make_where("attribute_name", attribute_name),
-            ]
-            self.update(
-                table_name=self.TableConfiguration.TABLE_NAME,
-                set_query="has_index = 1",
-                where=" AND ".join(where_list))
-
     def create_index_list(self, table_name, attribute_name_list):
         """
         :param str table_name: Table name that exists attribute.
@@ -641,7 +705,8 @@ class SimpleSQLite(object):
 
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
-        :param dict/namedtuple/list/tuple data_matrix: Data to be inserted.
+        :param data_matrix: Data to be inserted into the table.
+        :type data_matrix: List of dict/namedtuple/list/tuple data_matrix
         :param tuple index_attribute_list:
             List of attribute names of create indices.
         :raises ValueError: If ``data_matrix`` is empty.
@@ -668,20 +733,11 @@ class SimpleSQLite(object):
             set(attribute_name_list).intersection(set(index_attribute_list)))
         attr_description_list = []
 
-        table_config_matrix = []
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attribute_name_list[col]
             attr_description_list.append(
                 "'%s' %s" % (attr_name, value_type))
-
-            table_config_matrix.append([
-                table_name,
-                attr_name,
-                value_type,
-                attr_name in strip_index_attribute_list,
-            ])
-        self.__create_table_config(table_config_matrix)
 
         self.create_table(table_name, attr_description_list)
         self.insert_many(table_name, data_matrix)
@@ -710,8 +766,7 @@ class SimpleSQLite(object):
             containing special characters, such as the delimiter or quotechar,
             or which contain new-line characters.
         :param str encoding: csv file encoding.
-
-        :raises ValueError:
+        :raises ValueError: If the csv data is invalid
 
         .. seealso::
 
@@ -951,22 +1006,3 @@ class SimpleSQLite(object):
             self.__to_record(attr_name_list, record)
             for record in data_matrix
         ]
-
-    def __create_table_config(self, table_config_matrix):
-        if not self.__is_create_table_config:
-            return
-
-        attr_description_list = []
-        for attr_name in self.TableConfiguration.ATTRIBUTE_NAME_LIST:
-            if attr_name == "has_index":
-                data_type = "INTEGER"
-            else:
-                data_type = "TEXT"
-
-            attr_description_list.append("'%s' %s" % (attr_name, data_type))
-
-        table_name = self.TableConfiguration.TABLE_NAME
-        if not self.has_table(table_name):
-            self.create_table(table_name, attr_description_list)
-
-        self.insert_many(table_name, table_config_matrix)

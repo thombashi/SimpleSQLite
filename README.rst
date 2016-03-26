@@ -1,4 +1,5 @@
-**SimpleSQLite**
+SimpleSQLite
+============
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
    :target: https://pypi.python.org/pypi/SimpleSQLite
@@ -9,44 +10,43 @@
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
 
-.. contents:: Table of contents
-   :backlinks: top
-   :local:
 
 Summary
-=======
+-------
+
 SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
 
+
 Feature
-=======
+-------
 
--  Automatic table creation from data
--  Support various data type for insertion : dictionary, namedtuple,
-   list and tuple
--  Create table from csv file
+- Automatic table creation from data
+- Support various data types of record(s) insertion into a table:
+    - dictionary
+    - namedtuple
+    - list
+    - tuple
+- Create a table from a csv file
 
-Installation
-============
-
-::
-
-    pip install SimpleSQLite
 
 Usage
 =====
 
-Create table
-------------
+Create a table
+--------------
 
-Create table from data matrix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a table from data matrix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
     from simplesqlite import SimpleSQLite
+    import six
 
-    con = SimpleSQLite("sample.sqlite")
+    con = SimpleSQLite("sample.sqlite", "w")
+    table_name = "sample_table"
 
+    # create table -----
     data_matrix = [
         [1, 1.1, "aaa", 1,   1],
         [2, 2.2, "bbb", 2.2, 2.2],
@@ -57,14 +57,14 @@ Create table from data matrix
         attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=data_matrix)
 
-    # display values -----
-    print(con.get_attribute_name_list("sample_table"))
-    result = con.select(select="*", table_name="sample_table")
+    # display values in the table -----
+    six.print_(con.get_attribute_name_list(table_name))
+    result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        print(record)
+        six.print_(record)
 
-    # display data type for each column -----
-    print(con.get_attribute_type_list(table_name="sample_table"))
+    # display data type for each column in the table -----
+    six.print_(con.get_attribute_type_list(table_name))
 
 .. code:: console
 
@@ -74,46 +74,8 @@ Create table from data matrix
     (3, 3.3, u'ccc', 3.0, u'ccc')
     (u'integer', u'real', u'text', u'real', u'text')
 
-Create table from csv file
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Input: sample\_data.csv
-^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    "attr_a","attr_b","attr_c"
-    1,4,"a"
-    2,2.1,"bb"
-    3,120.9,"ccc"
-
-Example
-^^^^^^^
-
-.. code:: python
-
-    from simplesqlite import SimpleSQLite
-
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_csv(csv_path="sample_data.csv")
-
-    print(con.get_attribute_name_list("sample_data"))
-    result = con.select(select="*", table_name="sample_data")
-    for record in result.fetchall():
-        print(record)
-
-Output of example
-^^^^^^^^^^^^^^^^^
-
-.. code:: console
-
-    ['attr_a', 'attr_b', 'attr_c']
-    (1, 4.0, u'a')
-    (2, 2.1, u'bb')
-    (3, 120.9, u'ccc')
-
-Insert records
---------------
+Insert records into a table
+---------------------------
 
 Insert dictionary
 ~~~~~~~~~~~~~~~~~
@@ -121,15 +83,17 @@ Insert dictionary
 .. code:: python
 
     from simplesqlite import SimpleSQLite
+    import six
 
+    table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_with_data(
-        table_name="sample_table",
+        table_name,
         attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     con.insert(
-        table_name="sample_table",
+        table_name,
         insert_record={
             "attr_a": 4,
             "attr_b": 4.4,
@@ -139,7 +103,7 @@ Insert dictionary
         }
     )
     con.insert_many(
-        table_name="sample_table",
+        table_name,
         insert_record_list=[
             {
                 "attr_a": 5,
@@ -155,9 +119,9 @@ Insert dictionary
         ]
     )
 
-    result = con.select(select="*", table_name="sample_table")
+    result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        print(record)
+        six.print_(record)
 
 .. code:: console
 
@@ -173,30 +137,30 @@ Insert list/tuple/namedtuple
 
     from collections import namedtuple
     from simplesqlite import SimpleSQLite
+    import six
 
+    table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_with_data(
-        table_name="sample_table",
+        table_name,
         attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     SampleTuple = namedtuple(
         "SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
 
-    con.insert(
-        table_name="sample_table",
-        insert_record=[7, 7.7, "fff", 7.77, "bar"])
+    con.insert(table_name, insert_record=[7, 7.7, "fff", 7.77, "bar"])
     con.insert_many(
-        table_name="sample_table",
+        table_name,
         insert_record_list=[
             (8, 8.8, "ggg", 8.88, "foobar"),
             SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
         ]
     )
 
-    result = con.select(select="*", table_name="sample_table")
+    result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        print(record)
+        six.print_(record)
 
 .. code:: console
 
@@ -205,23 +169,32 @@ Insert list/tuple/namedtuple
     (8, 8.8, u'ggg', 8.88, u'foobar')
     (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
-Documentation
-=============
+Installation
+============
 
-http://simplesqlite.readthedocs.org/en/stable/apis/simplesqlite.html
+::
+
+    pip install SimpleSQLite
+
 
 Dependencies
 ============
 
-Python 2.5+ or 3.3+
+Python 2.6+ or 3.3+
 
--  `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to
-   extract data types)
+-  `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
+-  `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 -  `six <https://pypi.python.org/pypi/six/>`__
 
 Test dependencies
 -----------------
 
--  `pytest <https://pypi.python.org/pypi/pytest>`__
+-  `pytest <http://pytest.org/latest/>`__
 -  `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
--  `tox <https://pypi.python.org/pypi/tox>`__
+-  `tox <https://testrun.org/tox/latest/>`__
+
+Documentation
+=============
+
+http://simplesqlite.readthedocs.org/en/latest/
+

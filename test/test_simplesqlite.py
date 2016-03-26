@@ -95,6 +95,23 @@ def con_profile(tmpdir):
 
 
 @pytest.fixture
+def con_index(tmpdir):
+    p = tmpdir.join("tmp.db")
+    con = SimpleSQLite(str(p), "w")
+
+    con.create_table_with_data(
+        table_name=TEST_TABLE_NAME,
+        attribute_name_list=["attr_a", "attr_b"],
+        data_matrix=[
+            [1, 2],
+            [3, 4],
+        ],
+        index_attribute_list=["attr_a"])
+
+    return con
+
+
+@pytest.fixture
 def con_null(tmpdir):
     p = tmpdir.join("tmp_null.db")
     con = SimpleSQLite(str(p), "w")
@@ -418,9 +435,7 @@ class Test_SimpleSQLite_get_total_changes:
 class Test_SimpleSQLite_get_table_name_list:
 
     def test_normal(self, con):
-        expected = set([
-            SimpleSQLite.TableConfiguration.TABLE_NAME, TEST_TABLE_NAME
-        ])
+        expected = set([TEST_TABLE_NAME])
 
         assert set(con.get_table_name_list()) == expected
 
@@ -548,14 +563,37 @@ class Test_SimpleSQLite_has_attribute_list:
 class Test_SimpleSQLite_get_profile:
 
     def test_normal(self, con):
-        attribute_name_list, profile_list = con.get_profile()
-        assert dataproperty.is_empty_list_or_tuple(attribute_name_list)
+        profile_list = con.get_profile()
         assert dataproperty.is_empty_list_or_tuple(profile_list)
 
     def test_normal_profile(self, con_profile):
-        attribute_name_list, profile_list = con_profile.get_profile()
-        assert dataproperty.is_not_empty_list_or_tuple(attribute_name_list)
+        profile_list = con_profile.get_profile()
         assert dataproperty.is_not_empty_list_or_tuple(profile_list)
+
+
+class Test_SimpleSQLite_get_sqlite_master:
+
+    def test_normal(self, con_index):
+        assert con_index.get_sqlite_master() == [
+            {
+                'name': u'test_table',
+                'rootpage': 2,
+                'sql': u"CREATE TABLE 'test_table' ('attr_a' INTEGER, 'attr_b' INTEGER)",
+                'tbl_name': u'test_table',
+                'type': u'table'
+            },
+            {
+                'name': u'test_table_attr_a_index',
+                'rootpage': 3,
+                'sql': u"CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
+                'tbl_name': u'test_table',
+                'type': u'index'
+            },
+        ]
+
+    def test_null(self, con_null):
+        with pytest.raises(NullDatabaseConnectionError):
+            con_null.get_sqlite_master()
 
 
 class Test_SimpleSQLite_verify_table_existence:
@@ -640,18 +678,6 @@ class Test_SimpleSQLite_create_table_with_data:
         result = con.select(select="*", table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
-
-        # check table config ---
-        expected = [
-            (table_name, 'attr_a', 'INTEGER', 1),
-            (table_name, 'attr_b', 'REAL', 0),
-            (table_name, 'attr_c', 'TEXT', 0),
-        ]
-
-        result = con.select(
-            select="*", table_name=SimpleSQLite.TableConfiguration.TABLE_NAME)
-        result_matrix = result.fetchall()
-        assert result_matrix == expected
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
