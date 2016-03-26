@@ -701,7 +701,8 @@ class SimpleSQLite(object):
 
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
-        :param dict/namedtuple/list/tuple data_matrix: Data to be inserted.
+        :param data_matrix: Data to be inserted into the table.
+        :type data_matrix: List of dict/namedtuple/list/tuple data_matrix
         :param tuple index_attribute_list:
             List of attribute names of create indices.
         :raises ValueError: If ``data_matrix`` is empty.
@@ -761,7 +762,6 @@ class SimpleSQLite(object):
             containing special characters, such as the delimiter or quotechar,
             or which contain new-line characters.
         :param str encoding: csv file encoding.
-
         :raises ValueError: If the csv data is invalid
 
         .. seealso::
