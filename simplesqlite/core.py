@@ -415,11 +415,11 @@ class SimpleSQLite(object):
 
         TN_SQL_PROFILE = "sql_profile"
 
-        value_matrix = []
-        for query, execute_time in six.iteritems(self.__dict_query_totalexectime):
-            call_count = self.__dict_query_count.get(query, 0)
-            value_list = [query, execute_time, call_count]
-            value_matrix.append(value_list)
+        value_matrix = [
+            [query, execute_time, self.__dict_query_count.get(query, 0)]
+            for query, execute_time
+            in six.iteritems(self.__dict_query_totalexectime)
+        ]
 
         attribute_name_list = ["query", "execution_time", "count"]
         con_tmp = simplesqlite.connect_sqlite_db_mem()
