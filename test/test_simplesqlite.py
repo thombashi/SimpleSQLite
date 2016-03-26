@@ -568,7 +568,6 @@ class Test_SimpleSQLite_get_profile:
 
     def test_normal_profile(self, con_profile):
         profile_list = con_profile.get_profile()
-        print profile_list
         assert dataproperty.is_not_empty_list_or_tuple(profile_list)
 
 
