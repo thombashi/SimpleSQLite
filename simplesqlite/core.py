@@ -27,7 +27,7 @@ class SimpleSQLite(object):
     :param str database_path: File path of the database to be connected.
     :param str mode: Open mode.
     :param bool profile:
-        Recording SQL query execution time profile, if the value is True.
+        Recording SQL query execution time profile, if the value is ``True``.
 
     .. seealso::
 
@@ -40,6 +40,18 @@ class SimpleSQLite(object):
         """
         :return: File path of the connected database.
         :rtype: str
+
+        :Examples:
+
+            .. code:: python
+
+                >>> from simplesqlite import SimpleSQLite
+                >>> con = SimpleSQLite("sample.sqlite", "w")
+                >>> con.database_path
+                '/tmp/sample.sqlite'
+                >>> con.close()
+                >>> print(con.database_path)
+                None
         """
 
         return self.__database_path
@@ -47,7 +59,7 @@ class SimpleSQLite(object):
     @property
     def connection(self):
         """
-        :return: Connection instance of the connected database.
+        :return: ``Connection`` instance of the connected database.
         :rtype: sqlite3.Connection
         """
 
@@ -85,6 +97,18 @@ class SimpleSQLite(object):
         """
         :return: ``True`` if the connection to a database is valid.
         :rtype: bool
+
+        :Examples:
+
+            .. code:: python
+
+                >>> from simplesqlite import SimpleSQLite
+                >>> con = SimpleSQLite("sample.sqlite", "w")
+                >>> con.is_connected()
+                True
+                >>> con.close()
+                >>> con.is_connected()
+                False
         """
 
         try:
@@ -110,10 +134,11 @@ class SimpleSQLite(object):
 
     def connect(self, database_path, mode="a"):
         """
-        :param str database_path: File path of the database to be connected.
+        :param str database_path:
+            Path to the SQLite database file to be connected.
         :param str mode:
             ``"r"``: Open for read only.
-            ``"w"``: Open for read/write. Delete existing tables.
+            ``"w"``: Open for read/write. Delete existing tables when connecting.
             ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError:
             If ``database_path`` is invalid or ``mode`` is invalid.
@@ -150,6 +175,11 @@ class SimpleSQLite(object):
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
         :raises sqlite3.OperationalError: If failed to execute query.
+
+        .. warning::
+
+            This method can execute an arbitrary query.
+            i.e. No access permissions check by :py:attr:`.mode`.
 
         .. seealso::
 
@@ -659,7 +689,7 @@ class SimpleSQLite(object):
 
     def create_index(self, table_name, attribute_name):
         """
-        :param str table_name: Table name that exists attribute.
+        :param str table_name: Table name that contains the attribute to be indexed.
         :param str attribute_name: Attribute name to create index.
         :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.

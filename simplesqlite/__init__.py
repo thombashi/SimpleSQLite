@@ -18,7 +18,7 @@ MEMORY_DB_NAME = ":memory:"
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
-    :raises ValueError: If ``name`` is empty.
+    :raises ValueError: If ``name`` is invalid for a table name.
     """
 
     if dataproperty.is_empty_string(name):
@@ -27,12 +27,14 @@ def validate_table_name(name):
 
 def append_table(con_src, con_dst, table_name):
     """
-    :param SimpleSQLite con_src: Copy source database.
-    :param SimpleSQLite con_dst: Copy destination database.
-    :param str table_name: Table name to copy.
+    Append the table from source to destination.
 
-    :return: Part of WHERE query of SQLite.
+    :param SimpleSQLite con_src: Source of the database.
+    :param SimpleSQLite con_dst: Destination of the database.
+    :param str table_name: Table name to copy.
+    :return: ``True`` if success.
     :rtype: bool
+    :raises ValueError: If attribute of the table is different from each other.
 
     .. seealso::
 
@@ -76,6 +78,12 @@ def connect_sqlite_db_mem():
 
 
 class NullDatabaseConnectionError(Exception):
+    """
+    Raised when executing an operation of
+    :py:class:`~simplesqlite.core.SimpleSQLite` instance without connection to
+    a SQLite database file.
+    """
+
     pass
 
 
