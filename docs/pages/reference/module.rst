@@ -1,5 +1,5 @@
-Module contents
----------------
+simplesqlite module contents
+----------------------------
 
 .. automodule:: simplesqlite
     :members:
