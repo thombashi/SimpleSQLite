@@ -770,4 +770,6 @@ class Test_SimpleSQLite_close:
 class Test_connect_sqlite_db_mem:
 
     def test_normal(self):
-        assert connect_sqlite_db_mem() is not None
+        con_mem = connect_sqlite_db_mem()
+        assert con_mem is not None
+        assert con_mem.database_path is MEMORY_DB_NAME

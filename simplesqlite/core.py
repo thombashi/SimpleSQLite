@@ -154,7 +154,11 @@ class SimpleSQLite(object):
         else:
             raise ValueError("unknown connection mode: " + mode)
 
-        self.__database_path = os.path.realpath(database_path)
+        if database_path == simplesqlite.MEMORY_DB_NAME:
+            self.__database_path = database_path
+        else:
+            self.__database_path = os.path.realpath(database_path)
+
         self.__connection = sqlite3.connect(database_path)
         self.__mode = mode
 
