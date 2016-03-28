@@ -19,7 +19,7 @@ https://github.com/thombashi/SimpleSQLite
    
    pages/introduction
    pages/installation
-   pages/usage/index
+   pages/examples/index
    pages/reference/index
    pages/genindex
 
