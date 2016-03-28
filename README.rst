@@ -29,8 +29,8 @@ Feature
 - Create a table from a csv file
 
 
-Usage
-=====
+Examples
+========
 
 Create a table
 --------------
@@ -168,6 +168,12 @@ Insert list/tuple/namedtuple
     (7, 7.7, u'fff', 7.77, u'bar')
     (8, 8.8, u'ggg', 8.88, u'foobar')
     (9, 9.9, u'ggg', 9.99, u'hogehoge')
+
+For more information
+--------------------
+More examples are available at 
+http://simplesqlite.readthedocs.org/en/latest/pages/examples/index.html
+
 
 Installation
 ============
