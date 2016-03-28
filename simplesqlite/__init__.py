@@ -72,6 +72,15 @@ def connect_sqlite_db_mem():
     """
     :return: Instance of a in memory database
     :rtype: SimpleSQLite
+
+    :Examples:
+
+        .. code:: python
+
+            >>> import simplesqlite
+            >>> con = simplesqlite.connect_sqlite_db_mem()
+            >>> con.database_path
+            ':memory:'
     """
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
