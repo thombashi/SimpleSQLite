@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+# encoding: utf-8
+
 
 from simplesqlite import SimpleSQLite
 import six
+
 
 table_name = "sample_data"
 con = SimpleSQLite("sample.sqlite", "w")

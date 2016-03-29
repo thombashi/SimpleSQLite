@@ -43,15 +43,13 @@ class SimpleSQLite(object):
 
         :Examples:
 
-            .. code:: python
-
-                >>> from simplesqlite import SimpleSQLite
-                >>> con = SimpleSQLite("sample.sqlite", "w")
-                >>> con.database_path
-                '/tmp/sample.sqlite'
-                >>> con.close()
-                >>> print(con.database_path)
-                None
+            >>> from simplesqlite import SimpleSQLite
+            >>> con = SimpleSQLite("sample.sqlite", "w")
+            >>> con.database_path
+            '/tmp/sample.sqlite'
+            >>> con.close()
+            >>> print(con.database_path)
+            None
         """
 
         return self.__database_path
@@ -100,15 +98,13 @@ class SimpleSQLite(object):
 
         :Examples:
 
-            .. code:: python
-
-                >>> from simplesqlite import SimpleSQLite
-                >>> con = SimpleSQLite("sample.sqlite", "w")
-                >>> con.is_connected()
-                True
-                >>> con.close()
-                >>> con.is_connected()
-                False
+            >>> from simplesqlite import SimpleSQLite
+            >>> con = SimpleSQLite("sample.sqlite", "w")
+            >>> con.is_connected()
+            True
+            >>> con.close()
+            >>> con.is_connected()
+            False
         """
 
         try:
@@ -122,6 +118,29 @@ class SimpleSQLite(object):
         """
         :raises NullDatabaseConnectionError:
             If not connected to a SQLite database file.
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, NullDatabaseConnectionError
+                import six
+
+                con = SimpleSQLite("sample.sqlite", "w")
+                six.print_("---- connected to a database ----")
+                con.check_connection()
+                six.print_("---- disconnected from a database ----")
+                con.close()
+                try:
+                    con.check_connection()
+                except NullDatabaseConnectionError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                ---- connected to a database ----
+                ---- disconnected from a database ----
+                null database connection
         """
 
         if self.connection is None:
@@ -227,10 +246,10 @@ class SimpleSQLite(object):
 
     def select(self, select, table_name, where=None, extra=None):
         """
-        Execute SELCT query.
+        Execute SELECT query.
 
-        :param str select: Attribute for SELECT query
-        :param str table_name: Table name of execute query.
+        :param str select: Attribute for the SELECT query.
+        :param str table_name: Table name of executing the query.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
 
@@ -250,9 +269,9 @@ class SimpleSQLite(object):
         """
         Execute INSERT query.
 
-        :param str table_name: Table name of execute query.
+        :param str table_name: Table name of executing the query.
         :param dict/namedtuple/list/tuple insert_record: Record to be inserted
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
 
         .. seealso::
@@ -273,10 +292,10 @@ class SimpleSQLite(object):
         """
         Execute INSERT query for multiple records.
 
-        :param str table: Table name of execute query.
+        :param str table: Table name of executing the query.
         :param dict/namedtuple/list/tuple insert_record:
             Records to be inserted.
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         :raises sqlite3.OperationalError: If failed to execute query.
 
@@ -318,9 +337,9 @@ class SimpleSQLite(object):
         """
         Execute UPDATE query.
 
-        :param str table_name: Table name of execute query.
+        :param str table_name: Table name of executing the query.
         :param str set_query:
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         :raises sqlite3.OperationalError: If failed to execute query.
 
@@ -355,8 +374,8 @@ class SimpleSQLite(object):
         Get a value from the table.
 
         :param str select: Attribute for SELECT query
-        :param str table_name: Table name of execute query.
-        :return: Result of execution of query.
+        :param str table_name: Table name of executing the query.
+        :return: Result of execution of the query.
 
         .. seealso::
 
@@ -382,6 +401,25 @@ class SimpleSQLite(object):
         :return: List of table names in the database.
         :rtype: list
 
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name="hoge",
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+                six.print_(con.get_table_name_list())
+
+            .. parsed-literal::
+
+                [u'hoge']
+
         .. seealso::
 
             :py:meth:`.check_connection`
@@ -403,6 +441,31 @@ class SimpleSQLite(object):
         :rtype: list
         :raises TableNotFoundError:
             If ``tablename`` table not found in the database.
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, TableNotFoundError
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name=table_name,
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+
+                six.print_(con.get_attribute_name_list(table_name))
+                try:
+                    six.print_(con.get_attribute_name_list("not_existing"))
+                except TableNotFoundError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                ['attr_a', 'attr_b']
+                'not_existing' table not found in /tmp/sample.sqlite
 
         .. seealso::
 
@@ -449,7 +512,7 @@ class SimpleSQLite(object):
         :param int profile_count:
             Number of profiles to retrieve,
             counted from the top query in descending order by
-            cumulative execution time.
+            the cumulative execution time.
         :return: Profile information for each query.
         :rtype: list of namedtuple
 
@@ -564,6 +627,26 @@ class SimpleSQLite(object):
         :param str table_name: Table name to be tested.
         :return: ``True`` if the database has the table.
         :rtype: bool
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite
+                import six
+
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name="hoge",
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+                six.print_(con.has_table("hoge"))
+                six.print_(con.has_table("not_existing"))
+
+            .. parsed-literal::
+
+                True
+                False
         """
 
         try:
@@ -580,6 +663,33 @@ class SimpleSQLite(object):
         :return: ``True`` if the table has the attribute.
         :rtype: bool
 
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, TableNotFoundError
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name=table_name,
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+
+                six.print_(con.has_attribute(table_name, "attr_a"))
+                six.print_(con.has_attribute(table_name, "not_existing"))
+                try:
+                    six.print_(con.has_attribute("not_existing", "attr_a"))
+                except TableNotFoundError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                True
+                False
+                'not_existing' table not found in /tmp/sample.sqlite
+
         .. seealso::
 
             :py:meth:`.verify_table_existence`
@@ -595,9 +705,40 @@ class SimpleSQLite(object):
     def has_attribute_list(self, table_name, attribute_name_list):
         """
         :param str table_name: Table name that exists attribute.
-        :param str attribute_name: Attribute name to be tested.
-        :return: ``True`` if the table has the all of the attribute.
+        :param str attribute_name_list: Attribute names to be tested.
+        :return: ``True`` if the table has all of the attribute.
         :rtype: bool
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, TableNotFoundError
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name=table_name,
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+
+                six.print_(con.has_attribute_list(table_name, ["attr_a"]))
+                six.print_(con.has_attribute_list(
+                    table_name, ["attr_a", "attr_b"]))
+                six.print_(con.has_attribute_list(
+                    table_name, ["attr_a", "attr_b", "not_existing"]))
+                try:
+                    six.print_(con.has_attribute("not_existing", ["attr_a"]))
+                except TableNotFoundError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                True
+                True
+                False
+                'not_existing' table not found in /tmp/sample.sqlite
 
         .. seealso::
 
@@ -621,7 +762,31 @@ class SimpleSQLite(object):
     def verify_table_existence(self, table_name):
         """
         :param str table_name: Table name to be tested.
-        :raises TableNotFoundError: If table not found in the database
+        :raises TableNotFoundError: If the table not found in the database
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, TableNotFoundError
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name=table_name,
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+
+                con.verify_table_existence(table_name)
+                try:
+                    con.verify_table_existence("not_existing")
+                except TableNotFoundError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                'not_existing' table not found in /tmp/sample.sqlite
 
         .. seealso::
 
@@ -641,6 +806,35 @@ class SimpleSQLite(object):
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to be tested.
         :raises AttributeNotFoundError: If attribute not found in the table
+
+        :Examples:
+
+            .. code:: python
+
+                from simplesqlite import SimpleSQLite, TableNotFoundError, AttributeNotFoundError
+                import six
+
+                table_name = "sample_table"
+                con = SimpleSQLite("sample.sqlite", "w")
+                con.create_table_with_data(
+                    table_name=table_name,
+                    attribute_name_list=["attr_a", "attr_b"],
+                    data_matrix=[[1, "a"], [2, "b"]])
+
+                con.verify_attribute_existence(table_name, "attr_a")
+                try:
+                    con.verify_attribute_existence(table_name, "not_existing")
+                except AttributeNotFoundError as e:
+                    six.print_(e)
+                try:
+                    con.verify_attribute_existence("not_existing", "attr_a")
+                except TableNotFoundError as e:
+                    six.print_(e)
+
+            .. parsed-literal::
+
+                'not_existing' attribute not found in 'sample_table' table
+                'not_existing' table not found in /tmp/sample.sqlite
 
         .. seealso::
 
@@ -674,7 +868,7 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name to create.
         :param list attribute_description_list: List of table description.
-        :raises ValueError: If database connection is invalid.
+        :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
         """
 
@@ -735,12 +929,12 @@ class SimpleSQLite(object):
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=()):
         """
-        Create a table if not exists. And insert data to the created table.
+        Create a table if not exists. And insert data into the created table.
 
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
-        :type data_matrix: List of dict/namedtuple/list/tuple data_matrix
+        :type data_matrix: List of dict/namedtuple/list/tuple
         :param tuple index_attribute_list:
             List of attribute names of create indices.
         :raises ValueError: If ``data_matrix`` is empty.
@@ -788,10 +982,10 @@ class SimpleSQLite(object):
         :param str csv_path: Path to the csv file.
         :param str table_name:
             Table name to create.
-            Use csv file base name as the table name if the value is empty.
+            Use csv file basename as the table name if the value is empty.
         :param list attribute_name_list:
             Attribute names of the table.
-            Use first line of the csv file as attribute list
+            Use the first line of the csv file as attribute list
             if attribute_name_list is empty.
         :param str delimiter:
             A one-character string used to separate fields.
@@ -800,7 +994,7 @@ class SimpleSQLite(object):
             containing special characters, such as the delimiter or quotechar,
             or which contain new-line characters.
         :param str encoding: csv file encoding.
-        :raises ValueError: If the csv data is invalid
+        :raises ValueError: If the csv data is invalid.
 
         .. seealso::
 
@@ -900,7 +1094,7 @@ class SimpleSQLite(object):
 
     def __verify_sqlite_db_file(self, database_path):
         """
-        :raises sqlite3.OperationalError: If unable to open database file
+        :raises sqlite3.OperationalError: If unable to open database file.
         """
 
         self.__validate_db_path(database_path)
@@ -914,7 +1108,7 @@ class SimpleSQLite(object):
     def __verify_value_matrix(field_list, value_matrix):
         """
         :param list/tuple field_list:
-        :param list/tuple value_matrix: the list to test
+        :param list/tuple value_matrix: the list to test.
         :raises ValueError: 
         """
 
@@ -945,7 +1139,6 @@ class SimpleSQLite(object):
     def __get_list_from_fetch(result):
         """
         :params tuple result: Return value from a Cursor.fetchall()
-
         :rtype: list
         """
 
@@ -963,9 +1156,9 @@ class SimpleSQLite(object):
     def validate_access_permission(self, valid_permission_list):
         """
         :param list/tuple valid_permission_list:
-            List of permissions that access is allowed
-        :raises ValueError: If database connection is invalid
-        :raises IOError: If invalid permission
+            List of permissions that access is allowed.
+        :raises ValueError: If database connection is invalid.
+        :raises IOError: If invalid permission.
 
         .. seealso::
 
