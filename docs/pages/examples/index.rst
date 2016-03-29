@@ -6,5 +6,6 @@ Examples
 
    create_table
    insert_record
+   update
    get_profile
    in_memory_database
