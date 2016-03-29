@@ -32,9 +32,9 @@ class SqlQuery:
     @classmethod
     def sanitize(cls, query_item):
         """
-        Sanitize SQLite query with empty char.
+        Sanitize SQLite query with an empty char.
 
-        :param str query_item: String to be sanitize.
+        :param str query_item: String to be sanitized.
         :return:
             String that exclude invalid chars.
             Invalid operators are as follows:
@@ -43,6 +43,12 @@ class SqlQuery:
             ``"!"``, ``"\"``, ``"#"``, ``"-"``, ``"+"``, ``"="``,
             ``"\\n"``, ``"\\r"``
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.sanitize("k<e:y")
+            'key'
         """
 
         return cls.__RE_SANITIZE.sub("", query_item)
@@ -50,9 +56,19 @@ class SqlQuery:
     @classmethod
     def to_table_str(cls, name):
         """
-        :param str name: Base name of table.
-        :return: String that suitable for table name.
+        :param str name: Table name.
+        :return: String that suitable for table name of a SQLite query.
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.to_table_str("length")
+            'length'
+            >>> SqlQuery.to_table_str("length(cm)")
+            '[length(cm)]'
+            >>> SqlQuery.to_table_str("string length")
+            "'string length'"
         """
 
         if cls.__RE_TABLE_STR.search(name):
@@ -66,11 +82,21 @@ class SqlQuery:
     @classmethod
     def to_attr_str(cls, name, operation_query=""):
         """
-        :param str name: Base name of attribute.
+        :param str name: Attribute name.
         :param str operation_query:
             Used as a SQLite function if the value is not empty.
-        :return: String that suitable for attribute name.
+        :return: String that suitable for attribute name of a SQLite query.
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.to_attr_str("key")
+            'key'
+            >>> SqlQuery.to_attr_str("a+b")
+            '[a+b]'
+            >>> SqlQuery.to_attr_str("key", operation_query="SUM")
+            'SUM(key)'
         """
 
         if cls.__RE_TO_ATTR_STR.search(name):
@@ -91,8 +117,17 @@ class SqlQuery:
         :param list/tuple name_list: List of attribute names.
         :param str operation_query:
             Used as a SQLite function if the value is not empty.
-        :return: List of strings that suitable for attribute name.
-        :rtype: list
+        :return:
+            List of strings that suitable for attribute names of a SQLite query.
+        :rtype: list/itertools.imap
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> list(SqlQuery.to_attr_str_list(["key", "a+b"]))
+            ['key', '[a+b]']
+            >>> SqlQuery.to_attr_str_list(["key", "a+b"], operation_query="AVG")
+            ['AVG(key)', 'AVG([a+b])']
 
         .. seealso::
 
@@ -112,9 +147,19 @@ class SqlQuery:
         """
         :param str value: Value associated with a key.
         :return:
-            String that suitable for value of a key.
+            String that suitable for a value of a key.
             Return ``"NULL"`` if the value is ``None``
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.to_value_str(1.2)
+            '1.2'
+            >>> SqlQuery.to_value_str("value")
+            "'value'"
+            >>> SqlQuery.to_value_str(None)
+            'NULL'
         """
 
         if value is None:
@@ -130,8 +175,14 @@ class SqlQuery:
         """
         :param list value_list: List of values associated with a key.
         :return:
-            List of value that executed ``to_value_str`` method for each item.
-        :rtype: list
+            List of values that executed ``to_value_str`` method for each item.
+        :rtype: itertools.imap
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> list(SqlQuery.to_value_str_list([1, "a", None]))
+            ['1', "'a'", 'NULL']
 
         .. seealso::
 
@@ -146,17 +197,26 @@ class SqlQuery:
         Make SELECT query.
 
         :param str select: Attribute for SELECT query.
-        :param str table: Table name of execute query.
+        :param str table: Table name of executing the query.
         :param str where:
-            Add WHERE clause to execute query,
+            Add a WHERE clause to execute query,
             if the value is not ``None``.
         :param extra extra:
             Add additional clause to execute query,
             if the value is not ``None``.
         :return: Query of SQLite.
         :rtype: str
-
         :raises ValueError: ``select`` is empty string.
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.make_select(select="value", table="example")
+            'SELECT value FROM example'
+            >>> SqlQuery.make_select(select="value", table="example", where=SqlQuery.make_where("key", 1))
+            'SELECT value FROM example WHERE key = 1'
+            >>> SqlQuery.make_select(select="value", table="example", where=SqlQuery.make_where("key", 1), extra="ORDER BY value")
+            'SELECT value FROM example WHERE key = 1 ORDER BY value'
 
         .. seealso::
 
@@ -183,7 +243,7 @@ class SqlQuery:
         """
         Make INSERT query.
 
-        :param str table: Table name of execute query.
+        :param str table: Table name of executing the query.
         :param list/tuple insert_tuple: Insertion data.
         :param bool is_insert_many:
             Make query that insert multiple data at once,
@@ -222,10 +282,10 @@ class SqlQuery:
         """
         Make UPDATE query.
 
-        :param str table: Table name of execute query.
-        :param str set_query: SET part of UPDATE query.
+        :param str table: Table name of executing the query.
+        :param str set_query: SET part of the UPDATE query.
         :param str where:
-            Add WHERE clause to execute query,
+            Add a WHERE clause to execute query,
             if the value is not ``None``.
         :return: Query of SQLite.
         :rtype: str
@@ -259,12 +319,19 @@ class SqlQuery:
         :param str operation: Operator of WHERE query.
         :return: Part of WHERE query of SQLite.
         :rtype: str
-
         :raises ValueError:
             If ``operation`` is invalid operator.
             Valid operators are as follows:
             ``"="``, ``"=="``, ``"!="``, ``"<>"``,
             ``">"``, ``">="``, ``"<"``, ``"<="``
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.make_where("key", "hoge")
+            "key = 'hoge'"
+            >>> SqlQuery.make_where("value", 1, operation=">")
+            'value > 1'
         """
 
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
@@ -283,6 +350,12 @@ class SqlQuery:
             List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.make_where_in("key", ["hoge", "foo", "bar"])
+            "key IN ('hoge', 'foo', 'bar')"
         """
 
         return "%s IN (%s)" % (
@@ -298,6 +371,12 @@ class SqlQuery:
             List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str
+
+        :Examples:
+
+            >>> from simplesqlite.sqlquery import SqlQuery
+            >>> SqlQuery.make_where_not_in("key", ["hoge", "foo", "bar"])
+            "key NOT IN ('hoge', 'foo', 'bar')"
         """
 
         return "%s NOT IN (%s)" % (
