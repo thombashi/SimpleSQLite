@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# encoding: utf-8
+
 
 from simplesqlite import SimpleSQLite
 import six
