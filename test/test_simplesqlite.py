@@ -5,14 +5,11 @@
 '''
 
 import itertools
-import os
-import re
 import sqlite3
 
 from collections import namedtuple
 import dataproperty
 import pytest
-from six.moves import range
 
 from simplesqlite import *
 from simplesqlite.sqlquery import SqlQuery
@@ -152,7 +149,8 @@ class Test_append_table:
     def test_exception_0(self, con_mix, con_profile):
         with pytest.raises(ValueError):
             append_table(
-                con_src=con_mix, con_dst=con_profile, table_name=TEST_TABLE_NAME)
+                con_src=con_mix, con_dst=con_profile,
+                table_name=TEST_TABLE_NAME)
 
     def test_exception_1(self, con_mix, con_null):
         with pytest.raises(NullDatabaseConnectionError):
@@ -719,8 +717,8 @@ class Test_SimpleSQLite_create_table_from_csv:
         ])
     def test_normal(
             self, tmpdir, csv_text, csv_filename,
-            table_name, attr_name_list,
-            expected_table_name, expected_attr_name_list, expected_data_matrix):
+            table_name, attr_name_list, expected_table_name,
+            expected_attr_name_list, expected_data_matrix):
         p_db = tmpdir.join("tmp.db")
         p_csv = tmpdir.join(csv_filename)
 

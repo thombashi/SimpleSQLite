@@ -157,7 +157,8 @@ class SimpleSQLite(object):
             Path to the SQLite database file to be connected.
         :param str mode:
             ``"r"``: Open for read only.
-            ``"w"``: Open for read/write. Delete existing tables when connecting.
+            ``"w"``: Open for read/write.
+            Delete existing tables when connecting.
             ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError:
             If ``database_path`` is invalid or ``mode`` is invalid.
@@ -887,7 +888,8 @@ class SimpleSQLite(object):
 
     def create_index(self, table_name, attribute_name):
         """
-        :param str table_name: Table name that contains the attribute to be indexed.
+        :param str table_name:
+            Table name that contains the attribute to be indexed.
         :param str attribute_name: Attribute name to create index.
         :raises ValueError: If the database connection is invalid.
         :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
@@ -1109,7 +1111,7 @@ class SimpleSQLite(object):
         """
         :param list/tuple field_list:
         :param list/tuple value_matrix: the list to test.
-        :raises ValueError: 
+        :raises ValueError:
         """
 
         miss_match_idx_list = []
