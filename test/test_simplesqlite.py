@@ -479,7 +479,7 @@ class Test_SimpleSQLite_get_attribute_type_list:
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["not_exist_table", TableNotFoundError],
-        [None, TableNotFoundError],
+        [None, ValueError],
     ])
     def test_exception(self, con, value, expected):
         with pytest.raises(expected):
