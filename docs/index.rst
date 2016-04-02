@@ -6,12 +6,6 @@
 Welcome to SimpleSQLite's documentation!
 ========================================
 
-GitHub repository
-=================
-
-https://github.com/thombashi/SimpleSQLite
-
-
 .. toctree::
    :caption: Table of Contents
    :maxdepth: 3
@@ -22,6 +16,7 @@ https://github.com/thombashi/SimpleSQLite
    pages/examples/index
    pages/reference/index
    pages/genindex
+   pages/links
 
 
 Indices and tables
