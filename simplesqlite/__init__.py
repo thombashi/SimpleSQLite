@@ -18,7 +18,7 @@ MEMORY_DB_NAME = ":memory:"
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
-    :raises ValueError: If ``name`` is invalid for a table name.
+    :raises ValueError: |raises_validate_table_name|
     """
 
     if dataproperty.is_empty_string(name):
@@ -32,13 +32,14 @@ def append_table(con_src, con_dst, table_name):
     :param SimpleSQLite con_src: Source of the database.
     :param SimpleSQLite con_dst: Destination of the database.
     :param str table_name: Table name to copy.
-    :return: ``True`` if success.
+    :return: |True| if success.
     :rtype: bool
+    :raises simplesqlite.TableNotFoundError:
+        |raises_verify_table_existence|
     :raises ValueError: If attribute of the table is different from each other.
 
     .. seealso::
 
-        :py:meth:`simplesqlite.core.SimpleSQLite.verify_table_existence`
         :py:meth:`simplesqlite.core.SimpleSQLite.create_table_with_data`
     """
 
@@ -70,7 +71,7 @@ def append_table(con_src, con_dst, table_name):
 
 def connect_sqlite_db_mem():
     """
-    :return: Instance of a in memory database
+    :return: Instance of a in memory database.
     :rtype: SimpleSQLite
 
     :Examples:
@@ -97,8 +98,16 @@ class NullDatabaseConnectionError(Exception):
 
 
 class TableNotFoundError(Exception):
+    """
+    Raised when accessed the table that not exists in the database.
+    """
+
     pass
 
 
 class AttributeNotFoundError(Exception):
+    """
+    Raised when accessed the attribute that not exists in the table.
+    """
+
     pass
