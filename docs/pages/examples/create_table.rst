@@ -6,7 +6,7 @@ Create a table from data matrix
 
 :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_with_data`
 method can get create a table from data matrix.
-Data matrix is a list of ``dictionary``/``namedtuple``/``list``/``tuple``.
+Data matrix is a list of |dict|/|namedtuple|/|list|/|tuple|.
 
 .. include:: create_table_from_data_matrix.rst
 

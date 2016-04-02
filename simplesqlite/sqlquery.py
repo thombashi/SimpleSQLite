@@ -118,7 +118,8 @@ class SqlQuery:
         :param str operation_query:
             Used as a SQLite function if the value is not empty.
         :return:
-            List of strings that suitable for attribute names of a SQLite query.
+            List of strings that suitable for
+            attribute names of a SQLite query.
         :rtype: list/itertools.imap
 
         :Examples:
@@ -148,7 +149,7 @@ class SqlQuery:
         :param str value: Value associated with a key.
         :return:
             String that suitable for a value of a key.
-            Return ``"NULL"`` if the value is ``None``
+            Return ``"NULL"`` if the value is |None|.
         :rtype: str
 
         :Examples:
@@ -200,13 +201,14 @@ class SqlQuery:
         :param str table: Table name of executing the query.
         :param str where:
             Add a WHERE clause to execute query,
-            if the value is not ``None``.
+            if the value is not |None|.
         :param extra extra:
             Add additional clause to execute query,
-            if the value is not ``None``.
+            if the value is not |None|.
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: ``select`` is empty string.
+        :raises ValueError: |raises_validate_table_name|
 
         :Examples:
 
@@ -217,10 +219,6 @@ class SqlQuery:
             'SELECT value FROM example WHERE key = 1'
             >>> SqlQuery.make_select(select="value", table="example", where=SqlQuery.make_where("key", 1), extra="ORDER BY value")
             'SELECT value FROM example WHERE key = 1 ORDER BY value'
-
-        .. seealso::
-
-            :py:func:`simplesqlite.validate_table_name`
         """
 
         sql.validate_table_name(table)
@@ -247,14 +245,11 @@ class SqlQuery:
         :param list/tuple insert_tuple: Insertion data.
         :param bool is_insert_many:
             Make query that insert multiple data at once,
-            if the value is ``True``.
+            if the value is |True|.
         :return: Query of SQLite.
         :rtype: str
-        :raises ValueError: If ``insert_tuple`` is empty list/tuple.
-
-        .. seealso::
-
-            :py:func:`simplesqlite.validate_table_name`
+        :raises ValueError: If ``insert_tuple`` is empty |list|/|tuple|.
+        :raises ValueError: |raises_validate_table_name|
         """
 
         sql.validate_table_name(table)
@@ -286,14 +281,11 @@ class SqlQuery:
         :param str set_query: SET part of the UPDATE query.
         :param str where:
             Add a WHERE clause to execute query,
-            if the value is not ``None``.
+            if the value is not |None|.
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``set_query`` is empty string.
-
-        .. seealso::
-
-            :py:func:`simplesqlite.validate_table_name`
+        :raises ValueError: |raises_validate_table_name|
         """
 
         sql.validate_table_name(table)

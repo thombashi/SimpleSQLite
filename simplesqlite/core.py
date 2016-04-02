@@ -22,12 +22,12 @@ from .sqlquery import SqlQuery
 
 class SimpleSQLite(object):
     """
-    Wrapper class of ``sqlite3`` module.
+    Wrapper class of |sqlite3| module.
 
     :param str database_path: File path of the database to be connected.
     :param str mode: Open mode.
     :param bool profile:
-        Recording SQL query execution time profile, if the value is ``True``.
+        Recording SQL query execution time profile, if the value is |True|.
 
     .. seealso::
 
@@ -57,7 +57,7 @@ class SimpleSQLite(object):
     @property
     def connection(self):
         """
-        :return: ``Connection`` instance of the connected database.
+        :return: |Connection| instance of the connected database.
         :rtype: sqlite3.Connection
         """
 
@@ -69,9 +69,7 @@ class SimpleSQLite(object):
         :return: Connection mode: ``"r"``/``"w"``/``"a"``.
         :rtype: str
 
-        .. seealso::
-
-            :py:meth:`.connect`
+        .. seealso:: :py:meth:`.connect`
         """
 
         return self.__mode
@@ -93,7 +91,7 @@ class SimpleSQLite(object):
 
     def is_connected(self):
         """
-        :return: ``True`` if the connection to a database is valid.
+        :return: |True| if the connection to a database is valid.
         :rtype: bool
 
         :Examples:
@@ -116,8 +114,8 @@ class SimpleSQLite(object):
 
     def check_connection(self):
         """
-        :raises NullDatabaseConnectionError:
-            If not connected to a SQLite database file.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
 
         :Examples:
 
@@ -157,10 +155,11 @@ class SimpleSQLite(object):
             Path to the SQLite database file to be connected.
         :param str mode:
             ``"r"``: Open for read only.
-            ``"w"``: Open for read/write. Delete existing tables when connecting.
+            ``"w"``: Open for read/write.
+            Delete existing tables when connecting.
             ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError:
-            If ``database_path`` is invalid or ``mode`` is invalid.
+            If ``database_path`` is invalid or |attr_mode| is invalid.
         :raises sqlite3.OperationalError: If unable to open the database file.
         """
 
@@ -194,19 +193,17 @@ class SimpleSQLite(object):
         :param str query: Query to be executed.
         :param tuple caller:
             Caller information.
-            Expects the return value of Logger.findCaller() method.
+            Expects the return value of :py:meth:`logging.Logger.findCaller`.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
-        :raises sqlite3.OperationalError: If failed to execute query.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         .. warning::
 
             This method can execute an arbitrary query.
-            i.e. No access permissions check by :py:attr:`.mode`.
-
-        .. seealso::
-
-            :py:meth:`.check_connection`
+            i.e. No access permissions check by |attr_mode|.
         """
 
         import time
@@ -252,12 +249,15 @@ class SimpleSQLite(object):
         :param str table_name: Table name of executing the query.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         .. seealso::
 
-            :py:meth:`.verify_table_existence`
             :py:meth:`.sqlquery.SqlQuery.make_select`
-            :py:meth:`.execute_query`
         """
 
         self.verify_table_existence(table_name)
@@ -270,15 +270,14 @@ class SimpleSQLite(object):
         Execute INSERT query.
 
         :param str table_name: Table name of executing the query.
-        :param dict/namedtuple/list/tuple insert_record: Record to be inserted
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+        :param insert_record: Record to be inserted.
+        :type insert_record: |dict|/|namedtuple|/|list|/|tuple|
+        :raises IOError: |raises_write_permission|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
-        .. seealso::
-
-            :py:meth:`.check_connection`
-            :py:meth:`.sqlquery.SqlQuery.make_insert`
-            :py:meth:`.execute_query`
+        .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -293,17 +292,16 @@ class SimpleSQLite(object):
         Execute INSERT query for multiple records.
 
         :param str table: Table name of executing the query.
-        :param dict/namedtuple/list/tuple insert_record:
-            Records to be inserted.
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
-        :raises sqlite3.OperationalError: If failed to execute query.
+        :param insert_record: Records to be inserted.
+        :type insert_record: |dict|/|namedtuple|/|list|/|tuple|
+        :raises IOError: |raises_write_permission|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
-        .. seealso::
-
-            :py:meth:`.check_connection`
-            :py:meth:`.verify_table_existence`
-            :py:meth:`.sqlquery.SqlQuery.make_insert`
+        .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -339,16 +337,16 @@ class SimpleSQLite(object):
 
         :param str table_name: Table name of executing the query.
         :param str set_query:
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
-        :raises sqlite3.OperationalError: If failed to execute query.
+        :raises IOError: |raises_write_permission|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         .. seealso::
 
-            :py:meth:`.check_connection`
-            :py:meth:`.verify_table_existence`
             :py:meth:`.sqlquery.SqlQuery.make_update`
-            :py:meth:`.execute_query`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -362,7 +360,7 @@ class SimpleSQLite(object):
         """
         .. seealso::
 
-            :py:meth:`sqlite3.Connection.total_changes`
+            :py:attr:`sqlite3.Connection.total_changes`
         """
 
         self.check_connection()
@@ -376,11 +374,13 @@ class SimpleSQLite(object):
         :param str select: Attribute for SELECT query
         :param str table_name: Table name of executing the query.
         :return: Result of execution of the query.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         .. seealso::
 
             :py:meth:`.sqlquery.SqlQuery.make_select`
-            :py:meth:`.execute_query`
         """
 
         self.verify_table_existence(table_name)
@@ -400,6 +400,9 @@ class SimpleSQLite(object):
         """
         :return: List of table names in the database.
         :rtype: list
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         :Examples:
 
@@ -419,11 +422,6 @@ class SimpleSQLite(object):
             .. parsed-literal::
 
                 [u'hoge']
-
-        .. seealso::
-
-            :py:meth:`.check_connection`
-            :py:meth:`.execute_query`
         """
 
         self.check_connection()
@@ -439,8 +437,11 @@ class SimpleSQLite(object):
         """
         :return: List of attribute names in the table.
         :rtype: list
-        :raises TableNotFoundError:
-            If ``tablename`` table not found in the database.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
 
         :Examples:
 
@@ -466,11 +467,6 @@ class SimpleSQLite(object):
 
                 ['attr_a', 'attr_b']
                 'not_existing' table not found in /tmp/sample.sqlite
-
-        .. seealso::
-
-            :py:meth:`.verify_table_existence`
-            :py:meth:`.execute_query`
         """
 
         self.verify_table_existence(table_name)
@@ -484,13 +480,11 @@ class SimpleSQLite(object):
         """
         :return: List of attribute names in the table.
         :rtype: list
-        :raises TableNotFoundError:
-            If ``tablename`` table not found in the database.
-
-        .. seealso::
-
-            :py:meth:`.verify_table_existence`
-            :py:meth:`.execute_query`
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
         """
 
         self.verify_table_existence(table_name)
@@ -514,11 +508,10 @@ class SimpleSQLite(object):
             counted from the top query in descending order by
             the cumulative execution time.
         :return: Profile information for each query.
-        :rtype: list of namedtuple
-
-        .. seealso::
-
-            :py:meth:`.execute_query`
+        :rtype: list of |namedtuple|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises sqlite3.OperationalError: |raises_operational_error|
         """
 
         from collections import namedtuple
@@ -562,6 +555,8 @@ class SimpleSQLite(object):
 
         :return: sqlite_master table information.
         :rtype: list
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
 
         :Examples:
 
@@ -601,10 +596,6 @@ class SimpleSQLite(object):
                         "rootpage": 3
                     }
                 ]
-
-        .. seealso::
-
-            :py:meth:`.check_connection`
         """
 
         self.check_connection()
@@ -625,7 +616,7 @@ class SimpleSQLite(object):
     def has_table(self, table_name):
         """
         :param str table_name: Table name to be tested.
-        :return: ``True`` if the database has the table.
+        :return: |True| if the database has the table.
         :rtype: bool
 
         :Examples:
@@ -660,8 +651,10 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to be tested.
-        :return: ``True`` if the table has the attribute.
+        :return: |True| if the table has the attribute.
         :rtype: bool
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
 
         :Examples:
 
@@ -689,10 +682,6 @@ class SimpleSQLite(object):
                 True
                 False
                 'not_existing' table not found in /tmp/sample.sqlite
-
-        .. seealso::
-
-            :py:meth:`.verify_table_existence`
         """
 
         self.verify_table_existence(table_name)
@@ -706,8 +695,10 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name_list: Attribute names to be tested.
-        :return: ``True`` if the table has all of the attribute.
+        :return: |True| if the table has all of the attribute.
         :rtype: bool
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
 
         :Examples:
 
@@ -739,10 +730,6 @@ class SimpleSQLite(object):
                 True
                 False
                 'not_existing' table not found in /tmp/sample.sqlite
-
-        .. seealso::
-
-            :py:meth:`.has_attribute`
         """
 
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
@@ -762,7 +749,9 @@ class SimpleSQLite(object):
     def verify_table_existence(self, table_name):
         """
         :param str table_name: Table name to be tested.
-        :raises TableNotFoundError: If the table not found in the database
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises ValueError: |raises_validate_table_name|
 
         :Examples:
 
@@ -787,10 +776,6 @@ class SimpleSQLite(object):
             .. parsed-literal::
 
                 'not_existing' table not found in /tmp/sample.sqlite
-
-        .. seealso::
-
-            :py:func:`simplesqlite.validate_table_name`
         """
 
         simplesqlite.validate_table_name(table_name)
@@ -805,7 +790,10 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to be tested.
-        :raises AttributeNotFoundError: If attribute not found in the table
+        :raises simplesqlite.AttributeNotFoundError:
+            If attribute not found in the table
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
 
         :Examples:
 
@@ -835,10 +823,6 @@ class SimpleSQLite(object):
 
                 'not_existing' attribute not found in 'sample_table' table
                 'not_existing' table not found in /tmp/sample.sqlite
-
-        .. seealso::
-
-            :py:meth:`.verify_table_existence`
         """
 
         self.verify_table_existence(table_name)
@@ -853,8 +837,9 @@ class SimpleSQLite(object):
     def drop_table(self, table_name):
         """
         :param str table_name: Table name to drop.
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises IOError: |raises_write_permission|
         """
 
         self.validate_access_permission(["w", "a"])
@@ -868,8 +853,9 @@ class SimpleSQLite(object):
         """
         :param str table_name: Table name to create.
         :param list attribute_description_list: List of table description.
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises IOError: |raises_write_permission|
         """
 
         self.validate_access_permission(["w", "a"])
@@ -887,14 +873,14 @@ class SimpleSQLite(object):
 
     def create_index(self, table_name, attribute_name):
         """
-        :param str table_name: Table name that contains the attribute to be indexed.
+        :param str table_name:
+            Table name that contains the attribute to be indexed.
         :param str attribute_name: Attribute name to create index.
-        :raises ValueError: If the database connection is invalid.
-        :raises IOError: If open mode is neither ``"w"`` nor ``"a"``.
-
-        .. seealso::
-
-            :py:meth:`.verify_table_existence`
+        :raises IOError: |raises_write_permission|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
         """
 
         self.verify_table_existence(table_name)
@@ -912,9 +898,7 @@ class SimpleSQLite(object):
         :param list attribute_name_list:
             List of attribute names to create indices.
 
-        .. seealso::
-
-            :py:meth:`.create_index`
+        .. seealso:: :py:meth:`.create_index`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -934,10 +918,10 @@ class SimpleSQLite(object):
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
-        :type data_matrix: List of dict/namedtuple/list/tuple
+        :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param tuple index_attribute_list:
             List of attribute names of create indices.
-        :raises ValueError: If ``data_matrix`` is empty.
+        :raises ValueError: If the ``data_matrix`` is empty.
 
         .. seealso::
 
@@ -999,7 +983,7 @@ class SimpleSQLite(object):
         .. seealso::
 
             :py:meth:`.create_table_with_data`
-            :py:meth:`csv.reader`
+            :py:func:`csv.reader`
         """
 
         import csv
@@ -1038,9 +1022,7 @@ class SimpleSQLite(object):
 
     def rollback(self):
         """
-        .. seealso::
-
-            :py:meth:`sqlite3.Connection.rollback`
+        .. seealso:: :py:meth:`sqlite3.Connection.rollback`
         """
 
         try:
@@ -1052,9 +1034,7 @@ class SimpleSQLite(object):
 
     def commit(self):
         """
-        .. seealso::
-
-            :py:meth:`sqlite3.Connection.commit`
+        .. seealso:: :py:meth:`sqlite3.Connection.commit`
         """
 
         try:
@@ -1068,9 +1048,7 @@ class SimpleSQLite(object):
         """
         Commit and close the connection.
 
-        .. seealso::
-
-            :py:meth:`sqlite3.Connection.close`
+        .. seealso:: :py:meth:`sqlite3.Connection.close`
         """
 
         try:
@@ -1109,7 +1087,7 @@ class SimpleSQLite(object):
         """
         :param list/tuple field_list:
         :param list/tuple value_matrix: the list to test.
-        :raises ValueError: 
+        :raises ValueError:
         """
 
         miss_match_idx_list = []
@@ -1155,14 +1133,14 @@ class SimpleSQLite(object):
 
     def validate_access_permission(self, valid_permission_list):
         """
-        :param list/tuple valid_permission_list:
+        :param valid_permission_list:
             List of permissions that access is allowed.
-        :raises ValueError: If database connection is invalid.
-        :raises IOError: If invalid permission.
-
-        .. seealso::
-
-            :py:meth:`.check_connection`
+        :type valid_permission_list: |list|/|tuple|
+        :raises ValueError: If the |attr_mode| is invalid.
+        :raises IOError:
+            If the |attr_mode| not in the ``valid_permission_list``.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
         """
 
         self.check_connection()
