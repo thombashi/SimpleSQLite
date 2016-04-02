@@ -481,7 +481,7 @@ class Test_SimpleSQLite_get_attribute_type_list:
         ["not_exist_table", TableNotFoundError],
         [None, TableNotFoundError],
     ])
-    def test_null(self, con, value, expected):
+    def test_exception(self, con, value, expected):
         with pytest.raises(expected):
             con.get_attribute_type_list(value)
 
