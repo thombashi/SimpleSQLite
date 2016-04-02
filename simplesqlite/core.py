@@ -491,10 +491,10 @@ class SimpleSQLite(object):
 
         attribute_name_list = self.get_attribute_name_list(table_name)
         query = "SELECT DISTINCT %s FROM '%s'" % (
-                ",".join([
-                    "TYPEOF(%s)" % (SqlQuery.to_attr_str(attribute))
-                    for attribute in attribute_name_list]),
-                table_name)
+            ",".join([
+                "TYPEOF(%s)" % (SqlQuery.to_attr_str(attribute))
+                for attribute in attribute_name_list]),
+            table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return result.fetchone()
@@ -516,7 +516,7 @@ class SimpleSQLite(object):
 
         from collections import namedtuple
 
-        TN_SQL_PROFILE = "sql_profile"
+        profile_table_name = "sql_profile"
 
         value_matrix = [
             [query, execute_time, self.__dict_query_count.get(query, 0)]
@@ -527,7 +527,7 @@ class SimpleSQLite(object):
         con_tmp = simplesqlite.connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
-                TN_SQL_PROFILE,
+                profile_table_name,
                 attribute_name_list,
                 data_matrix=value_matrix)
         except ValueError:
@@ -536,7 +536,7 @@ class SimpleSQLite(object):
         try:
             result = con_tmp.select(
                 select="%s,SUM(%s),SUM(%s)" % attribute_name_list,
-                table_name=TN_SQL_PROFILE,
+                table_name=profile_table_name,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
                     "query", "cumulative_time", profile_count))
         except sqlite3.OperationalError:
@@ -865,7 +865,7 @@ class SimpleSQLite(object):
             return True
 
         query = "CREATE TABLE IF NOT EXISTS '%s' (%s)" % (
-                table_name, ", ".join(attribute_description_list))
+            table_name, ", ".join(attribute_description_list))
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
 
@@ -889,7 +889,7 @@ class SimpleSQLite(object):
         index_name = "%s_%s_index" % (
             SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
         query = "CREATE INDEX IF NOT EXISTS %s ON %s('%s')" % (
-                index_name, SqlQuery.to_table_str(table_name), attribute_name)
+            index_name, SqlQuery.to_table_str(table_name), attribute_name)
         self.execute_query(query, logging.getLogger().findCaller())
 
     def create_index_list(self, table_name, attribute_name_list):
@@ -958,7 +958,7 @@ class SimpleSQLite(object):
 
     def create_table_from_csv(
             self, csv_path, table_name="",
-            attribute_name_list=[],
+            attribute_name_list=(),
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
         Create a table from a csv file.
@@ -1151,7 +1151,8 @@ class SimpleSQLite(object):
         if self.mode not in valid_permission_list:
             raise IOError(str(valid_permission_list))
 
-    def __get_column_valuetype(self, data_matrix):
+    @staticmethod
+    def __get_column_valuetype(data_matrix):
         """
         Get value type for each column.
 
@@ -1160,7 +1161,7 @@ class SimpleSQLite(object):
         :rtype: dictionary
         """
 
-        TYPENAME_TABLE = {
+        typename_table = {
             dataproperty.Typecode.INT:    "INTEGER",
             dataproperty.Typecode.FLOAT:  "REAL",
             dataproperty.Typecode.STRING: "TEXT",
@@ -1171,11 +1172,12 @@ class SimpleSQLite(object):
         col_prop_list = prop_extractor.extract_column_property_list()
 
         return dict([
-            [col, TYPENAME_TABLE[col_prop.typecode]]
+            [col, typename_table[col_prop.typecode]]
             for col, col_prop in enumerate(col_prop_list)
         ])
 
-    def __convert_none(self, value):
+    @staticmethod
+    def __convert_none(value):
         if value is None:
             return "NULL"
 
