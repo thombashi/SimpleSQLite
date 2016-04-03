@@ -123,6 +123,28 @@ def con_empty(tmpdir):
     return SimpleSQLite(str(p), "w")
 
 
+class Test_validate_table_name:
+
+    @pytest.mark.parametrize(["value"], [
+        ["valid_table_name"],
+        ["table_"],
+        ["_table"],
+    ])
+    def test_normal(self, value):
+        validate_table_name(value)
+
+    @pytest.mark.parametrize(["value", "expected"], [
+        [None, ValueError],
+        ["", ValueError],
+        ["table", ValueError],
+        ["TABLE", ValueError],
+        ["Table", ValueError],
+    ])
+    def test_exception(self, value, expected):
+        with pytest.raises(expected):
+            validate_table_name(value)
+
+
 class Test_append_table:
 
     def test_normal(self, con_mix, con_empty):

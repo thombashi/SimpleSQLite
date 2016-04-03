@@ -21,8 +21,13 @@ def validate_table_name(name):
     :raises ValueError: |raises_validate_table_name|
     """
 
+    import re
+
     if dataproperty.is_empty_string(name):
         raise ValueError("table name is empty")
+
+    if re.search("^table$", name, re.IGNORECASE) is not None:
+        raise ValueError("invalid table name: " + name)
 
 
 def append_table(con_src, con_dst, table_name):
