@@ -18,6 +18,7 @@ from six.moves import range
 
 import simplesqlite
 from .sqlquery import SqlQuery
+from .convertor import RecordConvertor
 
 
 class SimpleSQLite(object):
@@ -283,7 +284,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        query = SqlQuery.make_insert(table_name, self.__to_record(
+        query = SqlQuery.make_insert(table_name, RecordConvertor.to_record(
             self.get_attribute_name_list(table_name), insert_record))
         self.execute_query(query, logging.getLogger().findCaller())
 
@@ -310,7 +311,7 @@ class SimpleSQLite(object):
         if dataproperty.is_empty_list_or_tuple(insert_record_list):
             return
 
-        record_list = self.__to_data_matrix(
+        record_list = RecordConvertor.to_record_list(
             self.get_attribute_name_list(table_name), insert_record_list)
 
         query = SqlQuery.make_insert(
@@ -938,7 +939,8 @@ class SimpleSQLite(object):
             raise ValueError("input data is null: '%s (%s)'" % (
                 table_name, ", ".join(attribute_name_list)))
 
-        data_matrix = self.__to_data_matrix(attribute_name_list, data_matrix)
+        data_matrix = RecordConvertor.to_record_list(
+            attribute_name_list, data_matrix)
         self.__verify_value_matrix(attribute_name_list, data_matrix)
 
         strip_index_attribute_list = list(
@@ -1175,41 +1177,3 @@ class SimpleSQLite(object):
             [col, typename_table[col_prop.typecode]]
             for col, col_prop in enumerate(col_prop_list)
         ])
-
-    @staticmethod
-    def __convert_none(value):
-        if value is None:
-            return "NULL"
-
-        return value
-
-    def __to_record(self, attr_name_list, value):
-        try:
-            # dictionary to list
-            return [
-                self.__convert_none(value.get(attr_name))
-                for attr_name in attr_name_list
-            ]
-        except AttributeError:
-            pass
-
-        try:
-            # namedtuple to list
-            dict_value = value._asdict()
-            return [
-                self.__convert_none(dict_value.get(attr_name))
-                for attr_name in attr_name_list
-            ]
-        except AttributeError:
-            pass
-
-        if dataproperty.is_list_or_tuple(value):
-            return value
-
-        raise ValueError("cannot convert to list")
-
-    def __to_data_matrix(self, attr_name_list, data_matrix):
-        return [
-            self.__to_record(attr_name_list, record)
-            for record in data_matrix
-        ]
