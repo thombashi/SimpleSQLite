@@ -14,7 +14,7 @@ from ..data import TableData
 from .core import SpreadSheetLoader
 
 
-class GoogleSpreadSheetTableLoader(SpreadSheetLoader):
+class GoogleSheetsTableLoader(SpreadSheetLoader):
     """
     Concrete class of Google Spreadsheet loader.
 
@@ -37,7 +37,7 @@ class GoogleSpreadSheetTableLoader(SpreadSheetLoader):
         return self._worksheet.col_count
 
     def __init__(self, file_path=None):
-        super(GoogleSpreadSheetTableLoader, self).__init__(file_path)
+        super(GoogleSheetsTableLoader, self).__init__(file_path)
 
         self.title = None
         self.start_row = 0
@@ -61,7 +61,7 @@ class GoogleSpreadSheetTableLoader(SpreadSheetLoader):
 
         self._validate_title()
         table_name = super(
-            GoogleSpreadSheetTableLoader, self).make_table_name()
+            GoogleSheetsTableLoader, self).make_table_name()
 
         return table_name.replace("%(title)s", self.title)
 
@@ -72,7 +72,7 @@ class GoogleSpreadSheetTableLoader(SpreadSheetLoader):
 
         :return:
             |load_return|
-            :py:meth:`~.GoogleSpreadSheetTableLoader.make_table_name`.
+            :py:meth:`~.GoogleSheetsTableLoader.make_table_name`.
         :rtype: iterator of |TableData|
         :raises InvalidDataError: If the header row is not found.
         """

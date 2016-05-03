@@ -13,6 +13,6 @@ from .error import InvalidDataError
 from .csv.core import CsvTableFileLoader
 from .csv.core import CsvTableTextLoader
 from .spreadsheet.excelloader import ExcelTableFileLoader
-from .spreadsheet.gssloader import GoogleSpreadSheetTableLoader
+from .spreadsheet.gsloader import GoogleSheetsTableLoader
 from .json.core import JsonTableFileLoader
 from .json.core import JsonTableTextLoader
