@@ -3,13 +3,12 @@ import os.path
 import setuptools
 
 
-MISC_DIR = "misc"
 REQUIREMENT_DIR = "requirements"
 
 with open("README.rst") as fp:
     long_description = fp.read()
 
-with open(os.path.join(MISC_DIR, "summary.txt")) as f:
+with open(os.path.join("docs", "pages", "introduction", "summary.txt")) as f:
     summary = f.read()
 
 with open(os.path.join(REQUIREMENT_DIR, "requirements.txt")) as f:
