@@ -110,6 +110,7 @@ class JsonTableTextLoader(TableLoader):
 
     def __init__(self, text):
         super(JsonTableTextLoader, self).__init__(text)
+        self.table_name = "%(default)s"
 
     def load(self):
         """

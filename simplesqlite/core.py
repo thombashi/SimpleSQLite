@@ -1031,8 +1031,37 @@ class SimpleSQLite(object):
         for tabledata in loader.load():
             self.create_table_from_tabledata(tabledata)
 
-    def create_table_from_json(self, source, table_name=""):
-        pass
+    def create_table_from_json(self, json_source, table_name=""):
+        """
+        Create a table from a JSON file/text.
+
+        :param str json_source: Path to the JSON file or JSON text.
+        :param str table_name: Table name to create.
+
+        .. seealso::
+
+            :py:meth:`.loader.json.core.JsonTableFileLoader.load`
+            :py:meth:`.loader.json.core.JsonTableTextLoader.load`
+        """
+
+        from .loader import JsonTableFileLoader
+        from .loader import JsonTableTextLoader
+
+        loader = JsonTableFileLoader(json_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        try:
+            for tabledata in loader.load():
+                self.create_table_from_tabledata(tabledata)
+            return
+        except IOError:
+            pass
+
+        loader = JsonTableTextLoader(json_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        for tabledata in loader.load():
+            self.create_table_from_tabledata(tabledata)
 
     def rollback(self):
         """

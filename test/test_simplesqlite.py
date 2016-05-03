@@ -825,6 +825,140 @@ class Test_SimpleSQLite_create_table_from_csv:
         assert result_matrix == expected_data_matrix
 
 
+class Test_SimpleSQLite_create_table_from_json:
+
+    @pytest.mark.parametrize(
+        [
+            "json_text",
+            "filename",
+            "table_name",
+            "expected_table_name",
+            "expected_attr_name_list",
+            "expected_data_matrix",
+        ],
+        [
+            [
+                """[
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ]""",
+                "tmp.json",
+                "",
+
+                "tmp",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
+                ],
+            ],
+            [
+                """{
+                    "tablename" : [
+                        {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                        {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                        {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                    ]
+                }""",
+                "tmp.json",
+                "%(filename)s_%(key)s",
+
+                "tmp_tablename",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
+                ],
+            ],
+        ])
+    def test_normal_file(
+            self, tmpdir, json_text, filename, table_name,
+            expected_table_name,
+            expected_attr_name_list, expected_data_matrix):
+        p_db = tmpdir.join("tmp.db")
+        p_json = tmpdir.join(filename)
+
+        with open(str(p_json), "w") as f:
+            f.write(json_text)
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_json(str(p_json), table_name)
+
+        assert con.get_table_name_list() == [expected_table_name]
+        assert expected_attr_name_list == con.get_attribute_name_list(
+            expected_table_name)
+
+        result = con.select(select="*", table_name=expected_table_name)
+        result_matrix = result.fetchall()
+        assert len(result_matrix) == 3
+        assert result_matrix == expected_data_matrix
+
+    @pytest.mark.parametrize(
+        [
+            "json_text",
+            "table_name",
+            "expected_table_name",
+            "expected_attr_name_list",
+            "expected_data_matrix",
+        ],
+        [
+            [
+                """[
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ]""",
+                "tmp",
+
+                "tmp",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
+                ],
+            ],
+            [
+                """{
+                    "tablename" : [
+                        {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                        {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                        {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                    ]
+                }""",
+                "",
+
+                "tablename",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
+                ],
+            ],
+        ])
+    def test_normal_text(
+            self, tmpdir, json_text, table_name,
+            expected_table_name,
+            expected_attr_name_list, expected_data_matrix):
+        p_db = tmpdir.join("tmp.db")
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_json(json_text, table_name)
+
+        assert con.get_table_name_list() == [expected_table_name]
+        assert expected_attr_name_list == con.get_attribute_name_list(
+            expected_table_name)
+
+        result = con.select(select="*", table_name=expected_table_name)
+        result_matrix = result.fetchall()
+        assert len(result_matrix) == 3
+        assert result_matrix == expected_data_matrix
+
+
 class Test_SimpleSQLite_rollback:
 
     def test_normal(self, con):
