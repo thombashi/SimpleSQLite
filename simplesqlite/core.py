@@ -976,13 +976,13 @@ class SimpleSQLite(object):
             data_matrix=tabledata.record_list)
 
     def create_table_from_csv(
-            self, csv_path, table_name="",
+            self, csv_source, table_name="",
             attribute_name_list=(),
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
         Create a table from a csv file.
 
-        :param str csv_path: Path to the csv file.
+        :param str csv_source: Path to the CSV file or CSV text.
         :param str table_name:
             Table name to create.
             Use csv file basename as the table name if the value is empty.
@@ -1005,39 +1005,31 @@ class SimpleSQLite(object):
             :py:func:`csv.reader`
         """
 
-        import csv
+        from .loader import CsvTableFileLoader
+        from .loader import CsvTableTextLoader
 
-        csv_reader = csv.reader(
-            open(csv_path, "r"), delimiter=delimiter, quotechar=quotechar)
+        loader = CsvTableFileLoader(csv_source)
+        loader.table_name = table_name
+        loader.delimiter = delimiter
+        loader.quotechar = quotechar
+        loader.encoding = encoding
+        try:
+            for tabledata in loader.load():
+                self.create_table_from_tabledata(tabledata)
+            return
+        except IOError:
+            pass
 
-        data_matrix = [
-            [
-                six.b(data).decode(encoding, "ignore")
-                if not dataproperty.is_float(data) else data
-                for data in row
-            ]
-            for row in csv_reader
-        ]
+        loader = CsvTableTextLoader(csv_source)
+        loader.table_name = table_name
+        loader.delimiter = delimiter
+        loader.quotechar = quotechar
+        loader.encoding = encoding
+        for tabledata in loader.load():
+            self.create_table_from_tabledata(tabledata)
 
-        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
-            header_list = data_matrix[0]
-
-            if any([
-                dataproperty.is_empty_string(header) for header in header_list
-            ]):
-                raise ValueError(
-                    "the first line include empty string: "
-                    "the first line expected to contain header data.")
-
-            data_matrix = data_matrix[1:]
-        else:
-            header_list = attribute_name_list
-
-        if dataproperty.is_empty_string(table_name):
-            # use csv filename as a table name if table_name is a empty string.
-            table_name = os.path.splitext(os.path.basename(csv_path))[0]
-
-        self.create_table_with_data(table_name, header_list, data_matrix)
+    def create_table_from_json(self, source, table_name=""):
+        pass
 
     def rollback(self):
         """
