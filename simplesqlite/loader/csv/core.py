@@ -139,12 +139,10 @@ class CsvTableTextLoader(CsvTableLoader):
         .. seealso:: :py:func:`csv.reader`
         """
 
-        import StringIO
-
         self._validate()
 
         self._csv_reader = csv.reader(
-            StringIO.StringIO(self.source.strip()),
+            six.StringIO(self.source.strip()),
             delimiter=self.delimiter, quotechar=self.quotechar)
         formatter = CsvTableFormatter(self._to_data_matrix())
         formatter.accept(self)
