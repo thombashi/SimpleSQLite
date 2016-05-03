@@ -14,7 +14,7 @@ SimpleSQLite
 Summary
 -------
 
-SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
+.. include:: summary.txt
 
 
 Feature
@@ -26,5 +26,8 @@ Feature
     - namedtuple
     - list
     - tuple
-- Create a table from a csv file
-
+- Create table(s) from:
+    - CSV file/text
+    - JSON file/text
+    - Microsoft Excel |TM| file
+    - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_

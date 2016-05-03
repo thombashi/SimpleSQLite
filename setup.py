@@ -20,19 +20,22 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.2.3",
+    version="0.3.0",
+    url="https://github.com/thombashi/SimpleSQLite",
+    bugtrack_url="https://github.com/thombashi/SimpleSQLite/issues",
+
     author="Tsuyoshi Hombashi",
     author_email="gogogo.vm@gmail.com",
-    url="https://github.com/thombashi/SimpleSQLite",
     description=summary,
-    keywords=["SQLite"],
+    include_package_data=True,
+    install_requires=install_requires,
+    keywords=["SQLite", "CSV", "JSON", "Excel", "Google Sheets"],
     long_description=long_description,
     license="MIT License",
-    include_package_data=True,
     packages=setuptools.find_packages(exclude=['test*']),
-    install_requires=install_requires,
     setup_requires=["pytest-runner"],
     tests_require=tests_require,
+
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

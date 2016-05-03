@@ -295,6 +295,10 @@ texinfo_documents = [
 
 # ------------------------------------------------
 
+rp_common = u"""
+.. |TM| replace:: :superscript:`TM`
+"""
+
 rp_builtin = u"""
 .. |False| replace:: :py:obj:`False`
 .. |True| replace:: :py:obj:`True`
@@ -317,10 +321,38 @@ rp_class = u"""
 .. |Connection| replace:: :py:class:`sqlite3.Connection`
 .. |datetime| replace:: :py:class:`datetime.datetime`
 .. |timedelta| replace:: :py:class:`datetime.timedelta`
+
+.. |TableData| replace:: :py:class:`~simplesqlite.loader.data.TableData`
 """
 
 rp_module = u"""
 .. |sqlite3| replace:: :py:mod:`sqlite3`
+"""
+
+rp_attr = u"""
+.. |attr_mode| replace:: :py:attr:`.mode`
+
+.. |attr_table_name_description| replace:: 
+        Table name string.
+        Following format specifiers are replaced with specific string.
+
+.. |attr_table_name_header| replace:: format specifier
+"""
+
+rp_method = u"""
+.. |make_table_name| replace:: 
+        Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
+        Following format specifiers are replaced with specific string.
+        
+.. |load_desc| replace:: 
+        This method will automatically search the header row start from
+        :py:attr:`.start_row`. Conditions of the header row is that
+        all of the columns has value (except empty columns).
+
+.. |load_return| replace:: 
+        Loaded table data.
+        Return one TableData for each sheet in the workbook.
+        Table name is determined by 
 """
 
 rp_raises = u"""
@@ -340,6 +372,13 @@ rp_raises = u"""
     If the open |attr_mode| is neither ``"w"`` nor ``"a"``.
 """
 
-rst_prolog = rp_builtin + rp_func + rp_class + rp_module + rp_raises + u"""
-.. |attr_mode| replace:: :py:attr:`.mode`
-"""
+rst_prolog = (
+    rp_common +
+    rp_builtin +
+    rp_func +
+    rp_class +
+    rp_module +
+    rp_raises +
+    rp_attr +
+    rp_method
+)

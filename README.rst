@@ -14,7 +14,7 @@ SimpleSQLite
 Summary
 -------
 
-SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
+.. include:: summary.txt
 
 
 Feature
@@ -26,8 +26,11 @@ Feature
     - namedtuple
     - list
     - tuple
-- Create a table from a csv file
-
+- Create table(s) from:
+    - CSV file/text
+    - JSON file/text
+    - Microsoft Excel |TM| file
+    - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
 
 Examples
 ========
@@ -65,6 +68,7 @@ Create a table from data matrix
 
     # display data type for each column in the table -----
     six.print_(con.get_attribute_type_list(table_name))
+
 
 .. code:: console
 
@@ -189,8 +193,12 @@ Dependencies
 Python 2.6+ or 3.3+
 
 -  `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
+-  `jsonschema <https://github.com/Julian/jsonschema>`__
 -  `pathvalidate <https://github.com/thombashi/pathvalidate>`__
+-  `path.py <https://github.com/jaraco/path.py>`__
 -  `six <https://pypi.python.org/pypi/six/>`__
+-  `xlrd <https://github.com/python-excel/xlrd>`__
+
 
 Test dependencies
 -----------------
@@ -198,6 +206,7 @@ Test dependencies
 -  `pytest <http://pytest.org/latest/>`__
 -  `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 -  `tox <https://testrun.org/tox/latest/>`__
+-  `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
 
 Documentation
 =============

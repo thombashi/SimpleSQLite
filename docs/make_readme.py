@@ -40,7 +40,7 @@ def write_examples(f):
         "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
     ])
 
-    write_usage_file(f, "create_table_from_data_matrix.rst")
+    write_usage_file(f, "create_table_from_data_matrix.txt")
 
     write_line_list(f, [
         "Insert records into a table",
@@ -78,6 +78,10 @@ def main():
             "",
             "http://simplesqlite.readthedocs.org/en/latest/"
         ])
+
+    sys.stdout.write("complete\n")
+    sys.stdout.flush()
+    sys.stdin.readline()
 
 if __name__ == '__main__':
     sys.exit(main())

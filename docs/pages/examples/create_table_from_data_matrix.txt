@@ -25,7 +25,8 @@
     
     # display data type for each column in the table -----
     six.print_(con.get_attribute_type_list(table_name))
-    
+
+
 .. code:: console
 
     ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']

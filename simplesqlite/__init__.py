@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
-@author: Tsuyoshi Hombashi
-'''
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
 
 
 from __future__ import absolute_import
@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import dataproperty
 
 from .core import SimpleSQLite
+import simplesqlite.loader
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -21,8 +22,13 @@ def validate_table_name(name):
     :raises ValueError: |raises_validate_table_name|
     """
 
+    import re
+
     if dataproperty.is_empty_string(name):
         raise ValueError("table name is empty")
+
+    if re.search("^table$", name, re.IGNORECASE) is not None:
+        raise ValueError("invalid table name: " + name)
 
 
 def append_table(con_src, con_dst, table_name):

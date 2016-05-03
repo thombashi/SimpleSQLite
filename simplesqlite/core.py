@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
-@author: Tsuyoshi Hombashi
-'''
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
 
 
 from __future__ import absolute_import
@@ -18,6 +18,7 @@ from six.moves import range
 
 import simplesqlite
 from .sqlquery import SqlQuery
+from .converter import RecordConvertor
 
 
 class SimpleSQLite(object):
@@ -283,7 +284,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        query = SqlQuery.make_insert(table_name, self.__to_record(
+        query = SqlQuery.make_insert(table_name, RecordConvertor.to_record(
             self.get_attribute_name_list(table_name), insert_record))
         self.execute_query(query, logging.getLogger().findCaller())
 
@@ -310,7 +311,7 @@ class SimpleSQLite(object):
         if dataproperty.is_empty_list_or_tuple(insert_record_list):
             return
 
-        record_list = self.__to_data_matrix(
+        record_list = RecordConvertor.to_record_list(
             self.get_attribute_name_list(table_name), insert_record_list)
 
         query = SqlQuery.make_insert(
@@ -491,10 +492,10 @@ class SimpleSQLite(object):
 
         attribute_name_list = self.get_attribute_name_list(table_name)
         query = "SELECT DISTINCT %s FROM '%s'" % (
-                ",".join([
-                    "TYPEOF(%s)" % (SqlQuery.to_attr_str(attribute))
-                    for attribute in attribute_name_list]),
-                table_name)
+            ",".join([
+                "TYPEOF(%s)" % (SqlQuery.to_attr_str(attribute))
+                for attribute in attribute_name_list]),
+            table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return result.fetchone()
@@ -516,7 +517,7 @@ class SimpleSQLite(object):
 
         from collections import namedtuple
 
-        TN_SQL_PROFILE = "sql_profile"
+        profile_table_name = "sql_profile"
 
         value_matrix = [
             [query, execute_time, self.__dict_query_count.get(query, 0)]
@@ -527,7 +528,7 @@ class SimpleSQLite(object):
         con_tmp = simplesqlite.connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
-                TN_SQL_PROFILE,
+                profile_table_name,
                 attribute_name_list,
                 data_matrix=value_matrix)
         except ValueError:
@@ -536,7 +537,7 @@ class SimpleSQLite(object):
         try:
             result = con_tmp.select(
                 select="%s,SUM(%s),SUM(%s)" % attribute_name_list,
-                table_name=TN_SQL_PROFILE,
+                table_name=profile_table_name,
                 extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
                     "query", "cumulative_time", profile_count))
         except sqlite3.OperationalError:
@@ -865,7 +866,7 @@ class SimpleSQLite(object):
             return True
 
         query = "CREATE TABLE IF NOT EXISTS '%s' (%s)" % (
-                table_name, ", ".join(attribute_description_list))
+            table_name, ", ".join(attribute_description_list))
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
 
@@ -889,7 +890,7 @@ class SimpleSQLite(object):
         index_name = "%s_%s_index" % (
             SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
         query = "CREATE INDEX IF NOT EXISTS %s ON %s('%s')" % (
-                index_name, SqlQuery.to_table_str(table_name), attribute_name)
+            index_name, SqlQuery.to_table_str(table_name), attribute_name)
         self.execute_query(query, logging.getLogger().findCaller())
 
     def create_index_list(self, table_name, attribute_name_list):
@@ -938,7 +939,8 @@ class SimpleSQLite(object):
             raise ValueError("input data is null: '%s (%s)'" % (
                 table_name, ", ".join(attribute_name_list)))
 
-        data_matrix = self.__to_data_matrix(attribute_name_list, data_matrix)
+        data_matrix = RecordConvertor.to_record_list(
+            attribute_name_list, data_matrix)
         self.__verify_value_matrix(attribute_name_list, data_matrix)
 
         strip_index_attribute_list = list(
@@ -956,14 +958,30 @@ class SimpleSQLite(object):
         self.create_index_list(table_name, strip_index_attribute_list)
         self.commit()
 
+    def create_table_from_tabledata(self, tabledata):
+        """
+        Create a table from :py:class:`.loader.data.TableData`.
+
+        :param TableData tabledata: Table data to create.
+
+        .. seealso::
+
+            :py:meth:`.create_table_with_data`
+        """
+
+        self.create_table_with_data(
+            table_name=tabledata.table_name,
+            attribute_name_list=tabledata.header_list,
+            data_matrix=tabledata.record_list)
+
     def create_table_from_csv(
-            self, csv_path, table_name="",
-            attribute_name_list=[],
+            self, csv_source, table_name="",
+            attribute_name_list=(),
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
-        Create a table from a csv file.
+        Create a table from a CSV file/text.
 
-        :param str csv_path: Path to the csv file.
+        :param str csv_source: Path to the CSV file or CSV text.
         :param str table_name:
             Table name to create.
             Use csv file basename as the table name if the value is empty.
@@ -984,41 +1002,68 @@ class SimpleSQLite(object):
 
             :py:meth:`.create_table_with_data`
             :py:func:`csv.reader`
+            :py:meth:`.loader.csv.core.CsvTableLoader.load`
+            :py:meth:`.loader.csv.core.CsvTextLoader.load`
         """
 
-        import csv
+        from .loader import CsvTableFileLoader
+        from .loader import CsvTableTextLoader
 
-        csv_reader = csv.reader(
-            open(csv_path, "r"), delimiter=delimiter, quotechar=quotechar)
+        loader = CsvTableFileLoader(csv_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        loader.header_list = attribute_name_list
+        loader.delimiter = delimiter
+        loader.quotechar = quotechar
+        loader.encoding = encoding
+        try:
+            for tabledata in loader.load():
+                self.create_table_from_tabledata(tabledata)
+            return
+        except IOError:
+            pass
 
-        data_matrix = [
-            [
-                six.b(data).decode(encoding, "ignore")
-                if not dataproperty.is_float(data) else data
-                for data in row
-            ]
-            for row in csv_reader
-        ]
+        loader = CsvTableTextLoader(csv_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        loader.header_list = attribute_name_list
+        loader.delimiter = delimiter
+        loader.quotechar = quotechar
+        loader.encoding = encoding
+        for tabledata in loader.load():
+            self.create_table_from_tabledata(tabledata)
 
-        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
-            header_list = data_matrix[0]
+    def create_table_from_json(self, json_source, table_name=""):
+        """
+        Create a table from a JSON file/text.
 
-            if any([
-                dataproperty.is_empty_string(header) for header in header_list
-            ]):
-                raise ValueError(
-                    "the first line include empty string: "
-                    "the first line expected to contain header data.")
+        :param str json_source: Path to the JSON file or JSON text.
+        :param str table_name: Table name to create.
 
-            data_matrix = data_matrix[1:]
-        else:
-            header_list = attribute_name_list
+        .. seealso::
 
-        if dataproperty.is_empty_string(table_name):
-            # use csv filename as a table name if table_name is a empty string.
-            table_name = os.path.splitext(os.path.basename(csv_path))[0]
+            :py:meth:`.loader.json.core.JsonTableFileLoader.load`
+            :py:meth:`.loader.json.core.JsonTableTextLoader.load`
+        """
 
-        self.create_table_with_data(table_name, header_list, data_matrix)
+        from .loader import JsonTableFileLoader
+        from .loader import JsonTableTextLoader
+
+        loader = JsonTableFileLoader(json_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        try:
+            for tabledata in loader.load():
+                self.create_table_from_tabledata(tabledata)
+            return
+        except IOError:
+            pass
+
+        loader = JsonTableTextLoader(json_source)
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        for tabledata in loader.load():
+            self.create_table_from_tabledata(tabledata)
 
     def rollback(self):
         """
@@ -1151,7 +1196,8 @@ class SimpleSQLite(object):
         if self.mode not in valid_permission_list:
             raise IOError(str(valid_permission_list))
 
-    def __get_column_valuetype(self, data_matrix):
+    @staticmethod
+    def __get_column_valuetype(data_matrix):
         """
         Get value type for each column.
 
@@ -1160,7 +1206,7 @@ class SimpleSQLite(object):
         :rtype: dictionary
         """
 
-        TYPENAME_TABLE = {
+        typename_table = {
             dataproperty.Typecode.INT:    "INTEGER",
             dataproperty.Typecode.FLOAT:  "REAL",
             dataproperty.Typecode.STRING: "TEXT",
@@ -1171,43 +1217,6 @@ class SimpleSQLite(object):
         col_prop_list = prop_extractor.extract_column_property_list()
 
         return dict([
-            [col, TYPENAME_TABLE[col_prop.typecode]]
+            [col, typename_table[col_prop.typecode]]
             for col, col_prop in enumerate(col_prop_list)
         ])
-
-    def __convert_none(self, value):
-        if value is None:
-            return "NULL"
-
-        return value
-
-    def __to_record(self, attr_name_list, value):
-        try:
-            # dictionary to list
-            return [
-                self.__convert_none(value.get(attr_name))
-                for attr_name in attr_name_list
-            ]
-        except AttributeError:
-            pass
-
-        try:
-            # namedtuple to list
-            dict_value = value._asdict()
-            return [
-                self.__convert_none(dict_value.get(attr_name))
-                for attr_name in attr_name_list
-            ]
-        except AttributeError:
-            pass
-
-        if dataproperty.is_list_or_tuple(value):
-            return value
-
-        raise ValueError("cannot convert to list")
-
-    def __to_data_matrix(self, attr_name_list, data_matrix):
-        return [
-            self.__to_record(attr_name_list, record)
-            for record in data_matrix
-        ]
