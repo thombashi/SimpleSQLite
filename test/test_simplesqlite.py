@@ -720,20 +720,39 @@ class Test_SimpleSQLite_create_table_from_csv:
         [
             [
                 "\n".join([
-                    '"attr_a","attr_b","attr_c"',
-                    '1, 4,      "a"',
-                    '2, 2.1,    "bb"',
-                    '3, 120.9,  "ccc"',
+                    '1,4,"a"',
+                    '2,2.1,"bb"',
+                    '3,120.9,"ccc"',
                 ]),
                 "tmp.csv",
-                "tmp",
+                "tablename",
+                ["hoge", "foo", "bar"],
+
+                "tablename",
+                ["hoge", "foo", "bar"],
+                [
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
+                ],
+            ],
+            [
+                "\n".join([
+                    '"attr_a","attr_b","attr_c"',
+                    '1,4,"a"',
+                    '2,2.1,"bb"',
+                    '3,120.9,"ccc"',
+                ]),
+                "tmp.csv",
+                "",
                 [],
+
                 "tmp",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    [1, 4,      "a"],
-                    [2, 2.1,    "bb"],
-                    [3, 120.9,  "ccc"],
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
                 ],
             ],
         ])
@@ -750,14 +769,14 @@ class Test_SimpleSQLite_create_table_from_csv:
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
 
-        # check attribute ---
+        assert con.get_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.get_attribute_name_list(
-            table_name)
+            expected_table_name)
 
-        # check data ---
-        result = con.select(select="*", table_name=table_name)
+        result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+        assert result_matrix == expected_data_matrix
 
     @pytest.mark.parametrize(
         [
@@ -772,18 +791,18 @@ class Test_SimpleSQLite_create_table_from_csv:
             [
                 "\n".join([
                     '"attr_a","attr_b","attr_c"',
-                    '1, 4,      "a"',
-                    '2, 2.1,    "bb"',
-                    '3, 120.9,  "ccc"',
+                    '1,4,"a"',
+                    '2,2.1,"bb"',
+                    '3,120.9,"ccc"',
                 ]),
                 "tmp",
                 [],
                 "tmp",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    [1, 4,      "a"],
-                    [2, 2.1,    "bb"],
-                    [3, 120.9,  "ccc"],
+                    (1, 4.0,   u"a"),
+                    (2, 2.1,   u"bb"),
+                    (3, 120.9, u"ccc"),
                 ],
             ],
         ])
@@ -796,14 +815,14 @@ class Test_SimpleSQLite_create_table_from_csv:
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
-        # check attribute ---
+        assert con.get_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.get_attribute_name_list(
-            table_name)
+            expected_table_name)
 
-        # check data ---
-        result = con.select(select="*", table_name=table_name)
+        result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+        assert result_matrix == expected_data_matrix
 
 
 class Test_SimpleSQLite_rollback:

@@ -12,7 +12,6 @@ import sqlite3
 import sys
 
 import dataproperty
-import path
 import pathvalidate
 import six
 from six.moves import range
@@ -1009,7 +1008,9 @@ class SimpleSQLite(object):
         from .loader import CsvTableTextLoader
 
         loader = CsvTableFileLoader(csv_source)
-        loader.table_name = table_name
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        loader.header_list = attribute_name_list
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
@@ -1021,7 +1022,9 @@ class SimpleSQLite(object):
             pass
 
         loader = CsvTableTextLoader(csv_source)
-        loader.table_name = table_name
+        if dataproperty.is_not_empty_string(table_name):
+            loader.table_name = table_name
+        loader.header_list = attribute_name_list
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
