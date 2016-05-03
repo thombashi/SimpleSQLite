@@ -8,7 +8,7 @@
 import pytest
 
 from collections import namedtuple
-from simplesqlite.convertor import RecordConvertor
+from simplesqlite.converter import RecordConvertor
 
 
 attr_list_2 = ["attr_a", "attr_b"]
