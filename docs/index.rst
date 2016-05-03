@@ -11,7 +11,7 @@ Welcome to SimpleSQLite's documentation!
    :maxdepth: 3
    :numbered:
    
-   pages/introduction
+   pages/introduction/index
    pages/installation
    pages/examples/index
    pages/reference/index

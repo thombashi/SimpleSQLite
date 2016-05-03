@@ -55,4 +55,4 @@ can create a table from Google Spreadsheet.
     
         http://gspread.readthedocs.io/en/latest/oauth2.html
 
-.. include:: create_table_from_gss.txt
+.. include:: create_table_from_gs.txt

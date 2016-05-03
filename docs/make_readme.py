@@ -59,10 +59,34 @@ def write_examples(f):
 
 
 def main():
+    summary = open(os.path.join(DOC_PAGE_DIR, "summary.txt")).read()
+    print(summary)
+
     with open(os.path.join(OUTPUT_DIR, "README.rst"), "w") as f:
         write_line_list(f, [
+            "SimpleSQLite",
+            "=============",
+            "",
+        ] + [
             line.rstrip() for line in
-            open(os.path.join(DOC_PAGE_DIR, "introduction.rst")).readlines()
+            open(os.path.join(
+                DOC_PAGE_DIR, "introduction", "badges.txt")).readlines()
+        ])
+
+        write_line_list(f, [
+            "Summary",
+            "-------",
+            "",
+        ] + [
+            line.rstrip() for line in
+            open(os.path.join(
+                DOC_PAGE_DIR, "introduction", "summary.txt")).readlines()
+        ])
+
+        write_line_list(f, [
+            line.rstrip() for line in
+            open(os.path.join(
+                DOC_PAGE_DIR, "introduction", "feature.txt")).readlines()
         ])
 
         write_examples(f)

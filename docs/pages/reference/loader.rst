@@ -82,7 +82,7 @@ ExcelTableFileLoader class
 GoogleSheetsTableLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.spreadsheet.gssloader.GoogleSheetsTableLoader
+.. autoclass:: simplesqlite.loader.spreadsheet.gsloader.GoogleSheetsTableLoader
     :members:
     :undoc-members:
     :show-inheritance:
