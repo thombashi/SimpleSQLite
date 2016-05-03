@@ -38,6 +38,14 @@ class TableLoaderInterface(object):
 class TableLoader(TableLoaderInterface):
     """
     Abstract class of table data file loader.
+
+    .. py:attribute:: table_name
+
+        Table name string.
+
+    .. py:attribute:: source
+
+        Table data source to load.
     """
 
     def __init__(self, source):

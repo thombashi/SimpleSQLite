@@ -101,7 +101,7 @@ class CsvTableFileLoader(CsvTableLoader):
 
         :return:
             Loaded table data.
-            Table name is determined by :py:meth:`.make_table_name`.
+            Table name is determined by :py:meth:`~.CsvTableFileLoader.make_table_name`.
         :rtype: iterator of |TableData|
         :raises InvalidDataError: If the CSV data is invalid.
 

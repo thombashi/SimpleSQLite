@@ -77,7 +77,8 @@ class JsonTableFileLoader(TableLoader):
                 }
             }
 
-        The table name string is making from :py:attr:`.table_name`.
+        The table name string is making from
+        :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
         Following format specifiers are replaced with specific string.
 
             +----------------+------------------------------------------------+
