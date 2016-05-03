@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import dataproperty
 
 from .core import SimpleSQLite
+import simplesqlite.loader
 
 
 MEMORY_DB_NAME = ":memory:"
