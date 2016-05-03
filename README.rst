@@ -1,5 +1,5 @@
 SimpleSQLite
-============
+=============
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
    :target: https://pypi.python.org/pypi/SimpleSQLite
@@ -10,12 +10,10 @@ SimpleSQLite
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
 
-
 Summary
 -------
 
-.. include:: summary.txt
-
+SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
 
 Feature
 -------
@@ -29,7 +27,7 @@ Feature
 - Create table(s) from:
     - CSV file/text
     - JSON file/text
-    - Microsoft Excel |TM| file
+    - Microsoft Excel :superscript:`TM` file
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
 
 Examples
