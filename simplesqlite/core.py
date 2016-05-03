@@ -12,13 +12,14 @@ import sqlite3
 import sys
 
 import dataproperty
+import path
 import pathvalidate
 import six
 from six.moves import range
 
 import simplesqlite
 from .sqlquery import SqlQuery
-from .convertor import RecordConvertor
+from .converter import RecordConvertor
 
 
 class SimpleSQLite(object):
@@ -957,6 +958,22 @@ class SimpleSQLite(object):
         self.insert_many(table_name, data_matrix)
         self.create_index_list(table_name, strip_index_attribute_list)
         self.commit()
+
+    def create_table_from_tabledata(self, tabledata):
+        """
+        Create a table from :py:class:`.loader.data.TableData`.
+
+        :param TableData tabledata: Table data to create.
+
+        .. seealso::
+
+            :py:meth:`.create_table_with_data`
+        """
+
+        self.create_table_with_data(
+            table_name=tabledata.table_name,
+            attribute_name_list=tabledata.header_list,
+            data_matrix=tabledata.record_list)
 
     def create_table_from_csv(
             self, csv_path, table_name="",
