@@ -980,7 +980,7 @@ class SimpleSQLite(object):
             attribute_name_list=(),
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
-        Create a table from a csv file.
+        Create a table from a CSV file/text.
 
         :param str csv_source: Path to the CSV file or CSV text.
         :param str table_name:
