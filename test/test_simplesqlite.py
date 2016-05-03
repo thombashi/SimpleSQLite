@@ -737,7 +737,7 @@ class Test_SimpleSQLite_create_table_from_csv:
                 ],
             ],
         ])
-    def test_normal(
+    def test_normal_file(
             self, tmpdir, csv_text, csv_filename,
             table_name, attr_name_list, expected_table_name,
             expected_attr_name_list, expected_data_matrix):
@@ -749,6 +749,52 @@ class Test_SimpleSQLite_create_table_from_csv:
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
+
+        # check attribute ---
+        assert expected_attr_name_list == con.get_attribute_name_list(
+            table_name)
+
+        # check data ---
+        result = con.select(select="*", table_name=table_name)
+        result_matrix = result.fetchall()
+        assert len(result_matrix) == 3
+
+    @pytest.mark.parametrize(
+        [
+            "csv_text",
+            "table_name",
+            "attr_name_list",
+            "expected_table_name",
+            "expected_attr_name_list",
+            "expected_data_matrix",
+        ],
+        [
+            [
+                "\n".join([
+                    '"attr_a","attr_b","attr_c"',
+                    '1, 4,      "a"',
+                    '2, 2.1,    "bb"',
+                    '3, 120.9,  "ccc"',
+                ]),
+                "tmp",
+                [],
+                "tmp",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    [1, 4,      "a"],
+                    [2, 2.1,    "bb"],
+                    [3, 120.9,  "ccc"],
+                ],
+            ],
+        ])
+    def test_normal_text(
+            self, tmpdir, csv_text,
+            table_name, attr_name_list, expected_table_name,
+            expected_attr_name_list, expected_data_matrix):
+        p_db = tmpdir.join("tmp.db")
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
         # check attribute ---
         assert expected_attr_name_list == con.get_attribute_name_list(
