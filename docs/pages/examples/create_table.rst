@@ -2,51 +2,57 @@ Create a table
 --------------
 
 Create a table from data matrix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_with_data`
 method can get create a table from data matrix.
 Data matrix is a list of |dict|/|namedtuple|/|list|/|tuple|.
 
-.. include:: create_table_from_data_matrix.rst
+.. include:: create_table_from_data_matrix.txt
 
 
-Create a table from a csv file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a table from a CSV file/text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_from_csv` method
-can create a table from a :abbr:`csv(comma separated values)` file.
+can create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 
-.. object:: Input: sample\_data.csv
+.. include:: create_table_from_csv.txt
 
-    .. parsed-literal::
+
+Create a table from a JSON file/text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:py:meth:`~simplesqlite.core.SimpleSQLite.create_table_from_json` method
+can create a table from a JSON file/text.
+
+.. include:: create_table_from_json.txt
+
+
+Create a table from a Excel file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:py:class:`~simplesqlite.loader.spreadsheet.excelloader.ExcelTableFileLoader` class
+and :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_from_tabledata` method
+can create a table from a Excel file.
+
+.. include:: create_table_from_excel.txt
+
+
+Create a table from Google Sheets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:py:class:`~simplesqlite.loader.spreadsheet.gssloader.GoogleSheetsTableLoader` class
+and :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_from_tabledata` method
+can create a table from Google Spreadsheet.
+
+    Required packages:
+
+        - `oauth2client <https://pypi.python.org/pypi/oauth2client>`_
+        - `pyOpenSSL <https://pypi.python.org/pypi/pyOpenSSL>`_
+
+    .. seealso::
     
-        "attr_a","attr_b","attr_c"
-        1,4,"a"
-        2,2.1,"bb"
-        3,120.9,"ccc"
+        http://gspread.readthedocs.io/en/latest/oauth2.html
 
-.. object:: Sample code
-
-    .. code:: python
-
-        from simplesqlite import SimpleSQLite
-        import six
-
-        table_name = "sample_data"
-        con = SimpleSQLite("sample.sqlite", "w")
-        con.create_table_from_csv(csv_path="sample_data.csv")
-
-        six.print_(con.get_attribute_name_list(table_name))
-        result = con.select(select="*", table_name=table_name)
-        for record in result.fetchall():
-            six.print_(record)
-    
-.. object:: Output
-
-    .. code:: console
-
-        ['attr_a', 'attr_b', 'attr_c']
-        (1, 4.0, u'a')
-        (2, 2.1, u'bb')
-        (3, 120.9, u'ccc')
+.. include:: create_table_from_gss.txt
