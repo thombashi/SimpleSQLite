@@ -1,4 +1,4 @@
-Create a table
+Create table
 --------------
 
 Create a table from data matrix
@@ -20,7 +20,7 @@ can create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 .. include:: create_table_from_csv.txt
 
 
-Create a table from a JSON file/text
+Create table(s) from JSON file/text
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:meth:`~simplesqlite.core.SimpleSQLite.create_table_from_json` method
@@ -29,7 +29,7 @@ can create a table from a JSON file/text.
 .. include:: create_table_from_json.txt
 
 
-Create a table from a Excel file
+Create table(s) from a Excel file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:class:`~simplesqlite.loader.spreadsheet.excelloader.ExcelTableFileLoader` class
@@ -39,7 +39,7 @@ can create a table from a Excel file.
 .. include:: create_table_from_excel.txt
 
 
-Create a table from Google Sheets
+Create table(s) from Google Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:class:`~simplesqlite.loader.spreadsheet.gssloader.GoogleSheetsTableLoader` class
