@@ -48,8 +48,8 @@ can create a table from Google Spreadsheet.
 
     Required packages:
 
-        - `oauth2client <https://pypi.python.org/pypi/oauth2client>`_
-        - `pyOpenSSL <https://pypi.python.org/pypi/pyOpenSSL>`_
+        - `oauth2client <https://github.com/google/oauth2client/>`_
+        - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 
     .. seealso::
     
