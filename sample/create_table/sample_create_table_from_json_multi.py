@@ -6,7 +6,7 @@ from simplesqlite import SimpleSQLite
 import six
 
 
-file_path = "sample_data.json"
+file_path = "sample_data_multi.json"
 
 # create sample data file ---
 with open(file_path, "w") as f:
