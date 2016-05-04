@@ -6,6 +6,6 @@ Links
 - GitHub repository
     - https://github.com/thombashi/SimpleSQLite
 - Issue tracker
-    - https://github.com/thombashi/SimpleSQLite/issues    
+    - https://github.com/thombashi/SimpleSQLite/issues
 - PyPI
     - https://pypi.python.org/pypi/SimpleSQLite

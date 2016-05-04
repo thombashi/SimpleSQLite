@@ -59,9 +59,6 @@ def write_examples(f):
 
 
 def main():
-    summary = open(os.path.join(DOC_PAGE_DIR, "summary.txt")).read()
-    print(summary)
-
     with open(os.path.join(OUTPUT_DIR, "README.rst"), "w") as f:
         write_line_list(f, [
             "SimpleSQLite",
