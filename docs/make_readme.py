@@ -100,6 +100,14 @@ def main():
             "http://simplesqlite.readthedocs.org/en/latest/"
         ])
 
+        write_line_list(f, [
+            "Related project",
+            "==========================",
+            "",
+            "- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
+            "    - https://github.com/thombashi/sqlitebiter"
+        ])
+
     sys.stdout.write("complete\n")
     sys.stdout.flush()
     sys.stdin.readline()
