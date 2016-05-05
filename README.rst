@@ -211,3 +211,9 @@ Documentation
 
 http://simplesqlite.readthedocs.org/en/latest/
 
+Related project
+==========================
+
+- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
+    - https://github.com/thombashi/sqlitebiter
+
