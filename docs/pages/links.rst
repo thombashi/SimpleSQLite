@@ -9,3 +9,6 @@ Links
     - https://github.com/thombashi/SimpleSQLite/issues
 - PyPI
     - https://pypi.python.org/pypi/SimpleSQLite
+- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
+    - https://github.com/thombashi/sqlitebiter
+    
