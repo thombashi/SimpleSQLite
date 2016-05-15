@@ -47,7 +47,7 @@ def write_examples(f):
         "---------------------------",
     ])
 
-    write_usage_file(f, "insert_record_example.rst")
+    write_usage_file(f, "insert_record_example.txt")
 
     write_line_list(f, [
         "For more information",
