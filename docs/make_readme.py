@@ -2,10 +2,11 @@
 # encoding: utf-8
 
 import os
+import re
 import sys
 
 
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 OUTPUT_DIR = ".."
 README_WORK_DIR = "."
 DOC_PAGE_DIR = os.path.join(README_WORK_DIR, "pages")
@@ -16,7 +17,10 @@ def get_usage_file_path(filename):
 
 
 def write_line_list(f, line_list):
-    f.write("\n".join(line_list))
+    f.write("\n".join([
+        line for line in line_list
+        if re.search(":caption:", line) is None
+    ]))
     f.write("\n" * 2)
 
 
