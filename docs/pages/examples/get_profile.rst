@@ -4,8 +4,9 @@ Profiling
 :py:meth:`~simplesqlite.SimpleSQLite.get_profile`
 method can get profile of query execution time.
 
-.. code:: python
-
+.. code-block:: python
+    :caption: Sample code
+    
     from simplesqlite import SimpleSQLite
     con = SimpleSQLite("sample.sqlite", "w", profile=True)
     data_matrix = [
@@ -21,7 +22,9 @@ method can get profile of query execution time.
     for profile in con.get_profile():
         print(profile)
 
-.. parsed-literal::
+
+.. code-block:: none
+    :caption: Output
 
     SqliteProfile(query=u"CREATE INDEX IF NOT EXISTS sample_table_a_index ON sample_table('a')", cumulative_time=0.021904945373535156, count=1)
     SqliteProfile(query=u"CREATE TABLE IF NOT EXISTS 'sample_table' ('a' INTEGER, 'b' REAL, 'c' TEXT, 'd' REAL, 'e' TEXT)", cumulative_time=0.015315055847167969, count=1)

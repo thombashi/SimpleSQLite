@@ -4,9 +4,9 @@ Update a record in a table
 :py:meth:`~simplesqlite.SimpleSQLite.update`
 method can update record(s) in a table.
 
-
-.. code:: python
-
+.. code-block:: python
+    :caption: Sample code
+    
     from simplesqlite import SimpleSQLite
     from simplesqlite.sqlquery import SqlQuery
     import six
@@ -38,7 +38,9 @@ method can update record(s) in a table.
     for record in con.select(select="*", table_name=table_name).fetchall():
         six.print_(record)
 
-.. code-block:: console
+
+.. code-block:: none
+    :caption: Output
 
     ---- before update ----
     (1, u'aaa')

@@ -1,5 +1,6 @@
-.. code:: python
-
+.. code-block:: python
+    :caption: Sample code
+    
     from simplesqlite import SimpleSQLite
     import six
     
@@ -27,7 +28,8 @@
     six.print_(con.get_attribute_type_list(table_name))
 
 
-.. code:: console
+.. code-block:: none
+    :caption: Output
 
     ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
     (1, 1.1, u'aaa', 1.0, u'1')
