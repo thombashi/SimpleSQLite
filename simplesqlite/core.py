@@ -1002,8 +1002,8 @@ class SimpleSQLite(object):
 
             :py:meth:`.create_table_with_data`
             :py:func:`csv.reader`
-            :py:meth:`.loader.csv.core.CsvTableLoader.load`
-            :py:meth:`.loader.csv.core.CsvTextLoader.load`
+            :py:meth:`.loader.CsvTableFileLoader.load`
+            :py:meth:`.loader.CsvTableTextLoader.load`
         """
 
         from .loader import CsvTableFileLoader
@@ -1042,8 +1042,8 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:meth:`.loader.json.core.JsonTableFileLoader.load`
-            :py:meth:`.loader.json.core.JsonTableTextLoader.load`
+            :py:meth:`.loader.JsonTableFileLoader.load`
+            :py:meth:`.loader.JsonTableTextLoader.load`
         """
 
         from .loader import JsonTableFileLoader
