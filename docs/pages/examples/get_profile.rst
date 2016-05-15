@@ -1,7 +1,7 @@
 Profiling
 ---------
 
-:py:meth:`~simplesqlite.core.SimpleSQLite.get_profile`
+:py:meth:`~simplesqlite.SimpleSQLite.get_profile`
 method can get profile of query execution time.
 
 .. code:: python

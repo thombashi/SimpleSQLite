@@ -1,7 +1,7 @@
 Update a record in a table
 --------------------------
 
-:py:meth:`~simplesqlite.core.SimpleSQLite.update`
+:py:meth:`~simplesqlite.SimpleSQLite.update`
 method can update record(s) in a table.
 
 

@@ -29,7 +29,7 @@ CsvTableLoader class
 CsvTableFileLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.csv.core.CsvTableFileLoader
+.. autoclass:: simplesqlite.loader.CsvTableFileLoader
     :inherited-members:
     :undoc-members:
     :show-inheritance:
@@ -38,7 +38,7 @@ CsvTableFileLoader class
 CsvTableTextLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.csv.core.CsvTableTextLoader
+.. autoclass:: simplesqlite.loader.CsvTableTextLoader
     :inherited-members:
     :undoc-members:
     :show-inheritance:
@@ -47,7 +47,7 @@ CsvTableTextLoader class
 JsonTableFileLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.json.core.JsonTableFileLoader
+.. autoclass:: simplesqlite.loader.JsonTableFileLoader
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,7 +56,7 @@ JsonTableFileLoader class
 JsonTableTextLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.json.core.JsonTableTextLoader
+.. autoclass:: simplesqlite.loader.JsonTableTextLoader
     :members:
     :undoc-members:
     :show-inheritance:
@@ -73,7 +73,7 @@ SpreadSheetLoader class
 ExcelTableFileLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.spreadsheet.excelloader.ExcelTableFileLoader
+.. autoclass:: simplesqlite.loader.ExcelTableFileLoader
     :members:
     :undoc-members:
     :show-inheritance:
@@ -82,7 +82,7 @@ ExcelTableFileLoader class
 GoogleSheetsTableLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: simplesqlite.loader.spreadsheet.gsloader.GoogleSheetsTableLoader
+.. autoclass:: simplesqlite.loader.GoogleSheetsTableLoader
     :members:
     :undoc-members:
     :show-inheritance:
