@@ -39,7 +39,7 @@ Create a table
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: python
+.. code:: python
 
     from simplesqlite import SimpleSQLite
     import six
@@ -68,7 +68,7 @@ Create a table from data matrix
     six.print_(con.get_attribute_type_list(table_name))
 
 
-.. code-block:: none
+.. code::
 
     ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
     (1, 1.1, u'aaa', 1.0, u'1')
@@ -82,7 +82,7 @@ Insert records into a table
 Insert dictionary
 ~~~~~~~~~~~~~~~~~
 
-.. code-block:: python
+.. code:: python
 
     from simplesqlite import SimpleSQLite
     import six
@@ -125,7 +125,7 @@ Insert dictionary
     for record in result.fetchall():
         six.print_(record)
 
-.. code-block:: none
+.. code::
 
     (1, 1.1, u'aaa', 1, 1)
     (4, 4.4, u'ddd', 4.44, u'hoge')
@@ -136,7 +136,7 @@ Insert dictionary
 Insert list/tuple/namedtuple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: python
+.. code:: python
 
     from collections import namedtuple
     from simplesqlite import SimpleSQLite
@@ -166,7 +166,7 @@ Insert list/tuple/namedtuple
         six.print_(record)
 
 
-.. code-block:: none
+.. code::
 
     (1, 1.1, u'aaa', 1, 1)
     (7, 7.7, u'fff', 7.77, u'bar')
