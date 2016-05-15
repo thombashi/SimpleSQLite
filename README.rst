@@ -68,7 +68,7 @@ Create a table from data matrix
     six.print_(con.get_attribute_type_list(table_name))
 
 
-.. code:: console
+.. code::
 
     ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
     (1, 1.1, u'aaa', 1.0, u'1')
@@ -125,12 +125,13 @@ Insert dictionary
     for record in result.fetchall():
         six.print_(record)
 
-.. code:: console
+.. code::
 
     (1, 1.1, u'aaa', 1, 1)
     (4, 4.4, u'ddd', 4.44, u'hoge')
     (5, 5.5, u'eee', 5.55, u'foo')
     (6, u'NULL', u'fff', u'NULL', u'NULL')
+
 
 Insert list/tuple/namedtuple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -164,7 +165,8 @@ Insert list/tuple/namedtuple
     for record in result.fetchall():
         six.print_(record)
 
-.. code:: console
+
+.. code::
 
     (1, 1.1, u'aaa', 1, 1)
     (7, 7.7, u'fff', 7.77, u'bar')

@@ -46,7 +46,7 @@ def append_table(con_src, con_dst, table_name):
 
     .. seealso::
 
-        :py:meth:`simplesqlite.core.SimpleSQLite.create_table_with_data`
+        :py:meth:`simplesqlite.SimpleSQLite.create_table_with_data`
     """
 
     con_src.verify_table_existence(table_name)
@@ -96,7 +96,7 @@ def connect_sqlite_db_mem():
 class NullDatabaseConnectionError(Exception):
     """
     Raised when executing an operation of
-    :py:class:`~simplesqlite.core.SimpleSQLite` instance without connection to
+    :py:class:`~simplesqlite.SimpleSQLite` instance without connection to
     a SQLite database file.
     """
 

@@ -1,8 +1,9 @@
 Insert dictionary
 ~~~~~~~~~~~~~~~~~
 
-.. code:: python
-
+.. code-block:: python
+    :caption: Sample code
+    
     from simplesqlite import SimpleSQLite
     import six
 
@@ -44,18 +45,21 @@ Insert dictionary
     for record in result.fetchall():
         six.print_(record)
 
-.. code:: console
+.. code-block:: none
+    :caption: Output
 
     (1, 1.1, u'aaa', 1, 1)
     (4, 4.4, u'ddd', 4.44, u'hoge')
     (5, 5.5, u'eee', 5.55, u'foo')
     (6, u'NULL', u'fff', u'NULL', u'NULL')
 
+
 Insert list/tuple/namedtuple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
-
+.. code-block:: python
+    :caption: Sample code
+    
     from collections import namedtuple
     from simplesqlite import SimpleSQLite
     import six
@@ -83,7 +87,9 @@ Insert list/tuple/namedtuple
     for record in result.fetchall():
         six.print_(record)
 
-.. code:: console
+
+.. code-block:: none
+    :caption: Output
 
     (1, 1.1, u'aaa', 1, 1)
     (7, 7.7, u'fff', 7.77, u'bar')

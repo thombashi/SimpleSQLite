@@ -2,10 +2,11 @@
 # encoding: utf-8
 
 import os
+import re
 import sys
 
 
-VERSION = "0.4.0"
+VERSION = "0.4.2"
 OUTPUT_DIR = ".."
 README_WORK_DIR = "."
 DOC_PAGE_DIR = os.path.join(README_WORK_DIR, "pages")
@@ -15,8 +16,19 @@ def get_usage_file_path(filename):
     return os.path.join(DOC_PAGE_DIR, "examples", filename)
 
 
+def replace_for_pypi(line):
+    line = line.replace(".. code-block::", ".. code::")
+    line = line.replace(".. code:: none", ".. code::")
+
+    return line
+
+
 def write_line_list(f, line_list):
-    f.write("\n".join(line_list))
+    f.write("\n".join([
+        replace_for_pypi(line)
+        for line in line_list
+        if re.search(":caption:", line) is None
+    ]))
     f.write("\n" * 2)
 
 
@@ -47,7 +59,7 @@ def write_examples(f):
         "---------------------------",
     ])
 
-    write_usage_file(f, "insert_record_example.rst")
+    write_usage_file(f, "insert_record_example.txt")
 
     write_line_list(f, [
         "For more information",

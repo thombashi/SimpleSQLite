@@ -1,7 +1,7 @@
 SimpleSQLite class
 ------------------
 
-.. autoclass:: simplesqlite.core.SimpleSQLite
+.. autoclass:: simplesqlite.SimpleSQLite
     :members:
     :undoc-members:
     :show-inheritance:
