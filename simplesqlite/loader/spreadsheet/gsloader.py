@@ -20,6 +20,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
 
     Requirements:
 
+        - `gspread <https://github.com/burnash/gspread>`_
         - `oauth2client <https://pypi.python.org/pypi/oauth2client>`_
         - `pyOpenSSL <https://pypi.python.org/pypi/pyOpenSSL>`_
     """
