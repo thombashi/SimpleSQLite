@@ -1194,7 +1194,9 @@ class SimpleSQLite(object):
             raise ValueError("mode is not set")
 
         if self.mode not in valid_permission_list:
-            raise IOError(str(valid_permission_list))
+            raise IOError(
+                "invalid access: expected-mode='%s', current-mode='%s'" % (
+                    "' or '".join(valid_permission_list), self.mode))
 
     @staticmethod
     def __get_column_valuetype(data_matrix):
