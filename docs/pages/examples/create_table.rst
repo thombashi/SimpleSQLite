@@ -29,12 +29,12 @@ can create a table from a JSON file/text.
 .. include:: create_table_from_json.txt
 
 
-Create table(s) from a Excel file
+Create table(s) from an Excel file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:class:`~simplesqlite.loader.ExcelTableFileLoader` class
 and :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_tabledata` method
-can create a table from a Excel file.
+can create a table from an Excel file.
 
 .. include:: create_table_from_excel.txt
 

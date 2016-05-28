@@ -6,7 +6,7 @@ import re
 import sys
 
 
-VERSION = "0.4.2"
+VERSION = "0.4.3"
 OUTPUT_DIR = ".."
 README_WORK_DIR = "."
 DOC_PAGE_DIR = os.path.join(README_WORK_DIR, "pages")
@@ -33,11 +33,9 @@ def write_line_list(f, line_list):
 
 
 def write_usage_file(f, filename):
-    write_line_list(f, [
-        line.rstrip()
-        for line in
-        open(get_usage_file_path(filename)).readlines()
-    ])
+    with open(get_usage_file_path(filename)) as f_usage_file:
+        write_line_list(
+            f, [line.rstrip()for line in f_usage_file.readlines()])
 
 
 def write_examples(f):
@@ -120,9 +118,6 @@ def main():
             "    - https://github.com/thombashi/sqlitebiter"
         ])
 
-    sys.stdout.write("complete\n")
-    sys.stdout.flush()
-    sys.stdin.readline()
 
 if __name__ == '__main__':
     sys.exit(main())

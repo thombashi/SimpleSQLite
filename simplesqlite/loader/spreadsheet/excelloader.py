@@ -59,7 +59,7 @@ class ExcelTableFileLoader(SpreadSheetLoader):
 
     def load(self):
         """
-        Load table data from a Excel file.
+        Load table data from an Excel file.
         |load_desc|
 
         :return:
