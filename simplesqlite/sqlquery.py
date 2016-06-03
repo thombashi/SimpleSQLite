@@ -312,11 +312,13 @@ class SqlQuery:
         :param str operation: Operator of WHERE query.
         :return: Part of WHERE query of SQLite.
         :rtype: str
-        :raises ValueError:
-            If ``operation`` is invalid operator.
+        :raises simplesqlite.SqlSyntaxError:
+            If **a)** ``operation`` is invalid operator.
             Valid operators are as follows:
             ``"="``, ``"=="``, ``"!="``, ``"<>"``,
-            ``">"``, ``">="``, ``"<"``, ``"<="``
+            ``">"``, ``">="``, ``"<"``, ``"<="``.
+            **b)** the ``value`` is |None| and
+            the ``operation`` is not ``"="``/``"!="``.
 
         :Examples:
 
