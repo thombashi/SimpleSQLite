@@ -23,3 +23,9 @@ class AttributeNotFoundError(Exception):
     """
     Raised when accessed the attribute that not exists in the table.
     """
+
+
+class SqlSyntaxError(Exception):
+    """
+    Raised when a SQLite query syntax is invalid.
+    """
