@@ -1,5 +1,5 @@
 SimpleSQLite
-=============
+============
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
    :target: https://pypi.python.org/pypi/SimpleSQLite
@@ -175,9 +175,9 @@ Insert list/tuple/namedtuple
 
 For more information
 --------------------
+
 More examples are available at 
 http://simplesqlite.readthedocs.org/en/latest/pages/examples/index.html
-
 
 Installation
 ============
@@ -214,7 +214,7 @@ Documentation
 http://simplesqlite.readthedocs.org/en/latest/
 
 Related project
-==========================
+===============
 
 - sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
     - https://github.com/thombashi/sqlitebiter

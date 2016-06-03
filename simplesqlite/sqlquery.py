@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import re
 
@@ -13,6 +12,8 @@ import six
 from six.moves import map
 
 import simplesqlite as sql
+from ._error import SqlSyntaxError
+from ._func import validate_table_name
 
 
 class SqlQuery:
@@ -221,7 +222,7 @@ class SqlQuery:
             'SELECT value FROM example WHERE key = 1 ORDER BY value'
         """
 
-        sql.validate_table_name(table)
+        validate_table_name(table)
         if dataproperty.is_empty_string(select):
             raise ValueError("SELECT query is null")
 
@@ -252,7 +253,7 @@ class SqlQuery:
         :raises ValueError: |raises_validate_table_name|
         """
 
-        sql.validate_table_name(table)
+        validate_table_name(table)
 
         table = cls.to_table_str(table)
 
@@ -288,7 +289,7 @@ class SqlQuery:
         :raises ValueError: |raises_validate_table_name|
         """
 
-        sql.validate_table_name(table)
+        validate_table_name(table)
         if dataproperty.is_empty_string(set_query):
             raise ValueError("SET query is null")
 
@@ -311,11 +312,13 @@ class SqlQuery:
         :param str operation: Operator of WHERE query.
         :return: Part of WHERE query of SQLite.
         :rtype: str
-        :raises ValueError:
-            If ``operation`` is invalid operator.
+        :raises simplesqlite.SqlSyntaxError:
+            If **a)** ``operation`` is invalid operator.
             Valid operators are as follows:
             ``"="``, ``"=="``, ``"!="``, ``"<>"``,
-            ``">"``, ``">="``, ``"<"``, ``"<="``
+            ``">"``, ``">="``, ``"<"``, ``"<="``.
+            **b)** the ``value`` is |None| and
+            the ``operation`` is not ``"="``/``"!="``.
 
         :Examples:
 
@@ -327,10 +330,19 @@ class SqlQuery:
         """
 
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
-            raise ValueError("operation not supported: " + str(operation))
+            raise SqlSyntaxError("operation not supported: " + str(operation))
 
-        return "%s %s %s" % (
-            cls.to_attr_str(key), operation, cls.to_value_str(value))
+        if value is not None:
+            return "%s %s %s" % (
+                cls.to_attr_str(key), operation, cls.to_value_str(value))
+
+        if operation == "=":
+            return "%s IS NULL" % (cls.to_attr_str(key))
+        elif operation == "!=":
+            return "%s IS NOT NULL" % (cls.to_attr_str(key))
+
+        raise SqlSyntaxError(
+            "Invalid operation (%s) with None right-hand side" % (operation))
 
     @classmethod
     def make_where_in(cls, key, value_list):

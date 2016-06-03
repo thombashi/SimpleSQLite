@@ -11,7 +11,7 @@ import re
 import pytest
 
 from simplesqlite.sqlquery import SqlQuery
-
+from simplesqlite import SqlSyntaxError
 
 nan = float("nan")
 inf = float("inf")
@@ -290,19 +290,20 @@ class Test_SqlQuery_make_update:
 class Test_SqlQuery_make_where:
 
     @pytest.mark.parametrize(["key", "value", "operation", "expected"], [
-        ["key", "value", "=", "key = 'value'"],
-        ["key key", "value", "!=", "[key key] != 'value'"],
+        ["tkey", "tvalue", "=", "tkey = 'tvalue'"],
+        ["key key", "tvalue", "!=", "[key key] != 'tvalue'"],
         ["%key+key", 100, "<", "[%key+key] < 100"],
         ["key.key", "555", ">", "[key.key] > 555"],
 
-        ["key", None, "!=", "key != NULL"],
+        ["tkey", None, "=", "tkey IS NULL"],
+        ["tkey", None, "!=", "tkey IS NOT NULL"],
     ])
     def test_normal(self, key, value, operation, expected):
         assert SqlQuery.make_where(key, value, operation) == expected
 
     @pytest.mark.parametrize(["key", "value", "operation", "expected"], [
-        ["key", "value", None, ValueError],
-        ["key", "value", "INVALID_VALUE", ValueError],
+        ["tkey", "tvalue", None, SqlSyntaxError],
+        ["tkey", "tvalue", "INVALID_VALUE", SqlSyntaxError],
     ])
     def test_exception(self, key, value, operation, expected):
         with pytest.raises(expected):

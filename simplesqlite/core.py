@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import logging
 import os
@@ -16,9 +15,14 @@ import pathvalidate
 import six
 from six.moves import range
 
-import simplesqlite
 from .sqlquery import SqlQuery
 from .converter import RecordConvertor
+from ._error import AttributeNotFoundError
+from ._error import NullDatabaseConnectionError
+from ._error import TableNotFoundError
+from ._func import connect_sqlite_db_mem
+from ._func import validate_table_name
+from ._func import MEMORY_DB_NAME
 
 
 class SimpleSQLite(object):
@@ -108,7 +112,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return False
 
         return True
@@ -143,11 +147,11 @@ class SimpleSQLite(object):
         """
 
         if self.connection is None:
-            raise simplesqlite.NullDatabaseConnectionError(
+            raise NullDatabaseConnectionError(
                 "null database connection")
 
         if dataproperty.is_empty_string(self.database_path):
-            raise simplesqlite.NullDatabaseConnectionError(
+            raise NullDatabaseConnectionError(
                 "null database file path")
 
     def connect(self, database_path, mode="a"):
@@ -173,7 +177,7 @@ class SimpleSQLite(object):
         else:
             raise ValueError("unknown connection mode: " + mode)
 
-        if database_path == simplesqlite.MEMORY_DB_NAME:
+        if database_path == MEMORY_DB_NAME:
             self.__database_path = database_path
         else:
             self.__database_path = os.path.realpath(database_path)
@@ -525,7 +529,7 @@ class SimpleSQLite(object):
             in six.iteritems(self.__dict_query_totalexectime)
         ]
         attribute_name_list = ("query", "cumulative_time", "count")
-        con_tmp = simplesqlite.connect_sqlite_db_mem()
+        con_tmp = connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
                 profile_table_name,
@@ -642,7 +646,7 @@ class SimpleSQLite(object):
         """
 
         try:
-            simplesqlite.validate_table_name(table_name)
+            validate_table_name(table_name)
         except ValueError:
             return False
 
@@ -779,12 +783,12 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        simplesqlite.validate_table_name(table_name)
+        validate_table_name(table_name)
 
         if self.has_table(table_name):
             return
 
-        raise simplesqlite.TableNotFoundError(
+        raise TableNotFoundError(
             "'%s' table not found in %s" % (table_name, self.database_path))
 
     def verify_attribute_existence(self, table_name, attribute_name):
@@ -831,7 +835,7 @@ class SimpleSQLite(object):
         if self.has_attribute(table_name, attribute_name):
             return
 
-        raise simplesqlite.AttributeNotFoundError(
+        raise AttributeNotFoundError(
             "'%s' attribute not found in '%s' table" % (
                 attribute_name, table_name))
 
@@ -931,7 +935,7 @@ class SimpleSQLite(object):
             :py:meth:`.create_index_list`
         """
 
-        simplesqlite.validate_table_name(table_name)
+        validate_table_name(table_name)
 
         self.validate_access_permission(["w", "a"])
 
@@ -1072,7 +1076,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.connection.rollback()
@@ -1084,7 +1088,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.connection.commit()
@@ -1098,7 +1102,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.commit()
@@ -1110,7 +1114,7 @@ class SimpleSQLite(object):
         if dataproperty.is_empty_string(database_path):
             raise ValueError("null path")
 
-        if database_path == simplesqlite.MEMORY_DB_NAME:
+        if database_path == MEMORY_DB_NAME:
             return
 
         pathvalidate.validate_filename(os.path.basename(database_path))
