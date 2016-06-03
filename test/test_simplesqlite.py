@@ -13,6 +13,7 @@ import pytest
 
 from simplesqlite import *
 from simplesqlite.sqlquery import SqlQuery
+from simplesqlite._func import validate_table_name
 
 
 nan = float("nan")
@@ -991,4 +992,4 @@ class Test_connect_sqlite_db_mem:
     def test_normal(self):
         con_mem = connect_sqlite_db_mem()
         assert con_mem is not None
-        assert con_mem.database_path is MEMORY_DB_NAME
+        assert con_mem.database_path == ":memory:"
