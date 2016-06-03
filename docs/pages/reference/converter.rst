@@ -1,6 +1,5 @@
-Convertor classes
+Converter classes
 ----------------------------
-
 
 RecordConvertor class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
