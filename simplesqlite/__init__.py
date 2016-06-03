@@ -12,6 +12,10 @@ import dataproperty
 from .core import SimpleSQLite
 import simplesqlite.loader
 
+from ._error import NullDatabaseConnectionError
+from ._error import TableNotFoundError
+from ._error import AttributeNotFoundError
+
 
 MEMORY_DB_NAME = ":memory:"
 
@@ -91,29 +95,3 @@ def connect_sqlite_db_mem():
     """
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
-
-
-class NullDatabaseConnectionError(Exception):
-    """
-    Raised when executing an operation of
-    :py:class:`~simplesqlite.SimpleSQLite` instance without connection to
-    a SQLite database file.
-    """
-
-    pass
-
-
-class TableNotFoundError(Exception):
-    """
-    Raised when accessed the table that not exists in the database.
-    """
-
-    pass
-
-
-class AttributeNotFoundError(Exception):
-    """
-    Raised when accessed the attribute that not exists in the table.
-    """
-
-    pass

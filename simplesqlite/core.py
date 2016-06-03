@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import logging
 import os
@@ -19,6 +18,9 @@ from six.moves import range
 import simplesqlite
 from .sqlquery import SqlQuery
 from .converter import RecordConvertor
+from ._error import NullDatabaseConnectionError
+from ._error import TableNotFoundError
+from ._error import AttributeNotFoundError
 
 
 class SimpleSQLite(object):
@@ -108,7 +110,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return False
 
         return True
@@ -143,11 +145,11 @@ class SimpleSQLite(object):
         """
 
         if self.connection is None:
-            raise simplesqlite.NullDatabaseConnectionError(
+            raise NullDatabaseConnectionError(
                 "null database connection")
 
         if dataproperty.is_empty_string(self.database_path):
-            raise simplesqlite.NullDatabaseConnectionError(
+            raise NullDatabaseConnectionError(
                 "null database file path")
 
     def connect(self, database_path, mode="a"):
@@ -784,7 +786,7 @@ class SimpleSQLite(object):
         if self.has_table(table_name):
             return
 
-        raise simplesqlite.TableNotFoundError(
+        raise TableNotFoundError(
             "'%s' table not found in %s" % (table_name, self.database_path))
 
     def verify_attribute_existence(self, table_name, attribute_name):
@@ -831,7 +833,7 @@ class SimpleSQLite(object):
         if self.has_attribute(table_name, attribute_name):
             return
 
-        raise simplesqlite.AttributeNotFoundError(
+        raise AttributeNotFoundError(
             "'%s' attribute not found in '%s' table" % (
                 attribute_name, table_name))
 
@@ -1072,7 +1074,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.connection.rollback()
@@ -1084,7 +1086,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.connection.commit()
@@ -1098,7 +1100,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except simplesqlite.NullDatabaseConnectionError:
+        except NullDatabaseConnectionError:
             return
 
         self.commit()
