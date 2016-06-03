@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import re
 
@@ -13,6 +12,7 @@ import six
 from six.moves import map
 
 import simplesqlite as sql
+from ._error import SqlSyntaxError
 
 
 class SqlQuery:
@@ -327,10 +327,19 @@ class SqlQuery:
         """
 
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
-            raise ValueError("operation not supported: " + str(operation))
+            raise SqlSyntaxError("operation not supported: " + str(operation))
 
-        return "%s %s %s" % (
-            cls.to_attr_str(key), operation, cls.to_value_str(value))
+        if value is not None:
+            return "%s %s %s" % (
+                cls.to_attr_str(key), operation, cls.to_value_str(value))
+
+        if operation == "=":
+            return "%s IS NULL" % (cls.to_attr_str(key))
+        elif operation == "!=":
+            return "%s IS NOT NULL" % (cls.to_attr_str(key))
+
+        raise SqlSyntaxError(
+            "Invalid operation (%s) with None right-hand side" % (operation))
 
     @classmethod
     def make_where_in(cls, key, value_list):
