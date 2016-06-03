@@ -1,122 +1,69 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import os
-import re
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
+
 import sys
 
+import readmemaker
 
-VERSION = "0.4.3"
+
+PROJECT_NAME = "SimpleSQLite"
 OUTPUT_DIR = ".."
-README_WORK_DIR = "."
-DOC_PAGE_DIR = os.path.join(README_WORK_DIR, "pages")
 
 
-def get_usage_file_path(filename):
-    return os.path.join(DOC_PAGE_DIR, "examples", filename)
+def write_examples(maker):
+    maker.set_indent_level(0)
+    maker.write_chapter("Examples")
 
+    maker.inc_indent_level()
+    maker.write_chapter("Create a table")
+    maker.inc_indent_level()
+    maker.write_chapter("Create a table from data matrix")
+    maker.write_example_file("create_table_from_data_matrix.txt")
 
-def replace_for_pypi(line):
-    line = line.replace(".. code-block::", ".. code::")
-    line = line.replace(".. code:: none", ".. code::")
+    maker.dec_indent_level()
+    maker.write_chapter("Insert records into a table")
+    maker.write_example_file("insert_record_example.txt")
 
-    return line
-
-
-def write_line_list(f, line_list):
-    f.write("\n".join([
-        replace_for_pypi(line)
-        for line in line_list
-        if re.search(":caption:", line) is None
-    ]))
-    f.write("\n" * 2)
-
-
-def write_usage_file(f, filename):
-    with open(get_usage_file_path(filename)) as f_usage_file:
-        write_line_list(
-            f, [line.rstrip()for line in f_usage_file.readlines()])
-
-
-def write_examples(f):
-    write_line_list(f, [
-        "Examples",
-        "========",
-        "",
-        "Create a table",
-        "--------------",
-        "",
-        "Create a table from data matrix",
-        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-    ])
-
-    write_usage_file(f, "create_table_from_data_matrix.txt")
-
-    write_line_list(f, [
-        "Insert records into a table",
-        "---------------------------",
-    ])
-
-    write_usage_file(f, "insert_record_example.txt")
-
-    write_line_list(f, [
-        "For more information",
-        "--------------------",
+    maker.write_chapter("For more information")
+    maker.write_line_list([
         "More examples are available at ",
-        "http://simplesqlite.readthedocs.org/en/latest/pages/examples/index.html",
-        "",
+        "http://%s.readthedocs.org/en/latest/pages/examples/index.html" % (
+            PROJECT_NAME.lower()),
     ])
 
 
 def main():
-    with open(os.path.join(OUTPUT_DIR, "README.rst"), "w") as f:
-        write_line_list(f, [
-            "SimpleSQLite",
-            "=============",
-            "",
-        ] + [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "badges.txt")).readlines()
-        ])
+    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR)
 
-        write_line_list(f, [
-            "Summary",
-            "-------",
-            "",
-        ] + [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "summary.txt")).readlines()
-        ])
+    maker.write_introduction_file("badges.txt")
 
-        write_line_list(f, [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "feature.txt")).readlines()
-        ])
+    maker.inc_indent_level()
+    maker.write_chapter("Summary")
+    maker.write_introduction_file("summary.txt")
+    maker.write_introduction_file("feature.txt")
 
-        write_examples(f)
+    write_examples(maker)
 
-        write_line_list(f, [
-            line.rstrip() for line in
-            open(os.path.join(DOC_PAGE_DIR, "installation.rst")).readlines()
-        ])
+    maker.write_file(
+        maker.doc_page_root_dir_path.joinpath("installation.rst"))
 
-        write_line_list(f, [
-            "Documentation",
-            "=============",
-            "",
-            "http://simplesqlite.readthedocs.org/en/latest/"
-        ])
+    maker.set_indent_level(0)
+    maker.write_chapter("Documentation")
+    maker.write_line_list([
+        "http://%s.readthedocs.org/en/latest/" % (PROJECT_NAME.lower()),
+    ])
 
-        write_line_list(f, [
-            "Related project",
-            "==========================",
-            "",
-            "- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
-            "    - https://github.com/thombashi/sqlitebiter"
-        ])
+    maker.write_chapter("Related project")
+    maker.write_line_list([
+        "- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
+        "    - https://github.com/thombashi/sqlitebiter"
+    ])
+
+    return 0
 
 
 if __name__ == '__main__':
