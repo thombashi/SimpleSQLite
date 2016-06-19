@@ -1,9 +1,14 @@
 from __future__ import with_statement
 import os.path
 import setuptools
+import sys
 
 
 REQUIREMENT_DIR = "requirements"
+
+needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
+
 
 with open("README.rst") as fp:
     long_description = fp.read()
@@ -19,7 +24,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.3.3",
+    version="0.3.4",
     url="https://github.com/thombashi/SimpleSQLite",
     bugtrack_url="https://github.com/thombashi/SimpleSQLite/issues",
 
@@ -32,7 +37,7 @@ setuptools.setup(
     long_description=long_description,
     license="MIT License",
     packages=setuptools.find_packages(exclude=['test*']),
-    setup_requires=["pytest-runner"],
+    setup_requires=pytest_runner,
     tests_require=tests_require,
 
     classifiers=[
