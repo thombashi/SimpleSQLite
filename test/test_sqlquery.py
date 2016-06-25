@@ -7,6 +7,7 @@
 
 import os
 import re
+import string
 
 import pytest
 
@@ -20,7 +21,7 @@ inf = float("inf")
 class Test_SqlQuery_sanitize:
     SANITIZE_CHAR_LIST = [
         "%", "/", "(", ")", "[", "]", "<", ">", ".", ";",
-        "'", "!", "\\", "#", " ", "-", "+", "=", "\n"
+        "'", '"', "!", "\\", "#", " ", "-", "+", "=", "\n"
     ]
 
     @pytest.mark.parametrize(
@@ -85,9 +86,7 @@ class Test_SqlQuery_to_attr_str:
         ["attr_a", True, "attr_a"],
     ] + [
         ["te%sst" % (re.escape(c)), None, "[te%sst]" % (re.escape(c))]
-        for c in [
-            "%", "(", ")", ".", " ", "-", "+", "#"
-        ] + [str(n) for n in range(10)]
+        for c in string.digits + "%(). -+#'\""
     ]
     )
     def test_normal(self, value, operation, expected):

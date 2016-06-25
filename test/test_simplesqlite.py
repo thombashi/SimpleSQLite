@@ -668,35 +668,56 @@ class Test_SimpleSQLite_drop_table:
 
 class Test_SimpleSQLite_create_table_with_data:
 
-    @pytest.mark.parametrize(["data_matrix"], [
+    @pytest.mark.parametrize(
+        ["attr_name_list", "data_matrix", "index_attr_list"],
         [
             [
-                [1, 4,      "a"],
-                [2, 2.1,    "bb"],
-                [3, 120.9,  "ccc"],
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    [1, 4,      "a"],
+                    [2, 2.1,    "bb"],
+                    [3, 120.9,  "ccc"],
+                ],
+                ["attr_a"],
             ],
-        ],
-        [
             [
-                {"attr_a": 1, "attr_b": 4,      "attr_c": "a"},
-                {"attr_a": 2, "attr_b": 2.1,    "attr_c": "bb"},
-                {"attr_a": 3, "attr_b": 120.9,  "attr_c": "ccc"},
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    {"attr_a": 1, "attr_b": 4,      "attr_c": "a"},
+                    {"attr_a": 2, "attr_b": 2.1,    "attr_c": "bb"},
+                    {"attr_a": 3, "attr_b": 120.9,  "attr_c": "ccc"},
+                ],
+                [
+                    "not_exist_attr_0",
+                    "attr_a", "attr_b", "attr_c",
+                    "not_exist_attr_1",
+                ],
             ],
-        ],
-    ])
-    def test_normal(self, tmpdir, data_matrix):
+            [
+                ["attr'a", 'attr"b', "attr'c[%]", "attr($)"],
+                [
+                    [1, 4,   "a",  None],
+                    [2, 2.1, "bb", None],
+                    [2, 2.1, "bb", None],
+                ],
+                ["attr'a", 'attr"b', "attr[%]"],
+            ],
+        ]
+    )
+    def test_normal(
+            self, tmpdir, attr_name_list, data_matrix, index_attr_list):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
-        attribute_name_list = ["attr_a", "attr_b", "attr_c"]
-        index_attribute_list = ["attr_a"]
 
         con.create_table_with_data(
-            table_name, attribute_name_list, data_matrix, index_attribute_list)
+            table_name, attr_name_list, data_matrix, index_attr_list)
         con.commit()
 
         # check data ---
-        result = con.select(select="*", table_name=table_name)
+        result = con.select(
+            select=",".join(SqlQuery.to_attr_str_list(attr_name_list)),
+            table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
