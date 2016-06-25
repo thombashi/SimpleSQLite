@@ -21,7 +21,7 @@ inf = float("inf")
 class Test_SqlQuery_sanitize:
     SANITIZE_CHAR_LIST = [
         "%", "/", "(", ")", "[", "]", "<", ">", ".", ";",
-        "'", "!", "\\", "#", " ", "-", "+", "=", "\n"
+        "'", '"', "!", "\\", "#", " ", "-", "+", "=", "\n"
     ]
 
     @pytest.mark.parametrize(
@@ -86,7 +86,7 @@ class Test_SqlQuery_to_attr_str:
         ["attr_a", True, "attr_a"],
     ] + [
         ["te%sst" % (re.escape(c)), None, "[te%sst]" % (re.escape(c))]
-        for c in string.digits + "%(). -+#"
+        for c in string.digits + "%(). -+#'\""
     ]
     )
     def test_normal(self, value, operation, expected):

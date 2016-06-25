@@ -21,9 +21,10 @@ class SqlQuery:
     Support class for making SQLite query.
     """
 
-    __RE_SANITIZE = re.compile("[%s]" % (re.escape("%/()[]<>.:;'!\# -+=\n\r")))
+    __RE_SANITIZE = re.compile(
+        "[%s]" % (re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
     __RE_TABLE_STR = re.compile("[%s]" % (re.escape("%()-+/.")))
-    __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("[%()-+/.]")))
+    __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("[%()-+/.'\"]")))
     __RE_SPACE = re.compile("[\s]+")
 
     __VALID_WHERE_OPERATION_LIST = [
