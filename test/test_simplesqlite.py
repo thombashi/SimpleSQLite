@@ -693,6 +693,15 @@ class Test_SimpleSQLite_create_table_with_data:
                     "not_exist_attr_1",
                 ],
             ],
+            [
+                ["attr'a", 'attr"b', "attr'c[%]", "attr($)"],
+                [
+                    [1, 4,   "a",  None],
+                    [2, 2.1, "bb", None],
+                    [2, 2.1, "bb", None],
+                ],
+                ["attr'a", 'attr"b', "attr[%]"],
+            ],
         ]
     )
     def test_normal(
@@ -706,7 +715,9 @@ class Test_SimpleSQLite_create_table_with_data:
         con.commit()
 
         # check data ---
-        result = con.select(select="*", table_name=table_name)
+        result = con.select(
+            select=",".join(SqlQuery.to_attr_str_list(attr_name_list)),
+            table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 

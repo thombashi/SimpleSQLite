@@ -24,7 +24,8 @@ class SqlQuery:
     __RE_SANITIZE = re.compile(
         "[%s]" % (re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
     __RE_TABLE_STR = re.compile("[%s]" % (re.escape("%()-+/.")))
-    __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("[%()-+/.'\"]")))
+    __RE_BRACKET = re.compile("[%s]" % (re.escape("[]")))
+    __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("%()-+/.'\"")))
     __RE_SPACE = re.compile("[\s]+")
 
     __VALID_WHERE_OPERATION_LIST = [
@@ -101,7 +102,9 @@ class SqlQuery:
             'SUM(key)'
         """
 
-        if cls.__RE_TO_ATTR_STR.search(name):
+        if cls.__RE_BRACKET.search(name):
+            sql_name = '"%s"' % (name)
+        elif cls.__RE_TO_ATTR_STR.search(name):
             sql_name = "[%s]" % (name)
         elif name == "join":
             sql_name = "[%s]" % (name)

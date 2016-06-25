@@ -893,8 +893,15 @@ class SimpleSQLite(object):
 
         index_name = "%s_%s_index" % (
             SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
-        query = "CREATE INDEX IF NOT EXISTS %s ON %s('%s')" % (
-            index_name, SqlQuery.to_table_str(table_name), attribute_name)
+        if attribute_name.find("'") != -1:
+            query_format = 'CREATE INDEX IF NOT EXISTS %s ON %s("%s")'
+        else:
+            query_format = "CREATE INDEX IF NOT EXISTS %s ON %s('%s')"
+
+        query = query_format % (
+            index_name,
+            SqlQuery.to_table_str(table_name),
+            attribute_name)
         self.execute_query(query, logging.getLogger().findCaller())
 
     def create_index_list(self, table_name, attribute_name_list):
@@ -951,14 +958,9 @@ class SimpleSQLite(object):
             attribute_name_list, data_matrix)
         self.__verify_value_matrix(attribute_name_list, data_matrix)
 
-        attr_description_list = []
-        for col, value_type in sorted(
-                six.iteritems(self.__get_column_valuetype(data_matrix))):
-            attr_name = attribute_name_list[col]
-            attr_description_list.append(
-                "'%s' %s" % (attr_name, value_type))
-
-        self.create_table(table_name, attr_description_list)
+        self.create_table(
+            table_name,
+            self.__get_attr_desc_list(attribute_name_list, data_matrix))
         self.insert_many(table_name, data_matrix)
         self.create_index_list(table_name, index_attribute_list)
         self.commit()
@@ -1180,6 +1182,20 @@ class SimpleSQLite(object):
 
         self.__dict_query_count = {}
         self.__dict_query_totalexectime = {}
+
+    def __get_attr_desc_list(self, attr_name_list, data_matrix):
+        attr_description_list = []
+        for col, value_type in sorted(
+                six.iteritems(self.__get_column_valuetype(data_matrix))):
+            attr_name = attr_name_list[col]
+            if attr_name.find("'") != -1:
+                desc_format = '"%s" %s'
+            else:
+                desc_format = "'%s' %s"
+            attr_description_list.append(
+                desc_format % (attr_name, value_type))
+
+        return attr_description_list
 
     def validate_access_permission(self, valid_permission_list):
         """
