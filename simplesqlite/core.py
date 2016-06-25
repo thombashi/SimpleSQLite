@@ -902,6 +902,7 @@ class SimpleSQLite(object):
         :param str table_name: Table name that exists attribute.
         :param list attribute_name_list:
             List of attribute names to create indices.
+            Ignore attributes that not existing in the table.
 
         .. seealso:: :py:meth:`.create_index`
         """
@@ -911,7 +912,10 @@ class SimpleSQLite(object):
         if dataproperty.is_empty_list_or_tuple(attribute_name_list):
             return
 
-        for attribute in attribute_name_list:
+        table_attr_set = set(self.get_attribute_name_list(table_name))
+        index_attr_set = set(attribute_name_list)
+
+        for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
     def create_table_with_data(
@@ -947,10 +951,7 @@ class SimpleSQLite(object):
             attribute_name_list, data_matrix)
         self.__verify_value_matrix(attribute_name_list, data_matrix)
 
-        strip_index_attribute_list = list(
-            set(attribute_name_list).intersection(set(index_attribute_list)))
         attr_description_list = []
-
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attribute_name_list[col]
@@ -959,7 +960,7 @@ class SimpleSQLite(object):
 
         self.create_table(table_name, attr_description_list)
         self.insert_many(table_name, data_matrix)
-        self.create_index_list(table_name, strip_index_attribute_list)
+        self.create_index_list(table_name, index_attribute_list)
         self.commit()
 
     def create_table_from_tabledata(self, tabledata):
