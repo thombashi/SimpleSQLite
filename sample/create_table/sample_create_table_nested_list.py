@@ -2,9 +2,9 @@
 # encoding: utf-8
 
 
+import json
 from simplesqlite import SimpleSQLite
 import six
-
 
 table_name = "sample_table"
 con = SimpleSQLite("sample.sqlite", "w")
@@ -27,4 +27,4 @@ for record in result.fetchall():
     six.print_(record)
 
 # display data type for each column in the table -----
-six.print_(con.get_attribute_type_list(table_name))
+six.print_(json.dumps(con.get_attr_type(table_name), indent=4))
