@@ -481,6 +481,33 @@ class SimpleSQLite(object):
 
         return self.__get_list_from_fetch(result.description)
 
+    def get_attr_type(self, table_name):
+        """
+        :return:
+            Dictionary of attribute names and attribute types in the table.
+        :rtype: dict
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
+        """
+
+        import re
+
+        self.verify_table_existence(table_name)
+
+        result = self.execute_query(
+            "SELECT sql FROM sqlite_master WHERE type='table' and name=%s" % (
+                SqlQuery.to_value_str(table_name)))
+        query = result.fetchone()[0]
+        match = re.search("[(].*[)]", query)
+
+        return dict([
+            item.split("'")[1:]
+            for item in match.group().strip("()").split(", ")
+        ])
+
     def get_attribute_type_list(self, table_name):
         """
         :return: List of attribute names in the table.
@@ -490,6 +517,11 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
         :raises sqlite3.OperationalError: |raises_operational_error|
+
+        .. warning::
+
+            This method will be deleted in the future.
+            Use :py:meth:`.get_attr_type` instead.
         """
 
         self.verify_table_existence(table_name)
