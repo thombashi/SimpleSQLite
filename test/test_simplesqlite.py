@@ -4,6 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+import datetime
 import itertools
 import sqlite3
 
@@ -667,6 +668,7 @@ class Test_SimpleSQLite_drop_table:
 
 
 class Test_SimpleSQLite_create_table_with_data:
+    DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
         ["attr_name_list", "data_matrix", "index_attr_list"],
@@ -694,11 +696,14 @@ class Test_SimpleSQLite_create_table_with_data:
                 ],
             ],
             [
-                ["attr'a", 'attr"b', "attr'c[%]", "attr($)"],
                 [
-                    [1, 4,   "a",  None],
-                    [2, 2.1, "bb", None],
-                    [2, 2.1, "bb", None],
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
+                    "attr inf", "attr nan", "attr dt"
+                ],
+                [
+                    [1, 4,   "a",  None, inf, nan, DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, DATATIME_DATA],
                 ],
                 ["attr'a", 'attr"b', "attr[%]"],
             ],
