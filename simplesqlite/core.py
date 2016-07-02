@@ -925,6 +925,12 @@ class SimpleSQLite(object):
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
+    def __sanitize_attr_name_list(self, attr_name_list):
+        return [
+            SqlQuery.sanitize_attr(attr_name)
+            for attr_name in attr_name_list
+        ]
+
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=()):
@@ -960,9 +966,12 @@ class SimpleSQLite(object):
 
         self.create_table(
             table_name,
-            self.__get_attr_desc_list(attribute_name_list, data_matrix))
+            self.__get_attr_desc_list(
+                self.__sanitize_attr_name_list(attribute_name_list),
+                data_matrix))
         self.insert_many(table_name, data_matrix)
-        self.create_index_list(table_name, index_attribute_list)
+        self.create_index_list(
+            table_name, self.__sanitize_attr_name_list(index_attribute_list))
         self.commit()
 
     def create_table_from_tabledata(self, tabledata):

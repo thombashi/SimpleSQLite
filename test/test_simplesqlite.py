@@ -671,7 +671,10 @@ class Test_SimpleSQLite_create_table_with_data:
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
-        ["attr_name_list", "data_matrix", "index_attr_list"],
+        [
+            "attr_name_list", "data_matrix",
+            "index_attr_list", "expected_attr_list",
+        ],
         [
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -681,6 +684,7 @@ class Test_SimpleSQLite_create_table_with_data:
                     [3, 120.9,  "ccc"],
                 ],
                 ["attr_a"],
+                ("integer", "real", "text"),
             ],
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -694,23 +698,30 @@ class Test_SimpleSQLite_create_table_with_data:
                     "attr_a", "attr_b", "attr_c",
                     "not_exist_attr_1",
                 ],
+                ("integer", "real", "text"),
             ],
             [
                 [
                     "attr'a", 'attr"b', "attr'c[%]", "attr($)",
-                    "attr inf", "attr nan", "attr dt"
+                    "attr inf", "attr nan", "attr-f", "attr dt",
                 ],
                 [
-                    [1, 4,   "a",  None, inf, nan, DATATIME_DATA],
-                    [2, 2.1, "bb", None, inf, nan, DATATIME_DATA],
-                    [2, 2.1, "bb", None, inf, nan, DATATIME_DATA],
+                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA],
                 ],
-                ["attr'a", 'attr"b', "attr[%]"],
+                [
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
+                    "attr inf", "attr nan", "attr-f", "attr dt",
+                ],
+                (u'integer', u'real', u'text', u'null',
+                 u'text', u'null', u'real', u'text'),
             ],
         ]
     )
     def test_normal(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list):
+            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
+            expected_attr_list):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
@@ -725,6 +736,7 @@ class Test_SimpleSQLite_create_table_with_data:
             table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+        assert con.get_attribute_type_list(table_name) == expected_attr_list
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
