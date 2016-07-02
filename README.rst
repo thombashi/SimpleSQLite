@@ -41,11 +41,12 @@ Create a table from data matrix
 
 .. code:: python
 
+    import json
     from simplesqlite import SimpleSQLite
     import six
 
-    con = SimpleSQLite("sample.sqlite", "w")
     table_name = "sample_table"
+    con = SimpleSQLite("sample.sqlite", "w")
 
     # create table -----
     data_matrix = [
@@ -54,7 +55,7 @@ Create a table from data matrix
         [3, 3.3, "ccc", 3,   "ccc"],
     ]
     con.create_table_with_data(
-        table_name="sample_table",
+        table_name,
         attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=data_matrix)
 
@@ -65,7 +66,7 @@ Create a table from data matrix
         six.print_(record)
 
     # display data type for each column in the table -----
-    six.print_(con.get_attribute_type_list(table_name))
+    six.print_(json.dumps(con.get_attr_type(table_name), indent=4))
 
 
 .. code::
@@ -74,7 +75,13 @@ Create a table from data matrix
     (1, 1.1, u'aaa', 1.0, u'1')
     (2, 2.2, u'bbb', 2.2, u'2.2')
     (3, 3.3, u'ccc', 3.0, u'ccc')
-    (u'integer', u'real', u'text', u'real', u'text')
+    {
+        "attr_b": " REAL",
+        "attr_c": " TEXT",
+        "attr_a": " INTEGER",
+        "attr_d": " REAL",
+        "attr_e": " TEXT"
+    }
 
 Insert records into a table
 ---------------------------
