@@ -1240,6 +1240,6 @@ class SimpleSQLite(object):
         col_prop_list = prop_extractor.extract_column_property_list()
 
         return dict([
-            [col, typename_table[col_prop.typecode]]
+            [col, typename_table.get(col_prop.typecode, "TEXT")]
             for col, col_prop in enumerate(col_prop_list)
         ])
