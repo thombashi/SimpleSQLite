@@ -504,14 +504,16 @@ class SimpleSQLite(object):
 
         return result.fetchone()
 
-    def get_num_records(self, table_name):
+    def get_num_records(self, table_name, where=None):
         """
         :param str table_name: Table name to get records.
+        :param str where: Where clause of the query.
         :return: Number of records in the table.
         :rtype: int
         """
 
-        return self.get_value(select="COUNT(*)", table_name=table_name)
+        return self.get_value(
+            select="COUNT(*)", table_name=table_name, where=where)
 
     def get_profile(self, profile_count=50):
         """
