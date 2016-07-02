@@ -23,9 +23,10 @@ class SqlQuery:
 
     __RE_SANITIZE = re.compile(
         "[%s]" % (re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
+    __RE_SANITIZE_ATTR = re.compile("[%s]" % (re.escape("'\"")))
     __RE_TABLE_STR = re.compile("[%s]" % (re.escape("%()-+/.")))
-    __RE_BRACKET = re.compile("[%s]" % (re.escape("[]")))
-    __RE_TO_ATTR_STR = re.compile("[%s0-9\s#]" % (re.escape("%()-+/.'\"")))
+    __RE_TO_ATTR_QUOTE = re.compile("[%s]" % (re.escape("[_]")))
+    __RE_TO_ATTR_BRACKET = re.compile("[%s0-9\s#]" % (re.escape("%()-+/.'\"")))
     __RE_SPACE = re.compile("[\s]+")
 
     __VALID_WHERE_OPERATION_LIST = [
@@ -55,6 +56,10 @@ class SqlQuery:
         """
 
         return cls.__RE_SANITIZE.sub("", query_item)
+
+    @classmethod
+    def sanitize_attr(cls, query_item):
+        return cls.__RE_SANITIZE_ATTR.sub("_", query_item)
 
     @classmethod
     def to_table_str(cls, name):
@@ -102,9 +107,11 @@ class SqlQuery:
             'SUM(key)'
         """
 
-        if cls.__RE_BRACKET.search(name):
+        name = cls.sanitize_attr(name)
+
+        if cls.__RE_TO_ATTR_QUOTE.search(name):
             sql_name = '"%s"' % (name)
-        elif cls.__RE_TO_ATTR_STR.search(name):
+        elif cls.__RE_TO_ATTR_BRACKET.search(name):
             sql_name = "[%s]" % (name)
         elif name == "join":
             sql_name = "[%s]" % (name)
@@ -141,7 +148,7 @@ class SqlQuery:
         """
 
         if dataproperty.is_empty_string(operation_query):
-            return map(cls.to_attr_str, name_list)
+            return list(map(cls.to_attr_str, name_list))
 
         return [
             "%s(%s)" % (operation_query, cls.to_attr_str(name))
