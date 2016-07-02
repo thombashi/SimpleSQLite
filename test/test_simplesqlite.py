@@ -297,11 +297,9 @@ class Test_SimpleSQLite_insert:
         [NamedTupleEx(5, 6, 7), (5, 6)]
     ])
     def test_normal(self, con, value, expeted):
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con.get_num_records(TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
+        assert con.get_num_records(TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -310,11 +308,9 @@ class Test_SimpleSQLite_insert:
         [[5, 6.6, "c"], (5, 6.6, "c")],
     ])
     def test_mix(self, con_mix, value, expeted):
-        assert con_mix.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con_mix.get_num_records(TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con_mix.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
+        assert con_mix.get_num_records(TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -373,11 +369,9 @@ class Test_SimpleSQLite_insert_many:
             (11, 12),
         ]
 
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con.get_num_records(TEST_TABLE_NAME) == 2
         con.insert_many(TEST_TABLE_NAME, value)
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 5
+        assert con.get_num_records(TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
         assert result_tuple == expected

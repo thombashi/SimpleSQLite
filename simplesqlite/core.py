@@ -504,6 +504,15 @@ class SimpleSQLite(object):
 
         return result.fetchone()
 
+    def get_num_records(self, table_name):
+        """
+        :param str table_name: Table name to get records.
+        :return: Number of records in the table.
+        :rtype: int
+        """
+
+        return self.get_value(select="COUNT(*)", table_name=table_name)
+
     def get_profile(self, profile_count=50):
         """
         Get profile of query execution time.
