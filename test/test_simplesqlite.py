@@ -4,6 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+import datetime
 import itertools
 import sqlite3
 
@@ -296,11 +297,9 @@ class Test_SimpleSQLite_insert:
         [NamedTupleEx(5, 6, 7), (5, 6)]
     ])
     def test_normal(self, con, value, expeted):
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con.get_num_records(TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
+        assert con.get_num_records(TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -309,11 +308,9 @@ class Test_SimpleSQLite_insert:
         [[5, 6.6, "c"], (5, 6.6, "c")],
     ])
     def test_mix(self, con_mix, value, expeted):
-        assert con_mix.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con_mix.get_num_records(TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, insert_record=value)
-        assert con_mix.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 3
+        assert con_mix.get_num_records(TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expeted
@@ -372,11 +369,9 @@ class Test_SimpleSQLite_insert_many:
             (11, 12),
         ]
 
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 2
+        assert con.get_num_records(TEST_TABLE_NAME) == 2
         con.insert_many(TEST_TABLE_NAME, value)
-        assert con.get_value(
-            select="COUNT(*)", table_name=TEST_TABLE_NAME) == 5
+        assert con.get_num_records(TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
         assert result_tuple == expected
@@ -667,9 +662,13 @@ class Test_SimpleSQLite_drop_table:
 
 
 class Test_SimpleSQLite_create_table_with_data:
+    DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
-        ["attr_name_list", "data_matrix", "index_attr_list"],
+        [
+            "attr_name_list", "data_matrix",
+            "index_attr_list", "expected_attr",
+        ],
         [
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -679,6 +678,11 @@ class Test_SimpleSQLite_create_table_with_data:
                     [3, 120.9,  "ccc"],
                 ],
                 ["attr_a"],
+                {
+                    u'attr_a': u' INTEGER',
+                    u'attr_b': u' REAL',
+                    u'attr_c': u' TEXT',
+                },
             ],
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -692,20 +696,42 @@ class Test_SimpleSQLite_create_table_with_data:
                     "attr_a", "attr_b", "attr_c",
                     "not_exist_attr_1",
                 ],
+                {
+                    u'attr_a': u' INTEGER',
+                    u'attr_b': u' REAL',
+                    u'attr_c': u' TEXT',
+                },
             ],
             [
-                ["attr'a", 'attr"b', "attr'c[%]", "attr($)"],
                 [
-                    [1, 4,   "a",  None],
-                    [2, 2.1, "bb", None],
-                    [2, 2.1, "bb", None],
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
+                    "attr inf", "attr nan", "attr-f", "attr dt",
                 ],
-                ["attr'a", 'attr"b', "attr[%]"],
+                [
+                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA],
+                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA],
+                ],
+                [
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
+                    "attr inf", "attr nan", "attr-f", "attr dt",
+                ],
+                {
+                    u'attr_a': u' INTEGER',
+                    u'attr_c[%]': u' TEXT',
+                    u'attr_b': u' REAL',
+                    u'attr($)': u' TEXT',
+                    u'attr inf': u' TEXT',
+                    u'attr nan': u' TEXT',
+                    u'attr-f': u' REAL',
+                    u'attr dt': u' TEXT',
+                },
             ],
         ]
     )
     def test_normal(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list):
+            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
+            expected_attr):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
@@ -720,6 +746,7 @@ class Test_SimpleSQLite_create_table_with_data:
             table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+        assert con.get_attr_type(table_name) == expected_attr
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):

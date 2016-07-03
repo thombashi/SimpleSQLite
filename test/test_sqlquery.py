@@ -81,12 +81,14 @@ class Test_SqlQuery_to_attr_str:
 
     @pytest.mark.parametrize(["value", "operation", "expected"], [
         ["test", None, "test"],
+        ["te'st", None, '"te_st"'],
+        ['te"st', None, '"te_st"'],
         ["test", "AVG", "AVG(test)"],
-        ["attr_a", 2, "attr_a"],
-        ["attr_a", True, "attr_a"],
+        ["attr_a", 2, '"attr_a"'],
+        ["attr_a", True, '"attr_a"'],
     ] + [
         ["te%sst" % (re.escape(c)), None, "[te%sst]" % (re.escape(c))]
-        for c in string.digits + "%(). -+#'\""
+        for c in string.digits + "%(). -+#"
     ]
     )
     def test_normal(self, value, operation, expected):

@@ -481,6 +481,33 @@ class SimpleSQLite(object):
 
         return self.__get_list_from_fetch(result.description)
 
+    def get_attr_type(self, table_name):
+        """
+        :return:
+            Dictionary of attribute names and attribute types in the table.
+        :rtype: dict
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises sqlite3.OperationalError: |raises_operational_error|
+        """
+
+        import re
+
+        self.verify_table_existence(table_name)
+
+        result = self.execute_query(
+            "SELECT sql FROM sqlite_master WHERE type='table' and name=%s" % (
+                SqlQuery.to_value_str(table_name)))
+        query = result.fetchone()[0]
+        match = re.search("[(].*[)]", query)
+
+        return dict([
+            item.split("'")[1:]
+            for item in match.group().strip("()").split(", ")
+        ])
+
     def get_attribute_type_list(self, table_name):
         """
         :return: List of attribute names in the table.
@@ -490,6 +517,11 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
         :raises sqlite3.OperationalError: |raises_operational_error|
+
+        .. warning::
+
+            This method will be deleted in the future.
+            Use :py:meth:`.get_attr_type` instead.
         """
 
         self.verify_table_existence(table_name)
@@ -503,6 +535,17 @@ class SimpleSQLite(object):
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return result.fetchone()
+
+    def get_num_records(self, table_name, where=None):
+        """
+        :param str table_name: Table name to get records.
+        :param str where: Where clause of the query.
+        :return: Number of records in the table.
+        :rtype: int
+        """
+
+        return self.get_value(
+            select="COUNT(*)", table_name=table_name, where=where)
 
     def get_profile(self, profile_count=50):
         """
@@ -925,6 +968,12 @@ class SimpleSQLite(object):
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
+    def __sanitize_attr_name_list(self, attr_name_list):
+        return [
+            SqlQuery.sanitize_attr(attr_name)
+            for attr_name in attr_name_list
+        ]
+
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=()):
@@ -960,9 +1009,12 @@ class SimpleSQLite(object):
 
         self.create_table(
             table_name,
-            self.__get_attr_desc_list(attribute_name_list, data_matrix))
+            self.__get_attr_desc_list(
+                self.__sanitize_attr_name_list(attribute_name_list),
+                data_matrix))
         self.insert_many(table_name, data_matrix)
-        self.create_index_list(table_name, index_attribute_list)
+        self.create_index_list(
+            table_name, self.__sanitize_attr_name_list(index_attribute_list))
         self.commit()
 
     def create_table_from_tabledata(self, tabledata):
