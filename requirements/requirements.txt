@@ -1,4 +1,4 @@
-DataProperty>=0.4.1
+DataProperty>=0.5.4
 jsonschema
 pathvalidate>=0.4.2
 path.py
