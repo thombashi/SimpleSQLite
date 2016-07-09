@@ -53,10 +53,12 @@ class CsvTableLoader(TableLoader):
         self.encoding = "utf-8"
 
     def _to_data_matrix(self):
+        from dataproperty.type import FloatTypeChecker
+
         return [
             [
                 six.b(data).decode(self.encoding, "ignore")
-                if not dataproperty.is_float(data) else data
+                if not FloatTypeChecker(data).is_type() else data
                 for data in row
             ]
             for row in self._csv_reader
