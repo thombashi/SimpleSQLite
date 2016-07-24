@@ -273,7 +273,7 @@ class SqlQuery:
 
         table = cls.to_table_str(table)
 
-        if dataproperty.is_empty_list_or_tuple(insert_tuple):
+        if dataproperty.is_empty_sequence(insert_tuple):
             raise ValueError("empty insert list/tuple")
 
         if is_insert_many:
