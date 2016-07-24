@@ -1,6 +1,6 @@
-DataProperty>=0.7.0
+DataProperty>=0.8.0
 jsonschema
-pathvalidate>=0.4.2
+pathvalidate>=0.5.1
 path.py
 six
 xlrd
