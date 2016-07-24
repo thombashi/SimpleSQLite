@@ -19,7 +19,7 @@ class CsvTableFormatter(TableFormatter):
     def to_table_data(self):
         self._validate_source_data()
 
-        if dataproperty.is_empty_list_or_tuple(self._loader.header_list):
+        if dataproperty.is_empty_sequence(self._loader.header_list):
             header_list = self._source_data[0]
 
             if any([

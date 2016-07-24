@@ -312,7 +312,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        if dataproperty.is_empty_list_or_tuple(insert_record_list):
+        if dataproperty.is_empty_sequence(insert_record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
@@ -780,7 +780,7 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
+        if dataproperty.is_empty_sequence(attribute_name_list):
             return False
 
         not_exist_field_list = [
@@ -959,7 +959,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if dataproperty.is_empty_list_or_tuple(attribute_name_list):
+        if dataproperty.is_empty_sequence(attribute_name_list):
             return
 
         table_attr_set = set(self.get_attribute_name_list(table_name))
@@ -999,7 +999,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if dataproperty.is_empty_list_or_tuple(data_matrix):
+        if dataproperty.is_empty_sequence(data_matrix):
             raise ValueError("input data is null: '%s (%s)'" % (
                 table_name, ", ".join(attribute_name_list)))
 

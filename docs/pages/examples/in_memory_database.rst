@@ -1,12 +1,48 @@
 Make an in-memory database
 --------------------------
 
-:py:func:`~simplesqlite.connect_sqlite_db_mem` 
-function can create a SQLite database in memory.
+:py:func:`~simplesqlite.connect_sqlite_db_mem` function can create a SQLite database in memory.
+This function will return |SimpleSQLite| instance,
+the instance can execute methods as well as a |SimpleSQLite| instance opened with write mode. 
 
-.. code:: python
+.. code-block:: python
+    :caption: Sample code that make a table in memory
+    
+    table_name = "sample_table"
+    con = simplesqlite.connect_sqlite_db_mem()
 
-    >>> import simplesqlite
-    >>> con = simplesqlite.connect_sqlite_db_mem()
-    >>> con.database_path
-    ':memory:'
+    # create table -----
+    data_matrix = [
+        [1, 1.1, "aaa", 1,   1],
+        [2, 2.2, "bbb", 2.2, 2.2],
+        [3, 3.3, "ccc", 3,   "ccc"],
+    ]
+    con.create_table_with_data(
+        table_name,
+        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        data_matrix=data_matrix)
+
+    # display values in the table -----
+    six.print_(con.get_attribute_name_list(table_name))
+    result = con.select(select="*", table_name=table_name)
+    for record in result.fetchall():
+        six.print_(record)
+
+    # display data type for each column in the table -----
+    six.print_(json.dumps(con.get_attr_type(table_name), indent=4))
+
+
+.. code-block:: none
+    :caption: Output
+
+    ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
+    (1, 1.1, u'aaa', 1.0, u'1')
+    (2, 2.2, u'bbb', 2.2, u'2.2')
+    (3, 3.3, u'ccc', 3.0, u'ccc')
+    {
+        "attr_b": " REAL",
+        "attr_c": " TEXT",
+        "attr_a": " INTEGER",
+        "attr_d": " REAL",
+        "attr_e": " TEXT"
+    }

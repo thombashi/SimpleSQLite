@@ -323,6 +323,7 @@ rp_class = u"""
 .. |timedelta| replace:: :py:class:`datetime.timedelta`
 
 .. |TableData| replace:: :py:class:`~simplesqlite.loader.data.TableData`
+.. |SimpleSQLite| replace:: :py:class:`~simplesqlite.SimpleSQLite`
 """
 
 rp_module = u"""
