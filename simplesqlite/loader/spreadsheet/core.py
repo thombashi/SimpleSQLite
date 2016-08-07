@@ -35,23 +35,23 @@ class SpreadSheetLoader(TableLoader):
         self._end_col_idx = None
 
     @abc.abstractproperty
-    def _sheet_name(self):   # pragma: no cover
+    def _sheet_name(self):  # pragma: no cover
         pass
 
     @abc.abstractproperty
-    def _row_count(self):   # pragma: no cover
+    def _row_count(self):  # pragma: no cover
         pass
 
     @abc.abstractproperty
-    def _col_count(self):   # pragma: no cover
+    def _col_count(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _is_empty_sheet(self):   # pragma: no cover
+    def _is_empty_sheet(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _get_start_row_idx(self):   # pragma: no cover
+    def _get_start_row_idx(self):  # pragma: no cover
         pass
 
     def make_table_name(self):

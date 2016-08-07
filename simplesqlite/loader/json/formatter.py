@@ -27,7 +27,7 @@ class JsonConverter(TableFormatterInterface, LoaderAcceptor):
         self._buffer = json_buffer
 
     @abc.abstractproperty
-    def _schema(self):   # pragma: no cover
+    def _schema(self):  # pragma: no cover
         pass
 
     def _validate_source_data(self):

@@ -21,11 +21,11 @@ class TableFormatterInterface(object):
     """
 
     @abc.abstractmethod
-    def to_table_data(self):   # pragma: no cover
+    def to_table_data(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _validate_source_data(self):   # pragma: no cover
+    def _validate_source_data(self):  # pragma: no cover
         pass
 
 
