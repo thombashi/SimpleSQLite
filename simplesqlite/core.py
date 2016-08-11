@@ -994,9 +994,8 @@ class SimpleSQLite(object):
             :py:meth:`.create_index_list`
         """
 
-        validate_table_name(table_name)
-
         self.validate_access_permission(["w", "a"])
+        validate_table_name(table_name)
 
         if dataproperty.is_empty_sequence(data_matrix):
             raise ValueError("input data is null: '{:s} ({:s})'".format(
