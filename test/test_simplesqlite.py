@@ -748,6 +748,29 @@ class Test_SimpleSQLite_create_table_with_data:
         assert len(result_matrix) == 3
         assert con.get_attr_type(table_name) == expected_attr
 
+    @pytest.mark.parametrize(
+        [
+            "attr_name_list", "data_matrix",
+            "index_attr_list", "expected",
+        ],
+        [
+            [
+                [""], [["a"], ["bb"], ["ccc"]],
+                [], ValueError,
+            ],
+        ]
+    )
+    def test_exception_empty_header(
+            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
+            expected):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+        table_name = TEST_TABLE_NAME
+
+        with pytest.raises(expected):
+            con.create_table_with_data(
+                table_name, attr_name_list, data_matrix, index_attr_list)
+
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_table_with_data(

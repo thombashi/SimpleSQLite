@@ -13,6 +13,7 @@ from six.moves import zip
 from ..error import InvalidDataError
 from ..data import TableData
 from .core import SpreadSheetLoader
+from ..._func import connect_sqlite_db_mem
 
 
 class GoogleSheetsTableLoader(SpreadSheetLoader):
@@ -93,16 +94,22 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         gc = gspread.authorize(credentials)
         for worksheet in gc.open(self.title).worksheets():
             self._worksheet = worksheet
-            self.__all_values = worksheet.get_all_values()
+            self.__all_values = [row for row in worksheet.get_all_values()]
 
             if self._is_empty_sheet():
                 continue
 
-            self.__strip_empty_col()
+            try:
+                self.__strip_empty_col()
+            except ValueError:
+                continue
 
             value_matrix = self.__all_values[self._get_start_row_idx():]
-            header_list = value_matrix[0]
-            record_list = value_matrix[1:]
+            try:
+                header_list = value_matrix[0]
+                record_list = value_matrix[1:]
+            except IndexError:
+                continue
 
             yield TableData(self.make_table_name(), header_list, record_list)
 
@@ -127,16 +134,31 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             raise ValueError("spreadsheet title is empty")
 
     def __strip_empty_col(self):
-        col_idx = 0
-        t_value_matrix = zip(*self.__all_values)
+        from ...sqlquery import SqlQuery
 
-        for col_value_list in t_value_matrix:
+        con = connect_sqlite_db_mem()
+
+        tmp_table_name = "tmp"
+        header_list = [
+            "a{:d}".format(i)
+            for i in range(len(self.__all_values[0]))
+        ]
+        con.create_table_with_data(
+            tmp_table_name, header_list, self.__all_values)
+        for col_idx, header in enumerate(header_list):
+            result = con.select(
+                select=SqlQuery.to_attr_str(header), table_name=tmp_table_name)
             if any([
-                dataproperty.is_not_empty_string(value)
-                for value in col_value_list
+                dataproperty.is_not_empty_string(record[0])
+                for record in result.fetchall()
             ]):
                 break
 
-            col_idx += 1
+        strip_header_list = header_list[col_idx:]
+        if dataproperty.is_empty_sequence(strip_header_list):
+            raise ValueError()
 
-        self.__all_values = zip(*t_value_matrix[col_idx:])
+        result = con.select(
+            select=",".join(SqlQuery.to_attr_str_list(strip_header_list)),
+            table_name=tmp_table_name)
+        self.__all_values = result.fetchall()
