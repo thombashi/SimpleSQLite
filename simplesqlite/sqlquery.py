@@ -22,11 +22,12 @@ class SqlQuery:
     """
 
     __RE_SANITIZE = re.compile(
-        "[%s]" % (re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
-    __RE_SANITIZE_ATTR = re.compile("[%s]" % (re.escape("'\"")))
-    __RE_TABLE_STR = re.compile("[%s]" % (re.escape("%()-+/.")))
-    __RE_TO_ATTR_QUOTE = re.compile("[%s]" % (re.escape("[_]")))
-    __RE_TO_ATTR_BRACKET = re.compile("[%s0-9\s#]" % (re.escape("%()-+/.'\"")))
+        "[{:s}]".format(re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
+    __RE_SANITIZE_ATTR = re.compile("[{:s}]".format(re.escape("'\"")))
+    __RE_TABLE_STR = re.compile("[{:s}]".format(re.escape("%()-+/.")))
+    __RE_TO_ATTR_QUOTE = re.compile("[{:s}]".format(re.escape("[_]")))
+    __RE_TO_ATTR_BRACKET = re.compile(
+        "[{:s}0-9\s#]".format(re.escape("%()-+/.'\"")))
     __RE_SPACE = re.compile("[\s]+")
 
     __VALID_WHERE_OPERATION_LIST = [
@@ -80,10 +81,10 @@ class SqlQuery:
         """
 
         if cls.__RE_TABLE_STR.search(name):
-            return "[%s]" % (name)
+            return "[{:s}]".format(name)
 
         if cls.__RE_SPACE.search(name):
-            return "'%s'" % (name)
+            return "'{:s}'".format(name)
 
         return name
 
@@ -110,16 +111,16 @@ class SqlQuery:
         name = cls.sanitize_attr(name)
 
         if cls.__RE_TO_ATTR_QUOTE.search(name):
-            sql_name = '"%s"' % (name)
+            sql_name = '"{:s}"'.format(name)
         elif cls.__RE_TO_ATTR_BRACKET.search(name):
-            sql_name = "[%s]" % (name)
+            sql_name = "[{:s}]".format(name)
         elif name == "join":
-            sql_name = "[%s]" % (name)
+            sql_name = "[{:s}]".format(name)
         else:
             sql_name = name
 
         if dataproperty.is_not_empty_string(operation_query):
-            sql_name = "%s(%s)" % (operation_query, sql_name)
+            sql_name = "{:s}({:s})".format(operation_query, sql_name)
 
         return sql_name
 
@@ -151,7 +152,7 @@ class SqlQuery:
             return list(map(cls.to_attr_str, name_list))
 
         return [
-            "%s(%s)" % (operation_query, cls.to_attr_str(name))
+            "{:s}({:s})".format(operation_query, cls.to_attr_str(name))
             for name in name_list
         ]
 
@@ -186,7 +187,7 @@ class SqlQuery:
         ]):
             return str(value)
 
-        return "'%s'" % (value)
+        return "'{}'".format(value)
 
     @classmethod
     def to_value_str_list(cls, value_list):
@@ -280,13 +281,13 @@ class SqlQuery:
             value_list = ['?' for _i in insert_tuple]
         else:
             value_list = [
-                "'%s'" % (value)
+                "'{:s}'".format(value)
                 if isinstance(value, six.string_types) and value != "NULL"
                 else str(value)
                 for value in insert_tuple
             ]
 
-        return "INSERT INTO %s VALUES (%s)" % (
+        return "INSERT INTO {:s} VALUES ({:s})".format(
             table, ",".join(value_list))
 
     @classmethod
@@ -349,16 +350,17 @@ class SqlQuery:
             raise SqlSyntaxError("operation not supported: " + str(operation))
 
         if value is not None:
-            return "%s %s %s" % (
+            return "{:s} {:s} {:s}".format(
                 cls.to_attr_str(key), operation, cls.to_value_str(value))
 
         if operation == "=":
-            return "%s IS NULL" % (cls.to_attr_str(key))
+            return "{:s} IS NULL".format(cls.to_attr_str(key))
         elif operation == "!=":
-            return "%s IS NOT NULL" % (cls.to_attr_str(key))
+            return "{:s} IS NOT NULL".format(cls.to_attr_str(key))
 
         raise SqlSyntaxError(
-            "Invalid operation (%s) with None right-hand side" % (operation))
+            "Invalid operation ({:s}) with None right-hand side".format(
+                operation))
 
     @classmethod
     def make_where_in(cls, key, value_list):
@@ -378,7 +380,7 @@ class SqlQuery:
             "key IN ('hoge', 'foo', 'bar')"
         """
 
-        return "%s IN (%s)" % (
+        return "{:s} IN ({:s})".format(
             cls.to_attr_str(key), ", ".join(cls.to_value_str_list(value_list)))
 
     @classmethod
@@ -399,5 +401,5 @@ class SqlQuery:
             "key NOT IN ('hoge', 'foo', 'bar')"
         """
 
-        return "%s NOT IN (%s)" % (
+        return "{:s} NOT IN ({:s})".format(
             cls.to_attr_str(key), ", ".join(cls.to_value_str_list(value_list)))

@@ -54,9 +54,9 @@ def append_table(con_src, con_dst, table_name):
         if src_attr_list != dst_attr_list:
             raise ValueError("""
             source and destination attribute is different from each other
-              src: %s
-              dst: %s
-            """ % (str(src_attr_list), str(dst_attr_list)))
+              src: {:s}
+              dst: {:s}
+            """.format(str(src_attr_list), str(dst_attr_list)))
 
     result = con_src.select(select="*", table_name=table_name)
     if result is None:
