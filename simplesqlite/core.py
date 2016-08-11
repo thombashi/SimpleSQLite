@@ -996,6 +996,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
         validate_table_name(table_name)
+        self.__validate_attr_name_list(attribute_name_list)
 
         if dataproperty.is_empty_sequence(data_matrix):
             raise ValueError("input data is null: '{:s} ({:s})'".format(
@@ -1183,6 +1184,15 @@ class SimpleSQLite(object):
 
         connection = sqlite3.connect(database_path)
         connection.close()
+
+    @staticmethod
+    def __validate_attr_name_list(attr_name_list):
+        if dataproperty.is_empty_sequence(attr_name_list):
+            raise ValueError("attribute name list is empty")
+
+        for attr_name in attr_name_list:
+            if dataproperty.is_empty_string(attr_name):
+                raise ValueError("attribute name includes an empty string")
 
     @staticmethod
     def __verify_value_matrix(field_list, value_matrix):
