@@ -222,8 +222,7 @@ class SimpleSQLite(object):
 
         try:
             result = self.connection.execute(query)
-        except sqlite3.OperationalError:
-            _, e, _ = sys.exc_info()  # for python 2.5 compatibility
+        except sqlite3.OperationalError as e:
             if caller is None:
                 caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
@@ -323,8 +322,7 @@ class SimpleSQLite(object):
 
         try:
             self.connection.executemany(query, record_list)
-        except sqlite3.OperationalError:
-            _, e, _ = sys.exc_info()  # for python 2.5 compatibility
+        except sqlite3.OperationalError as e:
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             raise sqlite3.OperationalError(
