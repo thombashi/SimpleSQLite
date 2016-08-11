@@ -27,9 +27,9 @@ class Test_SqlQuery_sanitize:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
-            ["AAA%s" % (re.escape(c)), "AAA"] for c in SANITIZE_CHAR_LIST
+            ["AAA{:s}".format(re.escape(c)), "AAA"] for c in SANITIZE_CHAR_LIST
         ] + [
-            ["%sBBB" % (re.escape(c)), "BBB"] for c in SANITIZE_CHAR_LIST
+            ["{:s}BBB".format(re.escape(c)), "BBB"] for c in SANITIZE_CHAR_LIST
         ] + [
             [
                 "%a/b(c)d[e]f<g>h.i;j'k!l\\m#n _o-p+q=r\nstrvwxyz" +
@@ -87,7 +87,11 @@ class Test_SqlQuery_to_attr_str:
         ["attr_a", 2, '"attr_a"'],
         ["attr_a", True, '"attr_a"'],
     ] + [
-        ["te%sst" % (re.escape(c)), None, "[te%sst]" % (re.escape(c))]
+        [
+            "te{:s}st".format(re.escape(c)),
+            None,
+            "[te{:s}st]".format(re.escape(c)),
+        ]
         for c in string.digits + "%(). -+#"
     ]
     )

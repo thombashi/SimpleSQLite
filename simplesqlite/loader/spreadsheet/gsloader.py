@@ -76,7 +76,8 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             |load_return|
             :py:meth:`~.GoogleSheetsTableLoader.make_table_name`.
         :rtype: iterator of |TableData|
-        :raises InvalidDataError: If the header row is not found.
+        :raises simplesqlite.loader.InvalidDataError:
+            If the header row is not found.
         """
 
         import gspread

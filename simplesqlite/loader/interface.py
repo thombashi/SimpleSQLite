@@ -19,19 +19,19 @@ class TableLoaderInterface(object):
     """
 
     @abc.abstractmethod
-    def load(self):   # pragma: no cover
+    def load(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _validate(self):   # pragma: no cover
+    def _validate(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _validate_table_name(self):   # pragma: no cover
+    def _validate_table_name(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _validate_source(self):   # pragma: no cover
+    def _validate_source(self):  # pragma: no cover
         pass
 
 

@@ -27,7 +27,7 @@ class JsonConverter(TableFormatterInterface, LoaderAcceptor):
         self._buffer = json_buffer
 
     @abc.abstractproperty
-    def _schema(self):   # pragma: no cover
+    def _schema(self):  # pragma: no cover
         pass
 
     def _validate_source_data(self):
@@ -68,7 +68,7 @@ class SingleJsonTableConverter(JsonConverter):
     def to_table_data(self):
         """
         :raises ValueError:
-        :raises ValidationError:
+        :raises simplesqlite.loader.ValidationError:
         """
 
         self._validate_source_data()
@@ -109,7 +109,7 @@ class MultipleJsonTableConverter(JsonConverter):
     def to_table_data(self):
         """
         :raises ValueError:
-        :raises ValidationError:
+        :raises simplesqlite.loader.ValidationError:
         """
 
         self._validate_source_data()

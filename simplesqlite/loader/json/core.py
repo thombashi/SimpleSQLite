@@ -6,11 +6,7 @@
 
 
 from __future__ import absolute_import
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
+import json
 
 import path
 
@@ -93,6 +89,10 @@ class JsonTableFileLoader(TableLoader):
 
         :return: Loaded table data.
         :rtype: iterator of |TableData|
+        :raises simplesqlite.loader.InvalidDataError:
+            If the data is invalid JSON.
+        :raises simplesqlite.loader.ValidationError:
+            If the data is not acceptable JSON format.
         """
 
         self._validate()

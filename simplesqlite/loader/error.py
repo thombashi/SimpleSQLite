@@ -9,8 +9,12 @@ from __future__ import absolute_import
 
 
 class ValidationError(Exception):
-    pass
+    """
+    Raised data is not properly formatted.
+    """
 
 
 class InvalidDataError(Exception):
-    pass
+    """
+    Raised when data is invalid to load.
+    """

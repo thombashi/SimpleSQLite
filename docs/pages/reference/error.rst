@@ -12,3 +12,9 @@ Errors
 
 .. autoexception:: simplesqlite.SqlSyntaxError
     :show-inheritance:
+
+.. autoexception:: simplesqlite.loader.InvalidDataError
+    :show-inheritance:
+
+.. autoexception:: simplesqlite.loader.ValidationError
+    :show-inheritance:

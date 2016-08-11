@@ -222,17 +222,16 @@ class SimpleSQLite(object):
 
         try:
             result = self.connection.execute(query)
-        except sqlite3.OperationalError:
-            _, e, _ = sys.exc_info()  # for python 2.5 compatibility
+        except sqlite3.OperationalError as e:
             if caller is None:
                 caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             message_list = [
-                "failed to execute query at %s(%d) %s" % (
+                "failed to execute query at %{:s}({:d}) {:s}".format(
                     file_path, line_no, func_name),
-                "  - query: %s" % (query),
-                "  - msg:   %s" % (e),
-                "  - db:    %s" % (self.database_path),
+                "  - query: {:s}".format(query),
+                "  - msg:   {:s}".format(str(e)),
+                "  - db:    {:s}".format(self.database_path),
             ]
             raise sqlite3.OperationalError(os.linesep.join(message_list))
 
@@ -323,17 +322,16 @@ class SimpleSQLite(object):
 
         try:
             self.connection.executemany(query, record_list)
-        except sqlite3.OperationalError:
-            _, e, _ = sys.exc_info()  # for python 2.5 compatibility
+        except sqlite3.OperationalError as e:
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             raise sqlite3.OperationalError(
-                "%s(%d) %s: failed to execute query:\n" % (
+                "{:s}({:d}) {:s}: failed to execute query:\n".format(
                     file_path, line_no, func_name) +
-                "  query=%s\n" % (query) +
-                "  msg='%s'\n" % (str(e)) +
-                "  db=%s\n" % (self.database_path) +
-                "  records=%s\n" % (record_list[:2])
+                "  query={:s}\n".format(query) +
+                "  msg='{:s}'\n".format(str(e)) +
+                "  db={:s}\n".format(self.database_path) +
+                "  records={:s}\n".format(record_list[:2])
             )
 
     def update(self, table_name, set_query, where=None):
@@ -476,7 +474,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        query = "SELECT * FROM '%s'" % (table_name)
+        query = "SELECT * FROM '{:s}'".format(table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return self.__get_list_from_fetch(result.description)
@@ -498,7 +496,7 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         result = self.execute_query(
-            "SELECT sql FROM sqlite_master WHERE type='table' and name=%s" % (
+            "SELECT sql FROM sqlite_master WHERE type='table' and name={:s}".format(
                 SqlQuery.to_value_str(table_name)))
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
@@ -527,9 +525,9 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attribute_name_list(table_name)
-        query = "SELECT DISTINCT %s FROM '%s'" % (
+        query = "SELECT DISTINCT {:s} FROM '{:s}'".format(
             ",".join([
-                "TYPEOF(%s)" % (SqlQuery.to_attr_str(attribute))
+                "TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
                 for attribute in attribute_name_list]),
             table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
@@ -583,9 +581,9 @@ class SimpleSQLite(object):
 
         try:
             result = con_tmp.select(
-                select="%s,SUM(%s),SUM(%s)" % attribute_name_list,
+                select="{:s},SUM({:s}),SUM({:s})".format(*attribute_name_list),
                 table_name=profile_table_name,
-                extra="GROUP BY %s ORDER BY %s DESC LIMIT %d" % (
+                extra="GROUP BY {:s} ORDER BY {:s} DESC LIMIT {:d}".format(
                     "query", "cumulative_time", profile_count))
         except sqlite3.OperationalError:
             return []
@@ -832,7 +830,8 @@ class SimpleSQLite(object):
             return
 
         raise TableNotFoundError(
-            "'%s' table not found in %s" % (table_name, self.database_path))
+            "'{:s}' table not found in {:s}".format(
+                table_name, self.database_path))
 
     def verify_attribute_existence(self, table_name, attribute_name):
         """
@@ -879,7 +878,7 @@ class SimpleSQLite(object):
             return
 
         raise AttributeNotFoundError(
-            "'%s' attribute not found in '%s' table" % (
+            "'{:s}' attribute not found in '{:s}' table".format(
                 attribute_name, table_name))
 
     def drop_table(self, table_name):
@@ -893,7 +892,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
 
         if self.has_table(table_name):
-            query = "DROP TABLE IF EXISTS '%s'" % (table_name)
+            query = "DROP TABLE IF EXISTS '{:s}'".format(table_name)
             self.execute_query(query, logging.getLogger().findCaller())
             self.commit()
 
@@ -912,7 +911,7 @@ class SimpleSQLite(object):
         if self.has_table(table_name):
             return True
 
-        query = "CREATE TABLE IF NOT EXISTS '%s' (%s)" % (
+        query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
             table_name, ", ".join(attribute_description_list))
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
@@ -934,14 +933,14 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
         self.validate_access_permission(["w", "a"])
 
-        index_name = "%s_%s_index" % (
+        index_name = "{:s}_{:s}_index".format(
             SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
         if attribute_name.find("'") != -1:
-            query_format = 'CREATE INDEX IF NOT EXISTS %s ON %s("%s")'
+            query_format = 'CREATE INDEX IF NOT EXISTS {:s} ON {:s}("{:s})'
         else:
-            query_format = "CREATE INDEX IF NOT EXISTS %s ON %s('%s')"
+            query_format = "CREATE INDEX IF NOT EXISTS {:s} ON {:s}('{:s}')"
 
-        query = query_format % (
+        query = query_format.format(
             index_name,
             SqlQuery.to_table_str(table_name),
             attribute_name)
@@ -1000,7 +999,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
 
         if dataproperty.is_empty_sequence(data_matrix):
-            raise ValueError("input data is null: '%s (%s)'" % (
+            raise ValueError("input data is null: '{:s} ({:s})'".format(
                 table_name, ", ".join(attribute_name_list)))
 
         data_matrix = RecordConvertor.to_record_list(
@@ -1209,10 +1208,10 @@ class SimpleSQLite(object):
 
         raise ValueError(
             "miss match header length and value length:" +
-            "  header: %d %s\n" % (len(field_list), str(field_list)) +
-            "  # of miss match line: %d ouf of %d\n" % (
+            "  header: {:d} {:s}\n".format(len(field_list), str(field_list)) +
+            "  # of miss match line: {:d} ouf of {:d}\n".format(
                 len(miss_match_idx_list), len(value_matrix)) +
-            "  e.g. value at line=%d, len=%d: %s\n" % (
+            "  e.g. value at line={:d}, len={:d}: {:s}\n".format(
                 miss_match_idx_list[0],
                 len(sample_miss_match_list), str(sample_miss_match_list))
         )
@@ -1241,11 +1240,11 @@ class SimpleSQLite(object):
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attr_name_list[col]
             if attr_name.find("'") != -1:
-                desc_format = '"%s" %s'
+                desc_format = '"{:s}" {:s}'
             else:
-                desc_format = "'%s' %s"
+                desc_format = "'{:s}' {:s}"
             attr_description_list.append(
-                desc_format % (attr_name, value_type))
+                desc_format.format(attr_name, value_type))
 
         return attr_description_list
 
@@ -1268,7 +1267,7 @@ class SimpleSQLite(object):
 
         if self.mode not in valid_permission_list:
             raise IOError(
-                "invalid access: expected-mode='%s', current-mode='%s'" % (
+                "invalid access: expected-mode='{:s}', current-mode='{:s}'".format(
                     "' or '".join(valid_permission_list), self.mode))
 
     @staticmethod
