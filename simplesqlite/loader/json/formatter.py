@@ -68,7 +68,7 @@ class SingleJsonTableConverter(JsonConverter):
     def to_table_data(self):
         """
         :raises ValueError:
-        :raises ValidationError:
+        :raises simplesqlite.loader.ValidationError:
         """
 
         self._validate_source_data()
@@ -109,7 +109,7 @@ class MultipleJsonTableConverter(JsonConverter):
     def to_table_data(self):
         """
         :raises ValueError:
-        :raises ValidationError:
+        :raises simplesqlite.loader.ValidationError:
         """
 
         self._validate_source_data()

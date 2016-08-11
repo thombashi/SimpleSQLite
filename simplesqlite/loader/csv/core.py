@@ -106,7 +106,8 @@ class CsvTableFileLoader(CsvTableLoader):
             Table name is determined by
             :py:meth:`~.CsvTableFileLoader.make_table_name`.
         :rtype: iterator of |TableData|
-        :raises InvalidDataError: If the CSV data is invalid.
+        :raises simplesqlite.loader.InvalidDataError:
+            If the CSV data is invalid.
 
         .. seealso:: :py:func:`csv.reader`
         """
@@ -136,7 +137,8 @@ class CsvTableTextLoader(CsvTableLoader):
 
         :return: Loaded table data.
         :rtype: iterator of |TableData|
-        :raises InvalidDataError: If the CSV data is invalid.
+        :raises simplesqlite.loader.InvalidDataError:
+            If the CSV data is invalid.
 
         .. seealso:: :py:func:`csv.reader`
         """

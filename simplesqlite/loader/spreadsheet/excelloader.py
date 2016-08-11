@@ -66,7 +66,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
             |load_return|
             :py:meth:`~.ExcelTableFileLoader.make_table_name`.
         :rtype: iterator of |TableData|
-        :raises InvalidDataError: If the header row is not found.
+        :raises simplesqlite.loader.InvalidDataError:
+            If the header row is not found.
         """
 
         self._validate()
