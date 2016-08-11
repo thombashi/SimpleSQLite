@@ -101,8 +101,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
 
             try:
                 self.__strip_empty_col()
-            except ValueError as e:
-                print e
+            except ValueError:
                 continue
 
             value_matrix = self.__all_values[self._get_start_row_idx():]
