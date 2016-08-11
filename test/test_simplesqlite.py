@@ -643,7 +643,7 @@ class Test_SimpleSQLite_drop_table:
 
     def test_normal(self, con):
         attr_description_list = [
-            "'%s' %s" % ("attr_name", "TEXT")
+            "'{:s}' {:s}".format("attr_name", "TEXT")
         ]
 
         table_name = "new_table"
