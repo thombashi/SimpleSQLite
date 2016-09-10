@@ -118,7 +118,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
                 yield TableData(
                     self.make_table_name(), header_list, record_list)
         except gspread.exceptions.SpreadsheetNotFound:
-            raise OpenError("spread sheet not found")
+            raise OpenError("spreadsheet '{}' not found".format(self.title))
 
     def _is_empty_sheet(self):
         return len(self.__all_values) <= 1

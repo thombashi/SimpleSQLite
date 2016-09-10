@@ -5,8 +5,8 @@ import sys
 
 REQUIREMENT_DIR = "requirements"
 
-needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
-pytest_runner = ['pytest-runner'] if needs_pytest else []
+needs_pytest = set(["pytest", "test", "ptr"]).intersection(sys.argv)
+pytest_runner = ["pytest-runner"] if needs_pytest else []
 
 
 with open("README.rst") as fp:
@@ -23,7 +23,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.4.7",
+    version="0.4.8",
     url="https://github.com/thombashi/SimpleSQLite",
     bugtrack_url="https://github.com/thombashi/SimpleSQLite/issues",
 
@@ -35,7 +35,7 @@ setuptools.setup(
     keywords=["SQLite", "CSV", "JSON", "Excel", "Google Sheets"],
     long_description=long_description,
     license="MIT License",
-    packages=setuptools.find_packages(exclude=['test*']),
+    packages=setuptools.find_packages(exclude=["test*"]),
     setup_requires=pytest_runner,
     tests_require=tests_require,
 
