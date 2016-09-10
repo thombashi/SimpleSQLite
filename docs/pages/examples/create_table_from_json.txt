@@ -1,3 +1,5 @@
+.. _example-convert-multi-json-table:
+
 .. code-block:: python
     :caption: Sample code 1: multiple table data in a file
 
@@ -48,6 +50,8 @@
     (2, 2.1, u'bb')
     (3, 120.9, u'ccc')
 
+
+.. _example-convert-single-json-table:
 
 .. code-block:: python
     :caption: Sample code 2: single table data in a file
