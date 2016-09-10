@@ -18,3 +18,9 @@ class InvalidDataError(Exception):
     """
     Raised when data is invalid to load.
     """
+
+
+class OpenError(IOError):
+    """
+    Raised when failed to open a file.
+    """
