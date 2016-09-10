@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 from .error import ValidationError
 from .error import InvalidDataError
+from .error import OpenError
 
 from .csv.core import CsvTableFileLoader
 from .csv.core import CsvTableTextLoader

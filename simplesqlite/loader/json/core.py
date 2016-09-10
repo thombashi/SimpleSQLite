@@ -32,7 +32,8 @@ class JsonTableFileLoader(TableLoader):
     def load(self):
         """
         Load a JSON file from :py:attr:`.source` that includes table data.
-        First, single table data in a file,
+        This method can be loading two types of JSON formats:
+        **(1)** single table data in a file,
         acceptable JSON schema is as follows:
 
         .. code-block:: json
@@ -51,7 +52,11 @@ class JsonTableFileLoader(TableLoader):
                 },
             }
 
-        Second, multiple table data in a file,
+        :Examples:
+
+            :ref:`example-convert-single-json-table`
+
+        **(2)** multiple table data in a file,
         acceptable JSON schema is as follows:
 
         .. code-block:: json
@@ -72,6 +77,10 @@ class JsonTableFileLoader(TableLoader):
                     }
                 }
             }
+
+        :Examples:
+
+            :ref:`example-convert-multi-json-table`
 
         The table name string is making from
         :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.

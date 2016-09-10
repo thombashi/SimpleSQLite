@@ -11,6 +11,7 @@ import dataproperty
 from six.moves import zip
 
 from ..error import InvalidDataError
+from ..error import OpenError
 from ..data import TableData
 from .core import SpreadSheetLoader
 from ..._func import connect_sqlite_db_mem
@@ -79,6 +80,8 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         :rtype: iterator of |TableData|
         :raises simplesqlite.loader.InvalidDataError:
             If the header row is not found.
+        :raises simplesqlite.loader.OpenError:
+            If the spread sheet not found.
         """
 
         import gspread
@@ -92,26 +95,30 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             self.source, scope)
 
         gc = gspread.authorize(credentials)
-        for worksheet in gc.open(self.title).worksheets():
-            self._worksheet = worksheet
-            self.__all_values = [row for row in worksheet.get_all_values()]
+        try:
+            for worksheet in gc.open(self.title).worksheets():
+                self._worksheet = worksheet
+                self.__all_values = [row for row in worksheet.get_all_values()]
 
-            if self._is_empty_sheet():
-                continue
+                if self._is_empty_sheet():
+                    continue
 
-            try:
-                self.__strip_empty_col()
-            except ValueError:
-                continue
+                try:
+                    self.__strip_empty_col()
+                except ValueError:
+                    continue
 
-            value_matrix = self.__all_values[self._get_start_row_idx():]
-            try:
-                header_list = value_matrix[0]
-                record_list = value_matrix[1:]
-            except IndexError:
-                continue
+                value_matrix = self.__all_values[self._get_start_row_idx():]
+                try:
+                    header_list = value_matrix[0]
+                    record_list = value_matrix[1:]
+                except IndexError:
+                    continue
 
-            yield TableData(self.make_table_name(), header_list, record_list)
+                yield TableData(
+                    self.make_table_name(), header_list, record_list)
+        except gspread.exceptions.SpreadsheetNotFound:
+            raise OpenError("spread sheet not found")
 
     def _is_empty_sheet(self):
         return len(self.__all_values) <= 1

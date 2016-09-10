@@ -12,6 +12,7 @@ from six.moves import range
 import xlrd
 
 from ..error import InvalidDataError
+from ..error import OpenError
 from ..data import TableData
 from .core import SpreadSheetLoader
 
@@ -68,6 +69,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         :rtype: iterator of |TableData|
         :raises simplesqlite.loader.InvalidDataError:
             If the header row is not found.
+        :raises simplesqlite.loader.OpenError:
+            If failed to open the source file.
         """
 
         self._validate()
@@ -75,7 +78,7 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         try:
             workbook = xlrd.open_workbook(self.source)
         except xlrd.biffh.XLRDError as e:
-            raise InvalidDataError(e)
+            raise OpenError(e)
 
         for worksheet in workbook.sheets():
             self._worksheet = worksheet

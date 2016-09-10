@@ -18,3 +18,6 @@ Errors
 
 .. autoexception:: simplesqlite.loader.ValidationError
     :show-inheritance:
+
+.. autoexception:: simplesqlite.loader.OpenError
+    :show-inheritance:
