@@ -4,10 +4,9 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
-
 import abc
+
 import six
 
 from .acceptor import LoaderAcceptor
