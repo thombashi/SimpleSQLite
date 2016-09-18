@@ -7,8 +7,6 @@
 from __future__ import absolute_import
 import json
 
-import path
-
 from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 from .formatter import JsonTableFormatter
@@ -33,12 +31,7 @@ class JsonTableFileLoader(JsonTableLoader):
         super(JsonTableFileLoader, self).__init__(file_path)
 
     def make_table_name(self):
-        self._validate()
-
-        table_name = super(JsonTableFileLoader, self).make_table_name()
-
-        return table_name.replace(
-            tnt.FILENAME, path.Path(self.source).namebase)
+        return self._make_file_table_name()
 
     def load(self):
         """

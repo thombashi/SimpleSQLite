@@ -9,6 +9,7 @@ import abc
 import threading
 
 import dataproperty
+import path
 import six
 
 from .constant import TableNameTemplate as tnt
@@ -62,19 +63,7 @@ class TableLoader(TableLoaderInterface):
         return self.__format_table_count.get(self.format_name, 0)
 
     def make_table_name(self):
-        self._validate()
-
-        table_name = self.table_name.replace(
-            tnt.DEFAULT, self._get_default_table_name_template())
-        table_name = table_name.replace(
-            tnt.FORMAT_NAME, self.format_name)
-        table_name = table_name.replace(
-            tnt.FORMAT_ID,
-            str(self.__format_table_count.get(self.format_name, 0)))
-        table_name = table_name.replace(
-            tnt.GLOBAL_ID, str(self.__global_table_count))
-
-        return table_name
+        return self.__make_table_name()
 
     def inc_table_count(self):
         with self.__table_count_lock:
@@ -100,3 +89,22 @@ class TableLoader(TableLoaderInterface):
     def _validate_source(self):
         if dataproperty.is_empty_string(self.source):
             raise ValueError("data source is empty")
+
+    def _make_file_table_name(self):
+        return self.__make_table_name().replace(
+            tnt.FILENAME, path.Path(self.source).namebase)
+
+    def __make_table_name(self):
+        self._validate()
+
+        table_name = self.table_name.replace(
+            tnt.DEFAULT, self._get_default_table_name_template())
+        table_name = table_name.replace(
+            tnt.FORMAT_NAME, self.format_name)
+        table_name = table_name.replace(
+            tnt.FORMAT_ID,
+            str(self.__format_table_count.get(self.format_name, 0)))
+        table_name = table_name.replace(
+            tnt.GLOBAL_ID, str(self.__global_table_count))
+
+        return table_name

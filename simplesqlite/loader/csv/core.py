@@ -7,7 +7,6 @@
 from __future__ import absolute_import
 import csv
 
-import path
 import six
 
 from ..constant import TableNameTemplate as tnt
@@ -94,12 +93,7 @@ class CsvTableFileLoader(CsvTableLoader):
         :rtype: str
         """
 
-        self._validate()
-
-        table_name = super(CsvTableFileLoader, self).make_table_name()
-
-        return table_name.replace(
-            tnt.FILENAME, path.Path(self.source).namebase)
+        return self._make_file_table_name()
 
     def load(self):
         """
