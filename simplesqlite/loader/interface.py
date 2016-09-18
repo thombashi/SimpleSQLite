@@ -63,6 +63,21 @@ class TableLoader(TableLoaderInterface):
         return self.__format_table_count.get(self.format_name, 0)
 
     def make_table_name(self):
+        """
+        |make_table_name|
+
+            ===================  ========================================
+            format specifier     value after the replacement
+            ===================  ========================================
+            ``%(format_name)s``  return value of ``format_name`` property
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ========================================
+
+        :return: Table name.
+        :rtype: str
+        """
+
         return self.__make_table_name()
 
     def inc_table_count(self):
