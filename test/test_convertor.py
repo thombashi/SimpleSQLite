@@ -4,10 +4,10 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from collections import namedtuple
 
 import pytest
 
-from collections import namedtuple
 from simplesqlite.converter import RecordConvertor
 
 
