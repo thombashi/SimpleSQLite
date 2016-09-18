@@ -149,6 +149,8 @@ class Test_JsonTableFileLoader_make_table_name:
             "/path/to/data.json",
             "json0_data"
         ],
+        ["hoge_%(filename)s", None, "hoge_"],
+        ["hoge_%(filename)s", "", "hoge_"],
     ])
     def test_normal(self, value, source, expected):
         loader = sloader.JsonTableFileLoader(source)
@@ -257,8 +259,8 @@ class Test_JsonTableFileLoader_load:
                 pass
 
     @pytest.mark.parametrize(["filename", "expected"], [
-        ["", ValueError],
-        [None, ValueError],
+        ["", sloader.InvalidDataError],
+        [None, sloader.InvalidDataError],
     ])
     def test_null(
             self, tmpdir, filename, expected):
@@ -347,8 +349,8 @@ class Test_JsonTableTextLoader_load:
                 pass
 
     @pytest.mark.parametrize(["table_text", "expected"], [
-        ["", ValueError],
-        [None, ValueError],
+        ["", sloader.InvalidDataError],
+        [None, sloader.InvalidDataError],
     ])
     def test_null(self, table_text, expected):
         loader = sloader.JsonTableTextLoader(table_text)
