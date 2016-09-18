@@ -60,7 +60,7 @@ class TableLoader(TableLoaderInterface):
 
         return self.table_name
     @abc.abstractmethod
-    def _get_default_table_name_template(self):
+    def _get_default_table_name_template(self):  # pragma: no cover
         pass
 
     def _validate(self):
