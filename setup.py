@@ -23,7 +23,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.4.8",
+    version="0.5.0",
     url="https://github.com/thombashi/SimpleSQLite",
     bugtrack_url="https://github.com/thombashi/SimpleSQLite/issues",
 
@@ -32,7 +32,7 @@ setuptools.setup(
     description=summary,
     include_package_data=True,
     install_requires=install_requires,
-    keywords=["SQLite", "CSV", "JSON", "Excel", "Google Sheets"],
+    keywords=["SQLite", "CSV", "Excel", "Google Sheets", "HTML", "JSON"],
     long_description=long_description,
     license="MIT License",
     packages=setuptools.find_packages(exclude=["test*"]),
