@@ -13,7 +13,13 @@ from ..interface import TableLoader
 from .formatter import JsonTableFormatter
 
 
-class JsonTableFileLoader(TableLoader):
+class JsonTableLoader(TableLoader):
+    """
+    Abstract class of JSON table loader.
+    """
+
+
+class JsonTableFileLoader(JsonTableLoader):
     """
     Concrete class of JSON file loader.
     """
@@ -116,7 +122,7 @@ class JsonTableFileLoader(TableLoader):
         return "%(filename)s_%(key)s"
 
 
-class JsonTableTextLoader(TableLoader):
+class JsonTableTextLoader(JsonTableLoader):
 
     def __init__(self, text):
         super(JsonTableTextLoader, self).__init__(text)
