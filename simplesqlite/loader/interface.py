@@ -111,7 +111,7 @@ class TableLoader(TableLoaderInterface):
             tnt.FILENAME, path.Path(self.source).namebase)
 
     def __make_table_name(self):
-        self._validate()
+        self._validate_table_name()
 
         table_name = self.table_name.replace(
             tnt.DEFAULT, self._get_default_table_name_template())
