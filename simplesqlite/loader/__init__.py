@@ -12,6 +12,8 @@ from .error import OpenError
 
 from .csv.core import CsvTableFileLoader
 from .csv.core import CsvTableTextLoader
+from .html.core import HtmlTableFileLoader
+from .html.core import HtmlTableTextLoader
 from .spreadsheet.excelloader import ExcelTableFileLoader
 from .spreadsheet.gsloader import GoogleSheetsTableLoader
 from .json.core import JsonTableFileLoader
