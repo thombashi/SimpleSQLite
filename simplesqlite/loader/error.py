@@ -13,7 +13,7 @@ class ValidationError(Exception):
     """
 
 
-class InvalidDataError(Exception):
+class InvalidDataError(ValueError):
     """
     Raised when data is invalid to load.
     """
