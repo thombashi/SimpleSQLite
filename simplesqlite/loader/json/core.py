@@ -90,18 +90,17 @@ class JsonTableFileLoader(JsonTableLoader):
 
             :ref:`example-convert-multi-json-table`
 
-        The table name string is making from
-        :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
+        The table name is determined by the value of
+        :py:attr:`~JsonTableFileLoader.table_name`.
         Following format specifiers are replaced with specific string.
 
             ===================  ==============================================
-            format specifier      value after the replacement
+            format specifier     value after the replacement
             ===================  ==============================================
-            ``%(filename)s``     | Filename. Defaults to single JSON table.
-            ``%(key)s``          | The default value of ``table_name`` when
-                                 | multiple JSON table. This is replaced
-                                 | the different value for each single/multipl
-                                 | JSON tables: [single JSON table]
+            ``%(filename)s``     Filename. Defaults to single JSON table.
+            ``%(key)s``          | This is replaced the different value
+                                 | for each single/multipl JSON tables:
+                                 | [single JSON table]
                                  | ``%(format_name)s%(format_id)s``
                                  | [multiple JSON table] Key of the table data.
             ``%(format_name)s``  ``json``
