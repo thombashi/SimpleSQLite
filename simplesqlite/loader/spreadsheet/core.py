@@ -65,4 +65,4 @@ class SpreadSheetLoader(TableLoader):
         return table_name.replace(tnt.SHEET, self._sheet_name)
 
     def _get_default_table_name_template(self):
-        return "%(format_name)s_%(sheet)s"
+        return "{:s}".format(tnt.SHEET)

@@ -68,7 +68,18 @@ class TableLoader(TableLoaderInterface):
     def make_table_name(self):
         self._validate()
 
-        return self.table_name
+        table_name = self.table_name.replace(
+            tnt.DEFAULT, self._get_default_table_name_template())
+        table_name = table_name.replace(
+            tnt.FORMAT_NAME, self.format_name)
+        table_name = table_name.replace(
+            tnt.FORMAT_ID,
+            str(self.__format_table_count.get(self.format_name, 0)))
+        table_name = table_name.replace(
+            tnt.GLOBAL_ID, str(self.__global_table_count))
+
+        return table_name
+
     def inc_table_count(self):
         with self.__table_count_lock:
             self.__global_table_count += 1

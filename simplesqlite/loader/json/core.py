@@ -35,7 +35,9 @@ class JsonTableFileLoader(JsonTableLoader):
     def make_table_name(self):
         self._validate()
 
-        return self.table_name.replace(
+        table_name = super(JsonTableFileLoader, self).make_table_name()
+
+        return table_name.replace(
             tnt.FILENAME, path.Path(self.source).namebase)
 
     def load(self):
@@ -124,7 +126,7 @@ class JsonTableFileLoader(JsonTableLoader):
         return formatter.to_table_data()
 
     def _get_default_table_name_template(self):
-        return "%(filename)s_%(key)s"
+        return "{:s}_{:s}".format(tnt.FILENAME, tnt.KEY)
 
 
 class JsonTableTextLoader(JsonTableLoader):
@@ -152,4 +154,4 @@ class JsonTableTextLoader(JsonTableLoader):
         return formatter.to_table_data()
 
     def _get_default_table_name_template(self):
-        return "%(format_name)s_%(format_id)s"
+        return "{:s}".format(tnt.KEY)
