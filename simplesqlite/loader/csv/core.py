@@ -130,6 +130,10 @@ class CsvTableFileLoader(CsvTableLoader):
 class CsvTableTextLoader(CsvTableLoader):
     """
     Concrete class of CSV text loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(format_name)s%(format_id)s``.
     """
 
     def __init__(self, text):
@@ -139,15 +143,14 @@ class CsvTableTextLoader(CsvTableLoader):
         """
         Load table data from a CSV text.
 
-        :return:
-            Loaded table data.
-            The default table name is ``%(format_name)s%(format_id)s``.
-            See also :py:meth:`~.CsvTableFileLoader.make_table_name`.
+        :return: Loaded table data.
         :rtype: iterator of |TableData|
         :raises simplesqlite.loader.InvalidDataError:
             If the CSV data is invalid.
 
-        .. seealso:: :py:func:`csv.reader`
+        .. seealso::
+            :py:func:`csv.reader`
+            :py:meth:`~.CsvTableFileLoader.make_table_name`
         """
 
         self._validate()

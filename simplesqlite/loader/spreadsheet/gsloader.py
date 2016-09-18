@@ -21,6 +21,10 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
     """
     Concrete class of Google Spreadsheet loader.
 
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(sheet)s``.
+
     Requirements:
 
         - `gspread <https://github.com/burnash/gspread>`_
@@ -55,7 +59,6 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             ===================  ====================================
             format specifier     value after the replacement
             ===================  ====================================
-            ``%(filename)s``     Filename of the workbook
             ``%(title)s``        Name of the spreadsheet
             ``%(format_name)s``  ``spreadsheet``
             ``%(format_id)s``    unique number in the same format

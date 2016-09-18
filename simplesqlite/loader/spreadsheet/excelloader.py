@@ -20,6 +20,10 @@ from .core import SpreadSheetLoader
 class ExcelTableFileLoader(SpreadSheetLoader):
     """
     Concrete class of Microsoft Excel |TM| file loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(sheet)s``.
     """
 
     @property

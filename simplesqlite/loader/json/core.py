@@ -25,6 +25,10 @@ class JsonTableLoader(TableLoader):
 class JsonTableFileLoader(JsonTableLoader):
     """
     Concrete class of JSON file loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(filename)s_%(key)s``.
     """
 
     def __init__(self, file_path=None):
@@ -128,6 +132,13 @@ class JsonTableFileLoader(JsonTableLoader):
 
 
 class JsonTableTextLoader(JsonTableLoader):
+    """
+    Concrete class of JSON text loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(key)s``.
+    """
 
     def __init__(self, text):
         super(JsonTableTextLoader, self).__init__(text)
