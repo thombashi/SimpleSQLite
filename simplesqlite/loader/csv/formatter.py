@@ -37,6 +37,8 @@ class CsvTableFormatter(TableFormatter):
             raise InvalidDataError(
                 "data row must be greater or equal than one")
 
+        self._loader.inc_table_count()
+
         yield TableData(
             self._loader.make_table_name(),
             header_list, data_matrix)

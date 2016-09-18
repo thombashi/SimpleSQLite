@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import
 import abc
+import threading
 
 import dataproperty
 import six
@@ -55,10 +56,20 @@ class TableLoader(TableLoaderInterface):
         self.table_name = "%(default)s"
         self.source = source
 
+        self.__table_count_lock = threading.Lock()
+        self.__global_table_count = 0
+        self.__format_table_count = {}
+
     def make_table_name(self):
         self._validate()
 
         return self.table_name
+    def inc_table_count(self):
+        with self.__table_count_lock:
+            self.__global_table_count += 1
+            self.__format_table_count[self.format_name] = (
+                self.__format_table_count.get(self.format_name, 0) + 1)
+
     @abc.abstractmethod
     def _get_default_table_name_template(self):  # pragma: no cover
         pass

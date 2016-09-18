@@ -84,6 +84,7 @@ class SingleJsonTableConverter(JsonConverter):
         yield TableData(
             self._make_table_name(""),
             sorted(attr_name_set), self._buffer)
+        self._loader.inc_table_count()
 
 
 class MultipleJsonTableConverter(JsonConverter):
@@ -122,6 +123,8 @@ class MultipleJsonTableConverter(JsonConverter):
             attr_name_set = set()
             for json_record in json_record_list:
                 attr_name_set = attr_name_set.union(list(json_record.keys()))
+
+            self._loader.inc_table_count()
 
             yield TableData(
                 self._make_table_name(table_key),

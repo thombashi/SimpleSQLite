@@ -99,6 +99,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
                 for row_idx in range(start_row_idx + 1, self._row_count)
             ]
 
+            self.inc_table_count()
+
             yield TableData(self.make_table_name(), header_list, record_list)
 
     def _is_empty_sheet(self):

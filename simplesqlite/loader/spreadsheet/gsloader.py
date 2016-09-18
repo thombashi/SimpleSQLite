@@ -115,6 +115,8 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
                 except IndexError:
                     continue
 
+                self.inc_table_count()
+
                 yield TableData(
                     self.make_table_name(), header_list, record_list)
         except gspread.exceptions.SpreadsheetNotFound:
