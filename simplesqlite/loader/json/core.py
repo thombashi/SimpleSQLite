@@ -9,6 +9,7 @@ import json
 
 import path
 
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 from .formatter import JsonTableFormatter
 
@@ -35,7 +36,7 @@ class JsonTableFileLoader(JsonTableLoader):
         self._validate()
 
         return self.table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+            tnt.FILENAME, path.Path(self.source).namebase)
 
     def load(self):
         """

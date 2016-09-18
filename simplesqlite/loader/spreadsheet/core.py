@@ -7,6 +7,7 @@
 from __future__ import absolute_import
 import abc
 
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 
 
@@ -61,7 +62,7 @@ class SpreadSheetLoader(TableLoader):
 
         table_name = super(SpreadSheetLoader, self).make_table_name()
 
-        return table_name.replace("%(sheet)s", self._sheet_name)
+        return table_name.replace(tnt.SHEET, self._sheet_name)
 
     def _get_default_table_name_template(self):
         return "%(format_name)s_%(sheet)s"

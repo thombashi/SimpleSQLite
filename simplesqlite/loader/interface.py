@@ -11,6 +11,8 @@ import threading
 import dataproperty
 import six
 
+from .constant import TableNameTemplate as tnt
+
 
 @six.add_metaclass(abc.ABCMeta)
 class TableLoaderInterface(object):
@@ -53,7 +55,7 @@ class TableLoader(TableLoaderInterface):
     """
 
     def __init__(self, source):
-        self.table_name = "%(default)s"
+        self.table_name = tnt.DEFAULT
         self.source = source
 
         self.__table_count_lock = threading.Lock()

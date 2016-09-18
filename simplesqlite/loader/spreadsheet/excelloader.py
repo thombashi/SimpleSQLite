@@ -10,6 +10,7 @@ import path
 from six.moves import range
 import xlrd
 
+from ..constant import TableNameTemplate as tnt
 from ..error import InvalidDataError
 from ..error import OpenError
 from ..data import TableData
@@ -55,7 +56,7 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         table_name = super(ExcelTableFileLoader, self).make_table_name()
 
         return table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+            tnt.FILENAME, path.Path(self.source).namebase)
 
     def load(self):
         """

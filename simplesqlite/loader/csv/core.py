@@ -10,6 +10,7 @@ import csv
 import path
 import six
 
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 from .formatter import CsvTableFormatter
 
@@ -96,7 +97,7 @@ class CsvTableFileLoader(CsvTableLoader):
         self._validate()
 
         return self.table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+            tnt.FILENAME, path.Path(self.source).namebase)
 
     def load(self):
         """
@@ -124,7 +125,7 @@ class CsvTableFileLoader(CsvTableLoader):
         return formatter.to_table_data()
 
     def _get_default_table_name_template(self):
-        return "%(filename)s"
+        return tnt.FILENAME
 
 
 class CsvTableTextLoader(CsvTableLoader):

@@ -10,6 +10,7 @@ import abc
 import jsonschema
 import six
 
+from ..constant import TableNameTemplate as tnt
 from ..acceptor import LoaderAcceptor
 from ..data import TableData
 from ..error import ValidationError
@@ -42,7 +43,7 @@ class JsonConverter(TableFormatterInterface, LoaderAcceptor):
     def _make_table_name(self, table_key):
         table_name = self._loader.make_table_name()
 
-        return table_name.replace("%(key)s", table_key)
+        return table_name.replace(tnt.KEY, table_key)
 
 
 class SingleJsonTableConverter(JsonConverter):
@@ -147,7 +148,7 @@ class JsonTableFormatter(TableFormatter):
 
         old_table_name = self._loader.table_name
         self._loader.table_name = self._loader.table_name.replace(
-            "%(default)s", "%(filename)s")
+            tnt.DEFAULT, tnt.FILENAME)
 
         try:
             converter = SingleJsonTableConverter(self._source_data)

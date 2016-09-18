@@ -9,6 +9,7 @@ from __future__ import absolute_import
 import dataproperty
 from six.moves import zip
 
+from ..constant import TableNameTemplate as tnt
 from ..error import InvalidDataError
 from ..error import OpenError
 from ..data import TableData
@@ -66,7 +67,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         table_name = super(
             GoogleSheetsTableLoader, self).make_table_name()
 
-        return table_name.replace("%(title)s", self.title)
+        return table_name.replace(tnt.TITLE, self.title)
 
     def load(self):
         """
