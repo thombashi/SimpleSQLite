@@ -373,6 +373,16 @@ rp_raises = u"""
     If the open |attr_mode| is neither ``"w"`` nor ``"a"``.
 """
 
+rp_template = u"""
+.. |tnt_filename| replace:: %(filename)s
+.. |tnt_format_name| replace:: %(format_name)s
+.. |tnt_format_id| replace:: %(format_id)s
+.. |tnt_global_id| replace:: %(global_id)s
+.. |tnt_key| replace:: %(key)s
+.. |tnt_title| replace:: %(title)s
+.. |tnt_sheet| replace:: %(sheet)s
+"""
+
 rst_prolog = (
     rp_common +
     rp_builtin +
@@ -381,5 +391,6 @@ rst_prolog = (
     rp_module +
     rp_raises +
     rp_attr +
-    rp_method
+    rp_method +
+    rp_template
 )
