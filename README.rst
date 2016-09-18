@@ -26,6 +26,7 @@ Feature
     - tuple
 - Create table(s) from:
     - CSV file/text
+    - HTML file/text
     - JSON file/text
     - Microsoft Excel :superscript:`TM` file
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
@@ -197,14 +198,23 @@ Installation
 Dependencies
 ============
 
-Python 2.7 or 3.3+
+Python 2.7+ or 3.3+
 
--  `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
--  `jsonschema <https://github.com/Julian/jsonschema>`__
--  `pathvalidate <https://github.com/thombashi/pathvalidate>`__
--  `path.py <https://github.com/jaraco/path.py>`__
--  `six <https://pypi.python.org/pypi/six/>`__
--  `xlrd <https://github.com/python-excel/xlrd>`__
+Mandatory
+-----------------
+
+- `beautifulsoup4 <https://www.crummy.com/software/BeautifulSoup/>`__
+- `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
+- `jsonschema <https://github.com/Julian/jsonschema>`__
+- `pathvalidate <https://github.com/thombashi/pathvalidate>`__
+- `path.py <https://github.com/jaraco/path.py>`__
+- `six <https://pypi.python.org/pypi/six/>`__
+- `xlrd <https://github.com/python-excel/xlrd>`__
+
+Optional
+-----------------
+
+- `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
 
 
 Test dependencies
