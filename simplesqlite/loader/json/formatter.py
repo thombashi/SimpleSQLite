@@ -39,6 +39,11 @@ class JsonConverter(TableFormatterInterface, LoaderAcceptor):
         except jsonschema.ValidationError as e:
             raise ValidationError(e)
 
+    def _make_table_name(self, table_key):
+        table_name = self._loader.make_table_name()
+
+        return table_name.replace("%(key)s", table_key)
+
 
 class SingleJsonTableConverter(JsonConverter):
     """
@@ -77,7 +82,7 @@ class SingleJsonTableConverter(JsonConverter):
             attr_name_set = attr_name_set.union(list(json_record.keys()))
 
         yield TableData(
-            self._loader.make_table_name(),
+            self._make_table_name(""),
             sorted(attr_name_set), self._buffer)
 
 
@@ -119,13 +124,8 @@ class MultipleJsonTableConverter(JsonConverter):
                 attr_name_set = attr_name_set.union(list(json_record.keys()))
 
             yield TableData(
-                self.__make_table_name(table_key),
+                self._make_table_name(table_key),
                 sorted(attr_name_set), json_record_list)
-
-    def __make_table_name(self, table_key):
-        table_name = self._loader.make_table_name()
-        table_name = table_name.replace("%(default)s", "%(key)s")
-        return table_name.replace("%(key)s", table_key)
 
 
 class JsonTableFormatter(TableFormatter):
