@@ -13,6 +13,7 @@ import path
 import six
 
 from .constant import TableNameTemplate as tnt
+from .error import InvalidDataError
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -103,7 +104,7 @@ class TableLoader(TableLoaderInterface):
 
     def _validate_source(self):
         if dataproperty.is_empty_string(self.source):
-            raise ValueError("data source is empty")
+            raise InvalidDataError("data source is empty")
 
     def _make_file_table_name(self):
         return self.__make_table_name().replace(
