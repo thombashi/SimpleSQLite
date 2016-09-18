@@ -97,6 +97,11 @@ class Test_ExcelTableFileLoader_make_table_name:
             "/path/to/data.xlsx",
             "prefix_data_testsheet"
         ],
+        [
+            "%(format_name)s%(format_id)s_%(filename)s",
+            "/path/to/data.xlsx",
+            "spreadsheet0_data"
+        ],
     ])
     def test_normal(self, monkeypatch, value, source, expected):
         loader = sloader.ExcelTableFileLoader(source)

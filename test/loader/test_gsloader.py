@@ -23,6 +23,11 @@ class Test_GoogleSheetsTableLoader_make_table_name:
             "titlename",
             "prefix_titlename_testsheet"
         ],
+        [
+            "%(format_name)s%(format_id)s",
+            "titlename",
+            "spreadsheet0"
+        ],
     ])
     def test_normal(self, monkeypatch, value, title, expected):
         loader = sloader.GoogleSheetsTableLoader("dummy")

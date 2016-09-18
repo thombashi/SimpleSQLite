@@ -29,7 +29,7 @@ test_data_01 = Data(
     ]""",
     [
         TableData(
-            "tmp",
+            "json1",
             ["attr_a", "attr_b", "attr_c"],
             [
                 {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
@@ -47,7 +47,7 @@ test_data_02 = Data(
     ]""",
     [
         TableData(
-            "tmp",
+            "json1",
             ["attr_a", "attr_b", "attr_c"],
             [
                 {u'attr_a': 1},
@@ -106,7 +106,7 @@ test_data_04 = Data(
     }""",
     [
         TableData(
-            u"tmp_table_a",
+            u"table_a",
             [u"attr_a", u"attr_b", u"attr_c"],
             [
                 {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
@@ -116,7 +116,7 @@ test_data_04 = Data(
             ]
         ),
         TableData(
-            u"tmp_table_b",
+            u"table_b",
             [u"a", u"b"],
             [
                 {u'a': 1, u'b': 4},
@@ -144,6 +144,11 @@ class Test_JsonTableFileLoader_make_table_name:
             "datadata"
         ],
         ["%(%(filename)s)", "/path/to/data.json", "%(data)"],
+        [
+            "%(format_name)s%(format_id)s_%(filename)s",
+            "/path/to/data.json",
+            "json0_data"
+        ],
     ])
     def test_normal(self, value, source, expected):
         loader = sloader.JsonTableFileLoader(source)
@@ -178,25 +183,25 @@ class Test_JsonTableFileLoader_load:
             [
                 test_data_01.value,
                 "tmp.json",
-                "%(default)s",
+                "%(key)s",
                 test_data_01.expected
             ],
             [
                 test_data_02.value,
                 "tmp.json",
-                "%(default)s",
+                "%(key)s",
                 test_data_02.expected
             ],
             [
                 test_data_03.value,
                 "tmp.json",
-                "%(default)s",
+                "%(key)s",
                 test_data_03.expected
             ],
             [
                 test_data_04.value,
                 "tmp.json",
-                "%(filename)s_%(key)s",
+                "%(key)s",
                 test_data_04.expected
             ],
         ])
@@ -269,6 +274,7 @@ class Test_JsonTableTextLoader_make_table_name:
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(filename)s", "%(filename)s"],
         ["tablename", "tablename"],
+        ["%(format_name)s%(format_id)s", "json0"],
     ])
     def test_normal(self, value, expected):
         loader = sloader.JsonTableTextLoader("dummy")
@@ -299,12 +305,12 @@ class Test_JsonTableTextLoader_load:
         [
             [
                 test_data_01.value,
-                "tmp",
+                "json1",
                 test_data_01.expected,
             ],
             [
                 test_data_02.value,
-                "tmp",
+                "json1",
                 test_data_02.expected,
             ],
             [

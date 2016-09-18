@@ -70,6 +70,7 @@ test_data_02 = Data(
 class Test_CsvTableFileLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "source", "expected"], [
+        ["%(default)s", "/path/to/data.csv", "data"],
         ["%(filename)s", "/path/to/data.csv", "data"],
         ["prefix_%(filename)s", "/path/to/data.csv", "prefix_data"],
         ["%(filename)s_suffix", "/path/to/data.csv", "data_suffix"],
@@ -84,6 +85,11 @@ class Test_CsvTableFileLoader_make_table_name:
             "datadata"
         ],
         ["%(%(filename)s)", "/path/to/data.csv", "%(data)"],
+        [
+            "%(format_name)s%(format_id)s_%(filename)s",
+            "/path/to/data.csv",
+            "csv0_data",
+        ],
     ])
     def test_normal(self, value, source, expected):
         loader = sloader.CsvTableFileLoader(source)
@@ -221,6 +227,7 @@ class Test_CsvTableTextLoader_make_table_name:
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(filename)s", "%(filename)s"],
         ["tablename", "tablename"],
+        ["%(format_name)s%(format_id)s", "csv0"],
     ])
     def test_normal(self, value, expected):
         loader = sloader.CsvTableTextLoader("dummy")
