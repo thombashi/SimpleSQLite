@@ -107,8 +107,18 @@ class TableLoader(TableLoaderInterface):
             raise InvalidDataError("data source is empty")
 
     def _make_file_table_name(self):
-        return self.__make_table_name().replace(
-            tnt.FILENAME, path.Path(self.source).namebase)
+        filename = ""
+        if dataproperty.is_not_empty_string(self.source):
+            filename = path.Path(self.source).namebase
+
+        table_name = self.__make_table_name().replace(
+            tnt.FILENAME, filename)
+
+        if dataproperty.is_empty_string(table_name):
+            raise ValueError(
+                "table name is empty after the template replacement")
+
+        return table_name
 
     def __make_table_name(self):
         self._validate_table_name()
