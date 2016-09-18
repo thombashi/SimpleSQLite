@@ -55,6 +55,9 @@ class TableLoader(TableLoaderInterface):
         self._validate()
 
         return self.table_name
+    @abc.abstractmethod
+    def _get_default_table_name_template(self):
+        pass
 
     def _validate(self):
         self._validate_table_name()

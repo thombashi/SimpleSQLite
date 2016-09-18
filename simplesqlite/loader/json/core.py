@@ -112,6 +112,9 @@ class JsonTableFileLoader(TableLoader):
 
         return formatter.to_table_data()
 
+    def _get_default_table_name_template(self):
+        return "%(filename)s_%(key)s"
+
 
 class JsonTableTextLoader(TableLoader):
 
@@ -136,3 +139,6 @@ class JsonTableTextLoader(TableLoader):
         formatter.accept(self)
 
         return formatter.to_table_data()
+
+    def _get_default_table_name_template(self):
+        return "%(format_name)s_%(format_id)s"

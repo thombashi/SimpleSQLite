@@ -58,3 +58,6 @@ class SpreadSheetLoader(TableLoader):
         table_name = super(SpreadSheetLoader, self).make_table_name()
 
         return table_name.replace("%(sheet)s", self._sheet_name)
+
+    def _get_default_table_name_template(self):
+        return "%(format_name)s_%(sheet)s"
