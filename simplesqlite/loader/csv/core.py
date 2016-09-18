@@ -83,11 +83,14 @@ class CsvTableFileLoader(CsvTableLoader):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  filename
-            ================  ===========================
+            ===================  ==================================
+            format specifier     value after the replacement
+            ===================  ==================================
+            ``%(filename)s``     filename (without extention)
+            ``%(format_name)s``  ``csv``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ==================================
 
         :return: Table name.
         :rtype: str
@@ -136,7 +139,10 @@ class CsvTableTextLoader(CsvTableLoader):
         """
         Load table data from a CSV text.
 
-        :return: Loaded table data.
+        :return:
+            Loaded table data.
+            The default table name is ``%(format_name)s%(format_id)s``.
+            See also :py:meth:`~.CsvTableFileLoader.make_table_name`.
         :rtype: iterator of |TableData|
         :raises simplesqlite.loader.InvalidDataError:
             If the CSV data is invalid.

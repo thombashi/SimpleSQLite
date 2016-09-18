@@ -41,12 +41,15 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  Filename of the workbook
-            ``%(sheet)s``     Name of the sheet
-            ================  ===========================
+            ===================  ====================================
+            format specifier     value after the replacement
+            ===================  ====================================
+            ``%(filename)s``     Filename of the workbook
+            ``%(sheet)s``        Name of the sheet
+            ``%(format_name)s``  ``spreadsheet``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ====================================
 
         :return: Table name.
         :rtype: str

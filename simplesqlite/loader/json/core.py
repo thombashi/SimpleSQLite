@@ -90,15 +90,21 @@ class JsonTableFileLoader(JsonTableLoader):
         :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
         Following format specifiers are replaced with specific string.
 
-            +----------------+------------------------------------------------+
-            |format specifier|value after the replacement                     |
-            +================+================================================+
-            |``%(filename)s``|Filename. Defaults to single JSON table.        |
-            +----------------+------------------------------------------------+
-            |``%(key)s``     |Key of the table data                           |
-            |                |(only for multiple JSON table).                 |
-            |                |Defaults to multiple JSON table.                |
-            +----------------+------------------------------------------------+
+            +-------------------+---------------------------------------------+
+            |format specifier   |value after the replacement                  |
+            +===================+=============================================+
+            |``%(filename)s``   |Filename. Defaults to single JSON table.     |
+            +-------------------+---------------------------------------------+
+            |``%(key)s``        |Key of the table data                        |
+            |                   |(only for multiple JSON table).              |
+            |                   |Defaults to multiple JSON table.             |
+            +-------------------+---------------------------------------------+
+            |``%(format_name)s``|``json``                                     |
+            +-------------------+---------------------------------------------+
+            |``%(format_id)s``  | unique number in the same format            |
+            +-------------------+---------------------------------------------+
+            |``%(global_id)s``  | unique number in all of the format          |
+            +----------------+--+---------------------------------------------+
 
         :return: Loaded table data.
         :rtype: iterator of |TableData|

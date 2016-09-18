@@ -52,12 +52,15 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  Filename of the workbook
-            ``%(title)s``     Name of the spreadsheet
-            ================  ===========================
+            ===================  ====================================
+            format specifier     value after the replacement
+            ===================  ====================================
+            ``%(filename)s``     Filename of the workbook
+            ``%(title)s``        Name of the spreadsheet
+            ``%(format_name)s``  ``spreadsheet``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ====================================
 
         :return: Table name.
         :rtype: str
