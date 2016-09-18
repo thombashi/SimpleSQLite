@@ -98,6 +98,19 @@ test_data_02 = Data(
         ),
     ])
 
+test_data_03 = Data(
+    """
+<html>
+  <head>
+    header
+  </head>
+  <body>
+    hogehoge
+  </body>
+</html>
+""",
+    [])
+
 
 class Test_HtmlTableFileLoader_make_table_name:
 
@@ -168,6 +181,12 @@ class Test_HtmlTableFileLoader_load:
                 "tmp.html",
                 "%(key)s",
                 test_data_02.expected,
+            ],
+            [
+                test_data_03.value,
+                "tmp.html",
+                "%(default)s",
+                test_data_03.expected,
             ],
         ])
     def test_normal(
@@ -271,6 +290,11 @@ class Test_HtmlTableTextLoader_load:
                 test_data_02.value,
                 "%(default)s",
                 test_data_02.expected,
+            ],
+            [
+                test_data_03.value,
+                "%(default)s",
+                test_data_03.expected,
             ],
         ])
     def test_normal(self, table_text, table_name, expected_tabletuple_list):
