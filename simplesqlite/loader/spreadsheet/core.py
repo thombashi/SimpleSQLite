@@ -52,6 +52,10 @@ class SpreadSheetLoader(TableLoader):
     def _get_start_row_idx(self):  # pragma: no cover
         pass
 
+    @property
+    def format_name(self):
+        return "spreadsheet"
+
     def make_table_name(self):
         self._validate()
 

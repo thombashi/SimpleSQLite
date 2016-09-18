@@ -18,6 +18,10 @@ class JsonTableLoader(TableLoader):
     Abstract class of JSON table loader.
     """
 
+    @property
+    def format_name(self):
+        return "json"
+
 
 class JsonTableFileLoader(JsonTableLoader):
     """

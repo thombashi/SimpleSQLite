@@ -50,6 +50,10 @@ class CsvTableLoader(TableLoader):
         self.quotechar = '"'
         self.encoding = "utf-8"
 
+    @property
+    def format_name(self):
+        return "csv"
+
     def _to_data_matrix(self):
         from dataproperty.type import FloatTypeChecker
 

@@ -21,6 +21,10 @@ class TableLoaderInterface(object):
     def load(self):  # pragma: no cover
         pass
 
+    @abc.abstractproperty
+    def format_name(self):  # pragma: no cover
+        pass
+
     @abc.abstractmethod
     def _validate(self):  # pragma: no cover
         pass
