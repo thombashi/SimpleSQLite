@@ -20,7 +20,6 @@ class JsonTableFileLoader(TableLoader):
 
     def __init__(self, file_path=None):
         super(JsonTableFileLoader, self).__init__(file_path)
-        self.table_name = "%(default)s"
 
     def make_table_name(self):
         self._validate()
@@ -118,7 +117,6 @@ class JsonTableTextLoader(TableLoader):
 
     def __init__(self, text):
         super(JsonTableTextLoader, self).__init__(text)
-        self.table_name = "%(default)s"
 
     def load(self):
         """

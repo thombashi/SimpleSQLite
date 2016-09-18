@@ -27,7 +27,6 @@ class SpreadSheetLoader(TableLoader):
     def __init__(self, source):
         super(SpreadSheetLoader, self).__init__(source)
 
-        self.table_name = "%(sheet)s"
         self.start_row = 0
         self._worksheet = None
         self._start_col_idx = None

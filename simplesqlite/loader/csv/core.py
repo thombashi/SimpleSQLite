@@ -74,7 +74,6 @@ class CsvTableFileLoader(CsvTableLoader):
 
     def __init__(self, file_path=None):
         super(CsvTableFileLoader, self).__init__(file_path)
-        self.table_name = "%(filename)s"
 
     def make_table_name(self):
         """

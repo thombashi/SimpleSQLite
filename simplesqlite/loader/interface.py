@@ -48,7 +48,7 @@ class TableLoader(TableLoaderInterface):
     """
 
     def __init__(self, source):
-        self.table_name = None
+        self.table_name = "%(default)s"
         self.source = source
 
     def make_table_name(self):
