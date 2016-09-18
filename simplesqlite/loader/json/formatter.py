@@ -79,7 +79,8 @@ class SingleJsonTableConverter(JsonConverter):
 
         self._loader.inc_table_count()
 
-        yield TableData(self._make_table_name(), sorted(attr_name_set), self._buffer)
+        yield TableData(
+            self._make_table_name(), sorted(attr_name_set), self._buffer)
 
     def _make_table_name(self):
         table_name = self._loader.make_table_name()
@@ -165,5 +166,6 @@ class JsonTableFormatter(TableFormatter):
 
         converter = SingleJsonTableConverter(self._source_data)
         converter.accept(self._loader)
+
         for tabledata in converter.to_table_data():
             yield tabledata
