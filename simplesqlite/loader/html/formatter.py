@@ -30,7 +30,6 @@ class HtmlTableFormatter(TableFormatter):
 
         for table in self.__soup.find_all("table"):
             tabledata = self.__parse_html(table)
-            self._loader.inc_table_count()
 
             yield tabledata
 
