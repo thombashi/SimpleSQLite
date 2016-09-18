@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 import pytest
 
 import simplesqlite.loader as sloader
@@ -23,6 +22,11 @@ class Test_GoogleSheetsTableLoader_make_table_name:
             "prefix_%(title)s_%(sheet)s",
             "titlename",
             "prefix_titlename_testsheet"
+        ],
+        [
+            "%(format_name)s%(format_id)s",
+            "titlename",
+            "spreadsheet0"
         ],
     ])
     def test_normal(self, monkeypatch, value, title, expected):

@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 
 import dataproperty
@@ -37,6 +36,8 @@ class CsvTableFormatter(TableFormatter):
         if len(data_matrix) == 0:
             raise InvalidDataError(
                 "data row must be greater or equal than one")
+
+        self._loader.inc_table_count()
 
         yield TableData(
             self._loader.make_table_name(),

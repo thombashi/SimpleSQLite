@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 import pytest
 import xlsxwriter
 
@@ -97,6 +96,11 @@ class Test_ExcelTableFileLoader_make_table_name:
             "prefix_%(filename)s_%(sheet)s",
             "/path/to/data.xlsx",
             "prefix_data_testsheet"
+        ],
+        [
+            "%(format_name)s%(format_id)s_%(filename)s",
+            "/path/to/data.xlsx",
+            "spreadsheet0_data"
         ],
     ])
     def test_normal(self, monkeypatch, value, source, expected):

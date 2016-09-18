@@ -43,6 +43,24 @@ CsvTableTextLoader class
     :undoc-members:
     :show-inheritance:
 
+    
+HtmlTableFileLoader class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: simplesqlite.loader.HtmlTableFileLoader
+    :inherited-members:
+    :undoc-members:
+    :show-inheritance:
+
+
+HtmlTableTextLoader class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: simplesqlite.loader.HtmlTableTextLoader
+    :inherited-members:
+    :undoc-members:
+    :show-inheritance:
+
 
 JsonTableFileLoader class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

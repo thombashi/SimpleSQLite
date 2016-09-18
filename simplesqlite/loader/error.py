@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 
 
@@ -14,7 +13,7 @@ class ValidationError(Exception):
     """
 
 
-class InvalidDataError(Exception):
+class InvalidDataError(ValueError):
     """
     Raised when data is invalid to load.
     """

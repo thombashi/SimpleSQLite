@@ -4,13 +4,13 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 
 import path
 from six.moves import range
 import xlrd
 
+from ..constant import TableNameTemplate as tnt
 from ..error import InvalidDataError
 from ..error import OpenError
 from ..data import TableData
@@ -20,6 +20,10 @@ from .core import SpreadSheetLoader
 class ExcelTableFileLoader(SpreadSheetLoader):
     """
     Concrete class of Microsoft Excel |TM| file loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(sheet)s``.
     """
 
     @property
@@ -41,12 +45,15 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  Filename of the workbook
-            ``%(sheet)s``     Name of the sheet
-            ================  ===========================
+            ===================  ====================================
+            format specifier     value after the replacement
+            ===================  ====================================
+            ``%(filename)s``     Filename of the workbook
+            ``%(sheet)s``        Name of the sheet
+            ``%(format_name)s``  ``spreadsheet``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ====================================
 
         :return: Table name.
         :rtype: str
@@ -56,7 +63,7 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         table_name = super(ExcelTableFileLoader, self).make_table_name()
 
         return table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+            tnt.FILENAME, path.Path(self.source).namebase)
 
     def load(self):
         """
@@ -98,6 +105,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
                 self.__get_row_values(row_idx)
                 for row_idx in range(start_row_idx + 1, self._row_count)
             ]
+
+            self.inc_table_count()
 
             yield TableData(self.make_table_name(), header_list, record_list)
 

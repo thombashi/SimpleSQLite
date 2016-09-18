@@ -4,14 +4,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import csv
 
-import dataproperty
-import path
 import six
 
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 from .formatter import CsvTableFormatter
 
@@ -52,6 +50,10 @@ class CsvTableLoader(TableLoader):
         self.quotechar = '"'
         self.encoding = "utf-8"
 
+    @property
+    def format_name(self):
+        return "csv"
+
     def _to_data_matrix(self):
         from dataproperty.type import FloatTypeChecker
 
@@ -76,26 +78,25 @@ class CsvTableFileLoader(CsvTableLoader):
 
     def __init__(self, file_path=None):
         super(CsvTableFileLoader, self).__init__(file_path)
-        self.table_name = "%(filename)s"
 
     def make_table_name(self):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  filename
-            ================  ===========================
+            ===================  ==================================
+            format specifier     value after the replacement
+            ===================  ==================================
+            ``%(filename)s``     filename (without extention)
+            ``%(format_name)s``  ``csv``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ==================================
 
         :return: Table name.
         :rtype: str
         """
 
-        self._validate()
-
-        return self.table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+        return self._make_file_table_name()
 
     def load(self):
         """
@@ -122,10 +123,17 @@ class CsvTableFileLoader(CsvTableLoader):
 
         return formatter.to_table_data()
 
+    def _get_default_table_name_template(self):
+        return tnt.FILENAME
+
 
 class CsvTableTextLoader(CsvTableLoader):
     """
     Concrete class of CSV text loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(format_name)s%(format_id)s``.
     """
 
     def __init__(self, text):
@@ -140,7 +148,9 @@ class CsvTableTextLoader(CsvTableLoader):
         :raises simplesqlite.loader.InvalidDataError:
             If the CSV data is invalid.
 
-        .. seealso:: :py:func:`csv.reader`
+        .. seealso::
+            :py:func:`csv.reader`
+            :py:meth:`~.CsvTableFileLoader.make_table_name`
         """
 
         self._validate()
@@ -152,3 +162,6 @@ class CsvTableTextLoader(CsvTableLoader):
         formatter.accept(self)
 
         return formatter.to_table_data()
+
+    def _get_default_table_name_template(self):
+        return "{:s}{:s}".format(tnt.FORMAT_NAME, tnt.FORMAT_ID)

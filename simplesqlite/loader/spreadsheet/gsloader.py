@@ -4,12 +4,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 
 import dataproperty
 from six.moves import zip
 
+from ..constant import TableNameTemplate as tnt
 from ..error import InvalidDataError
 from ..error import OpenError
 from ..data import TableData
@@ -20,6 +20,10 @@ from ..._func import connect_sqlite_db_mem
 class GoogleSheetsTableLoader(SpreadSheetLoader):
     """
     Concrete class of Google Spreadsheet loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(sheet)s``.
 
     Requirements:
 
@@ -52,12 +56,14 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         """
         |make_table_name|
 
-            ================  ===========================
-            format specifier  value after the replacement
-            ================  ===========================
-            ``%(filename)s``  Filename of the workbook
-            ``%(title)s``     Name of the spreadsheet
-            ================  ===========================
+            ===================  ====================================
+            format specifier     value after the replacement
+            ===================  ====================================
+            ``%(title)s``        Name of the spreadsheet
+            ``%(format_name)s``  ``spreadsheet``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ====================================
 
         :return: Table name.
         :rtype: str
@@ -67,7 +73,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         table_name = super(
             GoogleSheetsTableLoader, self).make_table_name()
 
-        return table_name.replace("%(title)s", self.title)
+        return table_name.replace(tnt.TITLE, self.title)
 
     def load(self):
         """
@@ -114,6 +120,8 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
                     record_list = value_matrix[1:]
                 except IndexError:
                     continue
+
+                self.inc_table_count()
 
                 yield TableData(
                     self.make_table_name(), header_list, record_list)

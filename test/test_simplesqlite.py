@@ -918,7 +918,7 @@ class Test_SimpleSQLite_create_table_from_json:
                 "tmp.json",
                 "",
 
-                "tmp",
+                "tmp_json1",
                 ["attr_a", "attr_b", "attr_c"],
                 [
                     (1, 4.0,   u"a"),

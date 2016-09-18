@@ -4,10 +4,10 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import abc
 
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 
 
@@ -28,7 +28,6 @@ class SpreadSheetLoader(TableLoader):
     def __init__(self, source):
         super(SpreadSheetLoader, self).__init__(source)
 
-        self.table_name = "%(sheet)s"
         self.start_row = 0
         self._worksheet = None
         self._start_col_idx = None
@@ -54,9 +53,16 @@ class SpreadSheetLoader(TableLoader):
     def _get_start_row_idx(self):  # pragma: no cover
         pass
 
+    @property
+    def format_name(self):
+        return "spreadsheet"
+
     def make_table_name(self):
         self._validate()
 
         table_name = super(SpreadSheetLoader, self).make_table_name()
 
-        return table_name.replace("%(sheet)s", self._sheet_name)
+        return table_name.replace(tnt.SHEET, self._sheet_name)
+
+    def _get_default_table_name_template(self):
+        return "{:s}".format(tnt.SHEET)

@@ -4,30 +4,38 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import json
 
-import path
-
+from ..constant import TableNameTemplate as tnt
 from ..interface import TableLoader
 from .formatter import JsonTableFormatter
 
 
-class JsonTableFileLoader(TableLoader):
+class JsonTableLoader(TableLoader):
+    """
+    Abstract class of JSON table loader.
+    """
+
+    @property
+    def format_name(self):
+        return "json"
+
+
+class JsonTableFileLoader(JsonTableLoader):
     """
     Concrete class of JSON file loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(filename)s_%(key)s``.
     """
 
     def __init__(self, file_path=None):
         super(JsonTableFileLoader, self).__init__(file_path)
-        self.table_name = "%(default)s"
 
     def make_table_name(self):
-        self._validate()
-
-        return self.table_name.replace(
-            "%(filename)s", path.Path(self.source).namebase)
+        return self._make_file_table_name()
 
     def load(self):
         """
@@ -82,19 +90,23 @@ class JsonTableFileLoader(TableLoader):
 
             :ref:`example-convert-multi-json-table`
 
-        The table name string is making from
-        :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
+        The table name is determined by the value of
+        :py:attr:`~JsonTableFileLoader.table_name`.
         Following format specifiers are replaced with specific string.
 
-            +----------------+------------------------------------------------+
-            |format specifier|value after the replacement                     |
-            +================+================================================+
-            |``%(filename)s``|Filename. Defaults to single JSON table.        |
-            +----------------+------------------------------------------------+
-            |``%(key)s``     |Key of the table data                           |
-            |                |(only for multiple JSON table).                 |
-            |                |Defaults to multiple JSON table.                |
-            +----------------+------------------------------------------------+
+            ===================  ==============================================
+            format specifier     value after the replacement
+            ===================  ==============================================
+            ``%(filename)s``     Filename. Defaults to single JSON table.
+            ``%(key)s``          | This is replaced the different value
+                                 | for each single/multipl JSON tables:
+                                 | [single JSON table]
+                                 | ``%(format_name)s%(format_id)s``
+                                 | [multiple JSON table] Key of the table data.
+            ``%(format_name)s``  ``json``
+            ``%(format_id)s``    unique number in the same format
+            ``%(global_id)s``    unique number in all of the format
+            ===================  ==============================================
 
         :return: Loaded table data.
         :rtype: iterator of |TableData|
@@ -114,12 +126,21 @@ class JsonTableFileLoader(TableLoader):
 
         return formatter.to_table_data()
 
+    def _get_default_table_name_template(self):
+        return "{:s}_{:s}".format(tnt.FILENAME, tnt.KEY)
 
-class JsonTableTextLoader(TableLoader):
+
+class JsonTableTextLoader(JsonTableLoader):
+    """
+    Concrete class of JSON text loader.
+
+    .. py:attribute:: table_name
+
+        Table name string. Defaults to ``%(key)s``.
+    """
 
     def __init__(self, text):
         super(JsonTableTextLoader, self).__init__(text)
-        self.table_name = "%(default)s"
 
     def load(self):
         """
@@ -139,3 +160,6 @@ class JsonTableTextLoader(TableLoader):
         formatter.accept(self)
 
         return formatter.to_table_data()
+
+    def _get_default_table_name_template(self):
+        return "{:s}".format(tnt.KEY)
