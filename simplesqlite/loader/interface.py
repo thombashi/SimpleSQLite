@@ -62,6 +62,9 @@ class TableLoader(TableLoaderInterface):
         self.__global_table_count = 0
         self.__format_table_count = {}
 
+    def get_format_table_count(self):
+        return self.__format_table_count.get(self.format_name, 0)
+
     def make_table_name(self):
         self._validate()
 
@@ -70,7 +73,7 @@ class TableLoader(TableLoaderInterface):
         with self.__table_count_lock:
             self.__global_table_count += 1
             self.__format_table_count[self.format_name] = (
-                self.__format_table_count.get(self.format_name, 0) + 1)
+                self.get_format_table_count() + 1)
 
     @abc.abstractmethod
     def _get_default_table_name_template(self):  # pragma: no cover
