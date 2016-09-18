@@ -29,15 +29,11 @@ class TableLoaderInterface(object):
         pass
 
     @abc.abstractmethod
-    def _validate(self):  # pragma: no cover
+    def make_table_name(self):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def _validate_table_name(self):  # pragma: no cover
-        pass
-
-    @abc.abstractmethod
-    def _validate_source(self):  # pragma: no cover
+    def inc_table_count(self):  # pragma: no cover
         pass
 
 
