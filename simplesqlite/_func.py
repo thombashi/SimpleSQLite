@@ -5,9 +5,7 @@
 """
 
 from __future__ import absolute_import
-import re
 
-import dataproperty
 import pathvalidate
 
 from ._error import InvalidTableNameError
