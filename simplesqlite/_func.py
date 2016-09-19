@@ -21,11 +21,13 @@ def validate_table_name(name):
     """
 
     try:
-        pathvalidate.validate_sqlite_name(name)
+        pathvalidate.validate_sqlite_table_name(name)
     except pathvalidate.ReservedNameError as e:
         raise InvalidTableNameError(e)
     except pathvalidate.NullNameError:
         raise InvalidTableNameError("table name is empty")
+    except pathvalidate.InvalidCharError as e:
+        raise InvalidTableNameError(e)
 
 
 def append_table(con_src, con_dst, table_name):
