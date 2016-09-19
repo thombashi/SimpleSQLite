@@ -575,29 +575,29 @@ class SimpleSQLite(object):
             for query, execute_time
             in six.iteritems(self.__dict_query_totalexectime)
         ]
-        attribute_name_list = ("query", "cumulative_time", "count")
+        attr_name_list = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
                 profile_table_name,
-                attribute_name_list,
+                attr_name_list,
                 data_matrix=value_matrix)
         except ValueError:
             return []
 
         try:
             result = con_tmp.select(
-                select="{:s},SUM({:s}),SUM({:s})".format(*attribute_name_list),
+                select="{:s},SUM({:s}),SUM({:s})".format(*attr_name_list),
                 table_name=profile_table_name,
                 extra="GROUP BY {:s} ORDER BY {:s} DESC LIMIT {:d}".format(
-                    "query", "cumulative_time", profile_count))
+                    attr_name_list[0], attr_name_list[1], profile_count))
         except sqlite3.OperationalError:
             return []
         if result is None:
             return []
 
         SqliteProfile = namedtuple(
-            "SqliteProfile", " ".join(attribute_name_list))
+            "SqliteProfile", " ".join(attr_name_list))
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
