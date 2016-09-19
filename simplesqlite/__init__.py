@@ -14,6 +14,7 @@ from ._error import NullDatabaseConnectionError
 from ._error import TableNotFoundError
 from ._error import AttributeNotFoundError
 from ._error import InvalidTableNameError
+from ._error import InvalidAttributeNameError
 from ._error import SqlSyntaxError
 from ._error import OperationalError
 from ._func import append_table

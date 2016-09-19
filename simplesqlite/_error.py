@@ -33,6 +33,12 @@ class InvalidTableNameError(ValueError):
     """
 
 
+class InvalidAttributeNameError(ValueError):
+    """
+    Raised when used invalid attribute name for SQLite.
+    """
+
+
 class SqlSyntaxError(Exception):
     """
     Raised when a SQLite query syntax is invalid.
