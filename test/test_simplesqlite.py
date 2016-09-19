@@ -202,8 +202,8 @@ class Test_SimpleSQLite_init:
 
     @pytest.mark.parametrize(["value", "mode", "expected"], [
         [NOT_EXIT_FILE_PATH, "r", IOError],
-        [NOT_EXIT_FILE_PATH, "w", sqlite3.OperationalError],
-        [NOT_EXIT_FILE_PATH, "a", sqlite3.OperationalError],
+        [NOT_EXIT_FILE_PATH, "w", OperationalError],
+        [NOT_EXIT_FILE_PATH, "a", OperationalError],
 
         [NOT_EXIT_FILE_PATH, None, TypeError],
         [NOT_EXIT_FILE_PATH, inf, TypeError],
@@ -254,7 +254,7 @@ class Test_SimpleSQLite_select:
         assert result is not None
 
     @pytest.mark.parametrize(["attr", "table_name", "expected"], [
-        ["not_exist_attr", TEST_TABLE_NAME, sqlite3.OperationalError],
+        ["not_exist_attr", TEST_TABLE_NAME, OperationalError],
         ["", TEST_TABLE_NAME, ValueError],
         [None, TEST_TABLE_NAME, ValueError],
         ["attr_a", "not_exist_table", TableNotFoundError],
