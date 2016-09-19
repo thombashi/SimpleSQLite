@@ -33,7 +33,7 @@ class HtmlTableFormatter(TableFormatter):
             yield tabledata
 
     def _make_table_name(self):
-        table_name = self._loader.make_table_name()
+        table_name = self._loader._make_table_name()
         key = self.__table_id
         if dataproperty.is_empty_string(key):
             key = "{:s}{:d}".format(

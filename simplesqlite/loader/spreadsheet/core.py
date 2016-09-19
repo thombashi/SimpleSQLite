@@ -57,12 +57,18 @@ class SpreadSheetLoader(TableLoader):
     def format_name(self):
         return "spreadsheet"
 
+    def _make_table_name(self):
+        table_name = super(SpreadSheetLoader, self)._make_table_name()
+
+        return table_name.replace(tnt.SHEET, self._sheet_name)
+
     def _make_file_table_name(self):
         self._validate()
 
         table_name = super(SpreadSheetLoader, self)._make_file_table_name()
+        table_name = table_name.replace(tnt.SHEET, self._sheet_name)
 
-        return table_name.replace(tnt.SHEET, self._sheet_name)
+        return table_name
 
     def _get_default_table_name_template(self):
         return "{:s}".format(tnt.SHEET)

@@ -7,10 +7,12 @@
 import collections
 import os
 
+import pathvalidate
 import pytest
 
 import simplesqlite.loader as sloader
 from simplesqlite.loader.data import TableData
+from simplesqlite import InvalidTableNameError
 
 
 Data = collections.namedtuple("Data", "value expected")
@@ -128,16 +130,10 @@ class Test_HtmlTableFileLoader_make_table_name:
             "/path/to/data.html",
             "datadata"
         ],
-        ["%(%(filename)s)", "/path/to/data.html", "%(data)"],
         [
             "%(format_name)s%(format_id)s_%(filename)s",
             "/path/to/data.html",
             "html0_data"
-        ],
-        [
-            "%(key)s_%(filename)s",
-            "/path/to/data.html",
-            "%(key)s_data"
         ],
     ])
     def test_normal(self, value, source, expected):
@@ -151,6 +147,16 @@ class Test_HtmlTableFileLoader_make_table_name:
         ["", "/path/to/data.html", ValueError],
         ["%(filename)s", None, ValueError],
         ["%(filename)s", "", ValueError],
+        [
+            "%(%(filename)s)",
+            "/path/to/data.html",
+            InvalidTableNameError  # %(data)
+        ],
+        [
+            "%(key)s_%(filename)s",
+            "/path/to/data.html",
+            InvalidTableNameError  # "%(key)s_data"
+        ],
     ])
     def test_exception(self, value, source, expected):
         loader = sloader.HtmlTableFileLoader(source)
@@ -249,9 +255,7 @@ class Test_HtmlTableFileLoader_load:
 class Test_HtmlTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
-        ["%(filename)s", "%(filename)s"],
         ["%(format_name)s%(format_id)s", "html0"],
-        ["%(key)s", "%(key)s"],
         ["tablename", "tablename"],
         ["table", "table_html"],
     ])
@@ -262,6 +266,8 @@ class Test_HtmlTableTextLoader_make_table_name:
         assert loader.make_table_name() == expected
 
     @pytest.mark.parametrize(["value", "source", "expected"], [
+        ["<table></table>", "%(filename)s", InvalidTableNameError],
+        ["<table></table>", "%(key)s", InvalidTableNameError],
         [None, "tablename", ValueError],
         ["", "tablename", ValueError],
     ])

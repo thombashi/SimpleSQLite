@@ -20,9 +20,11 @@ from ._error import AttributeNotFoundError
 from ._error import NullDatabaseConnectionError
 from ._error import TableNotFoundError
 from ._error import InvalidTableNameError
+from ._error import InvalidAttributeNameError
 from ._error import OperationalError
 from ._func import connect_sqlite_db_mem
 from ._func import validate_table_name
+from ._func import validate_attr_name
 from ._func import MEMORY_DB_NAME
 
 
@@ -575,29 +577,29 @@ class SimpleSQLite(object):
             for query, execute_time
             in six.iteritems(self.__dict_query_totalexectime)
         ]
-        attribute_name_list = ("query", "cumulative_time", "count")
+        attr_name_list = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_sqlite_db_mem()
         try:
             con_tmp.create_table_with_data(
                 profile_table_name,
-                attribute_name_list,
+                attr_name_list,
                 data_matrix=value_matrix)
         except ValueError:
             return []
 
         try:
             result = con_tmp.select(
-                select="{:s},SUM({:s}),SUM({:s})".format(*attribute_name_list),
+                select="{:s},SUM({:s}),SUM({:s})".format(*attr_name_list),
                 table_name=profile_table_name,
                 extra="GROUP BY {:s} ORDER BY {:s} DESC LIMIT {:d}".format(
-                    "query", "cumulative_time", profile_count))
+                    attr_name_list[0], attr_name_list[1], profile_count))
         except sqlite3.OperationalError:
             return []
         if result is None:
             return []
 
         SqliteProfile = namedtuple(
-            "SqliteProfile", " ".join(attribute_name_list))
+            "SqliteProfile", " ".join(attr_name_list))
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
@@ -994,6 +996,8 @@ class SimpleSQLite(object):
             List of attribute names of create indices.
         :raises simplesqlite.InvalidTableNameError:
             |raises_validate_table_name|
+        :raises simplesqlite.InvalidAttributeNameError:
+            |raises_validate_attr_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
         .. seealso::
@@ -1201,11 +1205,10 @@ class SimpleSQLite(object):
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
         if dataproperty.is_empty_sequence(attr_name_list):
-            raise ValueError("attribute name list is empty")
+            raise InvalidAttributeNameError("attribute name list is empty")
 
         for attr_name in attr_name_list:
-            if dataproperty.is_empty_string(attr_name):
-                raise ValueError("attribute name includes an empty string")
+            validate_attr_name(attr_name)
 
     @staticmethod
     def __verify_value_matrix(field_list, value_matrix):

@@ -4,11 +4,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from collections import namedtuple
 import datetime
 import itertools
 import sqlite3
 
-from collections import namedtuple
+import pathvalidate
 import dataproperty
 import pytest
 
@@ -89,6 +90,7 @@ def con_profile(tmpdir):
             [1, 2],
             [3, 4],
         ])
+    con.commit()
 
     return con
 
@@ -130,7 +132,6 @@ class Test_validate_table_name:
     @pytest.mark.parametrize(["value"], [
         ["valid_table_name"],
         ["table_"],
-        ["_table"],
     ])
     def test_normal(self, value):
         validate_table_name(value)
@@ -141,10 +142,35 @@ class Test_validate_table_name:
         ["table", InvalidTableNameError],
         ["TABLE", InvalidTableNameError],
         ["Table", InvalidTableNameError],
+        ["_hoge", InvalidTableNameError],
+        ["%hoge", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
             validate_table_name(value)
+
+
+class Test_validate_attr_name:
+
+    @pytest.mark.parametrize(["value"], [
+        ["valid_attr_name"],
+        ["attr_"],
+    ])
+    def test_normal(self, value):
+        validate_attr_name(value)
+
+    @pytest.mark.parametrize(["value", "expected"], [
+        [None, InvalidAttributeNameError],
+        ["", InvalidAttributeNameError],
+        ["table", InvalidAttributeNameError],
+        ["TABLE", InvalidAttributeNameError],
+        ["Table", InvalidAttributeNameError],
+        ["_hoge", InvalidAttributeNameError],
+        ["%hoge", InvalidAttributeNameError],
+    ])
+    def test_exception(self, value, expected):
+        with pytest.raises(expected):
+            validate_attr_name(value)
 
 
 class Test_append_table:
@@ -768,6 +794,13 @@ class Test_SimpleSQLite_create_table_with_data:
                 [["a"], ["bb"], ["ccc"]],
                 [],
                 InvalidTableNameError,
+            ],
+            [
+                TEST_TABLE_NAME,
+                ["when"],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                InvalidAttributeNameError,
             ],
         ]
     )

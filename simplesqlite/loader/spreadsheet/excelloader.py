@@ -61,7 +61,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
 
         self._validate_source()
 
-        return super(ExcelTableFileLoader, self)._make_file_table_name()
+        return self._sanitize_table_name(
+            super(ExcelTableFileLoader, self)._make_file_table_name())
 
     def load(self):
         """

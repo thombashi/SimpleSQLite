@@ -35,7 +35,7 @@ class JsonTableFileLoader(JsonTableLoader):
         super(JsonTableFileLoader, self).__init__(file_path)
 
     def make_table_name(self):
-        return self._make_file_table_name()
+        return self._sanitize_table_name(self._make_file_table_name())
 
     def load(self):
         """

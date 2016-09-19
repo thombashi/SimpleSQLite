@@ -70,7 +70,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
 
         self._validate_title()
         table_name = super(
-            GoogleSheetsTableLoader, self)._make_file_table_name()
+            GoogleSheetsTableLoader, self)._make_table_name()
 
         return self._sanitize_table_name(
             table_name.replace(tnt.TITLE, self.title))
