@@ -187,7 +187,7 @@ class SimpleSQLite(object):
         try:
             self.__connection = sqlite3.connect(database_path)
         except sqlite3.OperationalError as e:
-            raise OperationalError(e.message)
+            raise OperationalError(e)
 
         self.__mode = mode
 
