@@ -54,13 +54,13 @@ class TableLoader(TableLoaderInterface):
         Table data source to load.
     """
 
+    __table_count_lock = threading.Lock()
+    __global_table_count = 0
+    __format_table_count = {}
+
     def __init__(self, source):
         self.table_name = tnt.DEFAULT
         self.source = source
-
-        self.__table_count_lock = threading.Lock()
-        self.__global_table_count = 0
-        self.__format_table_count = {}
 
     def get_format_table_count(self):
         return self.__format_table_count.get(self.format_name, 0)
@@ -129,11 +129,17 @@ class TableLoader(TableLoaderInterface):
             tnt.DEFAULT, self._get_default_table_name_template())
         table_name = table_name.replace(
             tnt.FORMAT_NAME, self.format_name)
+
+        with self.__table_count_lock:
+            global_table_count = self.__global_table_count
+            format_table_count = self.__format_table_count.get(
+                self.format_name, 0)
+
         table_name = table_name.replace(
             tnt.FORMAT_ID,
-            str(self.__format_table_count.get(self.format_name, 0)))
+            str(format_table_count))
         table_name = table_name.replace(
-            tnt.GLOBAL_ID, str(self.__global_table_count))
+            tnt.GLOBAL_ID, str(global_table_count))
 
         return table_name
 
@@ -145,3 +151,9 @@ class TableLoader(TableLoaderInterface):
             return "{:s}_{:s}".format(table_name, self.format_name)
         except pathvalidate.InvalidCharError as e:
             raise InvalidTableNameError(e)
+
+    @classmethod
+    def clear_table_count(cls):
+        with cls.__table_count_lock:
+            cls.__global_table_count = 0
+            cls.__format_table_count = {}

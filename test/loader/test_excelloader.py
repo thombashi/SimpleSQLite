@@ -8,6 +8,7 @@ import pytest
 import xlsxwriter
 
 import simplesqlite.loader as sloader
+from simplesqlite.loader.interface import TableLoader
 
 
 @pytest.fixture
@@ -85,6 +86,9 @@ def invalid_excel_file_path(tmpdir):
 
 class Test_ExcelTableFileLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @property
     def monkey_property(self):
         return "testsheet"
@@ -128,6 +132,9 @@ class Test_ExcelTableFileLoader_make_table_name:
 
 
 class Test_ExcelTableFileLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [
