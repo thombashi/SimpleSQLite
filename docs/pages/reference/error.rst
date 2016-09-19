@@ -10,9 +10,15 @@ Errors
 .. autoexception:: simplesqlite.AttributeNotFoundError
     :show-inheritance:
 
+.. autoexception:: simplesqlite.InvalidTableNameError
+    :show-inheritance:
+
 .. autoexception:: simplesqlite.SqlSyntaxError
     :show-inheritance:
 
+.. autoexception:: simplesqlite.OperationalError
+    :show-inheritance:
+    
 .. autoexception:: simplesqlite.loader.InvalidDataError
     :show-inheritance:
 
