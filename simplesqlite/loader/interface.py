@@ -9,11 +9,11 @@ import abc
 import threading
 
 import dataproperty
+import pathvalidate
 import path
 import six
 
 from .._error import InvalidTableNameError
-from .._func import validate_table_name
 from .constant import TableNameTemplate as tnt
 from .error import InvalidDataError
 
@@ -139,7 +139,9 @@ class TableLoader(TableLoaderInterface):
 
     def _sanitize_table_name(self, table_name):
         try:
-            validate_table_name(table_name)
+            pathvalidate.validate_sqlite_table_name(table_name)
             return table_name
-        except InvalidTableNameError:
+        except pathvalidate.ReservedNameError:
             return "{:s}_{:s}".format(table_name, self.format_name)
+        except pathvalidate.InvalidCharError as e:
+            raise InvalidTableNameError(e)
