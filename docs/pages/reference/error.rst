@@ -13,6 +13,9 @@ Errors
 .. autoexception:: simplesqlite.InvalidTableNameError
     :show-inheritance:
 
+.. autoexception:: simplesqlite.InvalidAttributeNameError
+    :show-inheritance:
+    
 .. autoexception:: simplesqlite.SqlSyntaxError
     :show-inheritance:
 

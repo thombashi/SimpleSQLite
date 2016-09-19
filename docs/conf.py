@@ -365,9 +365,12 @@ rp_raises = u"""
     
 .. |raises_operational_error| replace::
     If failed to execute a query.
-    
+
 .. |raises_validate_table_name| replace::
     If the name is invalid for a SQLite table name.
+
+.. |raises_validate_attr_name| replace::
+    If the name is invalid for a SQLite attribute name.
 
 .. |raises_write_permission| replace::
     If the open |attr_mode| is neither ``"w"`` nor ``"a"``.
