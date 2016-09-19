@@ -129,11 +129,17 @@ class TableLoader(TableLoaderInterface):
             tnt.DEFAULT, self._get_default_table_name_template())
         table_name = table_name.replace(
             tnt.FORMAT_NAME, self.format_name)
+
+        with self.__table_count_lock:
+            global_table_count = self.__global_table_count
+            format_table_count = self.__format_table_count.get(
+                self.format_name, 0)
+
         table_name = table_name.replace(
             tnt.FORMAT_ID,
-            str(self.__format_table_count.get(self.format_name, 0)))
+            str(format_table_count))
         table_name = table_name.replace(
-            tnt.GLOBAL_ID, str(self.__global_table_count))
+            tnt.GLOBAL_ID, str(global_table_count))
 
         return table_name
 
