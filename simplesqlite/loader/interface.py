@@ -145,3 +145,9 @@ class TableLoader(TableLoaderInterface):
             return "{:s}_{:s}".format(table_name, self.format_name)
         except pathvalidate.InvalidCharError as e:
             raise InvalidTableNameError(e)
+
+    @classmethod
+    def clear_table_count(cls):
+        with cls.__table_count_lock:
+            cls.__global_table_count = 0
+            cls.__format_table_count = {}
