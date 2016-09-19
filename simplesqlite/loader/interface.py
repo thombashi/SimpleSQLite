@@ -54,13 +54,13 @@ class TableLoader(TableLoaderInterface):
         Table data source to load.
     """
 
+    __table_count_lock = threading.Lock()
+    __global_table_count = 0
+    __format_table_count = {}
+
     def __init__(self, source):
         self.table_name = tnt.DEFAULT
         self.source = source
-
-        self.__table_count_lock = threading.Lock()
-        self.__global_table_count = 0
-        self.__format_table_count = {}
 
     def get_format_table_count(self):
         return self.__format_table_count.get(self.format_name, 0)
