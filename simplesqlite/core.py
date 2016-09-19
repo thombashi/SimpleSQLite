@@ -19,6 +19,8 @@ from .converter import RecordConvertor
 from ._error import AttributeNotFoundError
 from ._error import NullDatabaseConnectionError
 from ._error import TableNotFoundError
+from ._error import InvalidTableNameError
+from ._error import OperationalError
 from ._func import connect_sqlite_db_mem
 from ._func import validate_table_name
 from ._func import MEMORY_DB_NAME
@@ -164,7 +166,8 @@ class SimpleSQLite(object):
             ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError:
             If ``database_path`` is invalid or |attr_mode| is invalid.
-        :raises sqlite3.OperationalError: If unable to open the database file.
+        :raises simplesqlite.OperationalError:
+            If unable to open the database file.
         """
 
         self.close()
@@ -181,7 +184,11 @@ class SimpleSQLite(object):
         else:
             self.__database_path = os.path.realpath(database_path)
 
-        self.__connection = sqlite3.connect(database_path)
+        try:
+            self.__connection = sqlite3.connect(database_path)
+        except sqlite3.OperationalError as e:
+            raise OperationalError(e)
+
         self.__mode = mode
 
         if mode != "w":
@@ -202,7 +209,7 @@ class SimpleSQLite(object):
         :rtype: sqlite3.Cursor
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. warning::
 
@@ -232,7 +239,7 @@ class SimpleSQLite(object):
                 "  - msg:   {:s}".format(str(e)),
                 "  - db:    {:s}".format(self.database_path),
             ]
-            raise sqlite3.OperationalError(os.linesep.join(message_list))
+            raise OperationalError(os.linesep.join(message_list))
 
         if self.__is_profile:
             self.__dict_query_count[query] = (
@@ -256,7 +263,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
 
@@ -278,7 +285,7 @@ class SimpleSQLite(object):
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
@@ -302,7 +309,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
@@ -324,7 +331,7 @@ class SimpleSQLite(object):
         except sqlite3.OperationalError as e:
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
-            raise sqlite3.OperationalError(
+            raise OperationalError(
                 "{:s}({:d}) {:s}: failed to execute query:\n".format(
                     file_path, line_no, func_name) +
                 "  query={:s}\n".format(query) +
@@ -344,7 +351,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
 
@@ -378,7 +385,7 @@ class SimpleSQLite(object):
         :return: Result of execution of the query.
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
 
@@ -404,7 +411,7 @@ class SimpleSQLite(object):
         :rtype: list
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
 
@@ -443,7 +450,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
 
@@ -487,7 +494,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
         import re
@@ -513,7 +520,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. warning::
 
@@ -556,7 +563,7 @@ class SimpleSQLite(object):
         :rtype: list of |namedtuple|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
-        :raises sqlite3.OperationalError: |raises_operational_error|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
         from collections import namedtuple
@@ -687,7 +694,7 @@ class SimpleSQLite(object):
 
         try:
             validate_table_name(table_name)
-        except ValueError:
+        except InvalidTableNameError:
             return False
 
         return table_name in self.get_table_name_list()
@@ -796,7 +803,8 @@ class SimpleSQLite(object):
         :param str table_name: Table name to be tested.
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises ValueError: |raises_validate_table_name|
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
 
         :Examples:
 
@@ -984,6 +992,8 @@ class SimpleSQLite(object):
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param tuple index_attribute_list:
             List of attribute names of create indices.
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
         .. seealso::
@@ -1181,7 +1191,11 @@ class SimpleSQLite(object):
         if not os.path.isfile(os.path.realpath(database_path)):
             raise IOError("file not found: " + database_path)
 
-        connection = sqlite3.connect(database_path)
+        try:
+            connection = sqlite3.connect(database_path)
+        except sqlite3.OperationalError as e:
+            raise OperationalError(e)
+
         connection.close()
 
     @staticmethod

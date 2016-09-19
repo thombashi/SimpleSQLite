@@ -364,7 +364,7 @@ rp_raises = u"""
     If the table not found in the database.
     
 .. |raises_operational_error| replace::
-    If failed to execute query.
+    If failed to execute a query.
     
 .. |raises_validate_table_name| replace::
     If the name is invalid for a SQLite table name.

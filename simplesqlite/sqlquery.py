@@ -11,7 +11,6 @@ import dataproperty
 import six
 from six.moves import map
 
-import simplesqlite as sql
 from ._error import SqlSyntaxError
 from ._func import validate_table_name
 
@@ -226,7 +225,8 @@ class SqlQuery:
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: ``select`` is empty string.
-        :raises ValueError: |raises_validate_table_name|
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
 
         :Examples:
 
@@ -267,7 +267,8 @@ class SqlQuery:
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``insert_tuple`` is empty |list|/|tuple|.
-        :raises ValueError: |raises_validate_table_name|
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
         """
 
         validate_table_name(table)
@@ -303,7 +304,8 @@ class SqlQuery:
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``set_query`` is empty string.
-        :raises ValueError: |raises_validate_table_name|
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
         """
 
         validate_table_name(table)

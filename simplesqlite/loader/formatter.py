@@ -23,10 +23,6 @@ class TableFormatterInterface(object):
     def to_table_data(self):  # pragma: no cover
         pass
 
-    @abc.abstractmethod
-    def _validate_source_data(self):  # pragma: no cover
-        pass
-
 
 class TableFormatter(LoaderAcceptor, TableFormatterInterface):
     """

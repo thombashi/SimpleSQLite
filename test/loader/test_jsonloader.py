@@ -275,8 +275,9 @@ class Test_JsonTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(filename)s", "%(filename)s"],
-        ["tablename", "tablename"],
         ["%(format_name)s%(format_id)s", "json0"],
+        ["tablename", "tablename"],
+        ["table", "table_json"],
     ])
     def test_normal(self, value, expected):
         loader = sloader.JsonTableTextLoader("dummy")

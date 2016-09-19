@@ -12,6 +12,8 @@ import dataproperty
 import path
 import six
 
+from .._error import InvalidTableNameError
+from .._func import validate_table_name
 from .constant import TableNameTemplate as tnt
 from .error import InvalidDataError
 
@@ -79,7 +81,7 @@ class TableLoader(TableLoaderInterface):
         :rtype: str
         """
 
-        return self.__make_table_name()
+        return self._sanitize_table_name(self.__make_table_name())
 
     def inc_table_count(self):
         with self.__table_count_lock:
@@ -118,7 +120,7 @@ class TableLoader(TableLoaderInterface):
             raise ValueError(
                 "table name is empty after the template replacement")
 
-        return table_name
+        return self._sanitize_table_name(table_name)
 
     def __make_table_name(self):
         self._validate_table_name()
@@ -134,3 +136,10 @@ class TableLoader(TableLoaderInterface):
             tnt.GLOBAL_ID, str(self.__global_table_count))
 
         return table_name
+
+    def _sanitize_table_name(self, table_name):
+        try:
+            validate_table_name(table_name)
+            return table_name
+        except InvalidTableNameError:
+            return "{:s}_{:s}".format(table_name, self.format_name)

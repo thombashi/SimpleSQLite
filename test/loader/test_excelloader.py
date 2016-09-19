@@ -92,6 +92,7 @@ class Test_ExcelTableFileLoader_make_table_name:
     @pytest.mark.parametrize(["value", "source", "expected"], [
         ["%(sheet)s", "/path/to/data.xlsx", "testsheet"],
         ["%(filename)s", "/path/to/data.xlsx", "data"],
+        ["%(filename)s", "/path/to/table.xlsx", "table_spreadsheet"],
         [
             "prefix_%(filename)s_%(sheet)s",
             "/path/to/data.xlsx",

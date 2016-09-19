@@ -136,11 +136,11 @@ class Test_validate_table_name:
         validate_table_name(value)
 
     @pytest.mark.parametrize(["value", "expected"], [
-        [None, ValueError],
-        ["", ValueError],
-        ["table", ValueError],
-        ["TABLE", ValueError],
-        ["Table", ValueError],
+        [None, InvalidTableNameError],
+        ["", InvalidTableNameError],
+        ["table", InvalidTableNameError],
+        ["TABLE", InvalidTableNameError],
+        ["Table", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
@@ -202,8 +202,8 @@ class Test_SimpleSQLite_init:
 
     @pytest.mark.parametrize(["value", "mode", "expected"], [
         [NOT_EXIT_FILE_PATH, "r", IOError],
-        [NOT_EXIT_FILE_PATH, "w", sqlite3.OperationalError],
-        [NOT_EXIT_FILE_PATH, "a", sqlite3.OperationalError],
+        [NOT_EXIT_FILE_PATH, "w", OperationalError],
+        [NOT_EXIT_FILE_PATH, "a", OperationalError],
 
         [NOT_EXIT_FILE_PATH, None, TypeError],
         [NOT_EXIT_FILE_PATH, inf, TypeError],
@@ -254,7 +254,7 @@ class Test_SimpleSQLite_select:
         assert result is not None
 
     @pytest.mark.parametrize(["attr", "table_name", "expected"], [
-        ["not_exist_attr", TEST_TABLE_NAME, sqlite3.OperationalError],
+        ["not_exist_attr", TEST_TABLE_NAME, OperationalError],
         ["", TEST_TABLE_NAME, ValueError],
         [None, TEST_TABLE_NAME, ValueError],
         ["attr_a", "not_exist_table", TableNotFoundError],
@@ -750,22 +750,32 @@ class Test_SimpleSQLite_create_table_with_data:
 
     @pytest.mark.parametrize(
         [
+            "table_name",
             "attr_name_list", "data_matrix",
             "index_attr_list", "expected",
         ],
         [
             [
-                [""], [["a"], ["bb"], ["ccc"]],
-                [], ValueError,
+                TEST_TABLE_NAME,
+                [""],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                ValueError,
+            ],
+            [
+                "insert",
+                ["attr"],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                InvalidTableNameError,
             ],
         ]
     )
     def test_exception_empty_header(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
-            expected):
+            self, tmpdir, table_name, attr_name_list, data_matrix,
+            index_attr_list, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
-        table_name = TEST_TABLE_NAME
 
         with pytest.raises(expected):
             con.create_table_with_data(

@@ -60,10 +60,8 @@ class ExcelTableFileLoader(SpreadSheetLoader):
         """
 
         self._validate_source()
-        table_name = super(ExcelTableFileLoader, self).make_table_name()
 
-        return table_name.replace(
-            tnt.FILENAME, path.Path(self.source).namebase)
+        return super(ExcelTableFileLoader, self)._make_file_table_name()
 
     def load(self):
         """

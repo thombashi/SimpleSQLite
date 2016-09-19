@@ -226,8 +226,9 @@ class Test_CsvTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(filename)s", "%(filename)s"],
-        ["tablename", "tablename"],
         ["%(format_name)s%(format_id)s", "csv0"],
+        ["tablename", "tablename"],
+        ["table", "table_csv"],
     ])
     def test_normal(self, value, expected):
         loader = sloader.CsvTableTextLoader("dummy")
