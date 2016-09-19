@@ -17,5 +17,8 @@ from ._error import InvalidTableNameError
 from ._error import InvalidAttributeNameError
 from ._error import SqlSyntaxError
 from ._error import OperationalError
+
+from ._func import validate_table_name
+from ._func import validate_attr_name
 from ._func import append_table
 from ._func import connect_sqlite_db_mem
