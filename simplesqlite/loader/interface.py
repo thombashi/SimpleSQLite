@@ -81,7 +81,7 @@ class TableLoader(TableLoaderInterface):
         :rtype: str
         """
 
-        return self._sanitize_table_name(self.__make_table_name())
+        return self._sanitize_table_name(self._make_table_name())
 
     def inc_table_count(self):
         with self.__table_count_lock:
@@ -113,16 +113,16 @@ class TableLoader(TableLoaderInterface):
         if dataproperty.is_not_empty_string(self.source):
             filename = path.Path(self.source).namebase
 
-        table_name = self.__make_table_name().replace(
+        table_name = self._make_table_name().replace(
             tnt.FILENAME, filename)
 
         if dataproperty.is_empty_string(table_name):
             raise ValueError(
                 "table name is empty after the template replacement")
 
-        return self._sanitize_table_name(table_name)
+        return table_name
 
-    def __make_table_name(self):
+    def _make_table_name(self):
         self._validate_table_name()
 
         table_name = self.table_name.replace(

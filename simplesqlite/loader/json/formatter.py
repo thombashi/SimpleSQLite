@@ -83,15 +83,14 @@ class SingleJsonTableConverter(JsonConverter):
             self._make_table_name(), sorted(attr_name_set), self._buffer)
 
     def _make_table_name(self):
-        table_name = self._loader.make_table_name()
+        table_name = self._loader._make_file_table_name()
         table_name = table_name.replace(
-            tnt.KEY, "{:s}{:s}".format(tnt.FORMAT_NAME, tnt.FORMAT_ID))
-        table_name = table_name.replace(
-            tnt.FORMAT_NAME, self._loader.format_name)
-        table_name = table_name.replace(
-            tnt.FORMAT_ID, str(self._loader.get_format_table_count()))
+            tnt.KEY,
+            "{:s}{:d}".format(
+                self._loader.format_name,
+                self._loader.get_format_table_count()))
 
-        return table_name
+        return self._loader._sanitize_table_name(table_name)
 
 
 class MultipleJsonTableConverter(JsonConverter):
@@ -145,9 +144,10 @@ class MultipleJsonTableConverter(JsonConverter):
                 sorted(attr_name_set), json_record_list)
 
     def _make_table_name(self):
-        table_name = self._loader.make_table_name()
+        table_name = self._loader._make_file_table_name()
+        table_name = table_name.replace(tnt.KEY, self.__table_key)
 
-        return table_name.replace(tnt.KEY, self.__table_key)
+        return self._loader._sanitize_table_name(table_name)
 
 
 class JsonTableFormatter(TableFormatter):
