@@ -155,8 +155,8 @@ class Test_ExcelTableFileLoader_load:
                         record_list=[
                             [u'aa', u'ab', u'ac'],
                             [1.0, 1.1, u'a'],
-                            [2.0, '', u'bb'],
-                            [3.0, 3.3, ''],
+                            [2.0, u'', u'bb'],
+                            [3.0, 3.3, u''],
                         ]),
                 ]
             ],
@@ -178,8 +178,8 @@ class Test_ExcelTableFileLoader_load:
                         record_list=[
                             [u'aa', u'ab', u'ac'],
                             [1.0, 1.1, u'a'],
-                            [2.0, '', u'bb'],
-                            [3.0, 3.3, ''],
+                            [2.0, u'', u'bb'],
+                            [3.0, 3.3, u''],
                         ]),
                 ]
             ],

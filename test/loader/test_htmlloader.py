@@ -113,6 +113,71 @@ test_data_03 = Data(
 """,
     [])
 
+test_data_04 = Data(
+    """
+<table id="tablename">
+    <caption>caption</caption>
+    <tr>
+      <th>a</th>
+      <th>b</th>
+      <th>c</th>
+    </tr>
+    <tr>
+      <td align="right">1</td>
+      <td align="right">123.1</td>
+      <td align="left">a</td>
+    </tr>
+    <tr>
+      <td align="right">2</td>
+      <td align="right">2.2</td>
+      <td align="left">bb</td>
+    </tr>
+    <tr>
+      <td align="right">3</td>
+      <td align="right">3.3</td>
+      <td align="left">ccc</td>
+    </tr>
+</table>
+<table>
+    <tr>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+    <tr>
+      <td align="right">1</td>
+      <td align="right">123.1</td>
+    </tr>
+    <tr>
+      <td align="right">2</td>
+      <td align="right">2.2</td>
+    </tr>
+    <tr>
+      <td align="right">3</td>
+      <td align="right">3.3</td>
+    </tr>
+</table>
+""",
+    [
+        TableData(
+            table_name=u"tmp_tablename",
+            header_list=[u'a', u'b', u'c'],
+            record_list=[
+                [u'1', u'123.1', u'a'],
+                [u'2', u'2.2', u'bb'],
+                [u'3', u'3.3', u'ccc'],
+            ]
+        ),
+        TableData(
+            table_name=u"tmp_html2",
+            header_list=[u'a', u'b'],
+            record_list=[
+                [u'1', u'123.1'],
+                [u'2', u'2.2'],
+                [u'3', u'3.3'],
+            ]
+        ),
+    ])
+
 
 class Test_HtmlTableFileLoader_make_table_name:
 
@@ -194,6 +259,12 @@ class Test_HtmlTableFileLoader_load:
                 "%(default)s",
                 test_data_03.expected,
             ],
+            [
+                test_data_04.value,
+                "tmp.html",
+                "%(default)s",
+                test_data_04.expected,
+            ],
         ])
     def test_normal(
             self, tmpdir, table_text, filename,
@@ -210,8 +281,8 @@ class Test_HtmlTableFileLoader_load:
         loader = sloader.HtmlTableFileLoader(str(p_file_path))
         loader.table_name = table_name
 
-        for tabletuple in loader.load():
-            assert tabletuple in expected_tabletuple_list
+        for tabletuple, expected in zip(loader.load(), expected_tabletuple_list):
+            assert tabletuple == expected
 
     @pytest.mark.parametrize(
         [
