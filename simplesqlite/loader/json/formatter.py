@@ -11,14 +11,12 @@ import jsonschema
 import six
 
 from ..constant import TableNameTemplate as tnt
-from ..acceptor import LoaderAcceptor
 from ..data import TableData
 from ..error import ValidationError
 from ..formatter import TableFormatter
-from ..formatter import TableFormatterInterface
 
 
-class JsonConverter(TableFormatterInterface, LoaderAcceptor):
+class JsonConverter(TableFormatter):
     """
     Abstract class of JSON data converter.
     """
