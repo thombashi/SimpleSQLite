@@ -42,7 +42,3 @@ class CsvTableFormatter(TableFormatter):
         yield TableData(
             self._loader.make_table_name(),
             header_list, data_matrix)
-
-    def _validate_source_data(self):
-        if len(self._source_data) == 0:
-            raise InvalidDataError("csv data is empty")

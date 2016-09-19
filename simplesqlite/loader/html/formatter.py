@@ -33,10 +33,6 @@ class HtmlTableFormatter(TableFormatter):
 
             yield tabledata
 
-    def _validate_source_data(self):
-        if len(self._source_data) == 0:
-            raise InvalidDataError("html data is empty")
-
     def _make_table_name(self):
         table_name = self._loader.make_table_name()
         key = self.__table_id
