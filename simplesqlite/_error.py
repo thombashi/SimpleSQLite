@@ -4,6 +4,8 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+import sqlite3
+
 
 class NullDatabaseConnectionError(Exception):
     """
@@ -34,4 +36,10 @@ class InvalidTableNameError(ValueError):
 class SqlSyntaxError(Exception):
     """
     Raised when a SQLite query syntax is invalid.
+    """
+
+
+class OperationalError(sqlite3.OperationalError):
+    """
+    Raised when failed to execute a query
     """
