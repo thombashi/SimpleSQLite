@@ -9,6 +9,7 @@ from __future__ import absolute_import
 import pathvalidate
 
 from ._error import InvalidTableNameError
+from ._error import InvalidAttributeNameError
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -28,6 +29,22 @@ def validate_table_name(name):
         raise InvalidTableNameError("table name is empty")
     except pathvalidate.InvalidCharError as e:
         raise InvalidTableNameError(e)
+
+
+def validate_attr_name(name):
+    """
+    :param str name: Name to validate.
+    :raises InvalidAttributeNameError: |raises_validate_attr_name|
+    """
+
+    try:
+        pathvalidate.validate_sqlite_attr_name(name)
+    except pathvalidate.ReservedNameError as e:
+        raise InvalidAttributeNameError(e)
+    except pathvalidate.NullNameError:
+        raise InvalidAttributeNameError("attribute name is empty")
+    except pathvalidate.InvalidCharError as e:
+        raise InvalidAttributeNameError(e)
 
 
 def append_table(con_src, con_dst, table_name):

@@ -147,6 +147,29 @@ class Test_validate_table_name:
             validate_table_name(value)
 
 
+class Test_validate_attr_name:
+
+    @pytest.mark.parametrize(["value"], [
+        ["valid_attr_name"],
+        ["attr_"],
+    ])
+    def test_normal(self, value):
+        validate_attr_name(value)
+
+    @pytest.mark.parametrize(["value", "expected"], [
+        [None, InvalidAttributeNameError],
+        ["", InvalidAttributeNameError],
+        ["table", InvalidAttributeNameError],
+        ["TABLE", InvalidAttributeNameError],
+        ["Table", InvalidAttributeNameError],
+        ["_hoge", InvalidAttributeNameError],
+        ["%hoge", InvalidAttributeNameError],
+    ])
+    def test_exception(self, value, expected):
+        with pytest.raises(expected):
+            validate_attr_name(value)
+
+
 class Test_append_table:
 
     def test_normal(self, con_mix, con_empty):
