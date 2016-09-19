@@ -608,22 +608,8 @@ class Test_SimpleSQLite_get_profile:
         profile_list = con.get_profile()
         assert dataproperty.is_empty_sequence(profile_list)
 
-    def test_normal_profile(self, tmpdir, con_profile):
-        p = tmpdir.join("tmp_profile.db")
-        con = SimpleSQLite(str(p), "w", profile=True)
-
-        con.create_table_with_data(
-            table_name=TEST_TABLE_NAME,
-            attribute_name_list=["attr_a", "attr_b"],
-            data_matrix=[
-                [1, 2],
-                [3, 4],
-            ])
-        con.commit()
-
-        profile_list = con.get_profile()
-        #profile_list = con_profile.get_profile()
-        print profile_list
+    def test_normal_profile(self, con_profile):
+        profile_list = con_profile.get_profile()
         assert dataproperty.is_not_empty_sequence(profile_list)
 
 
