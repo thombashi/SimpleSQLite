@@ -11,6 +11,7 @@ import pathvalidate
 import pytest
 
 import simplesqlite.loader as sloader
+from simplesqlite.loader.interface import TableLoader
 from simplesqlite.loader.data import TableData
 from simplesqlite import InvalidTableNameError
 
@@ -181,6 +182,9 @@ test_data_04 = Data(
 
 class Test_HtmlTableFileLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "source", "expected"], [
         ["%(filename)s", "/path/to/data.html", "data"],
         ["prefix_%(filename)s", "/path/to/data.html", "prefix_data"],
@@ -232,6 +236,9 @@ class Test_HtmlTableFileLoader_make_table_name:
 
 
 class Test_HtmlTableFileLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [
@@ -325,6 +332,9 @@ class Test_HtmlTableFileLoader_load:
 
 class Test_HtmlTableTextLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(format_name)s%(format_id)s", "html0"],
         ["tablename", "tablename"],
@@ -351,6 +361,9 @@ class Test_HtmlTableTextLoader_make_table_name:
 
 
 class Test_HtmlTableTextLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [

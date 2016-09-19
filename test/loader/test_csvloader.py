@@ -11,6 +11,7 @@ import pytest
 import six
 
 import simplesqlite.loader as sloader
+from simplesqlite.loader.interface import TableLoader
 from simplesqlite.loader.data import TableData
 from simplesqlite import InvalidTableNameError
 
@@ -70,6 +71,9 @@ test_data_02 = Data(
 
 class Test_CsvTableFileLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "source", "expected"], [
         ["%(default)s", "/path/to/data.csv", "data"],
         ["%(filename)s", "/path/to/data.csv", "data"],
@@ -117,6 +121,9 @@ class Test_CsvTableFileLoader_make_table_name:
 
 
 class Test_CsvTableFileLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [
@@ -229,6 +236,9 @@ class Test_CsvTableFileLoader_load:
 
 class Test_CsvTableTextLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(format_name)s%(format_id)s", "csv0"],
         ["tablename", "tablename"],
@@ -253,6 +263,9 @@ class Test_CsvTableTextLoader_make_table_name:
 
 
 class Test_CsvTableTextLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [

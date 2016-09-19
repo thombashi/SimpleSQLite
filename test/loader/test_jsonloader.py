@@ -10,6 +10,7 @@ import os
 import pytest
 
 import simplesqlite.loader as sloader
+from simplesqlite.loader.interface import TableLoader
 from simplesqlite.loader.data import TableData
 from simplesqlite import InvalidTableNameError
 
@@ -130,6 +131,9 @@ test_data_04 = Data(
 
 class Test_JsonTableFileLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "source", "expected"], [
         ["%(filename)s", "/path/to/data.json", "data"],
         ["prefix_%(filename)s", "/path/to/data.json", "prefix_data"],
@@ -178,6 +182,9 @@ class Test_JsonTableFileLoader_make_table_name:
 
 
 class Test_JsonTableFileLoader_load:
+
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
         [
@@ -278,6 +285,9 @@ class Test_JsonTableFileLoader_load:
 
 class Test_JsonTableTextLoader_make_table_name:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(format_name)s%(format_id)s", "json0"],
         ["tablename", "tablename"],
@@ -304,6 +314,9 @@ class Test_JsonTableTextLoader_make_table_name:
 
 class Test_JsonTableTextLoader_load:
 
+    def setup_method(self, method):
+        TableLoader.clear_table_count()
+
     @pytest.mark.parametrize(
         [
             "table_text",
@@ -328,6 +341,7 @@ class Test_JsonTableTextLoader_load:
             ],
         ])
     def test_normal(self, table_text, table_name, expected_tabletuple_list):
+        sloader.JsonTableFileLoader.clear_table_count()
         loader = sloader.JsonTableTextLoader(table_text)
         loader.table_name = table_name
 
