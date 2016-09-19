@@ -41,7 +41,7 @@ class HtmlTableFileLoader(HtmlTableLoader):
         :rtype: str
         """
 
-        return self._make_file_table_name()
+        return self._sanitize_table_name(self._make_file_table_name())
 
     def load(self):
         """
