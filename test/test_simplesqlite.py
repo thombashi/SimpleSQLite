@@ -4,11 +4,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from collections import namedtuple
 import datetime
 import itertools
 import sqlite3
 
-from collections import namedtuple
+import pathvalidate
 import dataproperty
 import pytest
 
@@ -89,6 +90,7 @@ def con_profile(tmpdir):
             [1, 2],
             [3, 4],
         ])
+    con.commit()
 
     return con
 
@@ -130,7 +132,6 @@ class Test_validate_table_name:
     @pytest.mark.parametrize(["value"], [
         ["valid_table_name"],
         ["table_"],
-        ["_table"],
     ])
     def test_normal(self, value):
         validate_table_name(value)
@@ -141,6 +142,8 @@ class Test_validate_table_name:
         ["table", InvalidTableNameError],
         ["TABLE", InvalidTableNameError],
         ["Table", InvalidTableNameError],
+        ["_hoge", InvalidTableNameError],
+        ["%hoge", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
@@ -605,8 +608,22 @@ class Test_SimpleSQLite_get_profile:
         profile_list = con.get_profile()
         assert dataproperty.is_empty_sequence(profile_list)
 
-    def test_normal_profile(self, con_profile):
-        profile_list = con_profile.get_profile()
+    def test_normal_profile(self, tmpdir, con_profile):
+        p = tmpdir.join("tmp_profile.db")
+        con = SimpleSQLite(str(p), "w", profile=True)
+
+        con.create_table_with_data(
+            table_name=TEST_TABLE_NAME,
+            attribute_name_list=["attr_a", "attr_b"],
+            data_matrix=[
+                [1, 2],
+                [3, 4],
+            ])
+        con.commit()
+
+        profile_list = con.get_profile()
+        #profile_list = con_profile.get_profile()
+        print profile_list
         assert dataproperty.is_not_empty_sequence(profile_list)
 
 
@@ -791,6 +808,13 @@ class Test_SimpleSQLite_create_table_with_data:
                 [["a"], ["bb"], ["ccc"]],
                 [],
                 InvalidTableNameError,
+            ],
+            [
+                TEST_TABLE_NAME,
+                ["when"],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                InvalidAttributeNameError,
             ],
         ]
     )

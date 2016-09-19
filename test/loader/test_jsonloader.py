@@ -11,6 +11,7 @@ import pytest
 
 import simplesqlite.loader as sloader
 from simplesqlite.loader.data import TableData
+from simplesqlite import InvalidTableNameError
 
 
 Data = collections.namedtuple("Data", "value expected")
@@ -143,7 +144,6 @@ class Test_JsonTableFileLoader_make_table_name:
             "/path/to/data.json",
             "datadata"
         ],
-        ["%(%(filename)s)", "/path/to/data.json", "%(data)"],
         [
             "%(format_name)s%(format_id)s_%(filename)s",
             "/path/to/data.json",
@@ -163,6 +163,11 @@ class Test_JsonTableFileLoader_make_table_name:
         ["", "/path/to/data.json", ValueError],
         ["%(filename)s", None, ValueError],
         ["%(filename)s", "", ValueError],
+        [
+            "%(%(filename)s)",
+            "/path/to/data.json",
+            InvalidTableNameError  # %(data)
+        ],
     ])
     def test_exception(self, value, source, expected):
         loader = sloader.JsonTableFileLoader(source)
@@ -274,7 +279,6 @@ class Test_JsonTableFileLoader_load:
 class Test_JsonTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
-        ["%(filename)s", "%(filename)s"],
         ["%(format_name)s%(format_id)s", "json0"],
         ["tablename", "tablename"],
         ["table", "table_json"],
@@ -286,6 +290,7 @@ class Test_JsonTableTextLoader_make_table_name:
         assert loader.make_table_name() == expected
 
     @pytest.mark.parametrize(["value", "source", "expected"], [
+        ["[]", "%(filename)s", InvalidTableNameError],
         [None, "tablename", ValueError],
         ["", "tablename", ValueError],
     ])

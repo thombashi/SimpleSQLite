@@ -12,6 +12,7 @@ import six
 
 import simplesqlite.loader as sloader
 from simplesqlite.loader.data import TableData
+from simplesqlite import InvalidTableNameError
 
 
 Data = collections.namedtuple("Data", "value expected")
@@ -84,7 +85,6 @@ class Test_CsvTableFileLoader_make_table_name:
             "/path/to/data.csv",
             "datadata"
         ],
-        ["%(%(filename)s)", "/path/to/data.csv", "%(data)"],
         [
             "%(format_name)s%(format_id)s_%(filename)s",
             "/path/to/data.csv",
@@ -102,6 +102,11 @@ class Test_CsvTableFileLoader_make_table_name:
         ["", "/path/to/data.csv", ValueError],
         ["%(filename)s", None, ValueError],
         ["%(filename)s", "", ValueError],
+        [
+            "%(%(filename)s)",
+            "/path/to/data.csv",
+            InvalidTableNameError,  # "%(data)"
+        ],
     ])
     def test_exception(self, value, source, expected):
         loader = sloader.CsvTableFileLoader(source)
@@ -225,7 +230,6 @@ class Test_CsvTableFileLoader_load:
 class Test_CsvTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
-        ["%(filename)s", "%(filename)s"],
         ["%(format_name)s%(format_id)s", "csv0"],
         ["tablename", "tablename"],
         ["table", "table_csv"],
