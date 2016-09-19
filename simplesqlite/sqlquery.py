@@ -11,7 +11,6 @@ import dataproperty
 import six
 from six.moves import map
 
-import simplesqlite as sql
 from ._error import SqlSyntaxError
 from ._func import validate_table_name
 

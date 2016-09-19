@@ -7,7 +7,6 @@
 from __future__ import absolute_import
 
 import dataproperty
-from six.moves import zip
 
 from ..constant import TableNameTemplate as tnt
 from ..error import InvalidDataError
