@@ -750,22 +750,32 @@ class Test_SimpleSQLite_create_table_with_data:
 
     @pytest.mark.parametrize(
         [
+            "table_name",
             "attr_name_list", "data_matrix",
             "index_attr_list", "expected",
         ],
         [
             [
-                [""], [["a"], ["bb"], ["ccc"]],
-                [], ValueError,
+                TEST_TABLE_NAME,
+                [""],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                ValueError,
+            ],
+            [
+                "insert",
+                ["attr"],
+                [["a"], ["bb"], ["ccc"]],
+                [],
+                InvalidTableNameError,
             ],
         ]
     )
     def test_exception_empty_header(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
-            expected):
+            self, tmpdir, table_name, attr_name_list, data_matrix,
+            index_attr_list, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
-        table_name = TEST_TABLE_NAME
 
         with pytest.raises(expected):
             con.create_table_with_data(
