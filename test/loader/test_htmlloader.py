@@ -250,9 +250,10 @@ class Test_HtmlTableTextLoader_make_table_name:
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["%(filename)s", "%(filename)s"],
-        ["tablename", "tablename"],
         ["%(format_name)s%(format_id)s", "html0"],
         ["%(key)s", "%(key)s"],
+        ["tablename", "tablename"],
+        ["table", "table_html"],
     ])
     def test_normal(self, value, expected):
         loader = sloader.HtmlTableTextLoader("dummy")
