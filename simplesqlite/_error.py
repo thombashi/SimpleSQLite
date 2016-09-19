@@ -25,6 +25,12 @@ class AttributeNotFoundError(Exception):
     """
 
 
+class InvalidTableNameError(ValueError):
+    """
+    Raised when used invalid table name for SQLite.
+    """
+
+
 class SqlSyntaxError(Exception):
     """
     Raised when a SQLite query syntax is invalid.
