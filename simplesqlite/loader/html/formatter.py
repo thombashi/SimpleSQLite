@@ -11,7 +11,6 @@ import dataproperty
 
 from ..constant import TableNameTemplate as tnt
 from ..data import TableData
-from ..error import InvalidDataError
 from ..formatter import TableFormatter
 
 
