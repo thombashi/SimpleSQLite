@@ -5,8 +5,12 @@
 """
 
 from __future__ import absolute_import
+import re
 
 import dataproperty
+import pathvalidate
+
+from ._error import InvalidTableNameError
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -15,16 +19,15 @@ MEMORY_DB_NAME = ":memory:"
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
-    :raises ValueError: |raises_validate_table_name|
+    :raises InvalidTableNameError: |raises_validate_table_name|
     """
 
-    import re
-
-    if dataproperty.is_empty_string(name):
-        raise ValueError("table name is empty")
-
-    if re.search("^table$", name, re.IGNORECASE) is not None:
-        raise ValueError("invalid table name: " + name)
+    try:
+        pathvalidate.validate_sqlite_name(name)
+    except pathvalidate.ReservedNameError as e:
+        raise InvalidTableNameError(e)
+    except pathvalidate.NullNameError:
+        raise InvalidTableNameError("table name is empty")
 
 
 def append_table(con_src, con_dst, table_name):

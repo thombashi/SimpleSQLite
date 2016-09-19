@@ -19,6 +19,7 @@ from .converter import RecordConvertor
 from ._error import AttributeNotFoundError
 from ._error import NullDatabaseConnectionError
 from ._error import TableNotFoundError
+from ._error import InvalidTableNameError
 from ._func import connect_sqlite_db_mem
 from ._func import validate_table_name
 from ._func import MEMORY_DB_NAME
@@ -687,7 +688,7 @@ class SimpleSQLite(object):
 
         try:
             validate_table_name(table_name)
-        except ValueError:
+        except InvalidTableNameError:
             return False
 
         return table_name in self.get_table_name_list()
@@ -796,7 +797,8 @@ class SimpleSQLite(object):
         :param str table_name: Table name to be tested.
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises ValueError: |raises_validate_table_name|
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
 
         :Examples:
 
@@ -984,6 +986,8 @@ class SimpleSQLite(object):
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param tuple index_attribute_list:
             List of attribute names of create indices.
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
         .. seealso::

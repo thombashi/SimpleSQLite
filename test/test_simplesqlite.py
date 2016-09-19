@@ -136,11 +136,11 @@ class Test_validate_table_name:
         validate_table_name(value)
 
     @pytest.mark.parametrize(["value", "expected"], [
-        [None, ValueError],
-        ["", ValueError],
-        ["table", ValueError],
-        ["TABLE", ValueError],
-        ["Table", ValueError],
+        [None, InvalidTableNameError],
+        ["", InvalidTableNameError],
+        ["table", InvalidTableNameError],
+        ["TABLE", InvalidTableNameError],
+        ["Table", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
