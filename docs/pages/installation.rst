@@ -19,6 +19,7 @@ Mandatory
 - `jsonschema <https://github.com/Julian/jsonschema>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `path.py <https://github.com/jaraco/path.py>`__
+- `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `six <https://pypi.python.org/pypi/six/>`__
 - `xlrd <https://github.com/python-excel/xlrd>`__
 
