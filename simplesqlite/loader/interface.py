@@ -154,6 +154,10 @@ class TableLoader(TableLoaderInterface):
 
     @classmethod
     def clear_table_count(cls):
+        """
+        Reset counter of created tables.
+        """
+
         with cls.__table_count_lock:
             cls.__global_table_count = 0
             cls.__format_table_count = {}
