@@ -1306,8 +1306,8 @@ class SimpleSQLite(object):
         """
 
         typename_table = {
-            dataproperty.Typecode.INT:    "INTEGER",
-            dataproperty.Typecode.FLOAT:  "REAL",
+            dataproperty.Typecode.INTEGER: "INTEGER",
+            dataproperty.Typecode.FLOAT: "REAL",
             dataproperty.Typecode.STRING: "TEXT",
         }
 
