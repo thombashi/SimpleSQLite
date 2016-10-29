@@ -8,11 +8,13 @@ from __future__ import absolute_import
 
 import dataproperty
 
-from ..constant import TableNameTemplate as tnt
-from ..error import InvalidDataError
-from ..error import OpenError
-from ..data import TableData
-from .core import SpreadSheetLoader
+from pytablereader import OpenError
+from pytablereader import TableData
+from pytablereader._constant import TableNameTemplate as tnt
+from pytablereader._validator import TextValidator
+from pytablereader.spreadsheet.core import SpreadSheetLoader
+
+
 from ..._func import connect_sqlite_db_mem
 
 
@@ -49,31 +51,9 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         self.title = None
         self.start_row = 0
 
+        self._validator = TextValidator(file_path)
+
         self.__all_values = None
-
-    def make_table_name(self):
-        """
-        |make_table_name|
-
-            ===================  ====================================
-            format specifier     value after the replacement
-            ===================  ====================================
-            ``%(title)s``        Name of the spreadsheet
-            ``%(format_name)s``  ``spreadsheet``
-            ``%(format_id)s``    unique number in the same format
-            ``%(global_id)s``    unique number in all of the format
-            ===================  ====================================
-
-        :return: Table name.
-        :rtype: str
-        """
-
-        self._validate_title()
-        table_name = super(
-            GoogleSheetsTableLoader, self)._make_table_name()
-
-        return self._sanitize_table_name(
-            table_name.replace(tnt.TITLE, self.title))
 
     def load(self):
         """
@@ -84,9 +64,9 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             |load_return|
             :py:meth:`~.GoogleSheetsTableLoader.make_table_name`.
         :rtype: iterator of |TableData|
-        :raises simplesqlite.loader.InvalidDataError:
+        :raises pytablereader.InvalidDataError:
             If the header row is not found.
-        :raises simplesqlite.loader.OpenError:
+        :raises pytablereader.OpenError:
             If the spread sheet not found.
         """
 
@@ -147,6 +127,18 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
     def _validate_title(self):
         if dataproperty.is_empty_string(self.title):
             raise ValueError("spreadsheet title is empty")
+
+    def _make_table_name(self):
+        self._validate_title()
+
+        mapping = self._get_basic_tablename_mapping()
+        mapping.append((tnt.TITLE, self.title))
+        try:
+            mapping.append((tnt.SHEET,  self._sheet_name))
+        except AttributeError:
+            mapping.append((tnt.SHEET,  ""))
+
+        return self._replace_table_name_template(mapping)
 
     def __strip_empty_col(self):
         from ...sqlquery import SqlQuery
