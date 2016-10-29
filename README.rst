@@ -2,11 +2,15 @@ SimpleSQLite
 ============
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
-   :target: https://pypi.python.org/pypi/SimpleSQLite
-.. image:: https://travis-ci.org/thombashi/SimpleSQLite.svg?branch=master
+    :target: https://pypi.python.org/pypi/SimpleSQLite
+
+.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux
     :target: https://travis-ci.org/thombashi/SimpleSQLite
-.. image:: https://ci.appveyor.com/api/projects/status/b564t8y34lkcd1hq/branch/master?svg=true
+    :alt: Linux CI test status
+
+.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows
     :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
+
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
 

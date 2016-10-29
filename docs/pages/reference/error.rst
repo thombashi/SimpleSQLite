@@ -21,12 +21,3 @@ Errors
 
 .. autoexception:: simplesqlite.OperationalError
     :show-inheritance:
-    
-.. autoexception:: simplesqlite.loader.InvalidDataError
-    :show-inheritance:
-
-.. autoexception:: simplesqlite.loader.ValidationError
-    :show-inheritance:
-
-.. autoexception:: simplesqlite.loader.OpenError
-    :show-inheritance:

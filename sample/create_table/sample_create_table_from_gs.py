@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
+from __future__ import print_function
 import simplesqlite
-import six
 
 
 credentials_file = "sample-xxxxxxxxxxxx.json"
@@ -19,9 +18,9 @@ for tabledata in loader.load():
 
 # output ---
 for table_name in con.get_table_name_list():
-    six.print_("table: " + table_name)
-    six.print_(con.get_attribute_name_list(table_name))
+    print("table: " + table_name)
+    print(con.get_attribute_name_list(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
-    six.print_()
+        print(record)
+    print()

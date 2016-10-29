@@ -11,6 +11,7 @@ import sqlite3
 
 import dataproperty
 import pathvalidate
+import pytablereader as ptr
 import six
 from six.moves import range
 
@@ -1031,7 +1032,7 @@ class SimpleSQLite(object):
 
     def create_table_from_tabledata(self, tabledata):
         """
-        Create a table from :py:class:`.loader.data.TableData`.
+        Create a table from :py:class:`pytablereader.TableData`.
 
         :param TableData tabledata: Table data to create.
 
@@ -1073,12 +1074,12 @@ class SimpleSQLite(object):
 
             :py:meth:`.create_table_with_data`
             :py:func:`csv.reader`
-            :py:meth:`.loader.CsvTableFileLoader.load`
-            :py:meth:`.loader.CsvTableTextLoader.load`
+            :py:meth:`.pytablereader.CsvTableFileLoader.load`
+            :py:meth:`.pytablereader.CsvTableTextLoader.load`
         """
 
-        from .loader import CsvTableFileLoader
-        from .loader import CsvTableTextLoader
+        from pytablereader import CsvTableFileLoader
+        from pytablereader import CsvTableTextLoader
 
         loader = CsvTableFileLoader(csv_source)
         if dataproperty.is_not_empty_string(table_name):
@@ -1091,7 +1092,7 @@ class SimpleSQLite(object):
             for tabledata in loader.load():
                 self.create_table_from_tabledata(tabledata)
             return
-        except IOError:
+        except (ptr.InvalidFilePathError, IOError):
             pass
 
         loader = CsvTableTextLoader(csv_source)
@@ -1113,12 +1114,12 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:meth:`.loader.JsonTableFileLoader.load`
-            :py:meth:`.loader.JsonTableTextLoader.load`
+            :py:meth:`.pytablereader.JsonTableFileLoader.load`
+            :py:meth:`.pytablereader.JsonTableTextLoader.load`
         """
 
-        from .loader import JsonTableFileLoader
-        from .loader import JsonTableTextLoader
+        from pytablereader import JsonTableFileLoader
+        from pytablereader import JsonTableTextLoader
 
         loader = JsonTableFileLoader(json_source)
         if dataproperty.is_not_empty_string(table_name):
@@ -1127,7 +1128,7 @@ class SimpleSQLite(object):
             for tabledata in loader.load():
                 self.create_table_from_tabledata(tabledata)
             return
-        except IOError:
+        except (ptr.InvalidFilePathError, IOError):
             pass
 
         loader = JsonTableTextLoader(json_source)
@@ -1306,8 +1307,8 @@ class SimpleSQLite(object):
         """
 
         typename_table = {
-            dataproperty.Typecode.INT:    "INTEGER",
-            dataproperty.Typecode.FLOAT:  "REAL",
+            dataproperty.Typecode.INTEGER: "INTEGER",
+            dataproperty.Typecode.FLOAT: "REAL",
             dataproperty.Typecode.STRING: "TEXT",
         }
 

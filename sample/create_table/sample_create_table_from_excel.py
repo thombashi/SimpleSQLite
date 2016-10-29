@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
+from __future__ import print_function
+import pytablereader
 import simplesqlite
-import six
 import xlsxwriter
 
 
@@ -44,15 +44,15 @@ workbook.close()
 # create table ---
 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
-loader = simplesqlite.loader.ExcelTableFileLoader(file_path)
+loader = pytablereader.ExcelTableFileLoader(file_path)
 for tabledata in loader.load():
     con.create_table_from_tabledata(tabledata)
 
 # output ---
 for table_name in con.get_table_name_list():
-    six.print_("table: " + table_name)
-    six.print_(con.get_attribute_name_list(table_name))
+    print("table: " + table_name)
+    print(con.get_attribute_name_list(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
-    six.print_()
+        print(record)
+    print()
