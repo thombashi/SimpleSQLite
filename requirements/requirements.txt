@@ -1,8 +1,8 @@
 beautifulsoup4
-DataProperty>=0.10.0
+DataProperty>=0.10.1
 jsonschema
 pathvalidate>=0.8.3
-pytablereader>=0.2.0
+pytablereader>=0.3.0
 path.py
 six
 xlrd
