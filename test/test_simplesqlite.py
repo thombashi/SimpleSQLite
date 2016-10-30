@@ -7,9 +7,7 @@
 from collections import namedtuple
 import datetime
 import itertools
-import sqlite3
 
-import pathvalidate
 import dataproperty
 import pytest
 
