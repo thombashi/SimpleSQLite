@@ -16,7 +16,7 @@ from simplesqlite import *
 class Test_SimpleSQLite_create_table_from_tabledata:
 
     @pytest.mark.parametrize(["filename"], [
-        ["Python (programming language) - Wikipedia, the free encyclopedia.html"],
+        ["python - Wiktionary.html"],
     ])
     def test_smoke(self, tmpdir, filename):
         p = tmpdir.join("tmp.db")
@@ -39,8 +39,8 @@ class Test_SimpleSQLite_create_table_from_tabledata:
                 con.create_table_from_tabledata(
                     ptr.SQLiteTableDataSanitizer(tabledata).sanitize())
                 success_count += 1
-            except ValueError:
-                pass
+            except ValueError as e:
+                print(e)
 
         con.commit()
 
