@@ -10,15 +10,18 @@ import dataproperty
 
 import simplesqlite.loader
 from .core import SimpleSQLite
-from ._error import NullDatabaseConnectionError
-from ._error import TableNotFoundError
-from ._error import AttributeNotFoundError
-from ._error import InvalidTableNameError
-from ._error import InvalidAttributeNameError
-from ._error import SqlSyntaxError
-from ._error import OperationalError
-
-from ._func import validate_table_name
-from ._func import validate_attr_name
-from ._func import append_table
-from ._func import connect_sqlite_db_mem
+from ._error import (
+    NullDatabaseConnectionError,
+    TableNotFoundError,
+    AttributeNotFoundError,
+    InvalidTableNameError,
+    InvalidAttributeNameError,
+    SqlSyntaxError,
+    OperationalError
+)
+from ._func import (
+    validate_table_name,
+    validate_attr_name,
+    append_table,
+    connect_sqlite_db_mem
+)

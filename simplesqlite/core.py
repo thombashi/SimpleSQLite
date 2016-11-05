@@ -17,16 +17,20 @@ from six.moves import range
 
 from .sqlquery import SqlQuery
 from .converter import RecordConvertor
-from ._error import AttributeNotFoundError
-from ._error import NullDatabaseConnectionError
-from ._error import TableNotFoundError
-from ._error import InvalidTableNameError
-from ._error import InvalidAttributeNameError
-from ._error import OperationalError
-from ._func import connect_sqlite_db_mem
-from ._func import validate_table_name
-from ._func import validate_attr_name
-from ._func import MEMORY_DB_NAME
+from ._error import (
+    AttributeNotFoundError,
+    NullDatabaseConnectionError,
+    TableNotFoundError,
+    InvalidTableNameError,
+    InvalidAttributeNameError,
+    OperationalError
+)
+from ._func import (
+    connect_sqlite_db_mem,
+    validate_table_name,
+    validate_attr_name,
+    MEMORY_DB_NAME
+)
 
 
 class SimpleSQLite(object):
