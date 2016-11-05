@@ -174,15 +174,15 @@ class SqlQuery:
             >>> SqlQuery.to_value_str(None)
             'NULL'
         """
-        from dataproperty.type import IntegerTypeChecker
-        from dataproperty.type import FloatTypeChecker
+
+        from dataproperty import (IntegerType, FloatType)
 
         if value is None:
             return "NULL"
 
         if any([
-            IntegerTypeChecker(value).is_type(),
-            FloatTypeChecker(value).is_type()
+            IntegerType(value).is_type(),
+            FloatType(value).is_type()
         ]):
             return str(value)
 
