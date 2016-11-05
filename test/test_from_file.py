@@ -25,7 +25,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         test_data_file_path = os.path.join(
             os.path.dirname(__file__), "data", filename)
         loader_factory = ptr.TableFileLoaderFactory(test_data_file_path)
-        loader = loader_factory.create_from_file_path()
+        loader = loader_factory.create_from_path()
 
         success_count = 0
 
