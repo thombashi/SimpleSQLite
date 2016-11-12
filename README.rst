@@ -1,6 +1,9 @@
 SimpleSQLite
 ============
 
+.. image:: https://badge.fury.io/py/SimpleSQLite.svg
+    :target: https://badge.fury.io/py/SimpleSQLite
+
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
     :target: https://pypi.python.org/pypi/SimpleSQLite
 
