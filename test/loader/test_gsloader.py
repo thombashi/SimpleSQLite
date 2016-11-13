@@ -18,7 +18,7 @@ class Test_GoogleSheetsTableLoader_make_table_name:
     @pytest.mark.parametrize(["value", "title", "expected"], [
         ["%(sheet)s", "titlename", "testsheet"],
         ["%(title)s", "titlename", "titlename"],
-        ["%(title)s", "table", "table_spreadsheet"],
+        ["%(title)s", "table", "table"],
         [
             "prefix_%(title)s_%(sheet)s",
             "titlename",

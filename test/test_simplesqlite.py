@@ -9,6 +9,7 @@ import datetime
 import itertools
 
 import dataproperty
+import pytablereader as ptr
 import pytest
 
 from simplesqlite import *
@@ -816,6 +817,40 @@ class Test_SimpleSQLite_create_table_with_data:
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_table_with_data(
                 TEST_TABLE_NAME, [], [])
+
+
+class Test_SimpleSQLite_create_table_from_tabledata:
+
+    @pytest.mark.parametrize(["value"], [
+        [
+            ptr.TableData(
+                "json1",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
+                    {u'attr_a': 2, u'attr_b': 2.1, u'attr_c': u'bb'},
+                    {u'attr_a': 3, u'attr_b': 120.9,
+                     u'attr_c': u'ccc'},
+                ]
+            )
+        ],
+    ])
+    def test_normal(
+            self, tmpdir, value):
+        p_db = tmpdir.join("tmp.db")
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_tabledata(value)
+
+        assert con.get_table_name_list() == [value.table_name]
+        assert con.get_attribute_name_list(
+            value.table_name) == value.header_list
+
+        result = con.select(select="*", table_name=value.table_name)
+        result_matrix = result.fetchall()
+        assert len(result_matrix) == 3
+        assert result_matrix == [
+            (1, 4.0, u'a'), (2, 2.1, u'bb'), (3, 120.9, u'ccc')]
 
 
 class Test_SimpleSQLite_create_table_from_csv:
