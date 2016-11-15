@@ -4,6 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import print_function
 from collections import namedtuple
 import datetime
 import itertools
@@ -615,20 +616,21 @@ class Test_SimpleSQLite_get_profile:
 class Test_SimpleSQLite_get_sqlite_master:
 
     def test_normal(self, con_index):
+        print(con_index.get_sqlite_master())
         assert con_index.get_sqlite_master() == [
             {
-                'name': u'test_table',
-                'rootpage': 2,
-                'sql': u"CREATE TABLE 'test_table' ('attr_a' INTEGER, 'attr_b' INTEGER)",
                 'tbl_name': u'test_table',
-                'type': u'table'
+                'sql': u'CREATE TABLE \'test_table\' ("attr_a" INTEGER, "attr_b" INTEGER)',
+                'type': u'table',
+                'name': u'test_table',
+                'rootpage': 2
             },
             {
-                'name': u'test_table_attr_a_index',
-                'rootpage': 3,
-                'sql': u"CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
                 'tbl_name': u'test_table',
-                'type': u'index'
+                'sql': u"CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
+                'type': u'index',
+                'name': u'test_table_attr_a_index',
+                'rootpage': 3
             },
         ]
 
@@ -704,9 +706,9 @@ class Test_SimpleSQLite_create_table_with_data:
                 ],
                 ["attr_a"],
                 {
-                    u'attr_a': u' INTEGER',
-                    u'attr_b': u' REAL',
-                    u'attr_c': u' TEXT',
+                    u'"attr_c"': u'TEXT',
+                    u'"attr_b"': u'REAL',
+                    u'"attr_a"': u'INTEGER'
                 },
             ],
             [
@@ -722,10 +724,9 @@ class Test_SimpleSQLite_create_table_with_data:
                     "not_exist_attr_1",
                 ],
                 {
-                    u'attr_a': u' INTEGER',
-                    u'attr_b': u' REAL',
-                    u'attr_c': u' TEXT',
-                },
+                    u'"attr_c"': u'TEXT',
+                    u'"attr_b"': u'REAL',
+                    u'"attr_a"': u'INTEGER'},
             ],
             [
                 [
@@ -742,15 +743,33 @@ class Test_SimpleSQLite_create_table_with_data:
                     "attr inf", "attr nan", "attr-f", "attr dt",
                 ],
                 {
-                    u'attr_a': u' INTEGER',
-                    u'attr_c[%]': u' TEXT',
-                    u'attr_b': u' REAL',
-                    u'attr($)': u' TEXT',
-                    u'attr inf': u' TEXT',
-                    u'attr nan': u' TEXT',
-                    u'attr-f': u' REAL',
-                    u'attr dt': u' TEXT',
-                },
+                    u'"attr_c[%]"': u'TEXT',
+                    u'"attr_a"': u'INTEGER',
+                    u'[attr nan]': u'TEXT',
+                    u'[attr inf]': u'TEXT',
+                    u'"attr_b"': u'REAL',
+                    u'[attr dt]': u'TEXT',
+                    u'[attr($)]': u'TEXT',
+                    u'[attr-f]': u'REAL'
+                }
+            ],
+            [
+                [
+                    "index", "No", "Player_last_name", "Age", "Team"
+                ],
+                [
+                    [1, 55, "D Sam", 31, "Raven"],
+                    [2, 36, "J Ifdgg", 30, "Raven"],
+                    [3, 91, "K Wedfb", 28, "Raven"],
+                ],
+                [],
+                {
+                    u'Age': u'INTEGER',
+                    u'No': u'INTEGER',
+                    u'Team': u'TEXT',
+                    u'"Player_last_name"': u'TEXT',
+                    u'"index"': u'INTEGER'
+                }
             ],
         ]
     )
@@ -771,6 +790,8 @@ class Test_SimpleSQLite_create_table_with_data:
             table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+        print("expected: {}".format(expected_attr))
+        print("actual: {}".format(con.get_attr_type(table_name)))
         assert con.get_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
@@ -786,20 +807,6 @@ class Test_SimpleSQLite_create_table_with_data:
                 [["a"], ["bb"], ["ccc"]],
                 [],
                 ValueError,
-            ],
-            [
-                "insert",
-                ["attr"],
-                [["a"], ["bb"], ["ccc"]],
-                [],
-                InvalidTableNameError,
-            ],
-            [
-                TEST_TABLE_NAME,
-                ["when"],
-                [["a"], ["bb"], ["ccc"]],
-                [],
-                InvalidAttributeNameError,
             ],
         ]
     )
