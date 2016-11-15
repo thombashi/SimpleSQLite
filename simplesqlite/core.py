@@ -7,6 +7,7 @@
 from __future__ import absolute_import
 import logging
 import os
+import re
 import sqlite3
 
 import dataproperty
@@ -504,8 +505,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
-        import re
-
         self.verify_table_existence(table_name)
 
         result = self.execute_query(
@@ -514,8 +513,14 @@ class SimpleSQLite(object):
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
 
+        def get_entry(item_list):
+            key = " ".join(item_list[:-1])
+            value = item_list[-1]
+
+            return [key, value]
+
         return dict([
-            item.split("'")[1:]
+            get_entry(item.split(" "))
             for item in match.group().strip("()").split(", ")
         ])
 
@@ -989,7 +994,7 @@ class SimpleSQLite(object):
 
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
-            index_attribute_list=()):
+            index_attribute_list=None):
         """
         Create a table if not exists. And insert data into the created table.
 
@@ -1012,29 +1017,11 @@ class SimpleSQLite(object):
             :py:meth:`.create_index_list`
         """
 
-        self.validate_access_permission(["w", "a"])
-        validate_table_name(table_name)
-        self.__validate_attr_name_list(attribute_name_list)
+        self.__create_table_from_tabledata(
+            ptr.TableData(table_name, attribute_name_list, data_matrix),
+            index_attribute_list)
 
-        if dataproperty.is_empty_sequence(data_matrix):
-            raise ValueError("input data is null: '{:s} ({:s})'".format(
-                table_name, ", ".join(attribute_name_list)))
-
-        data_matrix = RecordConvertor.to_record_list(
-            attribute_name_list, data_matrix)
-        self.__verify_value_matrix(attribute_name_list, data_matrix)
-
-        self.create_table(
-            table_name,
-            self.__get_attr_desc_list(
-                self.__sanitize_attr_name_list(attribute_name_list),
-                data_matrix))
-        self.insert_many(table_name, data_matrix)
-        self.create_index_list(
-            table_name, self.__sanitize_attr_name_list(index_attribute_list))
-        self.commit()
-
-    def create_table_from_tabledata(self, tabledata):
+    def create_table_from_tabledata(self, tabledata, index_attr_list=None):
         """
         Create a table from :py:class:`pytablereader.TableData`.
 
@@ -1045,10 +1032,36 @@ class SimpleSQLite(object):
             :py:meth:`.create_table_with_data`
         """
 
-        self.create_table_with_data(
-            table_name=tabledata.table_name,
-            attribute_name_list=tabledata.header_list,
-            data_matrix=tabledata.record_list)
+        self.__create_table_from_tabledata(tabledata, index_attr_list)
+
+    def __create_table_from_tabledata(
+            self, tabledata, index_attr_list=None):
+
+        self.validate_access_permission(["w", "a"])
+        validate_table_name(tabledata.table_name)
+
+        attr_name_list = self.__sanitize_attr_name_list(tabledata.header_list)
+        try:
+            self.__validate_attr_name_list(attr_name_list)
+        except pathvalidate.ReservedNameError:
+            pass
+
+        if dataproperty.is_empty_sequence(tabledata.record_list):
+            raise ValueError("input data is null: '{} ({})'".format(
+                tabledata.table_name, ", ".join(attr_name_list)))
+
+        self.__verify_value_matrix(attr_name_list, tabledata.record_list)
+
+        self.create_table(
+            tabledata.table_name,
+            self.__get_attr_desc_list(
+                attr_name_list, tabledata.record_list))
+        self.insert_many(tabledata.table_name, tabledata.record_list)
+        if dataproperty.is_not_empty_sequence(index_attr_list):
+            self.create_index_list(
+                tabledata.table_name,
+                self.__sanitize_attr_name_list(index_attr_list))
+        self.commit()
 
     def create_table_from_csv(
             self, csv_source, table_name="",
@@ -1213,7 +1226,7 @@ class SimpleSQLite(object):
             raise InvalidAttributeNameError("attribute name list is empty")
 
         for attr_name in attr_name_list:
-            validate_attr_name(attr_name)
+            pathvalidate.validate_sqlite_attr_name(attr_name)
 
     @staticmethod
     def __verify_value_matrix(field_list, value_matrix):
@@ -1269,12 +1282,8 @@ class SimpleSQLite(object):
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attr_name_list[col]
-            if attr_name.find("'") != -1:
-                desc_format = '"{:s}" {:s}'
-            else:
-                desc_format = "'{:s}' {:s}"
-            attr_description_list.append(
-                desc_format.format(attr_name, value_type))
+            attr_description_list.append("{:s} {:s}".format(
+                SqlQuery.to_attr_str(attr_name), value_type))
 
         return attr_description_list
 

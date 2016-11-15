@@ -23,7 +23,7 @@ def validate_table_name(name):
 
     try:
         pathvalidate.validate_sqlite_table_name(name)
-    except pathvalidate.ReservedNameError as e:
+    except pathvalidate.InvalidReservedNameError as e:
         raise InvalidTableNameError(e)
     except pathvalidate.NullNameError:
         raise InvalidTableNameError("table name is empty")
@@ -39,7 +39,7 @@ def validate_attr_name(name):
 
     try:
         pathvalidate.validate_sqlite_attr_name(name)
-    except pathvalidate.ReservedNameError as e:
+    except pathvalidate.InvalidReservedNameError as e:
         raise InvalidAttributeNameError(e)
     except pathvalidate.NullNameError:
         raise InvalidAttributeNameError("attribute name is empty")

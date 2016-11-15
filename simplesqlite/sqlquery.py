@@ -8,6 +8,7 @@ from __future__ import absolute_import
 import re
 
 import dataproperty
+import pathvalidate as pv
 import six
 from six.moves import map
 
@@ -109,7 +110,16 @@ class SqlQuery:
 
         name = cls.sanitize_attr(name)
 
-        if cls.__RE_TO_ATTR_QUOTE.search(name):
+        is_quote = cls.__RE_TO_ATTR_QUOTE.search(name) is not None
+
+        try:
+            pv.validate_sqlite_attr_name(name)
+        except pv.InvalidReservedNameError:
+            is_quote = True
+        except (pv.ValidReservedNameError, pv.NullNameError, pv.InvalidCharError):
+            pass
+
+        if is_quote:
             sql_name = '"{:s}"'.format(name)
         elif cls.__RE_TO_ATTR_BRACKET.search(name):
             sql_name = "[{:s}]".format(name)
