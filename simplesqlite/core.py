@@ -930,8 +930,8 @@ class SimpleSQLite(object):
         if self.has_table(table_name):
             return True
 
-        query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
-            table_name, ", ".join(attribute_description_list))
+        query = u"CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
+            table_name, u", ".join(attribute_description_list))
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
 
@@ -1282,7 +1282,7 @@ class SimpleSQLite(object):
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attr_name_list[col]
-            attr_description_list.append("{:s} {:s}".format(
+            attr_description_list.append(u"{:s} {:s}".format(
                 SqlQuery.to_attr_str(attr_name), value_type))
 
         return attr_description_list

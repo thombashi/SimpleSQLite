@@ -5,6 +5,7 @@
 """
 
 from __future__ import print_function
+from __future__ import unicode_literals
 from collections import namedtuple
 import datetime
 import itertools
@@ -769,6 +770,26 @@ class Test_SimpleSQLite_create_table_with_data:
                     u'Team': u'TEXT',
                     u'"Player_last_name"': u'TEXT',
                     u'"index"': u'INTEGER'
+                }
+            ],
+            [
+                ["姓", "名", "生年月日", "郵便番号", "住所", "電話番号"],
+                [
+                    ["山田", "太郎", "2001/1/1", "100-0002",
+                     "東京都千代田区皇居外苑", "03-1234-5678"],
+                    ["山田", "次郎", "2001/1/2", "251-0036",
+                     "神奈川県藤沢市江の島１丁目", "03-9999-9999"],
+                    ["山田", "次郎", "2001/1/2", "251-0036",
+                     "神奈川県藤沢市江の島１丁目", "03-9999-9999"],
+                ],
+                [],
+                {
+                    "姓": 'TEXT',
+                    "名": 'TEXT',
+                    "生年月日": 'TEXT',
+                    "郵便番号": 'TEXT',
+                    "住所": 'TEXT',
+                    "電話番号": 'TEXT'
                 }
             ],
         ]
