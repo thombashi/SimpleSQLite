@@ -243,9 +243,9 @@ class SimpleSQLite(object):
             message_list = [
                 "failed to execute query at %{:s}({:d}) {:s}".format(
                     file_path, line_no, func_name),
-                "  - query: {:s}".format(query),
-                "  - msg:   {:s}".format(str(e)),
-                "  - db:    {:s}".format(self.database_path),
+                "  - query: {}".format(query),
+                "  - msg:   {}".format(str(e)),
+                "  - db:    {}".format(self.database_path),
             ]
             raise OperationalError(os.linesep.join(message_list))
 
@@ -342,10 +342,10 @@ class SimpleSQLite(object):
             raise OperationalError(
                 "{:s}({:d}) {:s}: failed to execute query:\n".format(
                     file_path, line_no, func_name) +
-                "  query={:s}\n".format(query) +
-                "  msg='{:s}'\n".format(str(e)) +
-                "  db={:s}\n".format(self.database_path) +
-                "  records={:s}\n".format(record_list[:2])
+                "  query={}\n".format(query) +
+                "  msg='{}'\n".format(str(e)) +
+                "  db={}\n".format(self.database_path) +
+                "  records={}\n".format(record_list[:2])
             )
 
     def update(self, table_name, set_query, where=None):
@@ -849,7 +849,7 @@ class SimpleSQLite(object):
             return
 
         raise TableNotFoundError(
-            "'{:s}' table not found in {:s}".format(
+            "'{}' table not found in {}".format(
                 table_name, self.database_path))
 
     def verify_attribute_existence(self, table_name, attribute_name):
@@ -897,7 +897,7 @@ class SimpleSQLite(object):
             return
 
         raise AttributeNotFoundError(
-            "'{:s}' attribute not found in '{:s}' table".format(
+            "'{}' attribute not found in '{}' table".format(
                 attribute_name, table_name))
 
     def drop_table(self, table_name):
@@ -1251,12 +1251,12 @@ class SimpleSQLite(object):
 
         raise ValueError(
             "miss match header length and value length:" +
-            "  header: {:d} {:s}\n".format(len(field_list), str(field_list)) +
-            "  # of miss match line: {:d} ouf of {:d}\n".format(
+            "  header: {} {}\n".format(len(field_list), field_list) +
+            "  # of miss match line: {} ouf of {}\n".format(
                 len(miss_match_idx_list), len(value_matrix)) +
-            "  e.g. value at line={:d}, len={:d}: {:s}\n".format(
+            "  e.g. value at line={}, len={}: {}\n".format(
                 miss_match_idx_list[0],
-                len(sample_miss_match_list), str(sample_miss_match_list))
+                len(sample_miss_match_list), sample_miss_match_list)
         )
 
     @staticmethod
@@ -1306,7 +1306,7 @@ class SimpleSQLite(object):
 
         if self.mode not in valid_permission_list:
             raise IOError(
-                "invalid access: expected-mode='{:s}', current-mode='{:s}'".format(
+                "invalid access: expected-mode='{}', current-mode='{}'".format(
                     "' or '".join(valid_permission_list), self.mode))
 
     @staticmethod
