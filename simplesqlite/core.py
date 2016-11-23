@@ -1284,7 +1284,7 @@ class SimpleSQLite(object):
             "  header: {} {}\n".format(len(field_list), field_list) +
             "  # of miss match line: {} ouf of {}\n".format(
                 len(miss_match_idx_list), len(value_matrix)) +
-            "  e.g. value at line={}, len={}: {}\n".format(
+            "  e.g. value at line={}, col-size={}: {}\n".format(
                 miss_match_idx_list[0],
                 len(sample_miss_match_list), sample_miss_match_list)
         )
