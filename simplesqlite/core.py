@@ -998,6 +998,8 @@ class SimpleSQLite(object):
         """
         Create a table if not exists. And insert data into the created table.
 
+        Alias of :py:meth:`~.create_table_from_data_matrix`.
+
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
@@ -1017,9 +1019,37 @@ class SimpleSQLite(object):
             :py:meth:`.create_index_list`
         """
 
+        self.create_table_from_data_matrix(
+            table_name, attribute_name_list, data_matrix, index_attribute_list)
+
+    def create_table_from_data_matrix(
+            self, table_name, attr_name_list, data_matrix,
+            index_attr_list=None):
+        """
+        Create a table if not exists. And insert data into the created table.
+
+        :param str table_name: Table name to create.
+        :param list attr_name_list: List of attribute names of the table.
+        :param data_matrix: Data to be inserted into the table.
+        :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
+        :param tuple index_attr_list:
+            List of attribute names of create indices.
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
+        :raises simplesqlite.InvalidAttributeNameError:
+            |raises_validate_attr_name|
+        :raises ValueError: If the ``data_matrix`` is empty.
+
+        .. seealso::
+
+            :py:meth:`.create_table`
+            :py:meth:`.insert_many`
+            :py:meth:`.create_index_list`
+        """
+
         self.__create_table_from_tabledata(
-            ptr.TableData(table_name, attribute_name_list, data_matrix),
-            index_attribute_list)
+            ptr.TableData(table_name, attr_name_list, data_matrix),
+            index_attr_list)
 
     def create_table_from_tabledata(self, tabledata, index_attr_list=None):
         """
