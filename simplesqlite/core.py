@@ -488,10 +488,13 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        query = "SELECT * FROM '{:s}'".format(table_name)
+        query = u"SELECT * FROM '{:s}'".format(table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
-        return self.__get_list_from_fetch(result.description)
+        return [
+            dataproperty.to_unicode(attr)
+            for attr in self.__get_list_from_fetch(result.description)
+        ]
 
     def get_attr_type(self, table_name):
         """
@@ -543,9 +546,9 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attribute_name_list(table_name)
-        query = "SELECT DISTINCT {:s} FROM '{:s}'".format(
-            ",".join([
-                "TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
+        query = u"SELECT DISTINCT {:s} FROM '{:s}'".format(
+            u",".join([
+                u"TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
                 for attribute in attribute_name_list]),
             table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
