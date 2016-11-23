@@ -488,10 +488,13 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        query = "SELECT * FROM '{:s}'".format(table_name)
+        query = u"SELECT * FROM '{:s}'".format(table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
-        return self.__get_list_from_fetch(result.description)
+        return [
+            dataproperty.to_unicode(attr)
+            for attr in self.__get_list_from_fetch(result.description)
+        ]
 
     def get_attr_type(self, table_name):
         """
@@ -543,9 +546,9 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attribute_name_list(table_name)
-        query = "SELECT DISTINCT {:s} FROM '{:s}'".format(
-            ",".join([
-                "TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
+        query = u"SELECT DISTINCT {:s} FROM '{:s}'".format(
+            u",".join([
+                u"TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
                 for attribute in attribute_name_list]),
             table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
@@ -998,6 +1001,8 @@ class SimpleSQLite(object):
         """
         Create a table if not exists. And insert data into the created table.
 
+        Alias of :py:meth:`~.create_table_from_data_matrix`.
+
         :param str table_name: Table name to create.
         :param list attribute_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
@@ -1017,9 +1022,37 @@ class SimpleSQLite(object):
             :py:meth:`.create_index_list`
         """
 
+        self.create_table_from_data_matrix(
+            table_name, attribute_name_list, data_matrix, index_attribute_list)
+
+    def create_table_from_data_matrix(
+            self, table_name, attr_name_list, data_matrix,
+            index_attr_list=None):
+        """
+        Create a table if not exists. And insert data into the created table.
+
+        :param str table_name: Table name to create.
+        :param list attr_name_list: List of attribute names of the table.
+        :param data_matrix: Data to be inserted into the table.
+        :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
+        :param tuple index_attr_list:
+            List of attribute names of create indices.
+        :raises simplesqlite.InvalidTableNameError:
+            |raises_validate_table_name|
+        :raises simplesqlite.InvalidAttributeNameError:
+            |raises_validate_attr_name|
+        :raises ValueError: If the ``data_matrix`` is empty.
+
+        .. seealso::
+
+            :py:meth:`.create_table`
+            :py:meth:`.insert_many`
+            :py:meth:`.create_index_list`
+        """
+
         self.__create_table_from_tabledata(
-            ptr.TableData(table_name, attribute_name_list, data_matrix),
-            index_attribute_list)
+            ptr.TableData(table_name, attr_name_list, data_matrix),
+            index_attr_list)
 
     def create_table_from_tabledata(self, tabledata, index_attr_list=None):
         """
@@ -1254,7 +1287,7 @@ class SimpleSQLite(object):
             "  header: {} {}\n".format(len(field_list), field_list) +
             "  # of miss match line: {} ouf of {}\n".format(
                 len(miss_match_idx_list), len(value_matrix)) +
-            "  e.g. value at line={}, len={}: {}\n".format(
+            "  e.g. value at line={}, col-size={}: {}\n".format(
                 miss_match_idx_list[0],
                 len(sample_miss_match_list), sample_miss_match_list)
         )

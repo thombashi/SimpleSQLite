@@ -500,13 +500,13 @@ class Test_SimpleSQLite_get_attribute_name_list:
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["not_exist_table", TableNotFoundError],
-        [None, TableNotFoundError],
+        [None, InvalidTableNameError],
     ])
-    def test_null(self, con, value, expected):
+    def test_null_table(self, con, value, expected):
         with pytest.raises(expected):
             con.get_attribute_name_list(value)
 
-    def test_null(self, con_null):
+    def test_null_con(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.get_attribute_name_list("not_exist_table")
 
@@ -811,6 +811,7 @@ class Test_SimpleSQLite_create_table_with_data:
             table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
+
         print("expected: {}".format(expected_attr))
         print("actual: {}".format(con.get_attr_type(table_name)))
         assert con.get_attr_type(table_name) == expected_attr
@@ -849,7 +850,7 @@ class Test_SimpleSQLite_create_table_with_data:
 
 class Test_SimpleSQLite_create_table_from_tabledata:
 
-    @pytest.mark.parametrize(["value"], [
+    @pytest.mark.parametrize(["value", "expected"], [
         [
             ptr.TableData(
                 "json1",
@@ -860,11 +861,29 @@ class Test_SimpleSQLite_create_table_from_tabledata:
                     {u'attr_a': 3, u'attr_b': 120.9,
                      u'attr_c': u'ccc'},
                 ]
-            )
+            ),
+            [(1, 4.0, u'a'), (2, 2.1, u'bb'), (3, 120.9, u'ccc')]
+        ],
+        [
+            ptr.TableData(
+                "multibyte_char",
+                ["姓", "名", "生年月日", "郵便番号", "住所", "電話番号"],
+                [
+                    ["山田", "太郎", "2001/1/1", "100-0002",
+                        "東京都千代田区皇居外苑", "03-1234-5678"],
+                    ["山田", "次郎", "2001/1/2", "251-0036",
+                        "神奈川県藤沢市江の島１丁目", "03-9999-9999"],
+                ]
+            ),
+            [
+                ("山田", "太郎", "2001/1/1", "100-0002",
+                 "東京都千代田区皇居外苑", "03-1234-5678"),
+                ("山田", "次郎", "2001/1/2", "251-0036",
+                 "神奈川県藤沢市江の島１丁目", "03-9999-9999"),
+            ]
         ],
     ])
-    def test_normal(
-            self, tmpdir, value):
+    def test_normal(self, tmpdir, value, expected):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
@@ -876,9 +895,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
 
         result = con.select(select="*", table_name=value.table_name)
         result_matrix = result.fetchall()
-        assert len(result_matrix) == 3
-        assert result_matrix == [
-            (1, 4.0, u'a'), (2, 2.1, u'bb'), (3, 120.9, u'ccc')]
+        assert result_matrix == expected
 
 
 class Test_SimpleSQLite_create_table_from_csv:

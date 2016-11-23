@@ -59,10 +59,6 @@ def append_table(con_src, con_dst, table_name):
     :raises simplesqlite.TableNotFoundError:
         |raises_verify_table_existence|
     :raises ValueError: If attribute of the table is different from each other.
-
-    .. seealso::
-
-        :py:meth:`simplesqlite.SimpleSQLite.create_table_with_data`
     """
 
     con_src.verify_table_existence(table_name)
