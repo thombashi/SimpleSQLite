@@ -17,6 +17,7 @@ Mandatory
 - `beautifulsoup4 <https://www.crummy.com/software/BeautifulSoup/>`__
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
 - `jsonschema <https://github.com/Julian/jsonschema>`__
+- `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
