@@ -11,6 +11,7 @@ import re
 import sqlite3
 
 import dataproperty
+from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
 import pytablereader as ptr
 import six
@@ -492,7 +493,7 @@ class SimpleSQLite(object):
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return [
-            dataproperty.to_unicode(attr)
+            MultiByteStrDecoder(attr).unicode_str
             for attr in self.__get_list_from_fetch(result.description)
         ]
 
