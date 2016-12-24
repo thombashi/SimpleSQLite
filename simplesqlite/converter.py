@@ -4,34 +4,40 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import absolute_import
+from decimal import Decimal
+
 import dataproperty
 
 
 class RecordConvertor(object):
 
     @staticmethod
-    def __convert_none(value):
+    def __to_sqlite_element(value):
+        if isinstance(value, Decimal):
+            return float(value)
+
         if value is None:
             return "NULL"
 
         return value
 
     @classmethod
-    def to_record(cls, attr_name_list, value):
+    def to_record(cls, attr_name_list, values):
         """
         Convert values to a record to be inserted into a database.
 
         :param list attr_name_list:
             List of the attributes for the converting record.
-        :param value: Value to be converted.
-        :type value: |dict|/|namedtuple|/|list|/|tuple|
-        :raises ValueError: If the ``value`` is invalid.
+        :param values: Value to be converted.
+        :type values: |dict|/|namedtuple|/|list|/|tuple|
+        :raises ValueError: If the ``values`` is invalid.
         """
 
         try:
             # dictionary to list
             return [
-                cls.__convert_none(value.get(attr_name))
+                cls.__to_sqlite_element(values.get(attr_name))
                 for attr_name in attr_name_list
             ]
         except AttributeError:
@@ -39,16 +45,18 @@ class RecordConvertor(object):
 
         try:
             # namedtuple to list
-            dict_value = value._asdict()
+            dict_value = values._asdict()
             return [
-                cls.__convert_none(dict_value.get(attr_name))
+                cls.__to_sqlite_element(dict_value.get(attr_name))
                 for attr_name in attr_name_list
             ]
         except AttributeError:
             pass
 
-        if dataproperty.is_list_or_tuple(value):
-            return list(value)
+        if dataproperty.is_list_or_tuple(values):
+            return [
+                cls.__to_sqlite_element(value) for value in values
+            ]
 
         raise ValueError("cannot convert to list")
 

@@ -3,15 +3,15 @@ Insert dictionary
 
 .. code-block:: python
     :caption: Sample code
-    
+
     from simplesqlite import SimpleSQLite
-    import six
+
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name,
-        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     con.insert(
@@ -43,15 +43,7 @@ Insert dictionary
 
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
-
-.. code-block:: none
-    :caption: Output
-
-    (1, 1.1, u'aaa', 1, 1)
-    (4, 4.4, u'ddd', 4.44, u'hoge')
-    (5, 5.5, u'eee', 5.55, u'foo')
-    (6, u'NULL', u'fff', u'NULL', u'NULL')
+        print(record)
 
 
 Insert list/tuple/namedtuple
@@ -62,13 +54,13 @@ Insert list/tuple/namedtuple
     
     from collections import namedtuple
     from simplesqlite import SimpleSQLite
-    import six
+
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name,
-        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     SampleTuple = namedtuple(
@@ -85,7 +77,7 @@ Insert list/tuple/namedtuple
 
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
+        print(record)
 
 
 .. code-block:: none

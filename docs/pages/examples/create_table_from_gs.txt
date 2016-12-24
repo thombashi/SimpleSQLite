@@ -1,8 +1,8 @@
 .. code-block:: python
-    :caption: Sample code
+    :caption: Sample code that create a table from Goole Sheets
 
     import simplesqlite
-    import six
+
 
     credentials_file = "sample-xxxxxxxxxxxx.json"
 
@@ -17,9 +17,9 @@
 
     # output ---
     for table_name in con.get_table_name_list():
-        six.print_("table: " + table_name)
-        six.print_(con.get_attribute_name_list(table_name))
+        print("table: " + table_name)
+        print(con.get_attribute_name_list(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
-            six.print_(record)
-        six.print_()
+            print(record)
+        print()

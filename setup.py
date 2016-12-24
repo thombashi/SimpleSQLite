@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
+
 import os.path
 import setuptools
 import sys
@@ -23,7 +30,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.6.8",
+    version="0.6.9",
     url="https://github.com/thombashi/SimpleSQLite",
 
     author="Tsuyoshi Hombashi",

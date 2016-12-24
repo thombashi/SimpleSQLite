@@ -1,8 +1,8 @@
 .. code-block:: python
-    :caption: Sample code
+    :caption: Sample code that craete a table from CSV
 
     from simplesqlite import SimpleSQLite
-    import six
+
 
     file_path = "sample_data.csv"
 
@@ -13,17 +13,18 @@
             '2,2.1,"bb"',
             '3,120.9,"ccc"',
         ]))
-    
+
     # create table ---
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_csv(file_path)
 
     # output ---
     table_name = "sample_data"
-    six.print_(con.get_attribute_name_list(table_name))
+    print(con.get_attribute_name_list(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
+        print(record)
+
 
 
 .. code-block:: none
