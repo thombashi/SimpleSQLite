@@ -50,8 +50,9 @@ Create a table from data matrix
 .. code:: python
 
     import json
+
     from simplesqlite import SimpleSQLite
-    import six
+
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
@@ -62,19 +63,20 @@ Create a table from data matrix
         [2, 2.2, "bbb", 2.2, 2.2],
         [3, 3.3, "ccc", 3,   "ccc"],
     ]
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name,
-        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=data_matrix)
 
     # display values in the table -----
-    six.print_(con.get_attribute_name_list(table_name))
+    print(con.get_attribute_name_list(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
+        print(record)
 
     # display data type for each column in the table -----
-    six.print_(json.dumps(con.get_attr_type(table_name), indent=4))
+    print(json.dumps(con.get_attr_type(table_name), indent=4))
+
 
 
 .. code::
@@ -100,13 +102,13 @@ Insert dictionary
 .. code:: python
 
     from simplesqlite import SimpleSQLite
-    import six
+
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name,
-        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     con.insert(
@@ -138,14 +140,7 @@ Insert dictionary
 
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
-
-.. code::
-
-    (1, 1.1, u'aaa', 1, 1)
-    (4, 4.4, u'ddd', 4.44, u'hoge')
-    (5, 5.5, u'eee', 5.55, u'foo')
-    (6, u'NULL', u'fff', u'NULL', u'NULL')
+        print(record)
 
 
 Insert list/tuple/namedtuple
@@ -155,13 +150,13 @@ Insert list/tuple/namedtuple
 
     from collections import namedtuple
     from simplesqlite import SimpleSQLite
-    import six
+
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name,
-        attribute_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
         data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
     SampleTuple = namedtuple(
@@ -178,7 +173,7 @@ Insert list/tuple/namedtuple
 
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
-        six.print_(record)
+        print(record)
 
 
 .. code::
