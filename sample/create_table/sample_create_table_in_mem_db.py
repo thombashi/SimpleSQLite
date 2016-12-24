@@ -2,9 +2,10 @@
 # encoding: utf-8
 
 from __future__ import print_function
-
 import json
+
 import simplesqlite
+
 
 table_name = "sample_table"
 con = simplesqlite.connect_sqlite_db_mem()

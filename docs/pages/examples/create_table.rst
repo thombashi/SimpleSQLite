@@ -4,18 +4,18 @@ Create table
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:py:meth:`~simplesqlite.SimpleSQLite.create_table_with_data`
-method can get create a table from data matrix.
-Data matrix is a list of |dict|/|namedtuple|/|list|/|tuple|.
+:py:meth:`~simplesqlite.SimpleSQLite.create_table_from_data_matrix`
+method create a table in a SQLite database from data matrix.
+Data matrix required one of the types: |dict|/|namedtuple|/|list|/|tuple|.
 
 .. include:: create_table_from_data_matrix.txt
 
 
-Create a table from a CSV file/text
+Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:py:meth:`~simplesqlite.SimpleSQLite.create_table_from_csv` method
-can create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
+:py:meth:`~simplesqlite.SimpleSQLite.create_table_from_csv`
+method create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 
 .. include:: create_table_from_csv.txt
 

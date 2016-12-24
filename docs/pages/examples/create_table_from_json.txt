@@ -4,10 +4,11 @@
     :caption: Sample code 1: multiple table data in a file
 
     from simplesqlite import SimpleSQLite
-    import six
 
-    file_path = "sample_data.json"
 
+    file_path = "sample_data_multi.json"
+
+    # create sample data file ---
     with open(file_path, "w") as f:
         f.write("""{
             "table_a" : [
@@ -28,12 +29,13 @@
 
     # output ---
     for table_name in con.get_table_name_list():
-        six.print_("table: " + table_name)
-        six.print_(con.get_attribute_name_list(table_name))
+        print("table: " + table_name)
+        print(con.get_attribute_name_list(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
-            six.print_(record)
-        six.print_()
+            print(record)
+        print()
+
 
 .. code-block:: none
     :caption: Output of the sample code 1
@@ -57,7 +59,7 @@
     :caption: Sample code 2: single table data in a file
 
     from simplesqlite import SimpleSQLite
-    import six
+
 
     file_path = "sample_data_single.json"
 
@@ -75,12 +77,13 @@
 
     # output ---
     for table_name in con.get_table_name_list():
-        six.print_("table: " + table_name)
-        six.print_(con.get_attribute_name_list(table_name))
+        print("table: " + table_name)
+        print(con.get_attribute_name_list(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
-            six.print_(record)
-        six.print_()
+            print(record)
+        print()
+
 
 .. code-block:: none
     :caption: Output of the sample code 2

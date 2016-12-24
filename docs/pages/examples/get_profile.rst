@@ -6,19 +6,22 @@ method can get profile of query execution time.
 
 .. code-block:: python
     :caption: Sample code
-    
+
     from simplesqlite import SimpleSQLite
+
+
     con = SimpleSQLite("sample.sqlite", "w", profile=True)
     data_matrix = [
         [1, 1.1, "aaa", 1,   1],
         [2, 2.2, "bbb", 2.2, 2.2],
         [3, 3.3, "ccc", 3,   "ccc"],
     ]
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name="sample_table",
-        attribute_name_list=["a", "b", "c", "d", "e"],
+        attr_name_list=["a", "b", "c", "d", "e"],
         data_matrix=data_matrix,
-        index_attribute_list=["a"])
+        index_attr_list=["a"])
+
     for profile in con.get_profile():
         print(profile)
 
