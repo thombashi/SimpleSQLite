@@ -9,6 +9,7 @@ import os
 
 import pytest
 import pytablereader as ptr
+import pytablewriter as ptw
 
 from simplesqlite import *
 
@@ -32,7 +33,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
             if tabledata.is_empty():
                 continue
 
-            print(tabledata.dumps())
+            print(ptw.dump_tabledata(tabledata))
 
             try:
                 con.create_table_from_tabledata(
