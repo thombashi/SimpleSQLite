@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 
-from simplesqlite import SimpleSQLite, TableNotFoundError, AttributeNotFoundError
-import six
+from simplesqlite import (
+    SimpleSQLite,
+    TableNotFoundError,
+    AttributeNotFoundError
+)
 
 
 table_name = "sample_table"
 con = SimpleSQLite("sample.sqlite", "w")
-con.create_table_with_data(
+con.create_table_from_data_matrix(
     table_name=table_name,
-    attribute_name_list=["attr_a", "attr_b"],
+    attr_name_list=["attr_a", "attr_b"],
     data_matrix=[[1, "a"], [2, "b"]])
 
 con.verify_attribute_existence(table_name, "attr_a")
 try:
     con.verify_attribute_existence(table_name, "not_existing")
 except AttributeNotFoundError as e:
-    six.print_(e)
+    print(e)
 try:
     con.verify_attribute_existence("not_existing", "attr_a")
 except TableNotFoundError as e:
-    six.print_(e)
+    print(e)

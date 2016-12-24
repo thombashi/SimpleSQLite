@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 
 from simplesqlite import SimpleSQLite
-import six
 
 
 file_path = "sample_data.csv"
@@ -22,7 +22,7 @@ con.create_table_from_csv(file_path)
 
 # output ---
 table_name = "sample_data"
-six.print_(con.get_attribute_name_list(table_name))
+print(con.get_attribute_name_list(table_name))
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():
-    six.print_(record)
+    print(record)

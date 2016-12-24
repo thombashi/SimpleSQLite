@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
 
-from simplesqlite import SimpleSQLite, NullDatabaseConnectionError
-import six
+import simplesqlite
 
 
-con = SimpleSQLite("sample.sqlite", "w")
+con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
-six.print_("---- connected to a database ----")
+print("---- connected to a database ----")
 con.check_connection()
 
-six.print_("---- disconnected from a database ----")
+print("---- disconnected from a database ----")
 con.close()
 try:
     con.check_connection()
-except NullDatabaseConnectionError as e:
-    six.print_(e)
+except simplesqlite.NullDatabaseConnectionError as e:
+    print(e)
