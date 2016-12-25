@@ -33,13 +33,13 @@ class Test_RecordConvertor_to_record:
             {"attr_a": 5, "attr_b": 6, "not_exist_attr": 100},
             [5, 6]
         ],
-        [attr_list_2, {"attr_a": 5}, [5, "NULL"]],
-        [attr_list_2, {"attr_b": 6}, ["NULL", 6]],
-        [attr_list_2, {}, ["NULL", "NULL"]],
+        [attr_list_2, {"attr_a": 5}, [5, None]],
+        [attr_list_2, {"attr_b": 6}, [None, 6]],
+        [attr_list_2, {}, [None, None]],
         [attr_list_2, NamedTuple2(5, 6), [5, 6]],
-        [attr_list_2, NamedTuple2(5, None), [5, "NULL"]],
-        [attr_list_2, NamedTuple2(None, 6), ["NULL", 6]],
-        [attr_list_2, NamedTuple2(None, None), ["NULL", "NULL"]],
+        [attr_list_2, NamedTuple2(5, None), [5, None]],
+        [attr_list_2, NamedTuple2(None, 6), [None, 6]],
+        [attr_list_2, NamedTuple2(None, None), [None, None]],
         [attr_list_2, NamedTuple3(5, 6, 7), [5, 6]],
         [attr_list_3, NamedTuple3(5, 6, 7), [5, 6, 7]]
     ])
@@ -76,10 +76,10 @@ class Test_RecordConvertor_to_record_list:
                 [3, 4],
                 [5, 6],
                 [7, 8],
-                [9, "NULL"],
-                ["NULL", 10],
-                ["NULL", "NULL"],
-                [11, "NULL"],
+                [9, None],
+                [None, 10],
+                [None, None],
+                [11, None],
             ],
         ]
     ])

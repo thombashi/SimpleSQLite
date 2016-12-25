@@ -17,9 +17,6 @@ class RecordConvertor(object):
         if isinstance(value, Decimal):
             return float(value)
 
-        if value is None:
-            return "NULL"
-
         return value
 
     @classmethod
