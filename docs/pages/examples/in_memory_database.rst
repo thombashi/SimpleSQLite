@@ -1,3 +1,5 @@
+.. _example-connect-sqlite-db-mem:
+
 Make an in-memory database
 --------------------------
 

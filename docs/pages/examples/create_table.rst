@@ -1,6 +1,8 @@
 Create table
 --------------
 
+.. _example-create-table-from-data-matrix:
+
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -11,6 +13,8 @@ Data matrix required one of the types: |dict|/|namedtuple|/|list|/|tuple|.
 .. include:: create_table_from_data_matrix.txt
 
 
+.. _example-create-table-from-csv:
+
 Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -20,7 +24,9 @@ method create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 .. include:: create_table_from_csv.txt
 
 
-Create table(s) from JSON file/text
+.. _example-create-table-from-json:
+
+Create table(s) from JSON
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_json` method
@@ -29,7 +35,7 @@ can create a table from a JSON file/text.
 .. include:: create_table_from_json.txt
 
 
-Create table(s) from an Excel file
+Create table(s) from an Excel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:class:`~simplesqlite.loader.ExcelTableFileLoader` class
@@ -38,6 +44,8 @@ can create a table from an Excel file.
 
 .. include:: create_table_from_excel.txt
 
+
+.. _example-create-table-from-gs:
 
 Create table(s) from Google Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

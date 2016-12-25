@@ -1,3 +1,5 @@
+.. _example-insert-records:
+
 Insert records into a table
 ---------------------------
 
