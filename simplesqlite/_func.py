@@ -94,12 +94,7 @@ def connect_sqlite_db_mem():
 
     :Examples:
 
-        .. code:: python
-
-            >>> import simplesqlite
-            >>> con = simplesqlite.connect_sqlite_db_mem()
-            >>> con.database_path
-            ':memory:'
+        :ref:`example-connect-sqlite-db-mem`
     """
 
     from .core import SimpleSQLite

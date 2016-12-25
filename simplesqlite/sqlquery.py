@@ -8,9 +8,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 import re
 
-import dataproperty
+import dataproperty as dp
 import pathvalidate as pv
-import six
 from six.moves import map
 
 from ._error import SqlSyntaxError
@@ -129,7 +128,7 @@ class SqlQuery:
         else:
             sql_name = name
 
-        if dataproperty.is_not_empty_string(operation_query):
+        if dp.is_not_empty_string(operation_query):
             sql_name = "{:s}({:s})".format(operation_query, sql_name)
 
         return sql_name
@@ -158,7 +157,7 @@ class SqlQuery:
             :py:meth:`.to_attr_str`
         """
 
-        if dataproperty.is_empty_string(operation_query):
+        if dp.is_empty_string(operation_query):
             return list(map(cls.to_attr_str, name_list))
 
         return [
@@ -251,16 +250,16 @@ class SqlQuery:
         """
 
         validate_table_name(table)
-        if dataproperty.is_empty_string(select):
+        if dp.is_empty_string(select):
             raise ValueError("SELECT query is null")
 
         query_list = [
             "SELECT " + select,
             "FROM " + cls.to_table_str(table),
         ]
-        if dataproperty.is_not_empty_string(where):
+        if dp.is_not_empty_string(where):
             query_list.append("WHERE " + where)
-        if dataproperty.is_not_empty_string(extra):
+        if dp.is_not_empty_string(extra):
             query_list.append(extra)
 
         return " ".join(query_list)
@@ -286,21 +285,11 @@ class SqlQuery:
 
         table = cls.to_table_str(table)
 
-        if dataproperty.is_empty_sequence(insert_tuple):
+        if dp.is_empty_sequence(insert_tuple):
             raise ValueError("empty insert list/tuple")
 
-        if is_insert_many:
-            value_list = ['?' for _i in insert_tuple]
-        else:
-            value_list = [
-                "'{:s}'".format(value)
-                if isinstance(value, six.string_types) and value != "NULL"
-                else str(value)
-                for value in insert_tuple
-            ]
-
         return "INSERT INTO {:s} VALUES ({:s})".format(
-            table, ",".join(value_list))
+            table, ",".join(['?' for _i in insert_tuple]))
 
     @classmethod
     def make_update(cls, table, set_query, where=None):
@@ -320,14 +309,14 @@ class SqlQuery:
         """
 
         validate_table_name(table)
-        if dataproperty.is_empty_string(set_query):
+        if dp.is_empty_string(set_query):
             raise ValueError("SET query is null")
 
         query_list = [
             "UPDATE " + cls.to_table_str(table),
             "SET " + set_query,
         ]
-        if dataproperty.is_not_empty_string(where):
+        if dp.is_not_empty_string(where):
             query_list.append("WHERE " + where)
 
         return " ".join(query_list)

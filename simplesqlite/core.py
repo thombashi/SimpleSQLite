@@ -10,7 +10,7 @@ import os
 import re
 import sqlite3
 
-import dataproperty
+import dataproperty as dp
 from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
 import pytablereader as ptr
@@ -30,7 +30,6 @@ from ._error import (
 from ._func import (
     connect_sqlite_db_mem,
     validate_table_name,
-    validate_attr_name,
     MEMORY_DB_NAME
 )
 
@@ -136,18 +135,19 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, NullDatabaseConnectionError
-                import six
+                import simplesqlite
 
-                con = SimpleSQLite("sample.sqlite", "w")
-                six.print_("---- connected to a database ----")
+                con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+
+                print("---- connected to a database ----")
                 con.check_connection()
-                six.print_("---- disconnected from a database ----")
+
+                print("---- disconnected from a database ----")
                 con.close()
                 try:
                     con.check_connection()
-                except NullDatabaseConnectionError as e:
-                    six.print_(e)
+                except simplesqlite.NullDatabaseConnectionError as e:
+                    print(e)
 
             .. parsed-literal::
 
@@ -160,12 +160,14 @@ class SimpleSQLite(object):
             raise NullDatabaseConnectionError(
                 "null database connection")
 
-        if dataproperty.is_empty_string(self.database_path):
+        if dp.is_empty_string(self.database_path):
             raise NullDatabaseConnectionError(
                 "null database file path")
 
     def connect(self, database_path, mode="a"):
         """
+        Connect to a SQLite dtabase.
+
         :param str database_path:
             Path to the SQLite database file to be connected.
         :param str mode:
@@ -208,7 +210,7 @@ class SimpleSQLite(object):
 
     def execute_query(self, query, caller=None):
         """
-        Execute arbitrary SQLite query.
+        Send arbitrary SQLite query to the database.
 
         :param str query: Query to be executed.
         :param tuple caller:
@@ -229,7 +231,7 @@ class SimpleSQLite(object):
         import time
 
         self.check_connection()
-        if dataproperty.is_empty_string(query):
+        if dp.is_empty_string(query):
             return None
 
         if self.__is_profile:
@@ -262,7 +264,7 @@ class SimpleSQLite(object):
 
     def select(self, select, table_name, where=None, extra=None):
         """
-        Execute SELECT query.
+        Send a SELECT query to the database.
 
         :param str select: Attribute for the SELECT query.
         :param str table_name: Table name of executing the query.
@@ -286,7 +288,7 @@ class SimpleSQLite(object):
 
     def insert(self, table_name, insert_record):
         """
-        Execute INSERT query.
+        Send an INSERT query to the database.
 
         :param str table_name: Table name of executing the query.
         :param insert_record: Record to be inserted.
@@ -296,19 +298,16 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
+        :Examples:
+
+            :ref:`example-insert-records`
         """
 
-        self.validate_access_permission(["w", "a"])
-        self.verify_table_existence(table_name)
-
-        query = SqlQuery.make_insert(table_name, RecordConvertor.to_record(
-            self.get_attribute_name_list(table_name), insert_record))
-        self.execute_query(query, logging.getLogger().findCaller())
+        self.insert_many(table_name, [insert_record])
 
     def insert_many(self, table_name, insert_record_list):
         """
-        Execute INSERT query for multiple records.
+        Send an INSERT query with multiple records to the database.
 
         :param str table: Table name of executing the query.
         :param insert_record: Records to be inserted.
@@ -320,13 +319,17 @@ class SimpleSQLite(object):
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
+        :Examples:
+
+            :ref:`example-insert-records`
+
         .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
 
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        if dataproperty.is_empty_sequence(insert_record_list):
+        if dp.is_empty_sequence(insert_record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
@@ -351,7 +354,7 @@ class SimpleSQLite(object):
 
     def update(self, table_name, set_query, where=None):
         """
-        Execute UPDATE query.
+        Send an UPDATE query to the database.
 
         :param str table_name: Table name of executing the query.
         :param str set_query:
@@ -427,15 +430,13 @@ class SimpleSQLite(object):
             .. code:: python
 
                 from simplesqlite import SimpleSQLite
-                import six
 
-                table_name = "sample_table"
                 con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
+                con.create_table_from_data_matrix(
                     table_name="hoge",
-                    attribute_name_list=["attr_a", "attr_b"],
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
-                six.print_(con.get_table_name_list())
+                print(con.get_table_name_list())
 
             .. parsed-literal::
 
@@ -465,21 +466,21 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, TableNotFoundError
-                import six
+                import simplesqlite
 
                 table_name = "sample_table"
-                con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
-                    table_name=table_name,
-                    attribute_name_list=["attr_a", "attr_b"],
+                con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+                con.create_table_from_data_matrix(
+                    table_name,
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                six.print_(con.get_attribute_name_list(table_name))
+                print(con.get_attribute_name_list(table_name))
+
                 try:
-                    six.print_(con.get_attribute_name_list("not_existing"))
-                except TableNotFoundError as e:
-                    six.print_(e)
+                    print(con.get_attribute_name_list("not_existing"))
+                except simplesqlite.TableNotFoundError as e:
+                    print(e)
 
             .. parsed-literal::
 
@@ -580,6 +581,10 @@ class SimpleSQLite(object):
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
+
+        :Examples:
+
+            :ref:`example-get-profile`
         """
 
         from collections import namedtuple
@@ -631,6 +636,7 @@ class SimpleSQLite(object):
             .. code:: python
 
                 import json
+
                 from simplesqlite import SimpleSQLite
 
                 con = SimpleSQLite("sample.sqlite", "w")
@@ -639,11 +645,12 @@ class SimpleSQLite(object):
                     [2, 2.2, "bbb", 2.2, 2.2],
                     [3, 3.3, "ccc", 3,   "ccc"],
                 ]
-                con.create_table_with_data(
+                con.create_table_from_data_matrix(
                     table_name="sample_table",
-                    attribute_name_list=["a", "b", "c", "d", "e"],
+                    attr_name_list=["a", "b", "c", "d", "e"],
                     data_matrix=data_matrix,
-                    index_attribute_list=["a"])
+                    index_attr_list=["a"])
+
                 print(json.dumps(con.get_sqlite_master(), indent=4))
 
             .. parsed-literal::
@@ -692,15 +699,15 @@ class SimpleSQLite(object):
             .. code:: python
 
                 from simplesqlite import SimpleSQLite
-                import six
 
                 con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
+                con.create_table_from_data_matrix(
                     table_name="hoge",
-                    attribute_name_list=["attr_a", "attr_b"],
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
-                six.print_(con.has_table("hoge"))
-                six.print_(con.has_table("not_existing"))
+
+                print(con.has_table("hoge"))
+                print(con.has_table("not_existing"))
 
             .. parsed-literal::
 
@@ -728,22 +735,21 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, TableNotFoundError
-                import six
+                import simplesqlite
 
                 table_name = "sample_table"
-                con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
+                con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+                con.create_table_from_data_matrix(
                     table_name=table_name,
-                    attribute_name_list=["attr_a", "attr_b"],
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                six.print_(con.has_attribute(table_name, "attr_a"))
-                six.print_(con.has_attribute(table_name, "not_existing"))
+                print(con.has_attribute(table_name, "attr_a"))
+                print(con.has_attribute(table_name, "not_existing"))
                 try:
-                    six.print_(con.has_attribute("not_existing", "attr_a"))
-                except TableNotFoundError as e:
-                    six.print_(e)
+                    print(con.has_attribute("not_existing", "attr_a"))
+                except simplesqlite.TableNotFoundError as e:
+                    print(e)
 
             .. parsed-literal::
 
@@ -754,7 +760,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if dataproperty.is_empty_string(attribute_name):
+        if dp.is_empty_string(attribute_name):
             return False
 
         return attribute_name in self.get_attribute_name_list(table_name)
@@ -772,25 +778,23 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, TableNotFoundError
-                import six
+                import simplesqlite
 
                 table_name = "sample_table"
-                con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
+                con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+                con.create_table_from_data_matrix(
                     table_name=table_name,
-                    attribute_name_list=["attr_a", "attr_b"],
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                six.print_(con.has_attribute_list(table_name, ["attr_a"]))
-                six.print_(con.has_attribute_list(
-                    table_name, ["attr_a", "attr_b"]))
-                six.print_(con.has_attribute_list(
+                print(con.has_attribute_list(table_name, ["attr_a"]))
+                print(con.has_attribute_list(table_name, ["attr_a", "attr_b"]))
+                print(con.has_attribute_list(
                     table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
-                    six.print_(con.has_attribute("not_existing", ["attr_a"]))
-                except TableNotFoundError as e:
-                    six.print_(e)
+                    print(con.has_attribute("not_existing", ["attr_a"]))
+                except simplesqlite.TableNotFoundError as e:
+                    print(e)
 
             .. parsed-literal::
 
@@ -800,7 +804,7 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if dataproperty.is_empty_sequence(attribute_name_list):
+        if dp.is_empty_sequence(attribute_name_list):
             return False
 
         not_exist_field_list = [
@@ -826,21 +830,20 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, TableNotFoundError
-                import six
+                import simplesqlite
 
                 table_name = "sample_table"
-                con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
-                    table_name=table_name,
-                    attribute_name_list=["attr_a", "attr_b"],
+                con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+                con.create_table_from_data_matrix(
+                    table_name,
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
                 con.verify_table_existence(table_name)
                 try:
                     con.verify_table_existence("not_existing")
-                except TableNotFoundError as e:
-                    six.print_(e)
+                except simplesqlite.TableNotFoundError as e:
+                    print(e)
 
             .. parsed-literal::
 
@@ -869,25 +872,28 @@ class SimpleSQLite(object):
 
             .. code:: python
 
-                from simplesqlite import SimpleSQLite, TableNotFoundError, AttributeNotFoundError
-                import six
+                from simplesqlite import (
+                    SimpleSQLite,
+                    TableNotFoundError,
+                    AttributeNotFoundError
+                )
 
                 table_name = "sample_table"
                 con = SimpleSQLite("sample.sqlite", "w")
-                con.create_table_with_data(
+                con.create_table_from_data_matrix(
                     table_name=table_name,
-                    attribute_name_list=["attr_a", "attr_b"],
+                    attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
                 con.verify_attribute_existence(table_name, "attr_a")
                 try:
                     con.verify_attribute_existence(table_name, "not_existing")
                 except AttributeNotFoundError as e:
-                    six.print_(e)
+                    print(e)
                 try:
                     con.verify_attribute_existence("not_existing", "attr_a")
                 except TableNotFoundError as e:
-                    six.print_(e)
+                    print(e)
 
             .. parsed-literal::
 
@@ -981,7 +987,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if dataproperty.is_empty_sequence(attribute_name_list):
+        if dp.is_empty_sequence(attribute_name_list):
             return
 
         table_attr_set = set(self.get_attribute_name_list(table_name))
@@ -1044,6 +1050,10 @@ class SimpleSQLite(object):
             |raises_validate_attr_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
+        :Examples:
+
+            :ref:`example-create-table-from-data-matrix`
+
         .. seealso::
 
             :py:meth:`.create_table`
@@ -1063,7 +1073,7 @@ class SimpleSQLite(object):
 
         .. seealso::
 
-            :py:meth:`.create_table_with_data`
+            :py:meth:`.create_table_from_data_matrix`
         """
 
         self.__create_table_from_tabledata(tabledata, index_attr_list)
@@ -1080,7 +1090,7 @@ class SimpleSQLite(object):
         except pathvalidate.ReservedNameError:
             pass
 
-        if dataproperty.is_empty_sequence(tabledata.record_list):
+        if dp.is_empty_sequence(tabledata.record_list):
             raise ValueError("input data is null: '{} ({})'".format(
                 tabledata.table_name, ", ".join(attr_name_list)))
 
@@ -1091,7 +1101,7 @@ class SimpleSQLite(object):
             self.__get_attr_desc_list(
                 attr_name_list, tabledata.record_list))
         self.insert_many(tabledata.table_name, tabledata.record_list)
-        if dataproperty.is_not_empty_sequence(index_attr_list):
+        if dp.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
                 tabledata.table_name,
                 self.__sanitize_attr_name_list(index_attr_list))
@@ -1121,9 +1131,13 @@ class SimpleSQLite(object):
         :param str encoding: csv file encoding.
         :raises ValueError: If the csv data is invalid.
 
+        :Examples:
+
+            :ref:`example-create-table-from-csv`
+
         .. seealso::
 
-            :py:meth:`.create_table_with_data`
+            :py:meth:`.create_table_from_data_matrix`
             :py:func:`csv.reader`
             :py:meth:`.pytablereader.CsvTableFileLoader.load`
             :py:meth:`.pytablereader.CsvTableTextLoader.load`
@@ -1133,7 +1147,7 @@ class SimpleSQLite(object):
         from pytablereader import CsvTableTextLoader
 
         loader = CsvTableFileLoader(csv_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1147,7 +1161,7 @@ class SimpleSQLite(object):
             pass
 
         loader = CsvTableTextLoader(csv_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1163,6 +1177,10 @@ class SimpleSQLite(object):
         :param str json_source: Path to the JSON file or JSON text.
         :param str table_name: Table name to create.
 
+        :Examples:
+
+            :ref:`example-create-table-from-json`
+
         .. seealso::
 
             :py:meth:`.pytablereader.JsonTableFileLoader.load`
@@ -1173,7 +1191,7 @@ class SimpleSQLite(object):
         from pytablereader import JsonTableTextLoader
 
         loader = JsonTableFileLoader(json_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         try:
             for tabledata in loader.load():
@@ -1183,7 +1201,7 @@ class SimpleSQLite(object):
             pass
 
         loader = JsonTableTextLoader(json_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         for tabledata in loader.load():
             self.create_table_from_tabledata(tabledata)
@@ -1230,7 +1248,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_db_path(database_path):
-        if dataproperty.is_empty_string(database_path):
+        if dp.is_empty_string(database_path):
             raise ValueError("null path")
 
         if database_path == MEMORY_DB_NAME:
@@ -1256,7 +1274,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
-        if dataproperty.is_empty_sequence(attr_name_list):
+        if dp.is_empty_sequence(attr_name_list):
             raise InvalidAttributeNameError("attribute name list is empty")
 
         for attr_name in attr_name_list:
@@ -1335,7 +1353,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        if dataproperty.is_empty_string(self.mode):
+        if dp.is_empty_string(self.mode):
             raise ValueError("mode is not set")
 
         if self.mode not in valid_permission_list:
@@ -1354,12 +1372,12 @@ class SimpleSQLite(object):
         """
 
         typename_table = {
-            dataproperty.Typecode.INTEGER: "INTEGER",
-            dataproperty.Typecode.FLOAT: "REAL",
-            dataproperty.Typecode.STRING: "TEXT",
+            dp.Typecode.INTEGER: "INTEGER",
+            dp.Typecode.FLOAT: "REAL",
+            dp.Typecode.STRING: "TEXT",
         }
 
-        prop_extractor = dataproperty.PropertyExtractor()
+        prop_extractor = dp.PropertyExtractor()
         prop_extractor.data_matrix = data_matrix
         col_prop_list = prop_extractor.extract_column_property_list()
 
