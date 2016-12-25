@@ -6,8 +6,6 @@
 
 from __future__ import absolute_import
 
-import dataproperty
-
 import simplesqlite.loader
 from .core import SimpleSQLite
 from ._error import (

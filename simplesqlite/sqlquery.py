@@ -10,7 +10,6 @@ import re
 
 import dataproperty
 import pathvalidate as pv
-import six
 from six.moves import map
 
 from ._error import SqlSyntaxError
