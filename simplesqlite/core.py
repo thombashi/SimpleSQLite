@@ -30,7 +30,6 @@ from ._error import (
 from ._func import (
     connect_sqlite_db_mem,
     validate_table_name,
-    validate_attr_name,
     MEMORY_DB_NAME
 )
 
