@@ -294,16 +294,9 @@ class SimpleSQLite(object):
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
-
-        .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
 
-        self.validate_access_permission(["w", "a"])
-        self.verify_table_existence(table_name)
-
-        query = SqlQuery.make_insert(table_name, RecordConvertor.to_record(
-            self.get_attribute_name_list(table_name), insert_record))
-        self.execute_query(query, logging.getLogger().findCaller())
+        self.insert_many(table_name, [insert_record])
 
     def insert_many(self, table_name, insert_record_list):
         """
