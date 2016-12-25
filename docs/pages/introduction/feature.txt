@@ -1,12 +1,12 @@
-Feature
--------
+Features
+--------
 
-- Automatic table creation from data
+- Automatic SQLite table creation from data
 - Support various data types of record(s) insertion into a table:
-    - dictionary
-    - namedtuple
-    - list
-    - tuple
+    - ``dict``
+    - ``namedtuple``
+    - ``list``
+    - ``tuple``
 - Create table(s) from:
     - CSV file/text
     - HTML file/text
