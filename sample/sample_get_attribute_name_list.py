@@ -8,9 +8,9 @@ import simplesqlite
 
 table_name = "sample_table"
 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
-con.create_table_with_data(
-    table_name=table_name,
-    attribute_name_list=["attr_a", "attr_b"],
+con.create_table_from_data_matrix(
+    table_name,
+    attr_name_list=["attr_a", "attr_b"],
     data_matrix=[[1, "a"], [2, "b"]])
 
 print(con.get_attribute_name_list(table_name))
