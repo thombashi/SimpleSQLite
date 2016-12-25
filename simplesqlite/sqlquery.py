@@ -289,18 +289,8 @@ class SqlQuery:
         if dataproperty.is_empty_sequence(insert_tuple):
             raise ValueError("empty insert list/tuple")
 
-        if is_insert_many:
-            value_list = ['?' for _i in insert_tuple]
-        else:
-            value_list = [
-                "'{:s}'".format(value)
-                if isinstance(value, six.string_types) and value != "NULL"
-                else str(value)
-                for value in insert_tuple
-            ]
-
         return "INSERT INTO {:s} VALUES ({:s})".format(
-            table, ",".join(value_list))
+            table, ",".join(['?' for _i in insert_tuple]))
 
     @classmethod
     def make_update(cls, table, set_query, where=None):

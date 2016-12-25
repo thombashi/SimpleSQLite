@@ -225,27 +225,22 @@ class Test_SqlQuery_make_select:
 class Test_SqlQuery_make_insert:
 
     @pytest.mark.parametrize(
-        ["table", "insert_tuple", "is_isert_many", "expected"], [
+        ["table", "insert_tuple", "expected"], [
             [
-                "A", ["B"], False,
-                "INSERT INTO A VALUES ('B')"
-            ],
-            [
-                "A", ["AAAA", 2], False,
-                "INSERT INTO A VALUES ('AAAA',2)"
-            ],
-            [
-                "A", ["B"], True,
+                "A", ["B"],
                 "INSERT INTO A VALUES (?)"
             ],
             [
-                "A", ["B", "C"], True,
+                "A", ["B", "C"],
                 "INSERT INTO A VALUES (?,?)"
             ],
+            [
+                "A", ["AAAA", 2, 0.1],
+                "INSERT INTO A VALUES (?,?,?)"
+            ],
         ])
-    def test_normal(self, table, insert_tuple, is_isert_many, expected):
-        assert SqlQuery.make_insert(
-            table, insert_tuple, is_isert_many) == expected
+    def test_normal(self, table, insert_tuple, expected):
+        assert SqlQuery.make_insert(table, insert_tuple) == expected
 
     @pytest.mark.parametrize(
         ["table", "insert_tuple", "is_isert_many", "expected"], [
