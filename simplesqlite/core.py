@@ -10,7 +10,7 @@ import os
 import re
 import sqlite3
 
-import dataproperty
+import dataproperty as dp
 from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
 import pytablereader as ptr
@@ -159,7 +159,7 @@ class SimpleSQLite(object):
             raise NullDatabaseConnectionError(
                 "null database connection")
 
-        if dataproperty.is_empty_string(self.database_path):
+        if dp.is_empty_string(self.database_path):
             raise NullDatabaseConnectionError(
                 "null database file path")
 
@@ -228,7 +228,7 @@ class SimpleSQLite(object):
         import time
 
         self.check_connection()
-        if dataproperty.is_empty_string(query):
+        if dp.is_empty_string(query):
             return None
 
         if self.__is_profile:
@@ -318,7 +318,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        if dataproperty.is_empty_sequence(insert_record_list):
+        if dp.is_empty_sequence(insert_record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
@@ -746,7 +746,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if dataproperty.is_empty_string(attribute_name):
+        if dp.is_empty_string(attribute_name):
             return False
 
         return attribute_name in self.get_attribute_name_list(table_name)
@@ -792,7 +792,7 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if dataproperty.is_empty_sequence(attribute_name_list):
+        if dp.is_empty_sequence(attribute_name_list):
             return False
 
         not_exist_field_list = [
@@ -973,7 +973,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if dataproperty.is_empty_sequence(attribute_name_list):
+        if dp.is_empty_sequence(attribute_name_list):
             return
 
         table_attr_set = set(self.get_attribute_name_list(table_name))
@@ -1072,7 +1072,7 @@ class SimpleSQLite(object):
         except pathvalidate.ReservedNameError:
             pass
 
-        if dataproperty.is_empty_sequence(tabledata.record_list):
+        if dp.is_empty_sequence(tabledata.record_list):
             raise ValueError("input data is null: '{} ({})'".format(
                 tabledata.table_name, ", ".join(attr_name_list)))
 
@@ -1083,7 +1083,7 @@ class SimpleSQLite(object):
             self.__get_attr_desc_list(
                 attr_name_list, tabledata.record_list))
         self.insert_many(tabledata.table_name, tabledata.record_list)
-        if dataproperty.is_not_empty_sequence(index_attr_list):
+        if dp.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
                 tabledata.table_name,
                 self.__sanitize_attr_name_list(index_attr_list))
@@ -1125,7 +1125,7 @@ class SimpleSQLite(object):
         from pytablereader import CsvTableTextLoader
 
         loader = CsvTableFileLoader(csv_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1139,7 +1139,7 @@ class SimpleSQLite(object):
             pass
 
         loader = CsvTableTextLoader(csv_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1165,7 +1165,7 @@ class SimpleSQLite(object):
         from pytablereader import JsonTableTextLoader
 
         loader = JsonTableFileLoader(json_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         try:
             for tabledata in loader.load():
@@ -1175,7 +1175,7 @@ class SimpleSQLite(object):
             pass
 
         loader = JsonTableTextLoader(json_source)
-        if dataproperty.is_not_empty_string(table_name):
+        if dp.is_not_empty_string(table_name):
             loader.table_name = table_name
         for tabledata in loader.load():
             self.create_table_from_tabledata(tabledata)
@@ -1222,7 +1222,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_db_path(database_path):
-        if dataproperty.is_empty_string(database_path):
+        if dp.is_empty_string(database_path):
             raise ValueError("null path")
 
         if database_path == MEMORY_DB_NAME:
@@ -1248,7 +1248,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
-        if dataproperty.is_empty_sequence(attr_name_list):
+        if dp.is_empty_sequence(attr_name_list):
             raise InvalidAttributeNameError("attribute name list is empty")
 
         for attr_name in attr_name_list:
@@ -1327,7 +1327,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        if dataproperty.is_empty_string(self.mode):
+        if dp.is_empty_string(self.mode):
             raise ValueError("mode is not set")
 
         if self.mode not in valid_permission_list:
@@ -1346,12 +1346,12 @@ class SimpleSQLite(object):
         """
 
         typename_table = {
-            dataproperty.Typecode.INTEGER: "INTEGER",
-            dataproperty.Typecode.FLOAT: "REAL",
-            dataproperty.Typecode.STRING: "TEXT",
+            dp.Typecode.INTEGER: "INTEGER",
+            dp.Typecode.FLOAT: "REAL",
+            dp.Typecode.STRING: "TEXT",
         }
 
-        prop_extractor = dataproperty.PropertyExtractor()
+        prop_extractor = dp.PropertyExtractor()
         prop_extractor.data_matrix = data_matrix
         col_prop_list = prop_extractor.extract_column_property_list()
 
