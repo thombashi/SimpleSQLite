@@ -5,6 +5,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import unicode_literals
 import sys
 
 import readmemaker
@@ -23,6 +24,9 @@ def write_examples(maker):
     maker.inc_indent_level()
     maker.write_chapter("Create a table from data matrix")
     maker.write_example_file("create_table_from_data_matrix.txt")
+
+    maker.write_chapter("Create a table from CSV")
+    maker.write_example_file("create_table_from_csv.txt")
 
     maker.dec_indent_level()
     maker.write_chapter("Insert records into a table")

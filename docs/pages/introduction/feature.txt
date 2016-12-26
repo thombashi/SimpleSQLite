@@ -9,7 +9,6 @@ Features
     - ``tuple``
 - Create table(s) from:
     - CSV file/text
-    - HTML file/text
     - JSON file/text
-    - Microsoft Excel :superscript:`TM` file
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
+    - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__

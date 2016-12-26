@@ -5,7 +5,6 @@
     import simplesqlite
     import xlsxwriter
 
-
     file_path = "sample_data.xlsx"
 
     # create sample data file ---

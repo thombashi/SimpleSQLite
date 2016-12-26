@@ -39,10 +39,10 @@ Create table(s) from Excel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can extract tabular data from an Excel file by 
-:py:class:`pytablereader.ExcelTableFileLoader` class.
+:py:class:`pytablereader.ExcelTableFileLoader` class defined in
+`pytablereader <https://github.com/thombashi/pytablereader>`__ module.
 And you can create a table from extracted data by using
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_tabledata` method.
-
 
 .. include:: create_table_from_excel.txt
 
