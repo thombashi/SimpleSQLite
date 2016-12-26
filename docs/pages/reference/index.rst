@@ -7,7 +7,6 @@ Reference
    simplesqlite
    sqlquery
    loader
-   converter
    function
    error
 
