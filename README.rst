@@ -20,7 +20,7 @@ SimpleSQLite
 Summary
 -------
 
-SimpleSQLite is a python library to simplify the table creation and data insertion in SQLite database.
+SimpleSQLite is a python library to simplify the table creation and data insertion into SQLite database.
 
 Features
 --------
@@ -33,10 +33,9 @@ Features
     - ``tuple``
 - Create table(s) from:
     - CSV file/text
-    - HTML file/text
     - JSON file/text
-    - Microsoft Excel :superscript:`TM` file
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
+    - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 
 Examples
 ========
@@ -92,6 +91,40 @@ Create a table from data matrix
         "attr_d": " REAL",
         "attr_e": " TEXT"
     }
+
+Create a table from CSV
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from simplesqlite import SimpleSQLite
+
+    with open("sample_data.csv", "w") as f:
+        f.write("\n".join([
+            '"attr_a","attr_b","attr_c"',
+            '1,4,"a"',
+            '2,2.1,"bb"',
+            '3,120.9,"ccc"',
+        ]))
+
+    # create table ---
+    con = SimpleSQLite("sample.sqlite", "w")
+    con.create_table_from_csv("sample_data.csv")
+
+    # output ---
+    table_name = "sample_data"
+    print(con.get_attribute_name_list(table_name))
+    result = con.select(select="*", table_name=table_name)
+    for record in result.fetchall():
+        print(record)
+
+
+.. code::
+
+    ['attr_a', 'attr_b', 'attr_c']
+    (1, 4.0, u'a')
+    (2, 2.1, u'bb')
+    (3, 120.9, u'ccc')
 
 Insert records into a table
 ---------------------------
