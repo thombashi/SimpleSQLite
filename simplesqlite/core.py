@@ -335,8 +335,7 @@ class SimpleSQLite(object):
         record_list = RecordConvertor.to_record_list(
             self.get_attribute_name_list(table_name), insert_record_list)
 
-        query = SqlQuery.make_insert(
-            table_name, record_list[0], is_insert_many=True)
+        query = SqlQuery.make_insert(table_name, record_list[0])
 
         try:
             self.connection.executemany(query, record_list)

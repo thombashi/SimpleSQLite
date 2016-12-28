@@ -265,15 +265,12 @@ class SqlQuery:
         return " ".join(query_list)
 
     @classmethod
-    def make_insert(cls, table, insert_tuple, is_insert_many=False):
+    def make_insert(cls, table, insert_tuple):
         """
         Make INSERT query.
 
         :param str table: Table name of executing the query.
         :param list/tuple insert_tuple: Insertion data.
-        :param bool is_insert_many:
-            Make query that insert multiple data at once,
-            if the value is |True|.
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``insert_tuple`` is empty |list|/|tuple|.
