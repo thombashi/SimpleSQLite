@@ -16,7 +16,7 @@ from ._error import SqlSyntaxError
 from ._func import validate_table_name
 
 
-class SqlQuery:
+class SqlQuery(object):
     """
     Support class for making SQLite query.
     """
