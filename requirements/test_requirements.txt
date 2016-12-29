@@ -1,4 +1,4 @@
-pytablewriter>=0.15.0
+pytablewriter>=0.15.1
 pytest-cov
 pytest
 tox

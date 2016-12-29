@@ -1,5 +1,5 @@
-DataProperty>=0.13.7
-mbstrdecoder>=0.1.1
-pathvalidate>=0.10.1
-pytablereader>=0.7.1
+DataProperty>=0.13.9
+mbstrdecoder>=0.2.0
+pathvalidate>=0.12.1
+pytablereader>=0.8.1
 six

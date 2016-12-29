@@ -1096,17 +1096,17 @@ class SimpleSQLite(object):
         except pathvalidate.ReservedNameError:
             pass
 
-        if dp.is_empty_sequence(tabledata.record_list):
+        if dp.is_empty_sequence(tabledata.value_matrix):
             raise ValueError("input data is null: '{} ({})'".format(
                 tabledata.table_name, ", ".join(attr_name_list)))
 
-        self.__verify_value_matrix(attr_name_list, tabledata.record_list)
+        self.__verify_value_matrix(attr_name_list, tabledata.value_matrix)
 
         self.create_table(
             tabledata.table_name,
             self.__get_attr_desc_list(
-                attr_name_list, tabledata.record_list))
-        self.insert_many(tabledata.table_name, tabledata.record_list)
+                attr_name_list, tabledata.value_matrix))
+        self.insert_many(tabledata.table_name, tabledata.value_matrix)
         if dp.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
                 tabledata.table_name,
