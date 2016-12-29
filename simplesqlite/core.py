@@ -5,6 +5,7 @@
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 import logging
 import os
 import re
@@ -495,7 +496,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        query = u"SELECT * FROM '{:s}'".format(table_name)
+        query = "SELECT * FROM '{:s}'".format(table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
 
         return [
@@ -553,9 +554,9 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         attribute_name_list = self.get_attr_name_list(table_name)
-        query = u"SELECT DISTINCT {:s} FROM '{:s}'".format(
-            u",".join([
-                u"TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
+        query = "SELECT DISTINCT {:s} FROM '{:s}'".format(
+            ",".join([
+                "TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
                 for attribute in attribute_name_list]),
             table_name)
         result = self.execute_query(query, logging.getLogger().findCaller())
@@ -945,8 +946,8 @@ class SimpleSQLite(object):
         if self.has_table(table_name):
             return True
 
-        query = u"CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
-            table_name, u", ".join(attribute_description_list))
+        query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
+            table_name, ", ".join(attribute_description_list))
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
 
@@ -1339,7 +1340,7 @@ class SimpleSQLite(object):
         for col, value_type in sorted(
                 six.iteritems(self.__get_column_valuetype(data_matrix))):
             attr_name = attr_name_list[col]
-            attr_description_list.append(u"{:s} {:s}".format(
+            attr_description_list.append("{:s} {:s}".format(
                 SqlQuery.to_attr_str(attr_name), value_type))
 
         return attr_description_list
