@@ -65,8 +65,8 @@ def append_table(con_src, con_dst, table_name):
     con_dst.validate_access_permission(["w", "a"])
 
     if con_dst.has_table(table_name):
-        src_attr_list = con_src.get_attribute_name_list(table_name)
-        dst_attr_list = con_dst.get_attribute_name_list(table_name)
+        src_attr_list = con_src.get_attr_name_list(table_name)
+        dst_attr_list = con_dst.get_attr_name_list(table_name)
         if src_attr_list != dst_attr_list:
             raise ValueError("""
             source and destination attribute is different from each other
@@ -81,7 +81,7 @@ def append_table(con_src, con_dst, table_name):
 
     con_dst.create_table_with_data(
         table_name,
-        con_src.get_attribute_name_list(table_name),
+        con_src.get_attr_name_list(table_name),
         value_matrix)
 
     return True

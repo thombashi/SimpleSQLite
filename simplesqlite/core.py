@@ -333,7 +333,7 @@ class SimpleSQLite(object):
             return
 
         record_list = RecordConvertor.to_record_list(
-            self.get_attribute_name_list(table_name), insert_record_list)
+            self.get_attr_name_list(table_name), insert_record_list)
 
         query = SqlQuery.make_insert(table_name, record_list[0])
 
@@ -452,6 +452,12 @@ class SimpleSQLite(object):
         return self.__get_list_from_fetch(result.fetchall())
 
     def get_attribute_name_list(self, table_name):
+        # alias of the get_attr_name_list method.
+        # this method will be deleted in the future.
+
+        return self.get_attr_name_list(table_name)
+
+    def get_attr_name_list(self, table_name):
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -474,10 +480,10 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                print(con.get_attribute_name_list(table_name))
+                print(con.get_attr_name_list(table_name))
 
                 try:
-                    print(con.get_attribute_name_list("not_existing"))
+                    print(con.get_attr_name_list("not_existing"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
 
@@ -546,7 +552,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        attribute_name_list = self.get_attribute_name_list(table_name)
+        attribute_name_list = self.get_attr_name_list(table_name)
         query = u"SELECT DISTINCT {:s} FROM '{:s}'".format(
             u",".join([
                 u"TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
@@ -762,7 +768,7 @@ class SimpleSQLite(object):
         if dp.is_empty_string(attribute_name):
             return False
 
-        return attribute_name in self.get_attribute_name_list(table_name)
+        return attribute_name in self.get_attr_name_list(table_name)
 
     def has_attribute_list(self, table_name, attribute_name_list):
         """
@@ -989,7 +995,7 @@ class SimpleSQLite(object):
         if dp.is_empty_sequence(attribute_name_list):
             return
 
-        table_attr_set = set(self.get_attribute_name_list(table_name))
+        table_attr_set = set(self.get_attr_name_list(table_name))
         index_attr_set = set(attribute_name_list)
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):

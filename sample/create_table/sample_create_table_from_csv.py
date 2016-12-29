@@ -6,9 +6,7 @@ from __future__ import print_function
 from simplesqlite import SimpleSQLite
 
 
-file_path = "sample_data.csv"
-
-with open(file_path, "w") as f:
+with open("sample_data.csv", "w") as f:
     f.write("\n".join([
         '"attr_a","attr_b","attr_c"',
         '1,4,"a"',
@@ -18,11 +16,11 @@ with open(file_path, "w") as f:
 
 # create table ---
 con = SimpleSQLite("sample.sqlite", "w")
-con.create_table_from_csv(file_path)
+con.create_table_from_csv("sample_data.csv")
 
 # output ---
 table_name = "sample_data"
-print(con.get_attribute_name_list(table_name))
+print(con.get_attr_name_list(table_name))
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():
     print(record)

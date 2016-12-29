@@ -496,7 +496,7 @@ class Test_SimpleSQLite_get_attribute_name_list:
         ],
     ])
     def test_normal(self, con,  value, expected):
-        assert con.get_attribute_name_list(value) == expected
+        assert con.get_attr_name_list(value) == expected
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["not_exist_table", TableNotFoundError],
@@ -504,11 +504,11 @@ class Test_SimpleSQLite_get_attribute_name_list:
     ])
     def test_null_table(self, con, value, expected):
         with pytest.raises(expected):
-            con.get_attribute_name_list(value)
+            con.get_attr_name_list(value)
 
     def test_null_con(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.get_attribute_name_list("not_exist_table")
+            con_null.get_attr_name_list("not_exist_table")
 
 
 class Test_SimpleSQLite_get_attribute_type_list:
@@ -890,7 +890,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         con.create_table_from_tabledata(value)
 
         assert con.get_table_name_list() == [value.table_name]
-        assert con.get_attribute_name_list(
+        assert con.get_attr_name_list(
             value.table_name) == value.header_list
 
         result = con.select(select="*", table_name=value.table_name)
@@ -963,7 +963,7 @@ class Test_SimpleSQLite_create_table_from_csv:
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attribute_name_list(
+        assert expected_attr_name_list == con.get_attr_name_list(
             expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -1009,7 +1009,7 @@ class Test_SimpleSQLite_create_table_from_csv:
         con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attribute_name_list(
+        assert expected_attr_name_list == con.get_attr_name_list(
             expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -1081,7 +1081,7 @@ class Test_SimpleSQLite_create_table_from_json:
         con.create_table_from_json(str(p_json), table_name)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attribute_name_list(
+        assert expected_attr_name_list == con.get_attr_name_list(
             expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -1143,7 +1143,7 @@ class Test_SimpleSQLite_create_table_from_json:
         con.create_table_from_json(json_text, table_name)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attribute_name_list(
+        assert expected_attr_name_list == con.get_attr_name_list(
             expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
