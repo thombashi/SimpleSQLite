@@ -1,10 +1,8 @@
 .. code-block:: python
     :caption: Sample code that create a table from data matrix
 
-    import json
-    
+    import json    
     from simplesqlite import SimpleSQLite
-
 
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
@@ -28,7 +26,6 @@
 
     # display data type for each column in the table -----
     print(json.dumps(con.get_attr_type(table_name), indent=4))
-
 
 
 .. code-block:: none
