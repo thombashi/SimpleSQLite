@@ -528,7 +528,7 @@ class SimpleSQLite(object):
             for item in match.group().strip("()").split(", ")
         ])
 
-    def get_attribute_type_list(self, table_name):
+    def get_attr_type_list(self, table_name):
         """
         :return: List of attribute names in the table.
         :rtype: list
