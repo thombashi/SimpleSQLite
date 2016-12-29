@@ -664,7 +664,7 @@ class Test_SimpleSQLite_verify_attribute_existence:
     ])
     def test_normal(self, con, table, attr, expected):
         with pytest.raises(expected):
-            con.verify_attribute_existence(table, attr)
+            con.verify_attr_existence(table, attr)
 
 
 class Test_SimpleSQLite_drop_table:
