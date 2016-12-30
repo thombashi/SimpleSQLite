@@ -1264,7 +1264,7 @@ class SimpleSQLite(object):
 
     def __verify_sqlite_db_file(self, database_path):
         """
-        :raises sqlite3.OperationalError: If unable to open database file.
+        :raises SimpleSQLite.OperationalError: If unable to open database file.
         """
 
         self.__validate_db_path(database_path)
