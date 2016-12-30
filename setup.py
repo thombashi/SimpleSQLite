@@ -30,7 +30,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 
 setuptools.setup(
     name="SimpleSQLite",
-    version="0.7.0",
+    version="0.7.1",
     url="https://github.com/thombashi/SimpleSQLite",
 
     author="Tsuyoshi Hombashi",
