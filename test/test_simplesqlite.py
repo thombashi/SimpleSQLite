@@ -197,18 +197,18 @@ class Test_append_table:
 
         assert src_data_matrix * 2 == dst_data_matrix
 
-    def test_exception_0(self, con_mix, con_profile):
+    def test_exception_mismatch_schema(self, con_mix, con_profile):
         with pytest.raises(ValueError):
             append_table(
                 con_src=con_mix, con_dst=con_profile,
                 table_name=TEST_TABLE_NAME)
 
-    def test_exception_1(self, con_mix, con_null):
+    def test_exception_null_connection(self, con_mix, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             append_table(
                 con_src=con_mix, con_dst=con_null, table_name=TEST_TABLE_NAME)
 
-    def test_exception_2(self, con_mix, con_ro):
+    def test_exception_permission(self, con_mix, con_ro):
         with pytest.raises(IOError):
             append_table(
                 con_src=con_mix, con_dst=con_ro, table_name=TEST_TABLE_NAME)
@@ -241,7 +241,7 @@ class Test_SimpleSQLite_init:
         for arg_list in itertools.product(
             [None, nan, ""], ["r", "w", "a"], [ValueError])
     ])
-    def test_exception_1(self, value, mode, expected):
+    def test_exception_invalid_arg(self, value, mode, expected):
         with pytest.raises(expected):
             SimpleSQLite(value, mode)
 
