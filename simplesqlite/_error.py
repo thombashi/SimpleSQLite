@@ -7,6 +7,16 @@
 import sqlite3
 
 
+class DatabaseError(sqlite3.DatabaseError):
+    """
+    Exception raised for errors that are related to the database.
+
+    .. seealso::
+
+        - `sqlite3.DatabaseError <https://docs.python.org/3.5/library/sqlite3.html#sqlite3.DatabaseError>`__
+    """
+
+
 class NullDatabaseConnectionError(Exception):
     """
     Raised when executing an operation of

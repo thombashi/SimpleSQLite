@@ -1,6 +1,9 @@
 Errors
 ----------------------------
 
+.. autoexception:: simplesqlite.DatabaseError
+    :show-inheritance:
+
 .. autoexception:: simplesqlite.NullDatabaseConnectionError
     :show-inheritance:
 
