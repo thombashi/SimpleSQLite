@@ -925,6 +925,28 @@ class SimpleSQLite(object):
             "'{}' attribute not found in '{}' table".format(
                 attribute_name, table_name))
 
+    def validate_access_permission(self, valid_permission_list):
+        """
+        :param valid_permission_list:
+            List of permissions that access is allowed.
+        :type valid_permission_list: |list|/|tuple|
+        :raises ValueError: If the |attr_mode| is invalid.
+        :raises IOError:
+            If the |attr_mode| not in the ``valid_permission_list``.
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        """
+
+        self.check_connection()
+
+        if dp.is_empty_string(self.mode):
+            raise ValueError("mode is not set")
+
+        if self.mode not in valid_permission_list:
+            raise IOError(
+                "invalid access: expected-mode='{}', current-mode='{}'".format(
+                    "' or '".join(valid_permission_list), self.mode))
+
     def drop_table(self, table_name):
         """
         :param str table_name: Table name to drop.
@@ -1011,12 +1033,6 @@ class SimpleSQLite(object):
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
-    def __sanitize_attr_name_list(self, attr_name_list):
-        return [
-            SqlQuery.sanitize_attr(attr_name)
-            for attr_name in attr_name_list
-        ]
-
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=None):
@@ -1092,35 +1108,6 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(tabledata, index_attr_list)
-
-    def __create_table_from_tabledata(
-            self, tabledata, index_attr_list=None):
-
-        self.validate_access_permission(["w", "a"])
-        validate_table_name(tabledata.table_name)
-
-        attr_name_list = self.__sanitize_attr_name_list(tabledata.header_list)
-        try:
-            self.__validate_attr_name_list(attr_name_list)
-        except pathvalidate.ReservedNameError:
-            pass
-
-        if dp.is_empty_sequence(tabledata.value_matrix):
-            raise ValueError("input data is null: '{} ({})'".format(
-                tabledata.table_name, ", ".join(attr_name_list)))
-
-        self.__verify_value_matrix(attr_name_list, tabledata.value_matrix)
-
-        self.create_table(
-            tabledata.table_name,
-            self.__get_attr_desc_list(
-                attr_name_list, tabledata.value_matrix))
-        self.insert_many(tabledata.table_name, tabledata.value_matrix)
-        if dp.is_not_empty_sequence(index_attr_list):
-            self.create_index_list(
-                tabledata.table_name,
-                self.__sanitize_attr_name_list(index_attr_list))
-        self.commit()
 
     def create_table_from_csv(
             self, csv_source, table_name="",
@@ -1354,28 +1341,6 @@ class SimpleSQLite(object):
 
         return attr_description_list
 
-    def validate_access_permission(self, valid_permission_list):
-        """
-        :param valid_permission_list:
-            List of permissions that access is allowed.
-        :type valid_permission_list: |list|/|tuple|
-        :raises ValueError: If the |attr_mode| is invalid.
-        :raises IOError:
-            If the |attr_mode| not in the ``valid_permission_list``.
-        :raises simplesqlite.NullDatabaseConnectionError:
-            |raises_check_connection|
-        """
-
-        self.check_connection()
-
-        if dp.is_empty_string(self.mode):
-            raise ValueError("mode is not set")
-
-        if self.mode not in valid_permission_list:
-            raise IOError(
-                "invalid access: expected-mode='{}', current-mode='{}'".format(
-                    "' or '".join(valid_permission_list), self.mode))
-
     @staticmethod
     def __get_column_valuetype(data_matrix):
         """
@@ -1400,3 +1365,38 @@ class SimpleSQLite(object):
             [col, typename_table.get(col_prop.typecode, "TEXT")]
             for col, col_prop in enumerate(col_prop_list)
         ])
+
+    def __sanitize_attr_name_list(self, attr_name_list):
+        return [
+            SqlQuery.sanitize_attr(attr_name)
+            for attr_name in attr_name_list
+        ]
+
+    def __create_table_from_tabledata(
+            self, tabledata, index_attr_list=None):
+
+        self.validate_access_permission(["w", "a"])
+        validate_table_name(tabledata.table_name)
+
+        attr_name_list = self.__sanitize_attr_name_list(tabledata.header_list)
+        try:
+            self.__validate_attr_name_list(attr_name_list)
+        except pathvalidate.ReservedNameError:
+            pass
+
+        if dp.is_empty_sequence(tabledata.value_matrix):
+            raise ValueError("input data is null: '{} ({})'".format(
+                tabledata.table_name, ", ".join(attr_name_list)))
+
+        self.__verify_value_matrix(attr_name_list, tabledata.value_matrix)
+
+        self.create_table(
+            tabledata.table_name,
+            self.__get_attr_desc_list(
+                attr_name_list, tabledata.value_matrix))
+        self.insert_many(tabledata.table_name, tabledata.value_matrix)
+        if dp.is_not_empty_sequence(index_attr_list):
+            self.create_index_list(
+                tabledata.table_name,
+                self.__sanitize_attr_name_list(index_attr_list))
+        self.commit()
