@@ -217,7 +217,7 @@ For more information
 --------------------
 
 More examples are available at 
-http://simplesqlite.readthedocs.org/en/latest/pages/examples/index.html
+http://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
 
 Installation
 ============
@@ -252,11 +252,10 @@ Test dependencies
 Documentation
 =============
 
-http://simplesqlite.readthedocs.org/en/latest/
+http://simplesqlite.rtfd.io/
 
 Related project
 ===============
 
-- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
-    - https://github.com/thombashi/sqlitebiter
+- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
 

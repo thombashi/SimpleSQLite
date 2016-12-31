@@ -35,7 +35,7 @@ def write_examples(maker):
     maker.write_chapter("For more information")
     maker.write_line_list([
         "More examples are available at ",
-        "http://{:s}.readthedocs.org/en/latest/pages/examples/index.html".format(
+        "http://{:s}.rtfd.io/en/latest/pages/examples/index.html".format(
             PROJECT_NAME.lower()),
     ])
 
@@ -58,13 +58,13 @@ def main():
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")
     maker.write_line_list([
-        "http://{:s}.readthedocs.org/en/latest/".format(PROJECT_NAME.lower()),
+        "http://{:s}.rtfd.io/".format(PROJECT_NAME.lower()),
     ])
 
     maker.write_chapter("Related project")
     maker.write_line_list([
-        "- sqlitebiter: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
-        "    - https://github.com/thombashi/sqlitebiter"
+        "- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: "
+        "CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
     ])
 
     return 0
