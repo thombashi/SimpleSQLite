@@ -1357,13 +1357,13 @@ class SimpleSQLite(object):
             dp.Typecode.STRING: "TEXT",
         }
 
-        prop_extractor = dp.PropertyExtractor()
-        prop_extractor.data_matrix = data_matrix
-        col_prop_list = prop_extractor.extract_col_property_list()
+        dp_extractor = dp.DataPropertyExtractor()
+        dp_extractor.data_matrix = data_matrix
+        col_dp_list = dp_extractor.to_col_dataproperty_list()
 
         return dict([
-            [col, typename_table.get(col_prop.typecode, "TEXT")]
-            for col, col_prop in enumerate(col_prop_list)
+            [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
+            for col_idx, col_dp in enumerate(col_dp_list)
         ])
 
     def __sanitize_attr_name_list(self, attr_name_list):
