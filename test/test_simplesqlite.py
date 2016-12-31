@@ -246,10 +246,15 @@ class Test_SimpleSQLite_init:
             SimpleSQLite(value, mode)
 
     @pytest.mark.parametrize(["mode", "expected"], [
-        ["r", IOError],
+        ["r", DatabaseError],
+        ["w", DatabaseError],
+        ["a", DatabaseError],
     ])
-    def test_exception_2(self, tmpdir, mode, expected):
-        p = tmpdir.join("not_exist.db")
+    def test_exception_invalid_file(self, tmpdir, mode, expected):
+        p = tmpdir.join("testdata.txt")
+
+        with open(str(p), "w") as f:
+            f.write("dummy data")
 
         with pytest.raises(expected):
             SimpleSQLite(str(p), mode)

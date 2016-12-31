@@ -21,17 +21,18 @@ from six.moves import range
 from .sqlquery import SqlQuery
 from .converter import RecordConvertor
 from ._error import (
+    DatabaseError,
     AttributeNotFoundError,
     NullDatabaseConnectionError,
     TableNotFoundError,
     InvalidTableNameError,
     InvalidAttributeNameError,
-    OperationalError
+    OperationalError,
 )
 from ._func import (
     connect_sqlite_db_mem,
     validate_table_name,
-    MEMORY_DB_NAME
+    MEMORY_DB_NAME,
 )
 
 
@@ -178,6 +179,8 @@ class SimpleSQLite(object):
             ``"a"``: Open for read/write. Append to the existing tables.
         :raises ValueError:
             If ``database_path`` is invalid or |attr_mode| is invalid.
+        :raises simplesqlite.DatabaseError:
+            If the file is encrypted or is not a database.
         :raises simplesqlite.OperationalError:
             If unable to open the database file.
         """
@@ -202,6 +205,12 @@ class SimpleSQLite(object):
             raise OperationalError(e)
 
         self.__mode = mode
+
+        try:
+            # validate connection after connect
+            self.get_table_name_list()
+        except sqlite3.DatabaseError as e:
+            raise DatabaseError(e)
 
         if mode != "w":
             return
