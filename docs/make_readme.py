@@ -64,7 +64,8 @@ def main():
     maker.write_chapter("Related project")
     maker.write_line_list([
         "- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: "
-        "CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite",
+        "CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets "
+        "SQLite database by using SimpleSQLite",
     ])
 
     return 0

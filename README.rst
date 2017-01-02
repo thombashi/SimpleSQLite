@@ -257,5 +257,5 @@ http://simplesqlite.rtfd.io/
 Related project
 ===============
 
-- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets by using SimpleSQLite
+- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets SQLite database by using SimpleSQLite
 
