@@ -15,6 +15,7 @@ Mandatory
 -----------------
 
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
+- `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__

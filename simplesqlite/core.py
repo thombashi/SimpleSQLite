@@ -34,6 +34,7 @@ from ._func import (
     validate_table_name,
     MEMORY_DB_NAME,
 )
+from ._logger import logger
 
 
 class SimpleSQLite(object):
@@ -186,6 +187,10 @@ class SimpleSQLite(object):
         """
 
         self.close()
+
+        logger.debug(
+            "connect to a SQLite database: path='{}', mode={}".format(
+                database_path, mode))
 
         if mode == "r":
             self.__verify_sqlite_db_file(database_path)
@@ -979,6 +984,8 @@ class SimpleSQLite(object):
 
         query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
             table_name, ", ".join(attribute_description_list))
+        logger.debug(query)
+
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
             return False
 
@@ -1010,6 +1017,7 @@ class SimpleSQLite(object):
             index_name,
             SqlQuery.to_table_str(table_name),
             attribute_name)
+        logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
     def create_index_list(self, table_name, attribute_name_list):
@@ -1243,6 +1251,10 @@ class SimpleSQLite(object):
             self.check_connection()
         except NullDatabaseConnectionError:
             return
+
+        logger.debug(
+            "close connection to a SQLite database: path='{}'".format(
+                self.database_path))
 
         self.commit()
         self.connection.close()

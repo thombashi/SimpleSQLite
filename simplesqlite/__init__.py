@@ -24,3 +24,4 @@ from ._func import (
     append_table,
     connect_sqlite_db_mem,
 )
+from ._logger import set_logger
