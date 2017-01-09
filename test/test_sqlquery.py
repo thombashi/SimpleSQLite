@@ -154,8 +154,8 @@ class Test_SqlQuery_to_value_str:
         assert SqlQuery.to_value_str(value) == expected
 
     @pytest.mark.parametrize(["value", "expected"], [
-        [nan, "nan"],
-        [inf, "inf"],
+        [nan, "'nan'"],
+        [inf, "'inf'"],
     ])
     def test_abnormal(self, value, expected):
         assert SqlQuery.to_value_str(value) == expected
