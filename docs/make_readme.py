@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 import sys
 
+from path import Path
 import readmemaker
 
 
@@ -19,18 +20,21 @@ def write_examples(maker):
     maker.set_indent_level(0)
     maker.write_chapter("Examples")
 
+    examples_root = Path("pages").joinpath("examples")
+
     maker.inc_indent_level()
     maker.write_chapter("Create a table")
     maker.inc_indent_level()
     maker.write_chapter("Create a table from data matrix")
-    maker.write_example_file("create_table_from_data_matrix.txt")
+    maker.write_file(
+        examples_root.joinpath("create_table_from_data_matrix.txt"))
 
     maker.write_chapter("Create a table from CSV")
-    maker.write_example_file("create_table_from_csv.txt")
+    maker.write_file(examples_root.joinpath("create_table_from_csv.txt"))
 
     maker.dec_indent_level()
     maker.write_chapter("Insert records into a table")
-    maker.write_example_file("insert_record_example.txt")
+    maker.write_file(examples_root.joinpath("insert_record_example.txt"))
 
     maker.write_chapter("For more information")
     maker.write_line_list([

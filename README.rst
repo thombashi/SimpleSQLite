@@ -17,6 +17,9 @@ SimpleSQLite
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
 
+.. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
+   :target: https://github.com/thombashi/SimpleSQLite
+
 Summary
 -------
 
@@ -241,6 +244,7 @@ Mandatory
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `six <https://pypi.python.org/pypi/six/>`__
+- `typepy <https://github.com/thombashi/typepy>`__
 
 
 Test dependencies
