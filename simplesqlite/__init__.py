@@ -7,7 +7,7 @@
 from __future__ import absolute_import
 
 import simplesqlite.loader
-from .core import SimpleSQLite
+
 from ._error import (
     DatabaseError,
     NullDatabaseConnectionError,
@@ -24,4 +24,8 @@ from ._func import (
     append_table,
     connect_sqlite_db_mem,
 )
-from ._logger import set_logger
+from ._logger import (
+    set_logger,
+    set_log_level,
+)
+from .core import SimpleSQLite
