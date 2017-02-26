@@ -1271,7 +1271,12 @@ class SimpleSQLite(object):
         if database_path == MEMORY_DB_NAME:
             return
 
-        pathvalidate.validate_filename(os.path.basename(database_path))
+        try:
+            pathvalidate.validate_filename(os.path.basename(database_path))
+        except AttributeError:
+            raise ValueError(
+                "database path must be a string: actual={}".format(
+                    type(database_path)))
 
     def __verify_sqlite_db_file(self, database_path):
         """
