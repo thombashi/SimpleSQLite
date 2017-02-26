@@ -10,7 +10,6 @@ from __future__ import unicode_literals
 import re
 
 import typepy
-
 import pathvalidate as pv
 from six.moves import map
 
@@ -187,14 +186,12 @@ class SqlQuery(object):
             'NULL'
         """
 
-        from typepy.type import (Integer, RealNumber)
-
         if value is None:
             return "NULL"
 
         if any([
-            Integer(value).is_type(),
-            RealNumber(value).is_type()
+            typepy.type.Integer(value).is_type(),
+            typepy.type.RealNumber(value).is_type()
         ]):
             return str(value)
 
