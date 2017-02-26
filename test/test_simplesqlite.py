@@ -6,17 +6,18 @@
 
 from __future__ import print_function
 from __future__ import unicode_literals
+
 from collections import namedtuple
 import datetime
 import itertools
 
 import dataproperty
-import pytablereader as ptr
 import pytest
-
 from simplesqlite import *
-from simplesqlite.sqlquery import SqlQuery
 from simplesqlite._func import validate_table_name
+from simplesqlite.sqlquery import SqlQuery
+
+import pytablereader as ptr
 
 
 nan = float("nan")
@@ -236,10 +237,14 @@ class Test_SimpleSQLite_init:
         [NOT_EXIT_FILE_PATH, inf, TypeError],
         [NOT_EXIT_FILE_PATH, "", ValueError],
         [NOT_EXIT_FILE_PATH, "b", ValueError],
+
+        ["", "r", ValueError],
     ] + [
-        arg_list
-        for arg_list in itertools.product(
-            [None, nan, ""], ["r", "w", "a"], [ValueError])
+        arg_list for arg_list in itertools.product(
+            [None], ["r", "w", "a"], [ValueError])
+    ] + [
+        arg_list for arg_list in itertools.product(
+            [nan], ["r", "w", "a"], [TypeError])
     ])
     def test_exception_invalid_arg(self, value, mode, expected):
         with pytest.raises(expected):

@@ -1252,7 +1252,7 @@ class SimpleSQLite(object):
 
         try:
             self.check_connection()
-        except NullDatabaseConnectionError:
+        except (SystemError, NullDatabaseConnectionError):
             return
 
         logger.debug(
@@ -1274,7 +1274,7 @@ class SimpleSQLite(object):
         try:
             pathvalidate.validate_filename(os.path.basename(database_path))
         except AttributeError:
-            raise ValueError(
+            raise TypeError(
                 "database path must be a string: actual={}".format(
                     type(database_path)))
 
