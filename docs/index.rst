@@ -1,9 +1,6 @@
 Welcome to SimpleSQLite's documentation!
 ========================================
 
-.. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
-   :target: https://github.com/thombashi/SimpleSQLite
-
 .. toctree::
    :caption: Table of Contents
    :maxdepth: 3
