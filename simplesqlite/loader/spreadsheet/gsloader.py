@@ -6,14 +6,12 @@
 
 from __future__ import absolute_import
 
-import dataproperty
-
 from pytablereader import OpenError
 from pytablereader import TableData
 from pytablereader._constant import TableNameTemplate as tnt
 from pytablereader._validator import TextValidator
 from pytablereader.spreadsheet.core import SpreadSheetLoader
-
+import typepy
 
 from ..._func import connect_sqlite_db_mem
 
@@ -115,7 +113,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         row_idx = 0
         for row_value_list in self.__all_values:
             if all([
-                dataproperty.is_not_empty_string(value)
+                typepy.is_not_null_string(value)
                 for value in row_value_list
             ]):
                 break
@@ -125,7 +123,7 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
         return self.start_row + row_idx
 
     def _validate_title(self):
-        if dataproperty.is_empty_string(self.title):
+        if typepy.is_null_string(self.title):
             raise ValueError("spreadsheet title is empty")
 
     def _make_table_name(self):
@@ -156,13 +154,13 @@ class GoogleSheetsTableLoader(SpreadSheetLoader):
             result = con.select(
                 select=SqlQuery.to_attr_str(header), table_name=tmp_table_name)
             if any([
-                dataproperty.is_not_empty_string(record[0])
+                typepy.is_not_null_string(record[0])
                 for record in result.fetchall()
             ]):
                 break
 
         strip_header_list = header_list[col_idx:]
-        if dataproperty.is_empty_sequence(strip_header_list):
+        if typepy.is_empty_sequence(strip_header_list):
             raise ValueError()
 
         result = con.select(

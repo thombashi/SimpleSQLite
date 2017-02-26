@@ -6,20 +6,21 @@
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
 import logging
 import os
 import re
 import sqlite3
 
-import dataproperty as dp
+import dataproperty
 from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
-import pytablereader as ptr
 import six
+import typepy
+
+import pytablereader as ptr
 from six.moves import range
 
-from .sqlquery import SqlQuery
-from .converter import RecordConvertor
 from ._error import (
     DatabaseError,
     AttributeNotFoundError,
@@ -35,6 +36,8 @@ from ._func import (
     MEMORY_DB_NAME,
 )
 from ._logger import logger
+from .converter import RecordConvertor
+from .sqlquery import SqlQuery
 
 
 class SimpleSQLite(object):
@@ -163,7 +166,7 @@ class SimpleSQLite(object):
             raise NullDatabaseConnectionError(
                 "null database connection")
 
-        if dp.is_empty_string(self.database_path):
+        if typepy.is_null_string(self.database_path):
             raise NullDatabaseConnectionError(
                 "null database file path")
 
@@ -246,7 +249,7 @@ class SimpleSQLite(object):
         import time
 
         self.check_connection()
-        if dp.is_empty_string(query):
+        if typepy.is_null_string(query):
             return None
 
         if self.__is_profile:
@@ -344,7 +347,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        if dp.is_empty_sequence(insert_record_list):
+        if typepy.is_empty_sequence(insert_record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
@@ -780,7 +783,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if dp.is_empty_string(attribute_name):
+        if typepy.is_null_string(attribute_name):
             return False
 
         return attribute_name in self.get_attr_name_list(table_name)
@@ -824,7 +827,7 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if dp.is_empty_sequence(attribute_name_list):
+        if typepy.is_empty_sequence(attribute_name_list):
             return False
 
         not_exist_field_list = [
@@ -944,7 +947,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        if dp.is_empty_string(self.mode):
+        if typepy.is_null_string(self.mode):
             raise ValueError("mode is not set")
 
         if self.mode not in valid_permission_list:
@@ -1032,7 +1035,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if dp.is_empty_sequence(attribute_name_list):
+        if typepy.is_empty_sequence(attribute_name_list):
             return
 
         table_attr_set = set(self.get_attr_name_list(table_name))
@@ -1157,7 +1160,7 @@ class SimpleSQLite(object):
         from pytablereader import CsvTableTextLoader
 
         loader = CsvTableFileLoader(csv_source)
-        if dp.is_not_empty_string(table_name):
+        if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1171,7 +1174,7 @@ class SimpleSQLite(object):
             pass
 
         loader = CsvTableTextLoader(csv_source)
-        if dp.is_not_empty_string(table_name):
+        if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
         loader.delimiter = delimiter
@@ -1201,7 +1204,7 @@ class SimpleSQLite(object):
         from pytablereader import JsonTableTextLoader
 
         loader = JsonTableFileLoader(json_source)
-        if dp.is_not_empty_string(table_name):
+        if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         try:
             for tabledata in loader.load():
@@ -1211,7 +1214,7 @@ class SimpleSQLite(object):
             pass
 
         loader = JsonTableTextLoader(json_source)
-        if dp.is_not_empty_string(table_name):
+        if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for tabledata in loader.load():
             self.create_table_from_tabledata(tabledata)
@@ -1262,7 +1265,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_db_path(database_path):
-        if dp.is_empty_string(database_path):
+        if typepy.is_null_string(database_path):
             raise ValueError("null path")
 
         if database_path == MEMORY_DB_NAME:
@@ -1288,7 +1291,7 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
-        if dp.is_empty_sequence(attr_name_list):
+        if typepy.is_empty_sequence(attr_name_list):
             raise InvalidAttributeNameError("attribute name list is empty")
 
         for attr_name in attr_name_list:
@@ -1364,12 +1367,12 @@ class SimpleSQLite(object):
         """
 
         typename_table = {
-            dp.Typecode.INTEGER: "INTEGER",
-            dp.Typecode.FLOAT: "REAL",
-            dp.Typecode.STRING: "TEXT",
+            typepy.Typecode.INTEGER: "INTEGER",
+            typepy.Typecode.FLOAT: "REAL",
+            typepy.Typecode.STRING: "TEXT",
         }
 
-        dp_extractor = dp.DataPropertyExtractor()
+        dp_extractor = dataproperty.DataPropertyExtractor()
         dp_extractor.data_matrix = data_matrix
         col_dp_list = dp_extractor.to_col_dataproperty_list()
 
@@ -1396,7 +1399,7 @@ class SimpleSQLite(object):
         except pathvalidate.ReservedNameError:
             pass
 
-        if dp.is_empty_sequence(tabledata.value_matrix):
+        if typepy.is_empty_sequence(tabledata.value_matrix):
             raise ValueError("input data is null: '{} ({})'".format(
                 tabledata.table_name, ", ".join(attr_name_list)))
 
@@ -1407,7 +1410,7 @@ class SimpleSQLite(object):
             self.__get_attr_desc_list(
                 attr_name_list, tabledata.value_matrix))
         self.insert_many(tabledata.table_name, tabledata.value_matrix)
-        if dp.is_not_empty_sequence(index_attr_list):
+        if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
                 tabledata.table_name,
                 self.__sanitize_attr_name_list(index_attr_list))

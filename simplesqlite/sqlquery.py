@@ -6,9 +6,11 @@
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
 import re
 
-import dataproperty as dp
+import typepy
+
 import pathvalidate as pv
 from six.moves import map
 
@@ -128,7 +130,7 @@ class SqlQuery(object):
         else:
             sql_name = name
 
-        if dp.is_not_empty_string(operation_query):
+        if typepy.is_not_null_string(operation_query):
             sql_name = "{:s}({:s})".format(operation_query, sql_name)
 
         return sql_name
@@ -157,7 +159,7 @@ class SqlQuery(object):
             :py:meth:`.to_attr_str`
         """
 
-        if dp.is_empty_string(operation_query):
+        if typepy.is_null_string(operation_query):
             return list(map(cls.to_attr_str, name_list))
 
         return [
@@ -185,14 +187,14 @@ class SqlQuery(object):
             'NULL'
         """
 
-        from dataproperty import (IntegerType, FloatType)
+        from typepy.type import (Integer, RealNumber)
 
         if value is None:
             return "NULL"
 
         if any([
-            IntegerType(value).is_type(),
-            FloatType(value).is_type()
+            Integer(value).is_type(),
+            RealNumber(value).is_type()
         ]):
             return str(value)
 
@@ -250,16 +252,16 @@ class SqlQuery(object):
         """
 
         validate_table_name(table)
-        if dp.is_empty_string(select):
+        if typepy.is_null_string(select):
             raise ValueError("SELECT query is null")
 
         query_list = [
             "SELECT " + select,
             "FROM " + cls.to_table_str(table),
         ]
-        if dp.is_not_empty_string(where):
+        if typepy.is_not_null_string(where):
             query_list.append("WHERE " + where)
-        if dp.is_not_empty_string(extra):
+        if typepy.is_not_null_string(extra):
             query_list.append(extra)
 
         return " ".join(query_list)
@@ -282,7 +284,7 @@ class SqlQuery(object):
 
         table = cls.to_table_str(table)
 
-        if dp.is_empty_sequence(insert_tuple):
+        if typepy.is_empty_sequence(insert_tuple):
             raise ValueError("empty insert list/tuple")
 
         return "INSERT INTO {:s} VALUES ({:s})".format(
@@ -306,14 +308,14 @@ class SqlQuery(object):
         """
 
         validate_table_name(table)
-        if dp.is_empty_string(set_query):
+        if typepy.is_null_string(set_query):
             raise ValueError("SET query is null")
 
         query_list = [
             "UPDATE " + cls.to_table_str(table),
             "SET " + set_query,
         ]
-        if dp.is_not_empty_string(where):
+        if typepy.is_not_null_string(where):
             query_list.append("WHERE " + where)
 
         return " ".join(query_list)

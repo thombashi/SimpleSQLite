@@ -5,14 +5,18 @@
 """
 
 from __future__ import unicode_literals
+
 import os
 import re
 import string
 
 import pytest
-
+from simplesqlite import (
+    SqlSyntaxError,
+    InvalidTableNameError,
+)
 from simplesqlite.sqlquery import SqlQuery
-from simplesqlite import SqlSyntaxError
+
 
 nan = float("nan")
 inf = float("inf")
@@ -209,14 +213,14 @@ class Test_SqlQuery_make_select:
 
     @pytest.mark.parametrize(
         ["select", "table", "where", "extra", "expected"], [
-            ["A", None, None, None, ValueError],
+            ["A", None, None, None, InvalidTableNameError],
             ["", "B", None, None, ValueError],
-            [None, None, None, None, ValueError],
+            [None, None, None, None, InvalidTableNameError],
             [None, "B", None, None, ValueError],
-            [nan, None, None, None, ValueError],
-            [nan, nan, None, None, ValueError],
-            [nan, nan, nan, None, ValueError],
-            [nan, nan, nan, nan, ValueError],
+            [nan, None, None, None, InvalidTableNameError],
+            [nan, nan, None, None, TypeError],
+            [nan, nan, nan, None, TypeError],
+            [nan, nan, nan, nan, TypeError],
         ])
     def test_exception(self, select, table, where, extra, expected):
         with pytest.raises(expected):

@@ -4,3 +4,4 @@ logbook
 pathvalidate>=0.13.0
 pytablereader>=0.8.8
 six
+typepy>=0.0.4

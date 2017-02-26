@@ -8,7 +8,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from decimal import Decimal
 
-import dataproperty
+import typepy
 
 
 class RecordConvertor(object):
@@ -51,7 +51,7 @@ class RecordConvertor(object):
         except AttributeError:
             pass
 
-        if dataproperty.is_list_or_tuple(values):
+        if typepy.is_list_or_tuple(values):
             return [
                 cls.__to_sqlite_element(value) for value in values
             ]
