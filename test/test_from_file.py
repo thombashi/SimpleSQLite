@@ -4,15 +4,16 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-from __future__ import unicode_literals
 from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
 
 import pytest
+from simplesqlite import SimpleSQLite
+
 import pytablereader as ptr
 import pytablewriter as ptw
-
-from simplesqlite import *
 
 
 class Test_SimpleSQLite_create_table_from_tabledata:

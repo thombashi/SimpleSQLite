@@ -12,7 +12,19 @@ import datetime
 import itertools
 
 import pytest
-from simplesqlite import *
+from simplesqlite import (
+    append_table,
+    connect_sqlite_db_mem,
+    validate_attr_name,
+    SimpleSQLite,
+    AttributeNotFoundError,
+    DatabaseError,
+    InvalidAttributeNameError,
+    InvalidTableNameError,
+    NullDatabaseConnectionError,
+    OperationalError,
+    TableNotFoundError,
+)
 from simplesqlite._func import validate_table_name
 from simplesqlite.sqlquery import SqlQuery
 import typepy
