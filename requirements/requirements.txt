@@ -1,7 +1,7 @@
-DataProperty>=0.16.2
-mbstrdecoder>=0.2.2
+DataProperty>=0.18.1
+mbstrdecoder
 logbook>=1.0.0
-pathvalidate>=0.14.1
-pytablereader>=0.8.9
+pathvalidate>=0.15.0
+pytablereader>=0.8.11
 six
-typepy>=0.0.4
+typepy>=0.0.6
