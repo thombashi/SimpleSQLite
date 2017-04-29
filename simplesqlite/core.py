@@ -469,12 +469,6 @@ class SimpleSQLite(object):
 
         return self.__get_list_from_fetch(result.fetchall())
 
-    def get_attribute_name_list(self, table_name):
-        # alias of the get_attr_name_list method.
-        # this method will be deleted in the future.
-
-        return self.get_attr_name_list(table_name)
-
     def get_attr_name_list(self, table_name):
         """
         :return: List of attribute names in the table.
@@ -551,34 +545,6 @@ class SimpleSQLite(object):
             get_entry(item.split(" "))
             for item in match.group().strip("()").split(", ")
         ])
-
-    def get_attr_type_list(self, table_name):
-        """
-        :return: List of attribute names in the table.
-        :rtype: list
-        :raises simplesqlite.NullDatabaseConnectionError:
-            |raises_check_connection|
-        :raises simplesqlite.TableNotFoundError:
-            |raises_verify_table_existence|
-        :raises simplesqlite.OperationalError: |raises_operational_error|
-
-        .. warning::
-
-            This method will be deleted in the future.
-            Use :py:meth:`.get_attr_type` instead.
-        """
-
-        self.verify_table_existence(table_name)
-
-        attribute_name_list = self.get_attr_name_list(table_name)
-        query = "SELECT DISTINCT {:s} FROM '{:s}'".format(
-            ",".join([
-                "TYPEOF({:s})".format(SqlQuery.to_attr_str(attribute))
-                for attribute in attribute_name_list]),
-            table_name)
-        result = self.execute_query(query, logging.getLogger().findCaller())
-
-        return result.fetchone()
 
     def get_num_records(self, table_name, where=None):
         """

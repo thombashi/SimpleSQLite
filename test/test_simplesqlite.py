@@ -533,30 +533,6 @@ class Test_SimpleSQLite_get_attribute_name_list:
             con_null.get_attr_name_list("not_exist_table")
 
 
-class Test_SimpleSQLite_get_attribute_type_list:
-
-    @pytest.mark.parametrize(["value", "expected"], [
-        [
-            TEST_TABLE_NAME,
-            ("integer", "integer"),
-        ],
-    ])
-    def test_normal(self, con,  value, expected):
-        assert con.get_attr_type_list(value) == expected
-
-    @pytest.mark.parametrize(["value", "expected"], [
-        ["not_exist_table", TableNotFoundError],
-        [None, ValueError],
-    ])
-    def test_exception(self, con, value, expected):
-        with pytest.raises(expected):
-            con.get_attr_type_list(value)
-
-    def test_null(self, con_null):
-        with pytest.raises(NullDatabaseConnectionError):
-            con_null.get_attr_type_list(TEST_TABLE_NAME)
-
-
 class Test_SimpleSQLite_has_table:
 
     @pytest.mark.parametrize(["value", "expected"], [
