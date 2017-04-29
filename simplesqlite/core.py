@@ -1122,10 +1122,7 @@ class SimpleSQLite(object):
             :py:meth:`.pytablereader.CsvTableTextLoader.load`
         """
 
-        from pytablereader import CsvTableFileLoader
-        from pytablereader import CsvTableTextLoader
-
-        loader = CsvTableFileLoader(csv_source)
+        loader = ptr.CsvTableFileLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
@@ -1139,7 +1136,7 @@ class SimpleSQLite(object):
         except (ptr.InvalidFilePathError, IOError):
             pass
 
-        loader = CsvTableTextLoader(csv_source)
+        loader = ptr.CsvTableTextLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         loader.header_list = attribute_name_list
@@ -1166,10 +1163,7 @@ class SimpleSQLite(object):
             :py:meth:`.pytablereader.JsonTableTextLoader.load`
         """
 
-        from pytablereader import JsonTableFileLoader
-        from pytablereader import JsonTableTextLoader
-
-        loader = JsonTableFileLoader(json_source)
+        loader = ptr.JsonTableFileLoader(json_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         try:
@@ -1179,7 +1173,7 @@ class SimpleSQLite(object):
         except (ptr.InvalidFilePathError, IOError):
             pass
 
-        loader = JsonTableTextLoader(json_source)
+        loader = ptr.JsonTableTextLoader(json_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for tabledata in loader.load():
