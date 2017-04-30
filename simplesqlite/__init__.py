@@ -6,8 +6,6 @@
 
 from __future__ import absolute_import
 
-import simplesqlite.loader
-
 from ._error import (
     DatabaseError,
     NullDatabaseConnectionError,
