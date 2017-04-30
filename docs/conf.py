@@ -332,16 +332,6 @@ rp_method = u"""
 .. |make_table_name| replace:: 
         Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
         Following format specifiers are replaced with specific string.
-    
-.. |load_desc| replace:: 
-        This method will automatically search the header row start from
-        :py:attr:`.start_row`. Conditions of the header row is that
-        all of the columns has value (except empty columns).
-
-.. |load_return| replace:: 
-        Loaded table data.
-        Return one TableData for each sheet in the workbook.
-        Table name is determined by 
 """
 
 rp_raises = u"""

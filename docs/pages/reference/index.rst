@@ -6,7 +6,6 @@ Reference
    
    simplesqlite
    sqlquery
-   loader
    function
    error
 

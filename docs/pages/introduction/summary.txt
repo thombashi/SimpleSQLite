@@ -1,1 +1,1 @@
-SimpleSQLite is a python library to simplify the table creation and data insertion into SQLite database.
+SimpleSQLite is a Python library to simplify the table creation and data insertion into SQLite database.
