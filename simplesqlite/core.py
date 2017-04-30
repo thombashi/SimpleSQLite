@@ -347,12 +347,14 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
+        logger.debug("insert {} records".format(
+            len(insert_record_list) if insert_record_list else 0))
+
         if typepy.is_empty_sequence(insert_record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
             self.get_attr_name_list(table_name), insert_record_list)
-
         query = SqlQuery.make_insert(table_name, record_list[0])
 
         try:
