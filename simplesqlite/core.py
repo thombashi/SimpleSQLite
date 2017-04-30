@@ -1342,6 +1342,10 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         validate_table_name(tabledata.table_name)
 
+        logger.debug(
+            "__create_table_from_tabledata: table={}, headers={}".format(
+                tabledata.table_name, tabledata.header_list))
+
         attr_name_list = self.__sanitize_attr_name_list(tabledata.header_list)
         try:
             self.__validate_attr_name_list(attr_name_list)
