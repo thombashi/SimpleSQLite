@@ -23,12 +23,12 @@ SimpleSQLite
 Summary
 -------
 
-SimpleSQLite is a python library to simplify the table creation and data insertion into SQLite database.
+SimpleSQLite is a Python library to simplify the table creation and data insertion into SQLite database.
 
 Features
 --------
 
-- Automatic SQLite table creation from data
+- Automated SQLite table creation from data
 - Support various data types of record(s) insertion into a table:
     - ``dict``
     - ``namedtuple``
@@ -37,7 +37,6 @@ Features
 - Create table(s) from:
     - CSV file/text
     - JSON file/text
-    - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
     - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 
 Examples
