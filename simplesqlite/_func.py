@@ -9,8 +9,8 @@ from __future__ import unicode_literals
 
 import pathvalidate
 
-from ._error import InvalidTableNameError
 from ._error import InvalidAttributeNameError
+from ._error import InvalidTableNameError
 
 
 MEMORY_DB_NAME = ":memory:"
