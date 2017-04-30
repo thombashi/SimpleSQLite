@@ -588,7 +588,7 @@ class SimpleSQLite(object):
         attr_name_list = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_sqlite_db_mem()
         try:
-            con_tmp.create_table_with_data(
+            con_tmp.create_table_from_data_matrix(
                 profile_table_name,
                 attr_name_list,
                 data_matrix=value_matrix)
@@ -1013,29 +1013,13 @@ class SimpleSQLite(object):
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=None):
-        """
-        Create a table if not exists. And insert data into the created table.
+        import warnings
 
-        Alias of :py:meth:`~.create_table_from_data_matrix`.
-
-        :param str table_name: Table name to create.
-        :param list attribute_name_list: List of attribute names of the table.
-        :param data_matrix: Data to be inserted into the table.
-        :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
-        :param tuple index_attribute_list:
-            List of attribute names of create indices.
-        :raises simplesqlite.InvalidTableNameError:
-            |raises_validate_table_name|
-        :raises simplesqlite.InvalidAttributeNameError:
-            |raises_validate_attr_name|
-        :raises ValueError: If the ``data_matrix`` is empty.
-
-        .. seealso::
-
-            :py:meth:`.create_table`
-            :py:meth:`.insert_many`
-            :py:meth:`.create_index_list`
-        """
+        warnings.warn(
+            "create_table_with_data() will be deleted in the future, "
+            "use create_table_from_data_matrix() instead.",
+            DeprecationWarning
+        )
 
         self.create_table_from_data_matrix(
             table_name, attribute_name_list, data_matrix, index_attribute_list)

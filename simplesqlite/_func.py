@@ -80,7 +80,7 @@ def append_table(con_src, con_dst, table_name):
         return False
     value_matrix = result.fetchall()
 
-    con_dst.create_table_with_data(
+    con_dst.create_table_from_data_matrix(
         table_name,
         con_src.get_attr_name_list(table_name),
         value_matrix)

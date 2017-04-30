@@ -47,9 +47,9 @@ def con(tmpdir):
     p = tmpdir.join("tmp.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
-        attribute_name_list=["attr_a", "attr_b"],
+        attr_name_list=["attr_a", "attr_b"],
         data_matrix=[
             [1, 2],
             [3, 4],
@@ -63,9 +63,9 @@ def con_mix(tmpdir):
     p = tmpdir.join("tmp_mixed_data.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
-        attribute_name_list=["attr_i", "attr_f", "attr_s"],
+        attr_name_list=["attr_i", "attr_f", "attr_s"],
         data_matrix=[
             [1, 2.2, "aa"],
             [3, 4.4, "bb"],
@@ -79,9 +79,9 @@ def con_ro(tmpdir):
     p = tmpdir.join("tmp_readonly.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
-        attribute_name_list=["attr_a", "attr_b"],
+        attr_name_list=["attr_a", "attr_b"],
         data_matrix=[
             [1, 2],
             [3, 4],
@@ -97,9 +97,9 @@ def con_profile(tmpdir):
     p = tmpdir.join("tmp_profile.db")
     con = SimpleSQLite(str(p), "w", profile=True)
 
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
-        attribute_name_list=["attr_a", "attr_b"],
+        attr_name_list=["attr_a", "attr_b"],
         data_matrix=[
             [1, 2],
             [3, 4],
@@ -114,14 +114,14 @@ def con_index(tmpdir):
     p = tmpdir.join("tmp.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_with_data(
+    con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
-        attribute_name_list=["attr_a", "attr_b"],
+        attr_name_list=["attr_a", "attr_b"],
         data_matrix=[
             [1, 2],
             [3, 4],
         ],
-        index_attribute_list=["attr_a"])
+        index_attr_list=["attr_a"])
 
     return con
 
@@ -687,7 +687,7 @@ class Test_SimpleSQLite_drop_table:
             con_null.drop_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_create_table_with_data:
+class Test_SimpleSQLite_create_table_from_data_matrix:
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
@@ -799,7 +799,7 @@ class Test_SimpleSQLite_create_table_with_data:
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
-        con.create_table_with_data(
+        con.create_table_from_data_matrix(
             table_name, attr_name_list, data_matrix, index_attr_list)
         con.commit()
 
@@ -837,12 +837,12 @@ class Test_SimpleSQLite_create_table_with_data:
         con = SimpleSQLite(str(p), "w")
 
         with pytest.raises(expected):
-            con.create_table_with_data(
+            con.create_table_from_data_matrix(
                 table_name, attr_name_list, data_matrix, index_attr_list)
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.create_table_with_data(
+            con_null.create_table_from_data_matrix(
                 TEST_TABLE_NAME, [], [])
 
 
