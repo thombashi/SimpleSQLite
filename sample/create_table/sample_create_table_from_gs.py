@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import simplesqlite
+import pytablereader as ptr
 
 
 credentials_file = "sample-xxxxxxxxxxxx.json"
@@ -11,7 +12,7 @@ credentials_file = "sample-xxxxxxxxxxxx.json"
 # create table ---
 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
-loader = simplesqlite.loader.GoogleSheetsTableLoader(credentials_file)
+loader = ptr.GoogleSheetsTableLoader(credentials_file)
 loader.title = "samplebook"
 
 for tabledata in loader.load():
