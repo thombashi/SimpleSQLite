@@ -1319,7 +1319,7 @@ class SimpleSQLite(object):
 
         typename_table = {
             typepy.Typecode.INTEGER: "INTEGER",
-            typepy.Typecode.FLOAT: "REAL",
+            typepy.Typecode.REAL_NUMBER: "REAL",
             typepy.Typecode.STRING: "TEXT",
         }
 
