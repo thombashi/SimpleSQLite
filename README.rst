@@ -37,6 +37,7 @@ Features
 - Create table(s) from:
     - CSV file/text
     - JSON file/text
+    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 
 Examples
@@ -124,6 +125,33 @@ Create a table from CSV
     (1, 4.0, u'a')
     (2, 2.1, u'bb')
     (3, 120.9, u'ccc')
+
+Create a table from pandas.DataFrame
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    from simplesqlite import SimpleSQLite
+    import pandas
+
+
+    con = SimpleSQLite("pandas_df.sqlite")
+
+    con.create_table_from_dataframe(pandas.DataFrame(
+        [
+            [0, 0.1, "a"],
+            [1, 1.1, "bb"],
+            [2, 2.2, "ccc"],
+        ],
+        columns=['id', 'value', 'name']
+    ), table_name="pandas_df")
+
+
+.. code::
+
+    $ sqlite3 pandas_df.sqlite
+    sqlite> .schema
+    CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
 
 Insert records into a table
 ---------------------------
