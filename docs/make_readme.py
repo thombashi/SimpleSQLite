@@ -6,6 +6,7 @@
 """
 
 from __future__ import unicode_literals
+
 import sys
 
 from path import Path
@@ -31,6 +32,9 @@ def write_examples(maker):
 
     maker.write_chapter("Create a table from CSV")
     maker.write_file(examples_root.joinpath("create_table_from_csv.txt"))
+
+    maker.write_chapter("Create a table from pandas.DataFrame")
+    maker.write_file(examples_root.joinpath("create_table_from_df.txt"))
 
     maker.dec_indent_level()
     maker.write_chapter("Insert records into a table")

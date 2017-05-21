@@ -5,7 +5,6 @@ Create table
 
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_data_matrix`
 method create a table in a SQLite database from data matrix.
 Data matrix required one of the types: |dict|/|namedtuple|/|list|/|tuple|.
@@ -17,7 +16,6 @@ Data matrix required one of the types: |dict|/|namedtuple|/|list|/|tuple|.
 
 Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_csv`
 method create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 
@@ -28,16 +26,24 @@ method create a table from a :abbr:`CSV(Comma Separated Values)` file/text.
 
 Create table(s) from JSON
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_json` method
 can create a table from a JSON file/text.
 
 .. include:: create_table_from_json.txt
 
 
+.. _example-create-table-from-df:
+
+Create a table from pandas DataFrame
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:py:meth:`~simplesqlite.SimpleSQLite.create_table_from_dataframe` method
+can create a table from a ``pandas.DataFrame`` instance.
+
+.. include:: create_table_from_df.txt
+
+
 Create table(s) from Excel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 You can extract tabular data from an Excel file by 
 :py:class:`pytablereader.ExcelTableFileLoader` class defined in
 `pytablereader <https://github.com/thombashi/pytablereader>`__ module.
@@ -51,7 +57,6 @@ And you can create a table from extracted data by using
 
 Create table(s) from Google Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 :py:class:`~simplesqlite.loader.GoogleSheetsTableLoader` class
 and :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_tabledata` method
 can create a table from Google Spreadsheet.

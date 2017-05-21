@@ -10,4 +10,5 @@ Features
 - Create table(s) from:
     - CSV file/text
     - JSON file/text
+    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
