@@ -254,11 +254,11 @@ class SqlQuery(object):
             raise ValueError("SELECT query is null")
 
         query_list = [
-            "SELECT " + select,
-            "FROM " + cls.to_table_str(table),
+            "SELECT {:s}".format(select),
+            "FROM {:s}".format(cls.to_table_str(table)),
         ]
         if typepy.is_not_null_string(where):
-            query_list.append("WHERE " + where)
+            query_list.append("WHERE {:s}".format(where))
         if typepy.is_not_null_string(extra):
             query_list.append(extra)
 
@@ -310,11 +310,11 @@ class SqlQuery(object):
             raise ValueError("SET query is null")
 
         query_list = [
-            "UPDATE " + cls.to_table_str(table),
-            "SET " + set_query,
+            "UPDATE {:s}".format(cls.to_table_str(table)),
+            "SET {:s}".format(set_query),
         ]
         if typepy.is_not_null_string(where):
-            query_list.append("WHERE " + where)
+            query_list.append("WHERE {:s}".format(where))
 
         return " ".join(query_list)
 
