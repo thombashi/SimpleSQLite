@@ -1165,6 +1165,21 @@ class SimpleSQLite(object):
         for tabledata in loader.load():
             self.create_table_from_tabledata(tabledata)
 
+    def create_table_from_dataframe(self, dataframe, table_name=""):
+        """
+        Create a table from a pandas.DataFrame instance.
+
+        :param pandas.DataFrame dataframe: DataFrame instance to convert.
+        :param str table_name: Table name to create.
+
+        :Examples:
+
+            :ref:`example-create-table-from-df`
+        """
+
+        self.create_table_from_tabledata(ptr.TableData.from_dataframe(
+            dataframe=dataframe, table_name=table_name))
+
     def rollback(self):
         """
         .. seealso:: :py:meth:`sqlite3.Connection.rollback`
