@@ -11,4 +11,7 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `pytablereader.TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+- Get data from a table as:
+    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
+    - `pytablereader.TableData` instance
