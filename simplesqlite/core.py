@@ -309,14 +309,14 @@ class SimpleSQLite(object):
     def select_as_dataframe(
             self, column_list, table_name, where=None, extra=None):
         """
-        Get data in the database and return data as
-        a :py:class:`pandas.Dataframe` instance.
+        Get data in the database and return data as a
+        :py:class:`pandas.Dataframe` instance.
 
         :param list column_list: Column name list to select data.
         :param str table_name: Table name to extract data.
         :param str where: ``WHERE`` clause for the query.
         :param str extra: Any other SQL clause for the query.
-        :return: :py:class:`pandas.Dataframe` instance.
+        :return: Table data as a :py:class:`pandas.Dataframe` instance.
         :rtype: pandas.DataFrame
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
