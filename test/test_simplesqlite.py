@@ -895,6 +895,10 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         result_matrix = result.fetchall()
         assert result_matrix == expected
 
+        actual = con.select_as_tabledata(
+            column_list=value.header_list, table_name=value.table_name)
+        assert actual == value
+
 
 class Test_SimpleSQLite_create_table_from_csv:
 

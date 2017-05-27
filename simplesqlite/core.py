@@ -327,15 +327,27 @@ class SimpleSQLite(object):
 
         result = self.select(
             select=",".join(SqlQuery.to_attr_str_list(column_list)),
-            table_name=table_name,
-            where=where,
-            extra=extra
-        )
+            table_name=table_name, where=where, extra=extra)
 
         if result is None:
             return pandas.DataFrame()
 
         return pandas.DataFrame(result.fetchall(), columns=column_list)
+
+    def select_as_tabledata(
+            self, column_list, table_name, where=None, extra=None):
+
+        result = self.select(
+            select=",".join(SqlQuery.to_attr_str_list(column_list)),
+            table_name=table_name, where=where, extra=extra)
+
+        if result is None:
+            return ptr.TableData(
+                table_name=None, header_list=[], record_list=[])
+
+        return ptr.TableData(
+            table_name=table_name, header_list=column_list,
+            record_list=result.fetchall())
 
     def insert(self, table_name, insert_record):
         """
