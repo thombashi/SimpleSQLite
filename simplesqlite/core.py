@@ -284,8 +284,10 @@ class SimpleSQLite(object):
         """
         Send a SELECT query to the database.
 
-        :param str select: Attribute for the SELECT query.
+        :param str select: Attribute for the ``SELECT`` query.
         :param str table_name: Table name of executing the query.
+        :param str where: ``WHERE`` clause for the query.
+        :param str extra: Any other SQL clause for the query.
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -307,11 +309,14 @@ class SimpleSQLite(object):
     def select_as_dataframe(
             self, column_list, table_name, where=None, extra=None):
         """
-        SELECT data in the database and return data as a pandas.Dataframe
+        Get data in the database and return data as
+        a :py:class:`pandas.Dataframe` instance.
 
-        :param str column_list: Column name list to select data.
+        :param list column_list: Column name list to select data.
         :param str table_name: Table name to extract data.
-        :return: pandas.Dataframe instance.
+        :param str where: ``WHERE`` clause for the query.
+        :param str extra: Any other SQL clause for the query.
+        :return: :py:class:`pandas.Dataframe` instance.
         :rtype: pandas.DataFrame
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
