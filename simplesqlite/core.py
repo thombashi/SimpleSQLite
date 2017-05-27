@@ -324,6 +324,10 @@ class SimpleSQLite(object):
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
+        :Examples:
+
+            :ref:`example-select-as-dataframe`
+
         .. note::
             ``pandas`` package required to execute this method.
         """
@@ -341,6 +345,23 @@ class SimpleSQLite(object):
 
     def select_as_tabledata(
             self, column_list, table_name, where=None, extra=None):
+        """
+        SELECT data in the database and return data as a
+        :py:class:`pytablereader.TableData`.
+
+        :param str column_list: Column name list to select data.
+        :param str table_name: Table name to extract data.
+        :return: Table data as a :py:class:`pytablereader.TableData` instance.
+        :rtype: pytablereader.TableData
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
+
+        .. note::
+            ``pandas`` package required to execute this method.
+        """
 
         result = self.select(
             select=",".join(SqlQuery.to_attr_str_list(column_list)),
