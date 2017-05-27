@@ -304,6 +304,39 @@ class SimpleSQLite(object):
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
+    def select_as_dataframe(
+            self, column_list, table_name, where=None, extra=None):
+        """
+        SELECT data in the database and return data as a pandas.Dataframe
+
+        :param str column_list: Column name list to select data.
+        :param str table_name: Table name to extract data.
+        :return: pandas.Dataframe instance.
+        :rtype: pandas.DataFrame
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
+
+        .. note::
+            ``pandas`` package required to execute this method.
+        """
+
+        import pandas
+
+        result = self.select(
+            select=",".join(SqlQuery.to_attr_str_list(column_list)),
+            table_name=table_name,
+            where=where,
+            extra=extra
+        )
+
+        if result is None:
+            return pandas.DataFrame()
+
+        return pandas.DataFrame(result.fetchall(), columns=column_list)
+
     def insert(self, table_name, insert_record):
         """
         Send an INSERT query to the database.
