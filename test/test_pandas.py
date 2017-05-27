@@ -6,16 +6,9 @@
 
 from __future__ import unicode_literals
 
-from decimal import Decimal
-
-from pytablereader import (
-    TableData,
-    InvalidDataError,
-)
 import pytest
 from simplesqlite import connect_sqlite_db_mem
 from simplesqlite.sqlquery import SqlQuery
-import typepy
 
 
 try:
