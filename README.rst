@@ -38,10 +38,12 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `pytablereader.TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `pytablereader.TableData <http://pytablereader.rtfd.io/en/latest/pages/reference/data.html#tabledata>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `pytablereader.TableData` instance
+    - `pytablereader.TableData <http://pytablereader.rtfd.io/en/latest/pages/reference/data.html#tabledata>`__ instance
+
+
 
 Examples
 ========
@@ -254,16 +256,15 @@ Get Data from a table as pandas DataFrame
 
     con = SimpleSQLite("sample.sqlite", "w", profile=True)
     header_list = ["a", "b", "c", "d", "e"]
-    data_matrix = [
-        [1, 1.1, "aaa", 1,   1],
-        [2, 2.2, "bbb", 2.2, 2.2],
-        [3, 3.3, "ccc", 3,   "ccc"],
-    ]
 
     con.create_table_from_data_matrix(
         table_name="sample_table",
         attr_name_list=header_list,
-        data_matrix=data_matrix)
+        data_matrix=[
+            [1, 1.1, "aaa", 1,   1],
+            [2, 2.2, "bbb", 2.2, 2.2],
+            [3, 3.3, "ccc", 3,   "ccc"],
+        ])
 
     print(con.select_as_dataframe(
         column_list=header_list, table_name="sample_table"))
