@@ -1034,10 +1034,10 @@ class Test_SimpleSQLite_create_table_from_json:
                     {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
                     {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
                 ]""",
-                "tmp.json",
+                "tmpjson.json",
                 "",
 
-                "tmp_json1",
+                "tmpjson",
                 ["attr_a", "attr_b", "attr_c"],
                 [
                     (1, 4.0,   u"a"),
@@ -1055,7 +1055,6 @@ class Test_SimpleSQLite_create_table_from_json:
                 }""",
                 "tmp.json",
                 "%(filename)s_%(key)s",
-
                 "tmp_tablename",
                 ["attr_a", "attr_b", "attr_c"],
                 [
