@@ -23,7 +23,7 @@ SimpleSQLite
 Summary
 -------
 
-SimpleSQLite is a Python library to simplify the table creation and data insertion into SQLite database.
+SimpleSQLite is a Python library to simplify SQLite database operations: table creation, data insertion and get data as other data formats.
 
 Features
 --------
@@ -38,7 +38,10 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `pytablereader.TableData` instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+- Get data from a table as:
+    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
+    - `pytablereader.TableData` instance
 
 Examples
 ========
@@ -133,7 +136,6 @@ Create a table from pandas.DataFrame
 
     from simplesqlite import SimpleSQLite
     import pandas
-
 
     con = SimpleSQLite("pandas_df.sqlite")
 
@@ -242,6 +244,38 @@ Insert list/tuple/namedtuple
     (7, 7.7, u'fff', 7.77, u'bar')
     (8, 8.8, u'ggg', 8.88, u'foobar')
     (9, 9.9, u'ggg', 9.99, u'hogehoge')
+
+Get Data from a table as pandas DataFrame
+-----------------------------------------
+
+.. code:: python
+
+    from simplesqlite import SimpleSQLite
+
+    con = SimpleSQLite("sample.sqlite", "w", profile=True)
+    header_list = ["a", "b", "c", "d", "e"]
+    data_matrix = [
+        [1, 1.1, "aaa", 1,   1],
+        [2, 2.2, "bbb", 2.2, 2.2],
+        [3, 3.3, "ccc", 3,   "ccc"],
+    ]
+
+    con.create_table_from_data_matrix(
+        table_name="sample_table",
+        attr_name_list=header_list,
+        data_matrix=data_matrix)
+
+    print(con.select_as_dataframe(
+        column_list=header_list, table_name="sample_table"))
+
+
+.. code::
+
+    $ sample/select_as_dataframe.py
+       a    b    c    d    e
+    0  1  1.1  aaa  1.0    1
+    1  2  2.2  bbb  2.2  2.2
+    2  3  3.3  ccc  3.0  ccc
 
 For more information
 --------------------
