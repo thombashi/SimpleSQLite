@@ -8,7 +8,6 @@ from __future__ import unicode_literals
 
 import pytest
 from simplesqlite import connect_sqlite_db_mem
-from simplesqlite.sqlquery import SqlQuery
 
 
 try:
@@ -23,9 +22,7 @@ class Test_fromto_pandas_dataframe(object):
 
     def test_normal(self):
         con = connect_sqlite_db_mem()
-        column_list = ['id', 'value', 'name']
-        table_name = "tablename"
-
+        column_list = ["id", "value", "name"]
         dataframe = pandas.DataFrame(
             [
                 [0, 0.1, "a"],
@@ -34,23 +31,23 @@ class Test_fromto_pandas_dataframe(object):
             ],
             columns=column_list
         )
+        table_name = "tablename"
 
-        con.create_table_from_dataframe(dataframe, "tablename")
-        result = con.select(
-            select=", ".join(
-                SqlQuery.to_attr_str_list(['id', 'value', 'name'])),
-            table_name=table_name)
+        con.create_table_from_dataframe(dataframe, table_name)
 
-        assert result.fetchall() == [
-            (0, 0.1, u'a'),
-            (1, 1.1, u'bb'),
-            (2, 2.2, u'ccc'),
-        ]
-
-        actual = con.select_as_dataframe(
-            column_list=column_list, table_name=table_name)
-
+        actual_all = con.select_as_dataframe(table_name=table_name)
         print("[expected]\n{}\n".format(dataframe))
-        print("[actual]\n{}\n".format(actual))
+        print("[actual]\n{}\n".format(actual_all))
+        assert actual_all.equals(dataframe)
 
-        assert actual.equals(dataframe)
+        select_column_list = ["value", "name"]
+        actual_part = con.select_as_dataframe(
+            table_name=table_name, column_list=select_column_list)
+        assert actual_part.equals(pandas.DataFrame(
+            [
+                [0.1, "a"],
+                [1.1, "bb"],
+                [2.2, "ccc"],
+            ],
+            columns=select_column_list
+        ))

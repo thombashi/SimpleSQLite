@@ -307,13 +307,15 @@ class SimpleSQLite(object):
         return self.execute_query(query, logging.getLogger().findCaller())
 
     def select_as_dataframe(
-            self, column_list, table_name, where=None, extra=None):
+            self, table_name, column_list=None, where=None, extra=None):
         """
         Get data in the database and return data as a
         :py:class:`pandas.Dataframe` instance.
 
-        :param list column_list: Column name list to select data.
         :param str table_name: Table name to extract data.
+        :param list column_list:
+            Column name list to get data. If the value is |None|,
+            get data from all of the columns in the table.
         :param str where: ``WHERE`` clause for the query.
         :param str extra: Any other SQL clause for the query.
         :return: Table data as a :py:class:`pandas.Dataframe` instance.
@@ -333,6 +335,9 @@ class SimpleSQLite(object):
         """
 
         import pandas
+
+        if column_list is None:
+            column_list = self.get_attr_name_list(table_name)
 
         result = self.select(
             select=",".join(SqlQuery.to_attr_str_list(column_list)),
