@@ -349,13 +349,15 @@ class SimpleSQLite(object):
         return pandas.DataFrame(result.fetchall(), columns=column_list)
 
     def select_as_tabledata(
-            self, column_list, table_name, where=None, extra=None):
+            self, table_name, column_list=None, where=None, extra=None):
         """
         SELECT data in the database and return data as a
         :py:class:`pytablereader.TableData`.
 
-        :param str column_list: Column name list to select data.
         :param str table_name: Table name to extract data.
+        :param list column_list:
+            Column name list to get data. If the value is |None|,
+            get data from all of the columns in the table.
         :return: Table data as a :py:class:`pytablereader.TableData` instance.
         :rtype: pytablereader.TableData
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -367,6 +369,9 @@ class SimpleSQLite(object):
         .. note::
             ``pandas`` package required to execute this method.
         """
+
+        if column_list is None:
+            column_list = self.get_attr_name_list(table_name)
 
         result = self.select(
             select=",".join(SqlQuery.to_attr_str_list(column_list)),
