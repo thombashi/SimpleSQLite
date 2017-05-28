@@ -50,10 +50,10 @@ def validate_attr_name(name):
 
 def append_table(src_con, dst_con, table_name):
     """
-    Append the table from source to destination.
+    Append a table from source database to destination database.
 
-    :param SimpleSQLite src_con: Source of the database.
-    :param SimpleSQLite dst_con: Destination of the database.
+    :param SimpleSQLite src_con: Connection to the source database.
+    :param SimpleSQLite dst_con: Connection to the destination database.
     :param str table_name: Table name to copy.
     :return: |True| if success.
     :rtype: bool
