@@ -54,8 +54,8 @@ def append_table(src_con, dst_con, table_name):
 
     :param SimpleSQLite src_con: Connection to the source database.
     :param SimpleSQLite dst_con: Connection to the destination database.
-    :param str table_name: Table name to copy.
-    :return: |True| if success.
+    :param str table_name: Table name to append.
+    :return: |True| if the append operation succeed.
     :rtype: bool
     :raises simplesqlite.TableNotFoundError:
         |raises_verify_table_existence|
