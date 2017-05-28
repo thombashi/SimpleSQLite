@@ -13,218 +13,29 @@ import itertools
 
 import pytest
 from simplesqlite import (
-    append_table,
-    connect_sqlite_db_mem,
-    validate_attr_name,
     SimpleSQLite,
     AttributeNotFoundError,
     DatabaseError,
-    InvalidAttributeNameError,
     InvalidTableNameError,
     NullDatabaseConnectionError,
     OperationalError,
     TableNotFoundError,
 )
-from simplesqlite._func import validate_table_name
 from simplesqlite.sqlquery import SqlQuery
 import typepy
 
 import pytablereader as ptr
 
+from .fixture import *
+
 
 nan = float("nan")
 inf = float("inf")
-TEST_TABLE_NAME = "test_table"
 TEST_DB_NAME = "test_db"
 NOT_EXIT_FILE_PATH = "/not/existing/file/__path__"
 
 NamedTuple = namedtuple("NamedTuple", "attr_a attr_b")
 NamedTupleEx = namedtuple("NamedTupleEx", "attr_a attr_b attr_c")
-
-
-@pytest.fixture
-def con(tmpdir):
-    p = tmpdir.join("tmp.db")
-    con = SimpleSQLite(str(p), "w")
-
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
-
-    return con
-
-
-@pytest.fixture
-def con_mix(tmpdir):
-    p = tmpdir.join("tmp_mixed_data.db")
-    con = SimpleSQLite(str(p), "w")
-
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_i", "attr_f", "attr_s"],
-        data_matrix=[
-            [1, 2.2, "aa"],
-            [3, 4.4, "bb"],
-        ])
-
-    return con
-
-
-@pytest.fixture
-def con_ro(tmpdir):
-    p = tmpdir.join("tmp_readonly.db")
-    con = SimpleSQLite(str(p), "w")
-
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
-    con.close()
-    con.connect(str(p), "r")
-
-    return con
-
-
-@pytest.fixture
-def con_profile(tmpdir):
-    p = tmpdir.join("tmp_profile.db")
-    con = SimpleSQLite(str(p), "w", profile=True)
-
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
-    con.commit()
-
-    return con
-
-
-@pytest.fixture
-def con_index(tmpdir):
-    p = tmpdir.join("tmp.db")
-    con = SimpleSQLite(str(p), "w")
-
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ],
-        index_attr_list=["attr_a"])
-
-    return con
-
-
-@pytest.fixture
-def con_null(tmpdir):
-    p = tmpdir.join("tmp_null.db")
-    con = SimpleSQLite(str(p), "w")
-    con.close()
-
-    return con
-
-
-@pytest.fixture
-def con_empty(tmpdir):
-    p = tmpdir.join("tmp_empty.db")
-    return SimpleSQLite(str(p), "w")
-
-
-class Test_validate_table_name:
-
-    @pytest.mark.parametrize(["value"], [
-        ["valid_table_name"],
-        ["table_"],
-    ])
-    def test_normal(self, value):
-        validate_table_name(value)
-
-    @pytest.mark.parametrize(["value", "expected"], [
-        [None, InvalidTableNameError],
-        ["", InvalidTableNameError],
-        ["table", InvalidTableNameError],
-        ["TABLE", InvalidTableNameError],
-        ["Table", InvalidTableNameError],
-        ["_hoge", InvalidTableNameError],
-        ["%hoge", InvalidTableNameError],
-    ])
-    def test_exception(self, value, expected):
-        with pytest.raises(expected):
-            validate_table_name(value)
-
-
-class Test_validate_attr_name:
-
-    @pytest.mark.parametrize(["value"], [
-        ["valid_attr_name"],
-        ["attr_"],
-    ])
-    def test_normal(self, value):
-        validate_attr_name(value)
-
-    @pytest.mark.parametrize(["value", "expected"], [
-        [None, InvalidAttributeNameError],
-        ["", InvalidAttributeNameError],
-        ["table", InvalidAttributeNameError],
-        ["TABLE", InvalidAttributeNameError],
-        ["Table", InvalidAttributeNameError],
-        ["_hoge", InvalidAttributeNameError],
-        ["%hoge", InvalidAttributeNameError],
-    ])
-    def test_exception(self, value, expected):
-        with pytest.raises(expected):
-            validate_attr_name(value)
-
-
-class Test_append_table:
-
-    def test_normal(self, con_mix, con_empty):
-        assert append_table(
-            src_con=con_mix, dst_con=con_empty, table_name=TEST_TABLE_NAME)
-
-        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
-        src_data_matrix = result.fetchall()
-        result = con_empty.select(select="*", table_name=TEST_TABLE_NAME)
-        dst_data_matrix = result.fetchall()
-
-        assert src_data_matrix == dst_data_matrix
-
-        assert append_table(
-            src_con=con_mix, dst_con=con_empty, table_name=TEST_TABLE_NAME)
-
-        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
-        src_data_matrix = result.fetchall()
-        result = con_empty.select(select="*", table_name=TEST_TABLE_NAME)
-        dst_data_matrix = result.fetchall()
-
-        assert src_data_matrix * 2 == dst_data_matrix
-
-    def test_exception_mismatch_schema(self, con_mix, con_profile):
-        with pytest.raises(ValueError):
-            append_table(
-                src_con=con_mix, dst_con=con_profile,
-                table_name=TEST_TABLE_NAME)
-
-    def test_exception_null_connection(self, con_mix, con_null):
-        with pytest.raises(NullDatabaseConnectionError):
-            append_table(
-                src_con=con_mix, dst_con=con_null, table_name=TEST_TABLE_NAME)
-
-    def test_exception_permission(self, con_mix, con_ro):
-        with pytest.raises(IOError):
-            append_table(
-                src_con=con_mix, dst_con=con_ro, table_name=TEST_TABLE_NAME)
 
 
 class Test_SimpleSQLite_init:
@@ -1196,11 +1007,3 @@ class Test_SimpleSQLite_close:
 
     def test_null(self, con_null):
         con_null.close()
-
-
-class Test_connect_sqlite_db_mem:
-
-    def test_normal(self):
-        con_mem = connect_sqlite_db_mem()
-        assert con_mem is not None
-        assert con_mem.database_path == ":memory:"
