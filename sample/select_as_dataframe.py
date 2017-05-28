@@ -7,16 +7,14 @@ from simplesqlite import SimpleSQLite
 
 
 con = SimpleSQLite("sample.sqlite", "w", profile=True)
-header_list = ["a", "b", "c", "d", "e"]
 
 con.create_table_from_data_matrix(
     table_name="sample_table",
-    attr_name_list=header_list,
+    attr_name_list=["a", "b", "c", "d", "e"],
     data_matrix=[
         [1, 1.1, "aaa", 1,   1],
         [2, 2.2, "bbb", 2.2, 2.2],
         [3, 3.3, "ccc", 3,   "ccc"],
     ])
 
-print(con.select_as_dataframe(
-    column_list=header_list, table_name="sample_table"))
+print(con.select_as_dataframe(table_name="sample_table"))
