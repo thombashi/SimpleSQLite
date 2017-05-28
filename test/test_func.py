@@ -11,18 +11,26 @@ from __future__ import unicode_literals
 import pytest
 from simplesqlite import (
     append_table,
+    copy_table,
     connect_sqlite_db_mem,
     validate_attr_name,
-    SimpleSQLite,
     InvalidAttributeNameError,
     InvalidTableNameError,
     NullDatabaseConnectionError,
 )
 from simplesqlite._func import validate_table_name
-from .fixture import *
+
+from .fixture import (
+    TEST_TABLE_NAME,
+    con_mix,
+    con_ro,
+    con_profile,
+    con_null,
+    con_empty,
+)
 
 
-class Test_validate_table_name:
+class Test_validate_table_name(object):
 
     @pytest.mark.parametrize(["value"], [
         ["valid_table_name"],
@@ -45,7 +53,7 @@ class Test_validate_table_name:
             validate_table_name(value)
 
 
-class Test_validate_attr_name:
+class Test_validate_attr_name(object):
 
     @pytest.mark.parametrize(["value"], [
         ["valid_attr_name"],
@@ -68,7 +76,7 @@ class Test_validate_attr_name:
             validate_attr_name(value)
 
 
-class Test_append_table:
+class Test_append_table(object):
 
     def test_normal(self, con_mix, con_empty):
         assert append_table(
@@ -108,7 +116,31 @@ class Test_append_table:
                 src_con=con_mix, dst_con=con_ro, table_name=TEST_TABLE_NAME)
 
 
-class Test_connect_sqlite_db_mem:
+class Test_copy_table(object):
+
+    def test_normal(self, con_mix, con_empty):
+        assert copy_table(
+            src_con=con_mix, dst_con=con_empty,
+            src_table_name=TEST_TABLE_NAME, dst_table_name="dst")
+
+        result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
+        src_data_matrix = result.fetchall()
+        result = con_empty.select(select="*", table_name="dst")
+        dst_data_matrix = result.fetchall()
+
+        assert src_data_matrix == dst_data_matrix
+
+        assert not copy_table(
+            src_con=con_mix, dst_con=con_empty,
+            src_table_name=TEST_TABLE_NAME, dst_table_name="dst",
+            is_overwrite=False)
+        assert copy_table(
+            src_con=con_mix, dst_con=con_empty,
+            src_table_name=TEST_TABLE_NAME, dst_table_name="dst",
+            is_overwrite=True)
+
+
+class Test_connect_sqlite_db_mem(object):
 
     def test_normal(self):
         con_mem = connect_sqlite_db_mem()

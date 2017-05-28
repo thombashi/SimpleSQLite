@@ -26,7 +26,16 @@ import typepy
 
 import pytablereader as ptr
 
-from .fixture import *
+from .fixture import (
+    TEST_TABLE_NAME,
+    con,
+    con_mix,
+    con_ro,
+    con_profile,
+    con_index,
+    con_null,
+    con_empty,
+)
 
 
 nan = float("nan")
