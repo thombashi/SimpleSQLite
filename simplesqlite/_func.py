@@ -48,12 +48,12 @@ def validate_attr_name(name):
         raise InvalidAttributeNameError(e)
 
 
-def append_table(con_src, con_dst, table_name):
+def append_table(src_con, dst_con, table_name):
     """
     Append the table from source to destination.
 
-    :param SimpleSQLite con_src: Source of the database.
-    :param SimpleSQLite con_dst: Destination of the database.
+    :param SimpleSQLite src_con: Source of the database.
+    :param SimpleSQLite dst_con: Destination of the database.
     :param str table_name: Table name to copy.
     :return: |True| if success.
     :rtype: bool
@@ -62,12 +62,12 @@ def append_table(con_src, con_dst, table_name):
     :raises ValueError: If attribute of the table is different from each other.
     """
 
-    con_src.verify_table_existence(table_name)
-    con_dst.validate_access_permission(["w", "a"])
+    src_con.verify_table_existence(table_name)
+    dst_con.validate_access_permission(["w", "a"])
 
-    if con_dst.has_table(table_name):
-        src_attr_list = con_src.get_attr_name_list(table_name)
-        dst_attr_list = con_dst.get_attr_name_list(table_name)
+    if dst_con.has_table(table_name):
+        src_attr_list = src_con.get_attr_name_list(table_name)
+        dst_attr_list = dst_con.get_attr_name_list(table_name)
         if src_attr_list != dst_attr_list:
             raise ValueError("""
             source and destination attribute is different from each other
@@ -75,15 +75,14 @@ def append_table(con_src, con_dst, table_name):
               dst: {:s}
             """.format(str(src_attr_list), str(dst_attr_list)))
 
-    result = con_src.select(select="*", table_name=table_name)
+    result = src_con.select(select="*", table_name=table_name)
     if result is None:
         return False
-    value_matrix = result.fetchall()
 
-    con_dst.create_table_from_data_matrix(
+    dst_con.create_table_from_data_matrix(
         table_name,
-        con_src.get_attr_name_list(table_name),
-        value_matrix)
+        src_con.get_attr_name_list(table_name),
+        result.fetchall())
 
     return True
 
