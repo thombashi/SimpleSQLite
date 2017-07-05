@@ -161,120 +161,131 @@ Insert records into a table
 ---------------------------
 
 Insert dictionary
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
 
-    table_name = "sample_table"
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_data_matrix(
-        table_name,
-        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-        data_matrix=[[1, 1.1, "aaa", 1,   1]])
+        table_name = "sample_table"
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_data_matrix(
+            table_name,
+            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
-    con.insert(
-        table_name,
-        insert_record={
-            "attr_a": 4,
-            "attr_b": 4.4,
-            "attr_c": "ddd",
-            "attr_d": 4.44,
-            "attr_e": "hoge",
-        }
-    )
-    con.insert_many(
-        table_name,
-        insert_record_list=[
-            {
-                "attr_a": 5,
-                "attr_b": 5.5,
-                "attr_c": "eee",
-                "attr_d": 5.55,
-                "attr_e": "foo",
-            },
-            {
-                "attr_a": 6,
-                "attr_c": "fff",
-            },
-        ]
-    )
+        con.insert(
+            table_name,
+            insert_record={
+                "attr_a": 4,
+                "attr_b": 4.4,
+                "attr_c": "ddd",
+                "attr_d": 4.44,
+                "attr_e": "hoge",
+            }
+        )
+        con.insert_many(
+            table_name,
+            insert_record_list=[
+                {
+                    "attr_a": 5,
+                    "attr_b": 5.5,
+                    "attr_c": "eee",
+                    "attr_d": 5.55,
+                    "attr_e": "foo",
+                },
+                {
+                    "attr_a": 6,
+                    "attr_c": "fff",
+                },
+            ]
+        )
 
-    result = con.select(select="*", table_name=table_name)
-    for record in result.fetchall():
-        print(record)
+        result = con.select(select="*", table_name=table_name)
+        for record in result.fetchall():
+            print(record)
+
+:Output:
+    .. code::
+
+        (1, 1.1, 'aaa', 1, 1)
+        (4, 4.4, 'ddd', 4.44, 'hoge')
+        (5, 5.5, 'eee', 5.55, 'foo')
+        (6, None, 'fff', None, None)
 
 
 Insert list/tuple/namedtuple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    from collections import namedtuple
-    from simplesqlite import SimpleSQLite
-
-
-    table_name = "sample_table"
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_data_matrix(
-        table_name,
-        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-        data_matrix=[[1, 1.1, "aaa", 1,   1]])
-
-    SampleTuple = namedtuple(
-        "SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
-
-    con.insert(table_name, insert_record=[7, 7.7, "fff", 7.77, "bar"])
-    con.insert_many(
-        table_name,
-        insert_record_list=[
-            (8, 8.8, "ggg", 8.88, "foobar"),
-            SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
-        ]
-    )
-
-    result = con.select(select="*", table_name=table_name)
-    for record in result.fetchall():
-        print(record)
+        from collections import namedtuple
+        from simplesqlite import SimpleSQLite
 
 
-.. code::
+        table_name = "sample_table"
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_data_matrix(
+            table_name,
+            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            data_matrix=[[1, 1.1, "aaa", 1,   1]])
 
-    (1, 1.1, u'aaa', 1, 1)
-    (7, 7.7, u'fff', 7.77, u'bar')
-    (8, 8.8, u'ggg', 8.88, u'foobar')
-    (9, 9.9, u'ggg', 9.99, u'hogehoge')
+        SampleTuple = namedtuple(
+            "SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
+
+        con.insert(table_name, insert_record=[7, 7.7, "fff", 7.77, "bar"])
+        con.insert_many(
+            table_name,
+            insert_record_list=[
+                (8, 8.8, "ggg", 8.88, "foobar"),
+                SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
+            ]
+        )
+
+        result = con.select(select="*", table_name=table_name)
+        for record in result.fetchall():
+            print(record)
+
+:Output:
+    .. code::
+
+        (1, 1.1, u'aaa', 1, 1)
+        (7, 7.7, u'fff', 7.77, u'bar')
+        (8, 8.8, u'ggg', 8.88, u'foobar')
+        (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
 Get Data from a table as pandas DataFrame
 -----------------------------------------
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
-    con = SimpleSQLite("sample.sqlite", "w", profile=True)
+        con = SimpleSQLite("sample.sqlite", "w", profile=True)
 
-    con.create_table_from_data_matrix(
-        table_name="sample_table",
-        attr_name_list=["a", "b", "c", "d", "e"],
-        data_matrix=[
-            [1, 1.1, "aaa", 1,   1],
-            [2, 2.2, "bbb", 2.2, 2.2],
-            [3, 3.3, "ccc", 3,   "ccc"],
-        ])
+        con.create_table_from_data_matrix(
+            table_name="sample_table",
+            attr_name_list=["a", "b", "c", "d", "e"],
+            data_matrix=[
+                [1, 1.1, "aaa", 1,   1],
+                [2, 2.2, "bbb", 2.2, 2.2],
+                [3, 3.3, "ccc", 3,   "ccc"],
+            ])
 
-    print(con.select_as_dataframe(table_name="sample_table"))
+        print(con.select_as_dataframe(table_name="sample_table"))
 
+:Output:
+    .. code::
 
-.. code::
-
-    $ sample/select_as_dataframe.py
-       a    b    c    d    e
-    0  1  1.1  aaa  1.0    1
-    1  2  2.2  bbb  2.2  2.2
-    2  3  3.3  ccc  3.0  ccc
+        $ sample/select_as_dataframe.py
+           a    b    c    d    e
+        0  1  1.1  aaa  1.0    1
+        1  2  2.2  bbb  2.2  2.2
+        2  3  3.3  ccc  3.0  ccc
 
 For more information
 --------------------
@@ -297,7 +308,6 @@ Python 2.7+ or 3.3+
 
 Mandatory
 -----------------
-
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
@@ -309,7 +319,6 @@ Mandatory
 
 Test dependencies
 -----------------
-
 -  `pytest <http://pytest.org/latest/>`__
 -  `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 -  `tox <https://testrun.org/tox/latest/>`__
