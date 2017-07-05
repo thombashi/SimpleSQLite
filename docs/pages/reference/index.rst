@@ -2,7 +2,7 @@ Reference
 =========
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    
    simplesqlite
    sqlquery
