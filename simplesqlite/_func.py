@@ -60,7 +60,8 @@ def append_table(src_con, dst_con, table_name):
     :rtype: bool
     :raises simplesqlite.TableNotFoundError:
         |raises_verify_table_existence|
-    :raises ValueError: If attribute of the table is different from each other.
+    :raises ValueError:
+        If attributes of the table are different from each other.
     """
 
     src_con.verify_table_existence(table_name)
@@ -102,7 +103,8 @@ def copy_table(
     :rtype: bool
     :raises simplesqlite.TableNotFoundError:
         |raises_verify_table_existence|
-    :raises ValueError: If attribute of the table is different from each other.
+    :raises ValueError:
+        If attributes of the table are different from each other.
     """
 
     src_con.verify_table_existence(src_table_name)
@@ -113,7 +115,7 @@ def copy_table(
             dst_con.drop_table(dst_table_name)
         else:
             logger.error(
-                "failed to copy table: the table already exist "
+                "failed to copy table: the table already exists "
                 "(src_table={}, dst_table={})".format(
                     src_table_name, dst_table_name))
             return False
@@ -136,7 +138,6 @@ def connect_sqlite_db_mem():
     :rtype: SimpleSQLite
 
     :Examples:
-
         :ref:`example-connect-sqlite-db-mem`
     """
 

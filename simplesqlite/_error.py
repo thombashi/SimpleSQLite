@@ -12,7 +12,6 @@ class DatabaseError(sqlite3.DatabaseError):
     Exception raised for errors that are related to the database.
 
     .. seealso::
-
         - `sqlite3.DatabaseError <https://docs.python.org/3/library/sqlite3.html#sqlite3.DatabaseError>`__
     """
 

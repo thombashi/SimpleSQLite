@@ -39,7 +39,7 @@ class SqlQuery(object):
     @classmethod
     def sanitize(cls, query_item):
         """
-        Sanitize SQLite query with an empty char.
+        Replace invalid characters in a SQLite query with empty characters.
 
         :param str query_item: String to be sanitized.
         :return:
@@ -51,8 +51,7 @@ class SqlQuery(object):
             ``"\\n"``, ``"\\r"``
         :rtype: str
 
-        :Examples:
-
+        :Example:
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.sanitize("k<e:y")
             'key'
@@ -72,7 +71,6 @@ class SqlQuery(object):
         :rtype: str
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.to_table_str("length")
             'length'
@@ -100,7 +98,6 @@ class SqlQuery(object):
         :rtype: str
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.to_attr_str("key")
             'key'
@@ -147,7 +144,6 @@ class SqlQuery(object):
         :rtype: list/itertools.imap
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> list(SqlQuery.to_attr_str_list(["key", "a+b"]))
             ['key', '[a+b]']
@@ -155,7 +151,6 @@ class SqlQuery(object):
             ['AVG(key)', 'AVG([a+b])']
 
         .. seealso::
-
             :py:meth:`.to_attr_str`
         """
 
@@ -177,7 +172,6 @@ class SqlQuery(object):
         :rtype: str
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.to_value_str(1.2)
             '1.2'
@@ -207,13 +201,11 @@ class SqlQuery(object):
         :rtype: itertools.imap
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> list(SqlQuery.to_value_str_list([1, "a", None]))
             ['1', "'a'", 'NULL']
 
         .. seealso::
-
             :py:meth:`.to_value_str`
         """
 
@@ -239,7 +231,6 @@ class SqlQuery(object):
             |raises_validate_table_name|
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.make_select(select="value", table="example")
             'SELECT value FROM example'
@@ -337,7 +328,6 @@ class SqlQuery(object):
             the ``operation`` is not ``"="``/``"!="``.
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.make_where("key", "hoge")
             "key = 'hoge'"
@@ -373,7 +363,6 @@ class SqlQuery(object):
         :rtype: str
 
         :Examples:
-
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.make_where_in("key", ["hoge", "foo", "bar"])
             "key IN ('hoge', 'foo', 'bar')"
@@ -393,8 +382,7 @@ class SqlQuery(object):
         :return: Part of WHERE query of SQLite.
         :rtype: str
 
-        :Examples:
-
+        :Example:
             >>> from simplesqlite.sqlquery import SqlQuery
             >>> SqlQuery.make_where_not_in("key", ["hoge", "foo", "bar"])
             "key NOT IN ('hoge', 'foo', 'bar')"

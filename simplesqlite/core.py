@@ -50,7 +50,6 @@ class SimpleSQLite(object):
         Recording SQL query execution time profile, if the value is |True|.
 
     .. seealso::
-
         :py:meth:`.connect`
         :py:meth:`.get_profile`
     """
@@ -62,7 +61,6 @@ class SimpleSQLite(object):
         :rtype: str
 
         :Examples:
-
             >>> from simplesqlite import SimpleSQLite
             >>> con = SimpleSQLite("sample.sqlite", "w")
             >>> con.database_path
@@ -115,7 +113,6 @@ class SimpleSQLite(object):
         :rtype: bool
 
         :Examples:
-
             >>> from simplesqlite import SimpleSQLite
             >>> con = SimpleSQLite("sample.sqlite", "w")
             >>> con.is_connected()
@@ -137,8 +134,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 import simplesqlite
@@ -155,7 +151,8 @@ class SimpleSQLite(object):
                 except simplesqlite.NullDatabaseConnectionError as e:
                     print(e)
 
-            .. parsed-literal::
+        :Output:
+            .. code-block:: none
 
                 ---- connected to a database ----
                 ---- disconnected from a database ----
@@ -172,7 +169,7 @@ class SimpleSQLite(object):
 
     def connect(self, database_path, mode="a"):
         """
-        Connect to a SQLite dtabase.
+        Connect to a SQLite database.
 
         :param str database_path:
             Path to the SQLite database file to be connected.
@@ -230,18 +227,17 @@ class SimpleSQLite(object):
         """
         Send arbitrary SQLite query to the database.
 
-        :param str query: Query to be executed.
+        :param str query: Query to executed.
         :param tuple caller:
             Caller information.
             Expects the return value of :py:meth:`logging.Logger.findCaller`.
-        :return: Result of the query execution.
+        :return: The result of the query execution.
         :rtype: sqlite3.Cursor
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. warning::
-
             This method can execute an arbitrary query.
             i.e. No access permissions check by |attr_mode|.
         """
@@ -297,7 +293,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
-
             :py:meth:`.sqlquery.SqlQuery.make_select`
         """
 
@@ -327,7 +322,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
-
             :ref:`example-select-as-dataframe`
 
         .. note::
@@ -398,7 +392,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
-
             :ref:`example-insert-records`
         """
 
@@ -419,7 +412,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
-
             :ref:`example-insert-records`
 
         .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
@@ -466,7 +458,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
-
             :py:meth:`.sqlquery.SqlQuery.make_update`
         """
 
@@ -500,7 +491,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         .. seealso::
-
             :py:meth:`.sqlquery.SqlQuery.make_select`
         """
 
@@ -525,8 +515,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 from simplesqlite import SimpleSQLite
@@ -537,10 +526,10 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
                 print(con.get_table_name_list())
+        :Output:
+            .. code-block:: python
 
-            .. parsed-literal::
-
-                [u'hoge']
+                ['hoge']
         """
 
         self.check_connection()
@@ -562,8 +551,7 @@ class SimpleSQLite(object):
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
-
+        :Example:
             .. code:: python
 
                 import simplesqlite
@@ -581,7 +569,7 @@ class SimpleSQLite(object):
                     print(con.get_attr_name_list("not_existing"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
-
+        :Output:
             .. parsed-literal::
 
                 ['attr_a', 'attr_b']
@@ -655,7 +643,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
         :Examples:
-
             :ref:`example-get-profile`
         """
 
@@ -703,8 +690,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 import json
@@ -724,8 +710,8 @@ class SimpleSQLite(object):
                     index_attr_list=["a"])
 
                 print(json.dumps(con.get_sqlite_master(), indent=4))
-
-            .. parsed-literal::
+        :Output:
+            .. code-block:: json
 
                 [
                     {
@@ -766,8 +752,7 @@ class SimpleSQLite(object):
         :return: |True| if the database has the table.
         :rtype: bool
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 from simplesqlite import SimpleSQLite
@@ -780,8 +765,8 @@ class SimpleSQLite(object):
 
                 print(con.has_table("hoge"))
                 print(con.has_table("not_existing"))
-
-            .. parsed-literal::
+        :Output:
+            .. code-block:: python
 
                 True
                 False
@@ -803,8 +788,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 import simplesqlite
@@ -822,7 +806,7 @@ class SimpleSQLite(object):
                     print(con.has_attribute("not_existing", "attr_a"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
-
+        :Output:
             .. parsed-literal::
 
                 True
@@ -846,8 +830,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 import simplesqlite
@@ -867,7 +850,7 @@ class SimpleSQLite(object):
                     print(con.has_attribute("not_existing", ["attr_a"]))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
-
+        :Output:
             .. parsed-literal::
 
                 True
@@ -898,8 +881,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.InvalidTableNameError:
             |raises_validate_table_name|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 import simplesqlite
@@ -916,7 +898,7 @@ class SimpleSQLite(object):
                     con.verify_table_existence("not_existing")
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
-
+        :Output:
             .. parsed-literal::
 
                 'not_existing' table not found in /tmp/sample.sqlite
@@ -940,8 +922,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
 
-        :Examples:
-
+        :Sample Code:
             .. code:: python
 
                 from simplesqlite import (
@@ -966,7 +947,7 @@ class SimpleSQLite(object):
                     con.verify_attr_existence("not_existing", "attr_a")
                 except TableNotFoundError as e:
                     print(e)
-
+        :Output:
             .. parsed-literal::
 
                 'not_existing' attribute not found in 'sample_table' table
@@ -1111,14 +1092,15 @@ class SimpleSQLite(object):
             self, table_name, attr_name_list, data_matrix,
             index_attr_list=None):
         """
-        Create a table if not exists. And insert data into the created table.
+        Create a table if not exists. Moreover, insert data into the created
+        table.
 
         :param str table_name: Table name to create.
         :param list attr_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param tuple index_attr_list:
-            List of attribute names of create indices.
+            List of attribute names of creating indices.
         :raises simplesqlite.InvalidTableNameError:
             |raises_validate_table_name|
         :raises simplesqlite.InvalidAttributeNameError:
@@ -1126,7 +1108,6 @@ class SimpleSQLite(object):
         :raises ValueError: If the ``data_matrix`` is empty.
 
         :Examples:
-
             :ref:`example-create-table-from-data-matrix`
 
         .. seealso::
@@ -1163,26 +1144,24 @@ class SimpleSQLite(object):
         :param str csv_source: Path to the CSV file or CSV text.
         :param str table_name:
             Table name to create.
-            Use csv file basename as the table name if the value is empty.
+            Using CSV file basename as the table name if the value is empty.
         :param list attribute_name_list:
             Attribute names of the table.
-            Use the first line of the csv file as attribute list
+            Use the first line of the CSV file as attribute list
             if attribute_name_list is empty.
         :param str delimiter:
             A one-character string used to separate fields.
         :param str quotechar:
-            A one-character string used to quote fields
-            containing special characters, such as the delimiter or quotechar,
+            A one-character string used to quote fields containing special
+            characters, such as the ``delimiter`` or ``quotechar``,
             or which contain new-line characters.
-        :param str encoding: csv file encoding.
-        :raises ValueError: If the csv data is invalid.
+        :param str encoding: CSV file encoding.
+        :raises ValueError: If the CSV data is invalid.
 
         :Examples:
-
             :ref:`example-create-table-from-csv`
 
         .. seealso::
-
             :py:meth:`.create_table_from_data_matrix`
             :py:func:`csv.reader`
             :py:meth:`.pytablereader.CsvTableFileLoader.load`
@@ -1221,11 +1200,9 @@ class SimpleSQLite(object):
         :param str table_name: Table name to create.
 
         :Examples:
-
             :ref:`example-create-table-from-json`
 
         .. seealso::
-
             :py:meth:`.pytablereader.JsonTableFileLoader.load`
             :py:meth:`.pytablereader.JsonTableTextLoader.load`
         """
@@ -1254,7 +1231,6 @@ class SimpleSQLite(object):
         :param str table_name: Table name to create.
 
         :Examples:
-
             :ref:`example-create-table-from-df`
         """
 
