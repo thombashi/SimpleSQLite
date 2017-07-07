@@ -1,32 +1,32 @@
-.. code-block:: python
-    :caption: Sample code that craete a table from CSV
+:Sample Code:
+    .. code-block:: python
+        :caption: Create a table in a SQLite database from CSV
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
-    with open("sample_data.csv", "w") as f:
-        f.write("\n".join([
-            '"attr_a","attr_b","attr_c"',
-            '1,4,"a"',
-            '2,2.1,"bb"',
-            '3,120.9,"ccc"',
-        ]))
+        with open("sample_data.csv", "w") as f:
+            f.write("\n".join([
+                '"attr_a","attr_b","attr_c"',
+                '1,4,"a"',
+                '2,2.1,"bb"',
+                '3,120.9,"ccc"',
+            ]))
 
-    # create table ---
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_csv("sample_data.csv")
+        # create table ---
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_csv("sample_data.csv")
 
-    # output ---
-    table_name = "sample_data"
-    print(con.get_attr_name_list(table_name))
-    result = con.select(select="*", table_name=table_name)
-    for record in result.fetchall():
-        print(record)
+        # output ---
+        table_name = "sample_data"
+        print(con.get_attr_name_list(table_name))
+        result = con.select(select="*", table_name=table_name)
+        for record in result.fetchall():
+            print(record)
 
+:Output:
+    .. code-block:: none
 
-.. code-block:: none
-    :caption: Output
-
-    ['attr_a', 'attr_b', 'attr_c']
-    (1, 4.0, u'a')
-    (2, 2.1, u'bb')
-    (3, 120.9, u'ccc')
+        ['attr_a', 'attr_b', 'attr_c']
+        (1, 4.0, u'a')
+        (2, 2.1, u'bb')
+        (3, 120.9, u'ccc')

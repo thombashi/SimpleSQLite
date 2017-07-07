@@ -1,26 +1,27 @@
-.. code-block:: python
-    :caption: Sample code that create a table from Goole Sheets
+:Sample Code:
+    .. code-block:: python
+        :caption: Create a table in a SQLite database from Google Sheets
 
-    import simplesqlite
-    import pytablereader as ptr
+        import simplesqlite
+        import pytablereader as ptr
 
 
-    credentials_file = "sample-xxxxxxxxxxxx.json"
+        credentials_file = "sample-xxxxxxxxxxxx.json"
 
-    # create table ---
-    con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+        # create table ---
+        con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
-    loader = ptr.GoogleSheetsTableLoader(credentials_file)
-    loader.title = "samplebook"
+        loader = ptr.GoogleSheetsTableLoader(credentials_file)
+        loader.title = "samplebook"
 
-    for tabledata in loader.load():
-        con.create_table_from_tabledata(tabledata)
+        for tabledata in loader.load():
+            con.create_table_from_tabledata(tabledata)
 
-    # output ---
-    for table_name in con.get_table_name_list():
-        print("table: " + table_name)
-        print(con.get_attr_name_list(table_name))
-        result = con.select(select="*", table_name=table_name)
-        for record in result.fetchall():
-            print(record)
-        print()
+        # output ---
+        for table_name in con.get_table_name_list():
+            print("table: " + table_name)
+            print(con.get_attr_name_list(table_name))
+            result = con.select(select="*", table_name=table_name)
+            for record in result.fetchall():
+                print(record)
+            print()

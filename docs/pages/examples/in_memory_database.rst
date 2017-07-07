@@ -8,7 +8,7 @@ the instance can execute methods as well as a |SimpleSQLite| instance opened wit
 
 :Sample Code:
     .. code-block:: python
-        :caption: Make a memory database and create a table in the database
+        :caption: Make an in-memory database and create a table in the database
 
         import json
 

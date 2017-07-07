@@ -1,72 +1,72 @@
-.. code-block:: python
-    :caption: Sample code that create tables from an Excel file
+:Sample Code:
+    .. code-block:: python
+        :caption: Create a table in a SQLite database from an Excel file
 
-    import pytablereader
-    import simplesqlite
-    import xlsxwriter
+        import pytablereader
+        import simplesqlite
+        import xlsxwriter
 
-    file_path = "sample_data.xlsx"
+        file_path = "sample_data.xlsx"
 
-    # create sample data file ---
-    workbook = xlsxwriter.Workbook(file_path)
+        # create sample data file ---
+        workbook = xlsxwriter.Workbook(file_path)
 
-    worksheet = workbook.add_worksheet("samplesheet1")
-    table = [
-        ["", "", "", ""],
-        ["", "a", "b", "c"],
-        ["", 1, 1.1, "a"],
-        ["", 2, 2.2, "bb"],
-        ["", 3, 3.3, "cc"],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
+        worksheet = workbook.add_worksheet("samplesheet1")
+        table = [
+            ["", "", "", ""],
+            ["", "a", "b", "c"],
+            ["", 1, 1.1, "a"],
+            ["", 2, 2.2, "bb"],
+            ["", 3, 3.3, "cc"],
+        ]
+        for row_idx, row in enumerate(table):
+            for col_idx, item in enumerate(row):
+                worksheet.write(row_idx, col_idx, item)
 
-    worksheet = workbook.add_worksheet("samplesheet2")
+        worksheet = workbook.add_worksheet("samplesheet2")
 
-    worksheet = workbook.add_worksheet("samplesheet3")
-    table = [
-        ["", "", ""],
-        ["", "", ""],
-        ["aa", "ab", "ac"],
-        [1, "hoge", "a"],
-        [2, "", "bb"],
-        [3, "foo", ""],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
+        worksheet = workbook.add_worksheet("samplesheet3")
+        table = [
+            ["", "", ""],
+            ["", "", ""],
+            ["aa", "ab", "ac"],
+            [1, "hoge", "a"],
+            [2, "", "bb"],
+            [3, "foo", ""],
+        ]
+        for row_idx, row in enumerate(table):
+            for col_idx, item in enumerate(row):
+                worksheet.write(row_idx, col_idx, item)
 
-    workbook.close()
+        workbook.close()
 
-    # create table ---
-    con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+        # create table ---
+        con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
+    
+        loader = pytablereader.ExcelTableFileLoader(file_path)
+        for tabledata in loader.load():
+            con.create_table_from_tabledata(tabledata)
 
-    loader = pytablereader.ExcelTableFileLoader(file_path)
-    for tabledata in loader.load():
-        con.create_table_from_tabledata(tabledata)
+        # output ---
+        for table_name in con.get_table_name_list():
+            print("table: " + table_name)
+            print(con.get_attr_name_list(table_name))
+            result = con.select(select="*", table_name=table_name)
+            for record in result.fetchall():
+                print(record)
+            print()
 
-    # output ---
-    for table_name in con.get_table_name_list():
-        print("table: " + table_name)
-        print(con.get_attr_name_list(table_name))
-        result = con.select(select="*", table_name=table_name)
-        for record in result.fetchall():
-            print(record)
-        print()
+:Output:
+    .. code-block:: none
 
-
-.. code-block:: none
-    :caption: Output
-
-    table: samplesheet1
-    ['a', 'b', 'c']
-    (1.0, 1.1, u'a')
-    (2.0, 2.2, u'bb')
-    (3.0, 3.3, u'cc')
-
-    table: samplesheet3
-    ['aa', 'ab', 'ac']
-    (1.0, u'hoge', u'a')
-    (2.0, u'', u'bb')
-    (3.0, u'foo', u'')
+        table: samplesheet1
+        ['a', 'b', 'c']
+        (1.0, 1.1, 'a')
+        (2.0, 2.2, 'bb')
+        (3.0, 3.3, 'cc')
+    
+        table: samplesheet3
+        ['aa', 'ab', 'ac']
+        (1.0, 'hoge', 'a')
+        (2.0, '', 'bb')
+        (3.0, 'foo', '')

@@ -1,24 +1,25 @@
-.. code-block:: python
-    :caption: Sample code that craete a table from pandas.DataFrame
+:Sample Code:
+    .. code-block:: python
+        :caption: Create a table in a SQLite database from pandas.DataFrame
 
-    from simplesqlite import SimpleSQLite
-    import pandas
+        from simplesqlite import SimpleSQLite
+        import pandas
 
-    con = SimpleSQLite("pandas_df.sqlite")
+        con = SimpleSQLite("pandas_df.sqlite")
 
-    con.create_table_from_dataframe(pandas.DataFrame(
-        [
-            [0, 0.1, "a"],
-            [1, 1.1, "bb"],
-            [2, 2.2, "ccc"],
-        ],
-        columns=['id', 'value', 'name']
-    ), table_name="pandas_df")
+        con.create_table_from_dataframe(pandas.DataFrame(
+            [
+                [0, 0.1, "a"],
+                [1, 1.1, "bb"],
+                [2, 2.2, "ccc"],
+            ],
+            columns=['id', 'value', 'name']
+        ), table_name="pandas_df")
 
+:Output:
+    .. code-block:: none
+        :caption: Output sqlite database file
 
-.. code-block:: none
-    :caption: Output sqlite database file
-
-    $ sqlite3 pandas_df.sqlite
-    sqlite> .schema
-    CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
+        $ sqlite3 pandas_df.sqlite
+        sqlite> .schema
+        CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);

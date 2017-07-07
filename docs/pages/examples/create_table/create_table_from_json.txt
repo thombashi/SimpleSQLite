@@ -1,95 +1,95 @@
 .. _example-convert-multi-json-table:
 
-.. code-block:: python
-    :caption: Sample code 1: multiple table data in a file
+:Sample Code 1:
+    .. code-block:: python
+        :caption: Create multiple tables in a SQLite database from multiple table data in a JSON file
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
+        file_path = "sample_data_multi.json"
 
-    file_path = "sample_data_multi.json"
+        # create sample data file ---
+        with open(file_path, "w") as f:
+            f.write("""{
+                "table_a" : [
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ],
+                "table_b" : [
+                    {"a": 1, "b": 4},
+                    {"a": 2 },
+                    {"a": 3, "b": 120.9}
+                ]
+            }""")
 
-    # create sample data file ---
-    with open(file_path, "w") as f:
-        f.write("""{
-            "table_a" : [
-                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-            ],
-            "table_b" : [
-                {"a": 1, "b": 4},
-                {"a": 2 },
-                {"a": 3, "b": 120.9}
-            ]
-        }""")
+        # create table ---
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_json(file_path)
 
-    # create table ---
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_json(file_path)
+        # output ---
+        for table_name in con.get_table_name_list():
+            print("table: " + table_name)
+            print(con.get_attr_name_list(table_name))
+            result = con.select(select="*", table_name=table_name)
+            for record in result.fetchall():
+                print(record)
+            print()
 
-    # output ---
-    for table_name in con.get_table_name_list():
-        print("table: " + table_name)
-        print(con.get_attr_name_list(table_name))
-        result = con.select(select="*", table_name=table_name)
-        for record in result.fetchall():
-            print(record)
-        print()
-
-
-.. code-block:: none
-    :caption: Output of the sample code 1
+:Output:
+    .. code-block:: none
+        :caption: Output of the sample code 1
+        
+        table: table_b
+        ['a', 'b']
+        (1, '4')
+        (2, 'NULL')
+        (3, '120.9')
     
-    table: table_b
-    ['a', 'b']
-    (1, u'4')
-    (2, u'NULL')
-    (3, u'120.9')
-
-    table: table_a
-    ['attr_a', 'attr_b', 'attr_c']
-    (1, 4.0, u'a')
-    (2, 2.1, u'bb')
-    (3, 120.9, u'ccc')
+        table: table_a
+        ['attr_a', 'attr_b', 'attr_c']
+        (1, 4.0, 'a')
+        (2, 2.1, 'bb')
+        (3, 120.9, 'ccc')
 
 
 .. _example-convert-single-json-table:
 
-.. code-block:: python
-    :caption: Sample code 2: single table data in a file
+:Sample Code 2:
+    .. code-block:: python
+        :caption: Create a table in a SQLite database from a table data in a JSON file
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
+        file_path = "sample_data_single.json"
 
-    file_path = "sample_data_single.json"
+        # create sample data file ---
+        with open(file_path, "w") as f:
+            f.write("""[
+                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+            ]""")
 
-    # create sample data file ---
-    with open(file_path, "w") as f:
-        f.write("""[
-            {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-            {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-            {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-        ]""")
+        # create table ---
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_json(file_path)
 
-    # create table ---
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_json(file_path)
+        # output ---
+        for table_name in con.get_table_name_list():
+            print("table: " + table_name)
+            print(con.get_attr_name_list(table_name))
+            result = con.select(select="*", table_name=table_name)
+            for record in result.fetchall():
+                print(record)
+            print()
 
-    # output ---
-    for table_name in con.get_table_name_list():
-        print("table: " + table_name)
-        print(con.get_attr_name_list(table_name))
-        result = con.select(select="*", table_name=table_name)
-        for record in result.fetchall():
-            print(record)
-        print()
-
-
-.. code-block:: none
-    :caption: Output of the sample code 2
-
-    table: sample_data_single
-    ['attr_a', 'attr_b', 'attr_c']
-    (1, 4.0, u'a')
-    (2, 2.1, u'bb')
-    (3, 120.9, u'ccc')
+:Output:
+    .. code-block:: none
+        :caption: Output of the sample code 2
+    
+        table: sample_data_single
+        ['attr_a', 'attr_b', 'attr_c']
+        (1, 4.0, 'a')
+        (2, 2.1, 'bb')
+        (3, 120.9, 'ccc')
