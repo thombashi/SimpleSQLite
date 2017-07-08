@@ -825,8 +825,7 @@ class SimpleSQLite(object):
     def has_attribute(self, table_name, attribute_name):
         warnings.warn(
             "has_attribute deleted in the future, use has_attr instead.",
-            DeprecationWarning
-        )
+            DeprecationWarning)
 
     def has_attr_list(self, table_name, attribute_name_list):
         """
@@ -1091,10 +1090,9 @@ class SimpleSQLite(object):
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=None):
         warnings.warn(
-            "create_table_with_data() will be deleted in the future, "
+            "create_table_with_data() deleted in the future, "
             "use create_table_from_data_matrix() instead.",
-            DeprecationWarning
-        )
+            DeprecationWarning)
 
         self.create_table_from_data_matrix(
             table_name, attribute_name_list, data_matrix, index_attribute_list)
