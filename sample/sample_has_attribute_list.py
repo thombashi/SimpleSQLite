@@ -18,6 +18,6 @@ print(con.has_attribute_list(table_name, ["attr_a", "attr_b"]))
 print(con.has_attribute_list(
     table_name, ["attr_a", "attr_b", "not_existing"]))
 try:
-    print(con.has_attribute("not_existing", ["attr_a"]))
+    print(con.has_attr("not_existing", ["attr_a"]))
 except simplesqlite.TableNotFoundError as e:
     print(e)

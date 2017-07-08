@@ -378,7 +378,7 @@ class Test_SimpleSQLite_has_attribute:
         [TEST_TABLE_NAME, None, False],
     ])
     def test_normal(self, con, table, attr, expected):
-        assert con.has_attribute(table, attr) == expected
+        assert con.has_attr(table, attr) == expected
 
     @pytest.mark.parametrize(["value", "attr", "expected"], [
         ["not_exist_table", "attr_a", TableNotFoundError],
@@ -387,11 +387,11 @@ class Test_SimpleSQLite_has_attribute:
     ])
     def test_exception(self, con, value, attr, expected):
         with pytest.raises(expected):
-            con.has_attribute(value, attr)
+            con.has_attr(value, attr)
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.has_attribute(TEST_TABLE_NAME, "attr")
+            con_null.has_attr(TEST_TABLE_NAME, "attr")
 
 
 class Test_SimpleSQLite_has_attribute_list:
