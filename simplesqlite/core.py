@@ -11,6 +11,7 @@ import logging
 import os
 import re
 import sqlite3
+import warnings
 
 import dataproperty
 from mbstrdecoder import MultiByteStrDecoder
@@ -827,7 +828,7 @@ class SimpleSQLite(object):
             DeprecationWarning
         )
 
-    def has_attribute_list(self, table_name, attribute_name_list):
+    def has_attr_list(self, table_name, attribute_name_list):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name_list: Attribute names to be tested.
@@ -848,9 +849,9 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                print(con.has_attribute_list(table_name, ["attr_a"]))
-                print(con.has_attribute_list(table_name, ["attr_a", "attr_b"]))
-                print(con.has_attribute_list(
+                print(con.has_attr_list(table_name, ["attr_a"]))
+                print(con.has_attr_list(table_name, ["attr_a", "attr_b"]))
+                print(con.has_attr_list(
                     table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
                     print(con.has_attr("not_existing", ["attr_a"]))
@@ -878,6 +879,12 @@ class SimpleSQLite(object):
             return False
 
         return True
+
+    def has_attribute_list(self, table_name, attribute_name_list):
+        warnings.warn(
+            "has_attribute_list deleted in the future, use "
+            "has_attr_list instead.",
+            DeprecationWarning)
 
     def verify_table_existence(self, table_name):
         """

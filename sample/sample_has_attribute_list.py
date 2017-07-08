@@ -13,9 +13,9 @@ con.create_table_from_data_matrix(
     attr_name_list=["attr_a", "attr_b"],
     data_matrix=[[1, "a"], [2, "b"]])
 
-print(con.has_attribute_list(table_name, ["attr_a"]))
-print(con.has_attribute_list(table_name, ["attr_a", "attr_b"]))
-print(con.has_attribute_list(
+print(con.has_attr_list(table_name, ["attr_a"]))
+print(con.has_attr_list(table_name, ["attr_a", "attr_b"]))
+print(con.has_attr_list(
     table_name, ["attr_a", "attr_b", "not_existing"]))
 try:
     print(con.has_attr("not_existing", ["attr_a"]))
