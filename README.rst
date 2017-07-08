@@ -54,108 +54,111 @@ Create a table
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    import json
-    from simplesqlite import SimpleSQLite
+        import json
+        from simplesqlite import SimpleSQLite
 
-    table_name = "sample_table"
-    con = SimpleSQLite("sample.sqlite", "w")
+        table_name = "sample_table"
+        con = SimpleSQLite("sample.sqlite", "w")
 
-    # create table -----
-    data_matrix = [
-        [1, 1.1, "aaa", 1,   1],
-        [2, 2.2, "bbb", 2.2, 2.2],
-        [3, 3.3, "ccc", 3,   "ccc"],
-    ]
-    con.create_table_from_data_matrix(
-        table_name,
-        attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-        data_matrix=data_matrix)
+        # create table -----
+        data_matrix = [
+            [1, 1.1, "aaa", 1,   1],
+            [2, 2.2, "bbb", 2.2, 2.2],
+            [3, 3.3, "ccc", 3,   "ccc"],
+        ]
+        con.create_table_from_data_matrix(
+            table_name,
+            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            data_matrix=data_matrix)
 
-    # display values in the table -----
-    print(con.get_attr_name_list(table_name))
-    result = con.select(select="*", table_name=table_name)
-    for record in result.fetchall():
-        print(record)
+        # display values in the table -----
+        print(con.get_attr_name_list(table_name))
+        result = con.select(select="*", table_name=table_name)
+        for record in result.fetchall():
+            print(record)
 
-    # display data type for each column in the table -----
-    print(json.dumps(con.get_attr_type(table_name), indent=4))
+        # display data type for each column in the table -----
+        print(json.dumps(con.get_attr_type(table_name), indent=4))
 
+:Output:
+    .. code::
 
-.. code::
-
-    ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
-    (1, 1.1, u'aaa', 1.0, u'1')
-    (2, 2.2, u'bbb', 2.2, u'2.2')
-    (3, 3.3, u'ccc', 3.0, u'ccc')
-    {
-        "attr_b": " REAL",
-        "attr_c": " TEXT",
-        "attr_a": " INTEGER",
-        "attr_d": " REAL",
-        "attr_e": " TEXT"
-    }
+        ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
+        (1, 1.1, u'aaa', 1.0, u'1')
+        (2, 2.2, u'bbb', 2.2, u'2.2')
+        (3, 3.3, u'ccc', 3.0, u'ccc')
+        {
+            "attr_b": " REAL",
+            "attr_c": " TEXT",
+            "attr_a": " INTEGER",
+            "attr_d": " REAL",
+            "attr_e": " TEXT"
+        }
 
 Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    from simplesqlite import SimpleSQLite
+        from simplesqlite import SimpleSQLite
 
-    with open("sample_data.csv", "w") as f:
-        f.write("\n".join([
-            '"attr_a","attr_b","attr_c"',
-            '1,4,"a"',
-            '2,2.1,"bb"',
-            '3,120.9,"ccc"',
-        ]))
+        with open("sample_data.csv", "w") as f:
+            f.write("\n".join([
+                '"attr_a","attr_b","attr_c"',
+                '1,4,"a"',
+                '2,2.1,"bb"',
+                '3,120.9,"ccc"',
+            ]))
 
-    # create table ---
-    con = SimpleSQLite("sample.sqlite", "w")
-    con.create_table_from_csv("sample_data.csv")
+        # create table ---
+        con = SimpleSQLite("sample.sqlite", "w")
+        con.create_table_from_csv("sample_data.csv")
 
-    # output ---
-    table_name = "sample_data"
-    print(con.get_attr_name_list(table_name))
-    result = con.select(select="*", table_name=table_name)
-    for record in result.fetchall():
-        print(record)
+        # output ---
+        table_name = "sample_data"
+        print(con.get_attr_name_list(table_name))
+        result = con.select(select="*", table_name=table_name)
+        for record in result.fetchall():
+            print(record)
 
+:Output:
+    .. code::
 
-.. code::
-
-    ['attr_a', 'attr_b', 'attr_c']
-    (1, 4.0, u'a')
-    (2, 2.1, u'bb')
-    (3, 120.9, u'ccc')
+        ['attr_a', 'attr_b', 'attr_c']
+        (1, 4.0, u'a')
+        (2, 2.1, u'bb')
+        (3, 120.9, u'ccc')
 
 Create a table from pandas.DataFrame
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+:Sample Code:
+    .. code:: python
 
-    from simplesqlite import SimpleSQLite
-    import pandas
+        from simplesqlite import SimpleSQLite
+        import pandas
 
-    con = SimpleSQLite("pandas_df.sqlite")
+        con = SimpleSQLite("pandas_df.sqlite")
 
-    con.create_table_from_dataframe(pandas.DataFrame(
-        [
-            [0, 0.1, "a"],
-            [1, 1.1, "bb"],
-            [2, 2.2, "ccc"],
-        ],
-        columns=['id', 'value', 'name']
-    ), table_name="pandas_df")
+        con.create_table_from_dataframe(pandas.DataFrame(
+            [
+                [0, 0.1, "a"],
+                [1, 1.1, "bb"],
+                [2, 2.2, "ccc"],
+            ],
+            columns=['id', 'value', 'name']
+        ), table_name="pandas_df")
 
+:Output:
+    .. code::
 
-.. code::
-
-    $ sqlite3 pandas_df.sqlite
-    sqlite> .schema
-    CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
+        $ sqlite3 pandas_df.sqlite
+        sqlite> .schema
+        CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
 
 Insert records into a table
 ---------------------------
