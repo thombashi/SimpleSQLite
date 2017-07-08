@@ -1035,11 +1035,11 @@ class SimpleSQLite(object):
 
         return True
 
-    def create_index(self, table_name, attribute_name):
+    def create_index(self, table_name, attr_name):
         """
         :param str table_name:
             Table name that contains the attribute to be indexed.
-        :param str attribute_name: Attribute name to create index.
+        :param str attr_name: Attribute name to create index.
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -1051,16 +1051,14 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
 
         index_name = "{:s}_{:s}_index".format(
-            SqlQuery.sanitize(table_name), SqlQuery.sanitize(attribute_name))
-        if attribute_name.find("'") != -1:
+            SqlQuery.sanitize(table_name), SqlQuery.sanitize(attr_name))
+        if attr_name.find("'") != -1:
             query_format = 'CREATE INDEX IF NOT EXISTS {:s} ON {:s}("{:s})'
         else:
             query_format = "CREATE INDEX IF NOT EXISTS {:s} ON {:s}('{:s}')"
 
         query = query_format.format(
-            index_name,
-            SqlQuery.to_table_str(table_name),
-            attribute_name)
+            index_name, SqlQuery.to_table_str(table_name), attr_name)
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
