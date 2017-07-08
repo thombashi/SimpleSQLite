@@ -1011,10 +1011,10 @@ class SimpleSQLite(object):
             self.execute_query(query, logging.getLogger().findCaller())
             self.commit()
 
-    def create_table(self, table_name, attribute_description_list):
+    def create_table(self, table_name, attr_description_list):
         """
         :param str table_name: Table name to create.
-        :param list attribute_description_list: List of table description.
+        :param list attr_description_list: List of table description.
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises IOError: |raises_write_permission|
@@ -1027,7 +1027,7 @@ class SimpleSQLite(object):
             return True
 
         query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
-            table_name, ", ".join(attribute_description_list))
+            table_name, ", ".join(attr_description_list))
         logger.debug(query)
 
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
