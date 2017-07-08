@@ -322,7 +322,7 @@ class SimpleSQLite(object):
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
+        :Example:
             :ref:`example-select-as-dataframe`
 
         .. note::
@@ -392,7 +392,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
+        :Example:
             :ref:`example-insert-records`
         """
 
@@ -412,7 +412,7 @@ class SimpleSQLite(object):
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
+        :Example:
             :ref:`example-insert-records`
 
         .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
@@ -472,7 +472,6 @@ class SimpleSQLite(object):
     def get_total_changes(self):
         """
         .. seealso::
-
             :py:attr:`sqlite3.Connection.total_changes`
         """
 
@@ -643,7 +642,7 @@ class SimpleSQLite(object):
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
 
-        :Examples:
+        :Example:
             :ref:`example-get-profile`
         """
 
@@ -1067,7 +1066,7 @@ class SimpleSQLite(object):
         :param str table_name: Table name that exists attribute.
         :param list attr_name_list:
             List of attribute names to create indices.
-            Ignore attributes that not existing in the table.
+            Ignore attributes that are not existing in the table.
 
         .. seealso:: :py:meth:`.create_index`
         """
@@ -1113,11 +1112,10 @@ class SimpleSQLite(object):
             |raises_validate_attr_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
-        :Examples:
+        :Example:
             :ref:`example-create-table-from-data-matrix`
 
         .. seealso::
-
             :py:meth:`.create_table`
             :py:meth:`.insert_many`
             :py:meth:`.create_index_list`
@@ -1134,7 +1132,6 @@ class SimpleSQLite(object):
         :param TableData tabledata: Table data to create.
 
         .. seealso::
-
             :py:meth:`.create_table_from_data_matrix`
         """
 
@@ -1163,7 +1160,7 @@ class SimpleSQLite(object):
         :param str encoding: CSV file encoding.
         :raises ValueError: If the CSV data is invalid.
 
-        :Examples:
+        :Example:
             :ref:`example-create-table-from-csv`
 
         .. seealso::
