@@ -137,7 +137,7 @@ def connect_sqlite_db_mem():
     :return: Instance of a in memory database.
     :rtype: SimpleSQLite
 
-    :Examples:
+    :Example:
         :ref:`example-connect-sqlite-db-mem`
     """
 
