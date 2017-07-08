@@ -779,10 +779,10 @@ class SimpleSQLite(object):
 
         return table_name in self.get_table_name_list()
 
-    def has_attr(self, table_name, attribute_name):
+    def has_attr(self, table_name, attr_name):
         """
-        :param str table_name: Table name that exists attribute.
-        :param str attribute_name: Attribute name to be tested.
+        :param str table_name: Table name that the attribute exists.
+        :param str attr_name: Attribute name to be tested.
         :return: |True| if the table has the attribute.
         :rtype: bool
         :raises simplesqlite.TableNotFoundError:
@@ -816,10 +816,10 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if typepy.is_null_string(attribute_name):
+        if typepy.is_null_string(attr_name):
             return False
 
-        return attribute_name in self.get_attr_name_list(table_name)
+        return attr_name in self.get_attr_name_list(table_name)
 
     def has_attribute(self, table_name, attribute_name):
         warnings.warn(
