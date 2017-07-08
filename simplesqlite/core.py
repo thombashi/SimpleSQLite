@@ -779,7 +779,7 @@ class SimpleSQLite(object):
 
         return table_name in self.get_table_name_list()
 
-    def has_attribute(self, table_name, attribute_name):
+    def has_attr(self, table_name, attribute_name):
         """
         :param str table_name: Table name that exists attribute.
         :param str attribute_name: Attribute name to be tested.
@@ -800,10 +800,10 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                print(con.has_attribute(table_name, "attr_a"))
-                print(con.has_attribute(table_name, "not_existing"))
+                print(con.has_attr(table_name, "attr_a"))
+                print(con.has_attr(table_name, "not_existing"))
                 try:
-                    print(con.has_attribute("not_existing", "attr_a"))
+                    print(con.has_attr("not_existing", "attr_a"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
         :Output:
@@ -820,6 +820,12 @@ class SimpleSQLite(object):
             return False
 
         return attribute_name in self.get_attr_name_list(table_name)
+
+    def has_attribute(self, table_name, attribute_name):
+        warnings.warn(
+            "has_attribute deleted in the future, use has_attr instead.",
+            DeprecationWarning
+        )
 
     def has_attribute_list(self, table_name, attribute_name_list):
         """
@@ -847,7 +853,7 @@ class SimpleSQLite(object):
                 print(con.has_attribute_list(
                     table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
-                    print(con.has_attribute("not_existing", ["attr_a"]))
+                    print(con.has_attr("not_existing", ["attr_a"]))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
         :Output:
@@ -865,7 +871,7 @@ class SimpleSQLite(object):
         not_exist_field_list = [
             attribute_name
             for attribute_name in attribute_name_list
-            if not self.has_attribute(table_name, attribute_name)
+            if not self.has_attr(table_name, attribute_name)
         ]
 
         if len(not_exist_field_list) > 0:
@@ -956,7 +962,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if self.has_attribute(table_name, attribute_name):
+        if self.has_attr(table_name, attribute_name):
             return
 
         raise AttributeNotFoundError(
