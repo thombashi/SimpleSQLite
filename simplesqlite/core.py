@@ -1083,8 +1083,6 @@ class SimpleSQLite(object):
     def create_table_with_data(
             self, table_name, attribute_name_list, data_matrix,
             index_attribute_list=None):
-        import warnings
-
         warnings.warn(
             "create_table_with_data() will be deleted in the future, "
             "use create_table_from_data_matrix() instead.",
