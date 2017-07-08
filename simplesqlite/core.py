@@ -829,7 +829,7 @@ class SimpleSQLite(object):
 
     def has_attr_list(self, table_name, attr_name_list):
         """
-        :param str table_name: Table name that exists attribute.
+        :param str table_name: Table name that attributes exists.
         :param str attr_name_list: Attribute names to tested.
         :return: |True| if the table has all of the attribute.
         :rtype: bool
@@ -926,8 +926,8 @@ class SimpleSQLite(object):
 
     def verify_attr_existence(self, table_name, attr_name):
         """
-        :param str table_name: Table name that exists attribute.
-        :param str attr_name: Attribute name to be tested.
+        :param str table_name: Table name that the attribute exists.
+        :param str attr_name: Attribute name to tested.
         :raises simplesqlite.AttributeNotFoundError:
             If attribute not found in the table
         :raises simplesqlite.TableNotFoundError:
