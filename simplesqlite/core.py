@@ -924,10 +924,10 @@ class SimpleSQLite(object):
             "'{}' table not found in {}".format(
                 table_name, self.database_path))
 
-    def verify_attr_existence(self, table_name, attribute_name):
+    def verify_attr_existence(self, table_name, attr_name):
         """
         :param str table_name: Table name that exists attribute.
-        :param str attribute_name: Attribute name to be tested.
+        :param str attr_name: Attribute name to be tested.
         :raises simplesqlite.AttributeNotFoundError:
             If attribute not found in the table
         :raises simplesqlite.TableNotFoundError:
@@ -967,12 +967,12 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        if self.has_attr(table_name, attribute_name):
+        if self.has_attr(table_name, attr_name):
             return
 
         raise AttributeNotFoundError(
             "'{}' attribute not found in '{}' table".format(
-                attribute_name, table_name))
+                attr_name, table_name))
 
     def validate_access_permission(self, valid_permission_list):
         """
