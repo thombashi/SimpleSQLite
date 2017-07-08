@@ -380,6 +380,16 @@ class SimpleSQLite(object):
             table_name=table_name, header_list=column_list,
             record_list=result.fetchall())
 
+    def select_as_dict(
+            self, table_name, column_list=None, where=None, extra=None):
+        """
+        :return: Table data as a |dict| instance.
+        :rtype: dict
+        """
+
+        return self.select_as_tabledata(
+            table_name, column_list, where, extra).as_dict()
+
     def insert(self, table_name, insert_record):
         """
         Send an INSERT query to the database.

@@ -7,7 +7,7 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from collections import namedtuple
+from collections import (namedtuple, OrderedDict)
 import datetime
 import itertools
 
@@ -141,6 +141,41 @@ class Test_SimpleSQLite_select(object):
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.select(select="*", table_name=TEST_TABLE_NAME)
+
+
+class Test_SimpleSQLite_select_as_dict(object):
+
+    @pytest.mark.parametrize(["value", "expected"], [
+        [
+            ptr.TableData(
+                "json1",
+                ["attr_a", "attr_b", "attr_c"],
+                [
+                    {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
+                    {u'attr_a': 2, u'attr_b': 2.1, u'attr_c': u'bb'},
+                    {u'attr_a': 3, u'attr_b': 120.9,
+                     u'attr_c': u'ccc'},
+                ]
+            ),
+            {
+                'json1': [
+                    OrderedDict([
+                        ('attr_a', 1), ('attr_b', 4), ('attr_c', 'a')]),
+                    OrderedDict([
+                        ('attr_a', 2), ('attr_b', 2.1), ('attr_c', 'bb')]),
+                    OrderedDict([
+                        ('attr_a', 3), ('attr_b', 120.9), ('attr_c', 'ccc')]),
+                ],
+            },
+        ],
+    ])
+    def test_normal(self, tmpdir, value, expected):
+        p_db = tmpdir.join("tmp.db")
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_tabledata(value)
+
+        assert con.select_as_dict(table_name=value.table_name) == expected
 
 
 class Test_SimpleSQLite_insert(object):
