@@ -151,10 +151,10 @@ class Test_SimpleSQLite_select_as_dict(object):
                 "json1",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
-                    {u'attr_a': 2, u'attr_b': 2.1, u'attr_c': u'bb'},
-                    {u'attr_a': 3, u'attr_b': 120.9,
-                     u'attr_c': u'ccc'},
+                    {'attr_a': 1, 'attr_b': 4, 'attr_c': 'a'},
+                    {'attr_a': 2, 'attr_b': 2.1, 'attr_c': 'bb'},
+                    {'attr_a': 3, 'attr_b': 120.9,
+                     'attr_c': 'ccc'},
                 ]
             ),
             {
@@ -473,17 +473,17 @@ class Test_SimpleSQLite_get_sqlite_master(object):
         print(con_index.get_sqlite_master())
         assert con_index.get_sqlite_master() == [
             {
-                'tbl_name': u'test_table',
-                'sql': u'CREATE TABLE \'test_table\' ("attr_a" INTEGER, "attr_b" INTEGER)',
-                'type': u'table',
-                'name': u'test_table',
+                'tbl_name': 'test_table',
+                'sql': 'CREATE TABLE \'test_table\' ("attr_a" INTEGER, "attr_b" INTEGER)',
+                'type': 'table',
+                'name': 'test_table',
                 'rootpage': 2
             },
             {
-                'tbl_name': u'test_table',
-                'sql': u"CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
-                'type': u'index',
-                'name': u'test_table_attr_a_index',
+                'tbl_name': 'test_table',
+                'sql': "CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
+                'type': 'index',
+                'name': 'test_table_attr_a_index',
                 'rootpage': 3
             },
         ]
@@ -560,9 +560,9 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 ],
                 ["attr_a"],
                 {
-                    u'"attr_c"': u'TEXT',
-                    u'"attr_b"': u'REAL',
-                    u'"attr_a"': u'INTEGER'
+                    '"attr_c"': 'TEXT',
+                    '"attr_b"': 'REAL',
+                    '"attr_a"': 'INTEGER'
                 },
             ],
             [
@@ -578,9 +578,9 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     "not_exist_attr_1",
                 ],
                 {
-                    u'"attr_c"': u'TEXT',
-                    u'"attr_b"': u'REAL',
-                    u'"attr_a"': u'INTEGER'},
+                    '"attr_c"': 'TEXT',
+                    '"attr_b"': 'REAL',
+                    '"attr_a"': 'INTEGER'},
             ],
             [
                 [
@@ -597,14 +597,14 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     "attr inf", "attr nan", "attr-f", "attr dt",
                 ],
                 {
-                    u'"attr_c[%]"': u'TEXT',
-                    u'"attr_a"': u'INTEGER',
-                    u'[attr nan]': u'TEXT',
-                    u'[attr inf]': u'TEXT',
-                    u'"attr_b"': u'REAL',
-                    u'[attr dt]': u'TEXT',
-                    u'[attr($)]': u'TEXT',
-                    u'[attr-f]': u'REAL'
+                    '"attr_c[%]"': 'TEXT',
+                    '"attr_a"': 'INTEGER',
+                    '[attr nan]': 'TEXT',
+                    '[attr inf]': 'TEXT',
+                    '"attr_b"': 'REAL',
+                    '[attr dt]': 'TEXT',
+                    '[attr($)]': 'TEXT',
+                    '[attr-f]': 'REAL'
                 }
             ],
             [
@@ -618,11 +618,11 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 ],
                 [],
                 {
-                    u'Age': u'INTEGER',
-                    u'No': u'INTEGER',
-                    u'Team': u'TEXT',
-                    u'"Player_last_name"': u'TEXT',
-                    u'"index"': u'INTEGER'
+                    'Age': 'INTEGER',
+                    'No': 'INTEGER',
+                    'Team': 'TEXT',
+                    '"Player_last_name"': 'TEXT',
+                    '"index"': 'INTEGER'
                 }
             ],
             [
@@ -709,13 +709,13 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
                 "json1",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    {u'attr_a': 1, u'attr_b': 4, u'attr_c': u'a'},
-                    {u'attr_a': 2, u'attr_b': 2.1, u'attr_c': u'bb'},
-                    {u'attr_a': 3, u'attr_b': 120.9,
-                     u'attr_c': u'ccc'},
+                    {'attr_a': 1, 'attr_b': 4, 'attr_c': 'a'},
+                    {'attr_a': 2, 'attr_b': 2.1, 'attr_c': 'bb'},
+                    {'attr_a': 3, 'attr_b': 120.9,
+                     'attr_c': 'ccc'},
                 ]
             ),
-            [(1, 4.0, u'a'), (2, 2.1, u'bb'), (3, 120.9, u'ccc')]
+            [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')]
         ],
         [
             ptr.TableData(
@@ -781,9 +781,9 @@ class Test_SimpleSQLite_create_table_from_csv(object):
                 "tablename",
                 ["hoge", "foo", "bar"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
             [
@@ -800,9 +800,9 @@ class Test_SimpleSQLite_create_table_from_csv(object):
                 "tmp",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
         ])
@@ -850,9 +850,9 @@ class Test_SimpleSQLite_create_table_from_csv(object):
                 "tmp",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
         ])
@@ -899,9 +899,9 @@ class Test_SimpleSQLite_create_table_from_json(object):
                 "tmpjson",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
             [
@@ -917,9 +917,9 @@ class Test_SimpleSQLite_create_table_from_json(object):
                 "tmp_tablename",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
             [
@@ -935,9 +935,9 @@ class Test_SimpleSQLite_create_table_from_json(object):
                 "tablename",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
         ])
@@ -983,9 +983,9 @@ class Test_SimpleSQLite_create_table_from_json(object):
                 "tmp",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
             [
@@ -1001,9 +1001,9 @@ class Test_SimpleSQLite_create_table_from_json(object):
                 "tablename",
                 ["attr_a", "attr_b", "attr_c"],
                 [
-                    (1, 4.0,   u"a"),
-                    (2, 2.1,   u"bb"),
-                    (3, 120.9, u"ccc"),
+                    (1, 4.0,   "a"),
+                    (2, 2.1,   "bb"),
+                    (3, 120.9, "ccc"),
                 ],
             ],
         ])
