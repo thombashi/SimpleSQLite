@@ -1062,10 +1062,10 @@ class SimpleSQLite(object):
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
-    def create_index_list(self, table_name, attribute_name_list):
+    def create_index_list(self, table_name, attr_name_list):
         """
         :param str table_name: Table name that exists attribute.
-        :param list attribute_name_list:
+        :param list attr_name_list:
             List of attribute names to create indices.
             Ignore attributes that not existing in the table.
 
@@ -1074,11 +1074,11 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if typepy.is_empty_sequence(attribute_name_list):
+        if typepy.is_empty_sequence(attr_name_list):
             return
 
         table_attr_set = set(self.get_attr_name_list(table_name))
-        index_attr_set = set(attribute_name_list)
+        index_attr_set = set(attr_name_list)
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
