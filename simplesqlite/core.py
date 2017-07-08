@@ -827,10 +827,10 @@ class SimpleSQLite(object):
             "has_attribute deleted in the future, use has_attr instead.",
             DeprecationWarning)
 
-    def has_attr_list(self, table_name, attribute_name_list):
+    def has_attr_list(self, table_name, attr_name_list):
         """
         :param str table_name: Table name that exists attribute.
-        :param str attribute_name_list: Attribute names to be tested.
+        :param str attr_name_list: Attribute names to tested.
         :return: |True| if the table has all of the attribute.
         :rtype: bool
         :raises simplesqlite.TableNotFoundError:
@@ -865,13 +865,12 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if typepy.is_empty_sequence(attribute_name_list):
+        if typepy.is_empty_sequence(attr_name_list):
             return False
 
         not_exist_field_list = [
-            attribute_name
-            for attribute_name in attribute_name_list
-            if not self.has_attr(table_name, attribute_name)
+            attr_name for attr_name in attr_name_list
+            if not self.has_attr(table_name, attr_name)
         ]
 
         if len(not_exist_field_list) > 0:
