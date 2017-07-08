@@ -47,7 +47,7 @@ NamedTuple = namedtuple("NamedTuple", "attr_a attr_b")
 NamedTupleEx = namedtuple("NamedTupleEx", "attr_a attr_b attr_c")
 
 
-class Test_SimpleSQLite_init:
+class Test_SimpleSQLite_init(object):
 
     @pytest.mark.parametrize(["mode"], [
         ["w"],
@@ -97,7 +97,7 @@ class Test_SimpleSQLite_init:
             SimpleSQLite(str(p), mode)
 
 
-class Test_SimpleSQLite_is_connected:
+class Test_SimpleSQLite_is_connected(object):
 
     def test_normal(self, con):
         assert con.is_connected()
@@ -106,7 +106,7 @@ class Test_SimpleSQLite_is_connected:
         assert not con_null.is_connected()
 
 
-class Test_SimpleSQLite_check_connection:
+class Test_SimpleSQLite_check_connection(object):
 
     def test_normal(self, con):
         con.check_connection()
@@ -116,7 +116,7 @@ class Test_SimpleSQLite_check_connection:
             con_null.check_connection()
 
 
-class Test_SimpleSQLite_select:
+class Test_SimpleSQLite_select(object):
 
     def test_smoke(self, con):
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
@@ -143,7 +143,7 @@ class Test_SimpleSQLite_select:
             con_null.select(select="*", table_name=TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_insert:
+class Test_SimpleSQLite_insert(object):
 
     @pytest.mark.parametrize(["value", "expeted"], [
         [[5, 6], (5, 6)],
@@ -195,7 +195,7 @@ class Test_SimpleSQLite_insert:
                 TEST_TABLE_NAME, insert_record=[5, 6])
 
 
-class Test_SimpleSQLite_insert_many:
+class Test_SimpleSQLite_insert_many(object):
 
     @pytest.mark.parametrize(["table_name", "value"], [
         [
@@ -272,7 +272,7 @@ class Test_SimpleSQLite_insert_many:
                 TEST_TABLE_NAME, [])
 
 
-class Test_SimpleSQLite_update:
+class Test_SimpleSQLite_update(object):
 
     def test_normal(self, con):
         table_name = TEST_TABLE_NAME
@@ -307,7 +307,7 @@ class Test_SimpleSQLite_update:
             con_null.update(table_name=TEST_TABLE_NAME, set_query="hoge")
 
 
-class Test_SimpleSQLite_get_total_changes:
+class Test_SimpleSQLite_get_total_changes(object):
 
     def test_smoke(self, con):
         assert con.get_total_changes() > 0
@@ -317,7 +317,7 @@ class Test_SimpleSQLite_get_total_changes:
             con_null.get_total_changes()
 
 
-class Test_SimpleSQLite_get_table_name_list:
+class Test_SimpleSQLite_get_table_name_list(object):
 
     def test_normal(self, con):
         expected = set([TEST_TABLE_NAME])
@@ -329,7 +329,7 @@ class Test_SimpleSQLite_get_table_name_list:
             con_null.get_table_name_list()
 
 
-class Test_SimpleSQLite_get_attribute_name_list:
+class Test_SimpleSQLite_get_attribute_name_list(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [
@@ -353,7 +353,7 @@ class Test_SimpleSQLite_get_attribute_name_list:
             con_null.get_attr_name_list("not_exist_table")
 
 
-class Test_SimpleSQLite_has_table:
+class Test_SimpleSQLite_has_table(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [TEST_TABLE_NAME, True],
@@ -369,7 +369,7 @@ class Test_SimpleSQLite_has_table:
             con_null.has_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_has_attribute:
+class Test_SimpleSQLite_has_attribute(object):
 
     @pytest.mark.parametrize(["table", "attr", "expected"], [
         [TEST_TABLE_NAME, "attr_a", True],
@@ -394,7 +394,7 @@ class Test_SimpleSQLite_has_attribute:
             con_null.has_attr(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_has_attribute_list:
+class Test_SimpleSQLite_has_attribute_list(object):
 
     @pytest.mark.parametrize(["table", "attr", "expected"], [
         [TEST_TABLE_NAME, ["attr_a"], True],
@@ -421,7 +421,7 @@ class Test_SimpleSQLite_has_attribute_list:
             con_null.has_attr_list(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_get_profile:
+class Test_SimpleSQLite_get_profile(object):
 
     def test_normal(self, con):
         profile_list = con.get_profile()
@@ -432,7 +432,7 @@ class Test_SimpleSQLite_get_profile:
         assert typepy.is_not_empty_sequence(profile_list)
 
 
-class Test_SimpleSQLite_get_sqlite_master:
+class Test_SimpleSQLite_get_sqlite_master(object):
 
     def test_normal(self, con_index):
         print(con_index.get_sqlite_master())
@@ -458,7 +458,7 @@ class Test_SimpleSQLite_get_sqlite_master:
             con_null.get_sqlite_master()
 
 
-class Test_SimpleSQLite_verify_table_existence:
+class Test_SimpleSQLite_verify_table_existence(object):
 
     def test_normal(self, con):
         con.verify_table_existence(TEST_TABLE_NAME)
@@ -472,7 +472,7 @@ class Test_SimpleSQLite_verify_table_existence:
             con_null.verify_table_existence(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_verify_attribute_existence:
+class Test_SimpleSQLite_verify_attribute_existence(object):
 
     @pytest.mark.parametrize(["table", "attr", "expected"], [
         [TEST_TABLE_NAME, "not_exist_attr", AttributeNotFoundError],
@@ -485,7 +485,7 @@ class Test_SimpleSQLite_verify_attribute_existence:
             con.verify_attr_existence(table, attr)
 
 
-class Test_SimpleSQLite_drop_table:
+class Test_SimpleSQLite_drop_table(object):
 
     def test_normal(self, con):
         attr_description_list = [
@@ -507,7 +507,7 @@ class Test_SimpleSQLite_drop_table:
             con_null.drop_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_create_table_from_data_matrix:
+class Test_SimpleSQLite_create_table_from_data_matrix(object):
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
@@ -666,7 +666,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
                 TEST_TABLE_NAME, [], [])
 
 
-class Test_SimpleSQLite_create_table_from_tabledata:
+class Test_SimpleSQLite_create_table_from_tabledata(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [
@@ -720,7 +720,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         assert actual == value
 
 
-class Test_SimpleSQLite_create_table_from_csv:
+class Test_SimpleSQLite_create_table_from_csv(object):
 
     @pytest.mark.parametrize(
         [
@@ -840,7 +840,7 @@ class Test_SimpleSQLite_create_table_from_csv:
         assert result_matrix == expected_data_matrix
 
 
-class Test_SimpleSQLite_create_table_from_json:
+class Test_SimpleSQLite_create_table_from_json(object):
 
     @pytest.mark.parametrize(
         [
@@ -991,7 +991,7 @@ class Test_SimpleSQLite_create_table_from_json:
         assert result_matrix == expected_data_matrix
 
 
-class Test_SimpleSQLite_rollback:
+class Test_SimpleSQLite_rollback(object):
 
     def test_normal(self, con):
         con.rollback()
@@ -1000,7 +1000,7 @@ class Test_SimpleSQLite_rollback:
         con_null.rollback()
 
 
-class Test_SimpleSQLite_commit:
+class Test_SimpleSQLite_commit(object):
 
     def test_normal(self, con):
         con.commit()
@@ -1009,7 +1009,7 @@ class Test_SimpleSQLite_commit:
         con_null.commit()
 
 
-class Test_SimpleSQLite_close:
+class Test_SimpleSQLite_close(object):
 
     def test_close(self, con):
         con.close()

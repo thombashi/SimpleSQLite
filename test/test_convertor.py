@@ -19,7 +19,7 @@ NamedTuple2 = namedtuple("NamedTuple2", " ".join(attr_list_2))
 NamedTuple3 = namedtuple("NamedTuple3", " ".join(attr_list_3))
 
 
-class Test_RecordConvertor_to_record:
+class Test_RecordConvertor_to_record(object):
 
     @pytest.mark.parametrize(["attr_list", "value", "expeted"], [
         [attr_list_2, [5, 6], [5, 6]],
@@ -57,7 +57,7 @@ class Test_RecordConvertor_to_record:
             RecordConvertor.to_record(attr_list, value)
 
 
-class Test_RecordConvertor_to_record_list:
+class Test_RecordConvertor_to_record_list(object):
 
     @pytest.mark.parametrize(["attr_list", "value", "expeted"], [
         [

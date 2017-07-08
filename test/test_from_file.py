@@ -16,7 +16,7 @@ import pytablereader as ptr
 import pytablewriter as ptw
 
 
-class Test_SimpleSQLite_create_table_from_tabledata:
+class Test_SimpleSQLite_create_table_from_tabledata(object):
 
     @pytest.mark.parametrize(["filename"], [
         ["python - Wiktionary.html"],

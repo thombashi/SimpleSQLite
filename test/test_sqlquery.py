@@ -22,7 +22,7 @@ nan = float("nan")
 inf = float("inf")
 
 
-class Test_SqlQuery_sanitize:
+class Test_SqlQuery_sanitize(object):
     SANITIZE_CHAR_LIST = [
         "%", "/", "(", ")", "[", "]", "<", ">", ".", ";",
         "'", '"', "!", "\\", "#", " ", "-", "+", "=", "\n"
@@ -56,7 +56,7 @@ class Test_SqlQuery_sanitize:
             SqlQuery.sanitize(value)
 
 
-class Test_SqlQuery_to_table_str:
+class Test_SqlQuery_to_table_str(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["test", "test"],
@@ -81,7 +81,7 @@ class Test_SqlQuery_to_table_str:
             assert SqlQuery.to_table_str(value)
 
 
-class Test_SqlQuery_to_attr_str:
+class Test_SqlQuery_to_attr_str(object):
 
     @pytest.mark.parametrize(["value", "operation", "expected"], [
         ["test", None, "test"],
@@ -112,7 +112,7 @@ class Test_SqlQuery_to_attr_str:
             SqlQuery.to_attr_str(value)
 
 
-class Test_SqlQuery_to_attr_str_list:
+class Test_SqlQuery_to_attr_str_list(object):
 
     @pytest.mark.parametrize(
         ["value", "operation", "expected"],
@@ -143,7 +143,7 @@ class Test_SqlQuery_to_attr_str_list:
             SqlQuery.to_attr_str_list(value)
 
 
-class Test_SqlQuery_to_value_str:
+class Test_SqlQuery_to_value_str(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [0, "0"],
@@ -165,7 +165,7 @@ class Test_SqlQuery_to_value_str:
         assert SqlQuery.to_value_str(value) == expected
 
 
-class Test_SqlQuery_to_value_str_list:
+class Test_SqlQuery_to_value_str_list(object):
 
     @pytest.mark.parametrize(
         ["value", "expected"],
@@ -186,7 +186,7 @@ class Test_SqlQuery_to_value_str_list:
             assert SqlQuery.to_value_str_list(value)
 
 
-class Test_SqlQuery_make_select:
+class Test_SqlQuery_make_select(object):
 
     @pytest.mark.parametrize(
         ["select", "table", "where", "extra", "expected"],
@@ -227,7 +227,7 @@ class Test_SqlQuery_make_select:
             SqlQuery.make_select(select, table, where, extra)
 
 
-class Test_SqlQuery_make_insert:
+class Test_SqlQuery_make_insert(object):
 
     @pytest.mark.parametrize(
         ["table", "insert_tuple", "expected"], [
@@ -263,7 +263,7 @@ class Test_SqlQuery_make_insert:
             SqlQuery.make_insert(table, insert_tuple)
 
 
-class Test_SqlQuery_make_update:
+class Test_SqlQuery_make_update(object):
 
     @pytest.mark.parametrize(
         ["table", "set_query", "where", "expected"], [
@@ -291,7 +291,7 @@ class Test_SqlQuery_make_update:
             SqlQuery.make_update(table, set_query, where)
 
 
-class Test_SqlQuery_make_where:
+class Test_SqlQuery_make_where(object):
 
     @pytest.mark.parametrize(["key", "value", "operation", "expected"], [
         ["tkey", "tvalue", "=", "tkey = 'tvalue'"],
@@ -314,7 +314,7 @@ class Test_SqlQuery_make_where:
             SqlQuery.make_where(key, value, operation)
 
 
-class Test_SqlQuery_make_where_in:
+class Test_SqlQuery_make_where_in(object):
 
     @pytest.mark.parametrize(["key", "value", "expected"], [
         ["key", ["attr_a", "attr_b"], "key IN ('attr_a', 'attr_b')"],
@@ -333,7 +333,7 @@ class Test_SqlQuery_make_where_in:
             SqlQuery.make_where_in(key, value)
 
 
-class Test_SqlQuery_make_where_not_in:
+class Test_SqlQuery_make_where_not_in(object):
 
     @pytest.mark.parametrize(["key", "value", "expected"], [
         ["key", ["attr_a", "attr_b"], "key NOT IN ('attr_a', 'attr_b')"],
