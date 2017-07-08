@@ -1141,8 +1141,7 @@ class SimpleSQLite(object):
         self.__create_table_from_tabledata(tabledata, index_attr_list)
 
     def create_table_from_csv(
-            self, csv_source, table_name="",
-            attribute_name_list=(),
+            self, csv_source, table_name="", attr_name_list=(),
             delimiter=",", quotechar='"', encoding="utf-8"):
         """
         Create a table from a CSV file/text.
@@ -1151,7 +1150,7 @@ class SimpleSQLite(object):
         :param str table_name:
             Table name to create.
             Using CSV file basename as the table name if the value is empty.
-        :param list attribute_name_list:
+        :param list attr_name_list:
             Attribute names of the table.
             Use the first line of the CSV file as attribute list
             if attribute_name_list is empty.
@@ -1177,7 +1176,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableFileLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attribute_name_list
+        loader.header_list = attr_name_list
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
@@ -1191,7 +1190,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableTextLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attribute_name_list
+        loader.header_list = attr_name_list
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
