@@ -185,8 +185,8 @@ class SqlQuery(object):
             return "NULL"
 
         if any([
-            typepy.type.Integer(value).is_type(),
-            typepy.type.RealNumber(value).is_type()
+                typepy.type.Integer(value).is_type(),
+                typepy.type.RealNumber(value).is_type()
         ]):
             return str(value)
 

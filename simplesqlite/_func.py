@@ -9,10 +9,6 @@ from __future__ import unicode_literals
 
 import pathvalidate
 
-from ._error import InvalidAttributeNameError
-from ._error import InvalidTableNameError
-from ._logger import logger
-
 
 MEMORY_DB_NAME = ":memory:"
 
@@ -22,6 +18,8 @@ def validate_table_name(name):
     :param str name: Table name to validate.
     :raises InvalidTableNameError: |raises_validate_table_name|
     """
+
+    from ._error import InvalidTableNameError
 
     try:
         pathvalidate.validate_sqlite_table_name(name)
@@ -38,6 +36,8 @@ def validate_attr_name(name):
     :param str name: Name to validate.
     :raises InvalidAttributeNameError: |raises_validate_attr_name|
     """
+
+    from ._error import InvalidAttributeNameError
 
     try:
         pathvalidate.validate_sqlite_attr_name(name)
@@ -106,6 +106,8 @@ def copy_table(
     :raises ValueError:
         If attributes of the table are different from each other.
     """
+
+    from ._logger import logger
 
     src_con.verify_table_existence(src_table_name)
     dst_con.validate_access_permission(["w", "a"])

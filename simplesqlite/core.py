@@ -32,7 +32,6 @@ from ._error import (
     OperationalError,
 )
 from ._func import (
-    connect_sqlite_db_mem,
     validate_table_name,
     MEMORY_DB_NAME,
 )
@@ -657,6 +656,7 @@ class SimpleSQLite(object):
         """
 
         from collections import namedtuple
+        from ._func import connect_sqlite_db_mem
 
         profile_table_name = "sql_profile"
 
@@ -882,7 +882,7 @@ class SimpleSQLite(object):
             if not self.has_attr(table_name, attr_name)
         ]
 
-        if len(not_exist_field_list) > 0:
+        if not_exist_field_list:
             return False
 
         return True
@@ -1342,13 +1342,13 @@ class SimpleSQLite(object):
 
         miss_match_idx_list = []
 
-        for list_idx in range(len(value_matrix)):
-            if len(field_list) == len(value_matrix[list_idx]):
+        for list_idx, value_list in enumerate(value_matrix):
+            if len(field_list) == len(value_list):
                 continue
 
             miss_match_idx_list.append(list_idx)
 
-        if len(miss_match_idx_list) == 0:
+        if not miss_match_idx_list:
             return
 
         sample_miss_match_list = value_matrix[miss_match_idx_list[0]]
