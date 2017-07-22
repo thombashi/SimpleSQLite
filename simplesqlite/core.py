@@ -20,7 +20,6 @@ import six
 import typepy
 
 import pytablereader as ptr
-from six.moves import range
 
 from ._error import (
     DatabaseError,
