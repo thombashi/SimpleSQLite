@@ -136,7 +136,7 @@ def copy_table(
 
 def connect_sqlite_db_mem():
     """
-    :return: Instance of a in memory database.
+    :return: Instance of an in memory database.
     :rtype: SimpleSQLite
 
     :Example:
