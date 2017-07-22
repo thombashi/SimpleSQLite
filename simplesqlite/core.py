@@ -451,8 +451,7 @@ class SimpleSQLite(object):
                 "  query={}\n".format(query) +
                 "  msg='{}'\n".format(str(e)) +
                 "  db={}\n".format(self.database_path) +
-                "  records={}\n".format(record_list[:2])
-            )
+                "  records={}\n".format(record_list[:2]))
 
     def update(self, table_name, set_query, where=None):
         """
@@ -1360,8 +1359,7 @@ class SimpleSQLite(object):
                 len(miss_match_idx_list), len(value_matrix)) +
             "  e.g. value at line={}, col-size={}: {}\n".format(
                 miss_match_idx_list[0],
-                len(sample_miss_match_list), sample_miss_match_list)
-        )
+                len(sample_miss_match_list), sample_miss_match_list))
 
     @staticmethod
     def __get_list_from_fetch(result):

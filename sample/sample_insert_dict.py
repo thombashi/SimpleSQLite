@@ -21,8 +21,7 @@ con.insert(
         "attr_c": "ddd",
         "attr_d": 4.44,
         "attr_e": "hoge",
-    }
-)
+    })
 con.insert_many(
     table_name,
     insert_record_list=[
@@ -37,8 +36,7 @@ con.insert_many(
             "attr_a": 6,
             "attr_c": "fff",
         },
-    ]
-)
+    ])
 
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():

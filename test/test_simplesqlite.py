@@ -645,8 +645,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     "電話番号": 'TEXT'
                 }
             ],
-        ]
-    )
+        ])
     def test_normal(
             self, tmpdir, attr_name_list, data_matrix, index_attr_list,
             expected_attr):
@@ -683,8 +682,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 [],
                 ValueError,
             ],
-        ]
-    )
+        ])
     def test_exception_empty_header(
             self, tmpdir, table_name, attr_name_list, data_matrix,
             index_attr_list, expected):

@@ -29,8 +29,7 @@ class Test_fromto_pandas_dataframe(object):
                 [1, 1.1, "bb"],
                 [2, 2.2, "ccc"],
             ],
-            columns=column_list
-        )
+            columns=column_list)
         table_name = "tablename"
 
         con.create_table_from_dataframe(dataframe, table_name)
@@ -49,5 +48,4 @@ class Test_fromto_pandas_dataframe(object):
                 [1.1, "bb"],
                 [2.2, "ccc"],
             ],
-            columns=select_column_list
-        ))
+            columns=select_column_list))

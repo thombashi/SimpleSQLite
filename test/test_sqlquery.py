@@ -40,8 +40,7 @@ class Test_SqlQuery_sanitize(object):
                 os.linesep,
                 "abcdefghijklmn_opqrstrvwxyz"
             ]
-        ]
-    )
+        ])
     def test_normal(self, value, expected):
         assert SqlQuery.sanitize(value) == expected
 
@@ -97,8 +96,7 @@ class Test_SqlQuery_to_attr_str(object):
             "[te{:s}st]".format(re.escape(c)),
         ]
         for c in string.digits + "%(). -+#"
-    ]
-    )
+    ])
     def test_normal(self, value, operation, expected):
         assert SqlQuery.to_attr_str(value, operation) == expected
 
@@ -128,8 +126,7 @@ class Test_SqlQuery_to_attr_str_list(object):
                 ["SUM([%aaa])", "SUM(bbb)"],
             ],
             [[], None, []],
-        ]
-    )
+        ])
     def test_normal(self, value, operation, expected):
         assert list(SqlQuery.to_attr_str_list(value, operation)) == expected
 
@@ -172,8 +169,7 @@ class Test_SqlQuery_to_value_str_list(object):
         [
             [[0, "bbb", None], ["0", "'bbb'", "NULL"]],
             [[], []],
-        ]
-    )
+        ])
     def test_normal(self, value, expected):
         assert list(SqlQuery.to_value_str_list(value)) == expected
 

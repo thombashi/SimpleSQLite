@@ -23,8 +23,7 @@ con.insert_many(
     insert_record_list=[
         (8, 8.8, "ggg", 8.88, "foobar"),
         SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
-    ]
-)
+    ])
 
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():
