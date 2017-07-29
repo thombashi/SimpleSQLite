@@ -134,7 +134,7 @@ def copy_table(
     return True
 
 
-def connect_sqlite_db_mem():
+def connect_sqlite_memdb():
     """
     :return: Instance of an in memory database.
     :rtype: SimpleSQLite
@@ -146,3 +146,10 @@ def connect_sqlite_db_mem():
     from .core import SimpleSQLite
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
+
+
+def connect_sqlite_db_mem():
+    # connect_sqlite_db_mem will be deleted in the future, use
+    # connect_sqlite_memdb instead.
+
+    return connect_sqlite_memdb()

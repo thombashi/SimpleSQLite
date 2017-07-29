@@ -19,7 +19,7 @@ from ._error import (
 from ._func import (
     append_table,
     copy_table,
-    connect_sqlite_db_mem,
+    connect_sqlite_memdb,
 )
 from ._logger import (
     set_logger,

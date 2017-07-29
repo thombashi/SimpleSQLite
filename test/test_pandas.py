@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 
 import pytest
-from simplesqlite import connect_sqlite_db_mem
+from simplesqlite import connect_sqlite_memdb
 
 
 try:
@@ -21,7 +21,7 @@ except ImportError:
 class Test_fromto_pandas_dataframe(object):
 
     def test_normal(self):
-        con = connect_sqlite_db_mem()
+        con = connect_sqlite_memdb()
         column_list = ["id", "value", "name"]
         dataframe = pandas.DataFrame(
             [

@@ -5,4 +5,4 @@ Functions
 
 .. autofunction:: simplesqlite.copy_table
 
-.. autofunction:: simplesqlite.connect_sqlite_db_mem
+.. autofunction:: simplesqlite.connect_sqlite_memdb

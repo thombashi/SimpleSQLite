@@ -654,7 +654,7 @@ class SimpleSQLite(object):
         """
 
         from collections import namedtuple
-        from ._func import connect_sqlite_db_mem
+        from ._func import connect_sqlite_memdb
 
         profile_table_name = "sql_profile"
 
@@ -664,7 +664,7 @@ class SimpleSQLite(object):
             in six.iteritems(self.__dict_query_totalexectime)
         ]
         attr_name_list = ("sql_query", "cumulative_time", "count")
-        con_tmp = connect_sqlite_db_mem()
+        con_tmp = connect_sqlite_memdb()
         try:
             con_tmp.create_table_from_data_matrix(
                 profile_table_name,

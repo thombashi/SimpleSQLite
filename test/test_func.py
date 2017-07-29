@@ -12,7 +12,7 @@ import pytest
 from simplesqlite import (
     append_table,
     copy_table,
-    connect_sqlite_db_mem,
+    connect_sqlite_memdb,
     InvalidAttributeNameError,
     InvalidTableNameError,
     NullDatabaseConnectionError,
@@ -145,6 +145,6 @@ class Test_copy_table(object):
 class Test_connect_sqlite_db_mem(object):
 
     def test_normal(self):
-        con_mem = connect_sqlite_db_mem()
+        con_mem = connect_sqlite_memdb()
         assert con_mem is not None
         assert con_mem.database_path == ":memory:"
