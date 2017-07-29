@@ -13,12 +13,14 @@ from simplesqlite import (
     append_table,
     copy_table,
     connect_sqlite_db_mem,
-    validate_attr_name,
     InvalidAttributeNameError,
     InvalidTableNameError,
     NullDatabaseConnectionError,
 )
-from simplesqlite._func import validate_table_name
+from simplesqlite._func import (
+    validate_attr_name,
+    validate_table_name,
+)
 
 from .fixture import (
     TEST_TABLE_NAME,

@@ -17,8 +17,6 @@ from ._error import (
     OperationalError,
 )
 from ._func import (
-    validate_table_name,
-    validate_attr_name,
     append_table,
     copy_table,
     connect_sqlite_db_mem,
