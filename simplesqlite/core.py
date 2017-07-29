@@ -30,13 +30,13 @@ from ._error import (
     InvalidAttributeNameError,
     OperationalError,
 )
-from ._func import (
-    validate_table_name,
-    MEMORY_DB_NAME,
-)
+from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor
 from .sqlquery import SqlQuery
+
+
+MEMORY_DB_NAME = ":memory:"
 
 
 class SimpleSQLite(object):
@@ -654,7 +654,6 @@ class SimpleSQLite(object):
         """
 
         from collections import namedtuple
-        from ._func import connect_sqlite_memdb
 
         profile_table_name = "sql_profile"
 
@@ -1451,3 +1450,22 @@ class SimpleSQLite(object):
                 tabledata.table_name,
                 self.__sanitize_attr_name_list(index_attr_list))
         self.commit()
+
+
+def connect_sqlite_memdb():
+    """
+    :return: Instance of an in memory database.
+    :rtype: SimpleSQLite
+
+    :Example:
+        :ref:`example-connect-sqlite-db-mem`
+    """
+
+    return SimpleSQLite(MEMORY_DB_NAME, "w")
+
+
+def connect_sqlite_db_mem():
+    # connect_sqlite_db_mem will be deleted in the future, use
+    # connect_sqlite_memdb instead.
+
+    return connect_sqlite_memdb()

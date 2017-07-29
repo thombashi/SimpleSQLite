@@ -10,9 +10,6 @@ from __future__ import unicode_literals
 import pathvalidate
 
 
-MEMORY_DB_NAME = ":memory:"
-
-
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
@@ -132,24 +129,3 @@ def copy_table(
         result.fetchall())
 
     return True
-
-
-def connect_sqlite_memdb():
-    """
-    :return: Instance of an in memory database.
-    :rtype: SimpleSQLite
-
-    :Example:
-        :ref:`example-connect-sqlite-db-mem`
-    """
-
-    from .core import SimpleSQLite
-
-    return SimpleSQLite(MEMORY_DB_NAME, "w")
-
-
-def connect_sqlite_db_mem():
-    # connect_sqlite_db_mem will be deleted in the future, use
-    # connect_sqlite_memdb instead.
-
-    return connect_sqlite_memdb()

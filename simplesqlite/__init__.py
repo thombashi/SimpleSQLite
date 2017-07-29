@@ -19,11 +19,13 @@ from ._error import (
 from ._func import (
     append_table,
     copy_table,
-    connect_sqlite_memdb,
-    connect_sqlite_db_mem,
 )
 from ._logger import (
     set_logger,
     set_log_level,
 )
-from .core import SimpleSQLite
+from .core import (
+    connect_sqlite_memdb,
+    connect_sqlite_db_mem,
+    SimpleSQLite,
+)
