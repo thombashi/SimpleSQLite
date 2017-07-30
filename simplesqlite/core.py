@@ -1371,7 +1371,6 @@ class SimpleSQLite(object):
     def __initialize_connection(self):
         self.__database_path = None
         self.__connection = None
-        self.__cursur = None
         self.__mode = None
 
         self.__dict_query_count = {}
