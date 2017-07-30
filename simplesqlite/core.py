@@ -192,7 +192,7 @@ class SimpleSQLite(object):
                 database_path, mode))
 
         if mode == "r":
-            self.__verify_sqlite_db_file(database_path)
+            self.__verify_db_file_existence(database_path)
         elif mode in ["w", "a"]:
             self.__validate_db_path(database_path)
         else:
@@ -1305,7 +1305,7 @@ class SimpleSQLite(object):
                 "database path must be a string: actual={}".format(
                     type(database_path)))
 
-    def __verify_sqlite_db_file(self, database_path):
+    def __verify_db_file_existence(self, database_path):
         """
         :raises SimpleSQLite.OperationalError: If unable to open database file.
         """
