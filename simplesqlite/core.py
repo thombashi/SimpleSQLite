@@ -1315,6 +1315,14 @@ class SimpleSQLite(object):
         self.connection.close()
         self.__initialize_connection()
 
+    def __initialize_connection(self):
+        self.__database_path = None
+        self.__connection = None
+        self.__mode = None
+
+        self.__dict_query_count = {}
+        self.__dict_query_totalexectime = {}
+
     @staticmethod
     def __validate_db_path(database_path):
         if typepy.is_null_string(database_path):
@@ -1392,14 +1400,6 @@ class SimpleSQLite(object):
         """
 
         return [record[0] for record in result]
-
-    def __initialize_connection(self):
-        self.__database_path = None
-        self.__connection = None
-        self.__mode = None
-
-        self.__dict_query_count = {}
-        self.__dict_query_totalexectime = {}
 
     def __get_attr_desc_list(self, attr_name_list, data_matrix):
         attr_description_list = []
