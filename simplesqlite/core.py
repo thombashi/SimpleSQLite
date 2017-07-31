@@ -43,7 +43,10 @@ class SimpleSQLite(object):
     """
     Wrapper class of |sqlite3| module.
 
-    :param str database_path: File path of the database to be connected.
+    :param str database_src:
+        SQLite database source:
+        (1) File path to a database to be connected.
+        (2) sqlite3.Connection instance.
     :param str mode: Open mode.
     :param bool profile:
         Recording SQL query execution time profile, if the value is |True|.
@@ -92,13 +95,18 @@ class SimpleSQLite(object):
         return self.__mode
 
     def __init__(
-            self, database_path, mode="a",
+            self, database_src, mode="a",
             is_create_table_config=True, profile=False):
         self.__initialize_connection()
         self.__is_profile = profile
         self.__is_create_table_config = is_create_table_config
 
-        self.connect(database_path, mode)
+        if isinstance(database_src, sqlite3.Connection):
+            self.__connection = database_src
+            self.__mode = mode
+            return
+
+        self.connect(database_src, mode)
 
     def __del__(self):
         self.close()
