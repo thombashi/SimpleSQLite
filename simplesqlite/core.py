@@ -396,6 +396,23 @@ class SimpleSQLite(object):
         return self.select_as_tabledata(
             table_name, column_list, where, extra).as_dict()
 
+    def select_as_memdb(
+            self, table_name, column_list=None, where=None, extra=None):
+        """
+        :return:
+            Table data as a SimpleSQLite instance that connected to in
+            memory database.
+        :rtype: |SimpleSQLite|
+        """
+
+        memdb = connect_sqlite_memdb()
+        tabledata = self.select_as_tabledata(
+            table_name, column_list, where, extra)
+
+        memdb.create_table_from_tabledata(tabledata)
+
+        return memdb
+
     def insert(self, table_name, insert_record):
         """
         Send an INSERT query to the database.

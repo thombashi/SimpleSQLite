@@ -20,6 +20,7 @@ from simplesqlite import (
     NullDatabaseConnectionError,
     OperationalError,
     TableNotFoundError,
+    connect_sqlite_memdb,
 )
 from simplesqlite.sqlquery import SqlQuery
 import typepy
@@ -53,11 +54,22 @@ class Test_SimpleSQLite_init(object):
         ["w"],
         ["a"],
     ])
-    def test_normal(self, tmpdir, mode):
-        p = tmpdir.join("not_exist.db")
+    def test_normal_path(self, tmpdir, mode):
+        p = tmpdir.join("test.sqlite3")
         db_path = str(p)
         con = SimpleSQLite(db_path, mode)
+
         assert con.database_path == db_path
+        assert con.connection is not None
+
+    @pytest.mark.parametrize(["mode"], [
+        ["w"],
+        ["a"],
+    ])
+    def test_normal_con(self, mode):
+        con = SimpleSQLite(connect_sqlite_memdb().connection, mode)
+
+        assert con.database_path is None
         assert con.connection is not None
 
     @pytest.mark.parametrize(["value", "mode", "expected"], [
