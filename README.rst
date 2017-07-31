@@ -4,9 +4,6 @@ SimpleSQLite
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
 
-.. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
-    :target: https://pypi.python.org/pypi/SimpleSQLite
-
 .. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux
     :target: https://travis-ci.org/thombashi/SimpleSQLite
     :alt: Linux CI test status
@@ -171,7 +168,6 @@ Insert dictionary
 
         from simplesqlite import SimpleSQLite
 
-
         table_name = "sample_table"
         con = SimpleSQLite("sample.sqlite", "w")
         con.create_table_from_data_matrix(
@@ -187,8 +183,7 @@ Insert dictionary
                 "attr_c": "ddd",
                 "attr_d": 4.44,
                 "attr_e": "hoge",
-            }
-        )
+            })
         con.insert_many(
             table_name,
             insert_record_list=[
@@ -203,8 +198,7 @@ Insert dictionary
                     "attr_a": 6,
                     "attr_c": "fff",
                 },
-            ]
-        )
+            ])
 
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
@@ -228,7 +222,6 @@ Insert list/tuple/namedtuple
         from collections import namedtuple
         from simplesqlite import SimpleSQLite
 
-
         table_name = "sample_table"
         con = SimpleSQLite("sample.sqlite", "w")
         con.create_table_from_data_matrix(
@@ -245,8 +238,7 @@ Insert list/tuple/namedtuple
             insert_record_list=[
                 (8, 8.8, "ggg", 8.88, "foobar"),
                 SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
-            ]
-        )
+            ])
 
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
