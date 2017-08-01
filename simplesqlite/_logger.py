@@ -51,7 +51,7 @@ def set_log_level(log_level):
         set_logger(is_enable=False)
     else:
         set_logger(is_enable=True)
-        logger.level = log_level
 
+    logger.level = log_level
     dataproperty.set_log_level(log_level)
     pytablereader.set_log_level(log_level)
