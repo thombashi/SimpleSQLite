@@ -1,6 +1,6 @@
-SimpleSQLite
-============
 
+SimpleSQLite
+==============
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
 
@@ -17,9 +17,9 @@ SimpleSQLite
 .. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
    :target: https://github.com/thombashi/SimpleSQLite
 
-Summary
--------
 
+Summary
+---------
 SimpleSQLite is a Python library to simplify SQLite database operations: table creation, data insertion and get data as other data formats.
 
 Features
@@ -42,17 +42,17 @@ Features
 
 
 
+
 Examples
-========
+==========
 
 Create a table
---------------
+----------------
 
 Create a table from data matrix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         import json
         from simplesqlite import SimpleSQLite
@@ -81,7 +81,7 @@ Create a table from data matrix
         print(json.dumps(con.get_attr_type(table_name), indent=4))
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
         (1, 1.1, u'aaa', 1.0, u'1')
@@ -95,11 +95,11 @@ Create a table from data matrix
             "attr_e": " TEXT"
         }
 
-Create a table from CSV
-~~~~~~~~~~~~~~~~~~~~~~~
 
+Create a table from CSV
+~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         from simplesqlite import SimpleSQLite
 
@@ -123,18 +123,18 @@ Create a table from CSV
             print(record)
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         ['attr_a', 'attr_b', 'attr_c']
         (1, 4.0, u'a')
         (2, 2.1, u'bb')
         (3, 120.9, u'ccc')
 
-Create a table from pandas.DataFrame
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Create a table from pandas.DataFrame
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         from simplesqlite import SimpleSQLite
         import pandas
@@ -151,20 +151,20 @@ Create a table from pandas.DataFrame
         ), table_name="pandas_df")
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         $ sqlite3 pandas_df.sqlite
         sqlite> .schema
         CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
 
-Insert records into a table
----------------------------
 
+Insert records into a table
+-----------------------------
 Insert dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         from simplesqlite import SimpleSQLite
 
@@ -205,7 +205,7 @@ Insert dictionary
             print(record)
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         (1, 1.1, 'aaa', 1, 1)
         (4, 4.4, 'ddd', 4.44, 'hoge')
@@ -217,7 +217,7 @@ Insert list/tuple/namedtuple
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         from collections import namedtuple
         from simplesqlite import SimpleSQLite
@@ -245,18 +245,18 @@ Insert list/tuple/namedtuple
             print(record)
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         (1, 1.1, u'aaa', 1, 1)
         (7, 7.7, u'fff', 7.77, u'bar')
         (8, 8.8, u'ggg', 8.88, u'foobar')
         (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
-Get Data from a table as pandas DataFrame
------------------------------------------
 
+Get Data from a table as pandas DataFrame
+-------------------------------------------
 :Sample Code:
-    .. code:: python
+    .. code-block:: python
 
         from simplesqlite import SimpleSQLite
 
@@ -274,7 +274,7 @@ Get Data from a table as pandas DataFrame
         print(con.select_as_dataframe(table_name="sample_table"))
 
 :Output:
-    .. code::
+    .. code-block:: none
 
         $ sample/select_as_dataframe.py
            a    b    c    d    e
@@ -282,12 +282,11 @@ Get Data from a table as pandas DataFrame
         1  2  2.2  bbb  2.2  2.2
         2  3  3.3  ccc  3.0  ccc
 
-For more information
---------------------
 
+For more information
+----------------------
 More examples are available at 
 http://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
-
 Installation
 ============
 
@@ -316,13 +315,11 @@ Test dependencies
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
-Documentation
-=============
 
+Documentation
+===============
 http://simplesqlite.rtfd.io/
 
 Related project
-===============
-
+=================
 - `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets SQLite database by using SimpleSQLite
-
