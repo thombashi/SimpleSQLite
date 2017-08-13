@@ -1154,8 +1154,8 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            ptr.TableData(table_name, attr_name_list, data_matrix),
-            index_attr_list)
+            tabledata=ptr.TableData(table_name, attr_name_list, data_matrix),
+            index_attr_list=index_attr_list)
 
     def create_table_from_tabledata(self, tabledata, index_attr_list=None):
         """
@@ -1167,7 +1167,8 @@ class SimpleSQLite(object):
             :py:meth:`.create_table_from_data_matrix`
         """
 
-        self.__create_table_from_tabledata(tabledata, index_attr_list)
+        self.__create_table_from_tabledata(
+            tabledata=tabledata, index_attr_list=index_attr_list)
 
     def create_table_from_csv(
             self, csv_source, table_name="", attr_name_list=(),
