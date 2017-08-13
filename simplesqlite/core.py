@@ -1136,8 +1136,7 @@ class SimpleSQLite(object):
         :param list attr_name_list: List of attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
-        :param tuple index_attr_list:
-            List of attribute names of creating indices.
+        :param tuple index_attr_list: |index_attr_list|
         :raises simplesqlite.InvalidTableNameError:
             |raises_validate_table_name|
         :raises simplesqlite.InvalidAttributeNameError:

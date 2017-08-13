@@ -322,16 +322,21 @@ rp_attr = u"""
 .. |attr_mode| replace:: :py:attr:`.mode`
 
 .. |attr_table_name_description| replace:: 
-        Table name string.
-        Following format specifiers are replaced with specific string.
+    Table name string.
+    Following format specifiers are replaced with specific string.
 
 .. |attr_table_name_header| replace:: format specifier
 """
 
 rp_method = u"""
 .. |make_table_name| replace:: 
-        Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
-        Following format specifiers are replaced with specific string.
+    Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
+    Following format specifiers are replaced with specific string.
+"""
+
+rp_param = u"""
+.. |index_attr_list| replace:: 
+    List of attribute names that creating indices.
 """
 
 rp_raises = u"""
@@ -370,8 +375,9 @@ rst_prolog = (
     rp_func +
     rp_class +
     rp_module +
-    rp_raises +
     rp_attr +
     rp_method +
+    rp_param +
+    rp_raises +
     rp_template
 )
