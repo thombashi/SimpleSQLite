@@ -1172,7 +1172,8 @@ class SimpleSQLite(object):
 
     def create_table_from_csv(
             self, csv_source, table_name="", attr_name_list=(),
-            delimiter=",", quotechar='"', encoding="utf-8"):
+            delimiter=",", quotechar='"', encoding="utf-8",
+            index_attr_list=None):
         """
         Create a table from a CSV file/text.
 
@@ -1191,6 +1192,7 @@ class SimpleSQLite(object):
             characters, such as the ``delimiter`` or ``quotechar``,
             or which contain new-line characters.
         :param str encoding: CSV file encoding.
+        :param tuple index_attr_list: |index_attr_list|
         :raises ValueError: If the CSV data is invalid.
 
         :Example:
@@ -1212,7 +1214,8 @@ class SimpleSQLite(object):
         loader.encoding = encoding
         try:
             for tabledata in loader.load():
-                self.create_table_from_tabledata(tabledata)
+                self.create_table_from_tabledata(
+                    tabledata, index_attr_list=index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1225,14 +1228,17 @@ class SimpleSQLite(object):
         loader.quotechar = quotechar
         loader.encoding = encoding
         for tabledata in loader.load():
-            self.create_table_from_tabledata(tabledata)
+            self.create_table_from_tabledata(
+                tabledata, index_attr_list=index_attr_list)
 
-    def create_table_from_json(self, json_source, table_name=""):
+    def create_table_from_json(
+            self, json_source, table_name="", index_attr_list=None):
         """
         Create a table from a JSON file/text.
 
         :param str json_source: Path to the JSON file or JSON text.
         :param str table_name: Table name to create.
+        :param tuple index_attr_list: |index_attr_list|
 
         :Examples:
             :ref:`example-create-table-from-json`
@@ -1247,7 +1253,8 @@ class SimpleSQLite(object):
             loader.table_name = table_name
         try:
             for tabledata in loader.load():
-                self.create_table_from_tabledata(tabledata)
+                self.create_table_from_tabledata(
+                    tabledata, index_attr_list=index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1256,21 +1263,26 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for tabledata in loader.load():
-            self.create_table_from_tabledata(tabledata)
+            self.create_table_from_tabledata(
+                tabledata, index_attr_list=index_attr_list)
 
-    def create_table_from_dataframe(self, dataframe, table_name=""):
+    def create_table_from_dataframe(
+            self, dataframe, table_name="", index_attr_list=None):
         """
         Create a table from a pandas.DataFrame instance.
 
         :param pandas.DataFrame dataframe: DataFrame instance to convert.
         :param str table_name: Table name to create.
+        :param tuple index_attr_list: |index_attr_list|
 
         :Examples:
             :ref:`example-create-table-from-df`
         """
 
-        self.create_table_from_tabledata(ptr.TableData.from_dataframe(
-            dataframe=dataframe, table_name=table_name))
+        tabledata = ptr.TableData.from_dataframe(
+            dataframe=dataframe, table_name=table_name)
+        self.create_table_from_tabledata(
+            tabledata, index_attr_list=index_attr_list)
 
     def rollback(self):
         """
