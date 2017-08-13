@@ -1161,6 +1161,7 @@ class SimpleSQLite(object):
         Create a table from :py:class:`pytablereader.TableData`.
 
         :param TableData tabledata: Table data to create.
+        :param tuple index_attr_list: |index_attr_list|
 
         .. seealso::
             :py:meth:`.create_table_from_data_matrix`
