@@ -1470,9 +1470,9 @@ class SimpleSQLite(object):
         except pathvalidate.ReservedNameError:
             pass
 
-        if typepy.is_empty_sequence(tabledata.value_matrix):
-            raise ValueError("input data is null: '{} ({})'".format(
-                tabledata.table_name, ", ".join(attr_name_list)))
+        if tabledata.is_empty():
+            raise ValueError("input tabledata is empty: {}".format(
+                tabledata))
 
         self.__verify_value_matrix(attr_name_list, tabledata.value_matrix)
 
