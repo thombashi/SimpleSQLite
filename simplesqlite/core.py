@@ -513,7 +513,8 @@ class SimpleSQLite(object):
 
     def get_value(self, select, table_name, where=None, extra=None):
         """
-        Get a value from the table.
+        Get a value from the table. Return None if no value matches
+        the conditions, or the table not found in the database.
 
         :param str select: Attribute for SELECT query
         :param str table_name: Table name of executing the query.
@@ -526,7 +527,11 @@ class SimpleSQLite(object):
             :py:meth:`.sqlquery.SqlQuery.make_select`
         """
 
-        self.verify_table_existence(table_name)
+        try:
+            self.verify_table_existence(table_name)
+        except TableNotFoundError as e:
+            logger.debug(e)
+            return None
 
         query = SqlQuery.make_select(select, table_name, where, extra)
         result = self.execute_query(query, logging.getLogger().findCaller())
