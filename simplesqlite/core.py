@@ -952,7 +952,7 @@ class SimpleSQLite(object):
             return
 
         raise TableNotFoundError(
-            "'{}' table not found in {}".format(
+            "'{}' table not found in '{}' database".format(
                 table_name, self.database_path))
 
     def verify_attr_existence(self, table_name, attr_name):
