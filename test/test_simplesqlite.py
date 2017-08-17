@@ -169,16 +169,14 @@ class Test_SimpleSQLite_select_as_dict(object):
                      'attr_c': 'ccc'},
                 ]
             ),
-            {
-                'json1': [
-                    OrderedDict([
-                        ('attr_a', 1), ('attr_b', 4), ('attr_c', 'a')]),
-                    OrderedDict([
-                        ('attr_a', 2), ('attr_b', 2.1), ('attr_c', 'bb')]),
-                    OrderedDict([
-                        ('attr_a', 3), ('attr_b', 120.9), ('attr_c', 'ccc')]),
-                ],
-            },
+            [
+                OrderedDict([
+                    ('attr_a', 1), ('attr_b', 4), ('attr_c', 'a')]),
+                OrderedDict([
+                    ('attr_a', 2), ('attr_b', 2.1), ('attr_c', 'bb')]),
+                OrderedDict([
+                    ('attr_a', 3), ('attr_b', 120.9), ('attr_c', 'ccc')]),
+            ],
         ],
     ])
     def test_normal(self, tmpdir, value, expected):

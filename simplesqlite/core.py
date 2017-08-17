@@ -399,7 +399,7 @@ class SimpleSQLite(object):
         """
 
         return self.select_as_tabledata(
-            table_name, column_list, where, extra).as_dict()
+            table_name, column_list, where, extra).as_dict().get(table_name)
 
     def select_as_memdb(
             self, table_name, column_list=None, where=None, extra=None):
