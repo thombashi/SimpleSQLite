@@ -1461,7 +1461,6 @@ class SimpleSQLite(object):
         ]
 
     def __create_table_from_tabledata(self, tabledata, index_attr_list=None):
-
         self.validate_access_permission(["w", "a"])
         validate_table_name(tabledata.table_name)
 
