@@ -396,6 +396,14 @@ class SimpleSQLite(object):
         :param str extra: |arg_select_extra|
         :return: Table data as |OrderedDict| instances.
         :rtype: |list| of |OrderedDict|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
+
+        :Example:
+            :ref:`example-select-as-dict`
         """
 
         return self.select_as_tabledata(
@@ -415,6 +423,11 @@ class SimpleSQLite(object):
             Table data as a |SimpleSQLite| instance that connected to in
             memory database.
         :rtype: |SimpleSQLite|
+        :raises simplesqlite.NullDatabaseConnectionError:
+            |raises_check_connection|
+        :raises simplesqlite.TableNotFoundError:
+            |raises_verify_table_existence|
+        :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
         memdb = connect_sqlite_memdb()
