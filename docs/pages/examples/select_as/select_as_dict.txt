@@ -14,13 +14,12 @@
                 [3, 3.3, "ccc", 3,   "ccc"],
             ])
 
-        print(con.select_as_dataframe(table_name="sample_table"))
+        for record in con.select_as_dict(table_name="sample_table"):
+            print(record)
 
 :Output:
     .. code-block:: none
 
-        $ sample/select_as_dataframe.py
-           a    b    c    d    e
-        0  1  1.1  aaa  1.0    1
-        1  2  2.2  bbb  2.2  2.2
-        2  3  3.3  ccc  3.0  ccc
+        OrderedDict([('a', 1), ('b', 1.1), ('c', 'aaa'), ('d', 1), ('e', 1)])
+        OrderedDict([('a', 2), ('b', 2.2), ('c', 'bbb'), ('d', 2.2), ('e', 2.2)])
+        OrderedDict([('a', 3), ('b', 3.3), ('c', 'ccc'), ('d', 3), ('e', 'ccc')])
