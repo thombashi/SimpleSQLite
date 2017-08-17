@@ -299,6 +299,8 @@ rp_builtin = u"""
 .. |float| replace:: :py:class:`float`
 .. |str| replace:: :py:class:`str`
 .. |tuple| replace:: :py:obj:`tuple`
+
+.. |OrderedDict| replace:: :py:class:`collections.OrderedDict`
 """
 
 rp_func = u"""
@@ -335,8 +337,16 @@ rp_method = u"""
 """
 
 rp_param = u"""
-.. |index_attr_list| replace:: 
+.. |index_attr_list| replace::
     List of attribute names that creating indices.
+
+.. |arg_select_table_name| replace:: Table name of executing the query.
+.. |arg_select_where| replace:: ``WHERE`` clause for the query.
+.. |arg_select_extra| replace:: Any other SQL clause for the query.
+
+.. |arg_select_as_xx_column_list| replace::
+    Column name list to get data. If the value is |None|,
+    get data from all of the columns in the table.
 """
 
 rp_raises = u"""

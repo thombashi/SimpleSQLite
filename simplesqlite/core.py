@@ -288,9 +288,9 @@ class SimpleSQLite(object):
         Send a SELECT query to the database.
 
         :param str select: Attribute for the ``SELECT`` query.
-        :param str table_name: Table name of executing the query.
-        :param str where: ``WHERE`` clause for the query.
-        :param str extra: Any other SQL clause for the query.
+        :param str table_name: |arg_select_table_name|
+        :param str where: |arg_select_where|
+        :param str extra: |arg_select_extra|
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -311,15 +311,13 @@ class SimpleSQLite(object):
     def select_as_dataframe(
             self, table_name, column_list=None, where=None, extra=None):
         """
-        Get data in the database and return data as a
+        Get data in the database and return fetched data as a
         :py:class:`pandas.Dataframe` instance.
 
-        :param str table_name: Table name to extract data.
-        :param list column_list:
-            Column name list to get data. If the value is |None|,
-            get data from all of the columns in the table.
-        :param str where: ``WHERE`` clause for the query.
-        :param str extra: Any other SQL clause for the query.
+        :param str table_name: |arg_select_table_name|
+        :param list column_list: |arg_select_as_xx_column_list|
+        :param str where: |arg_select_where|
+        :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`pandas.Dataframe` instance.
         :rtype: pandas.DataFrame
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -352,13 +350,13 @@ class SimpleSQLite(object):
     def select_as_tabledata(
             self, table_name, column_list=None, where=None, extra=None):
         """
-        SELECT data in the database and return data as a
-        :py:class:`pytablereader.TableData`.
+        Get data in the database and return fetched data as a
+        :py:class:`pytablereader.TableData` instance.
 
-        :param str table_name: Table name to extract data.
-        :param list column_list:
-            Column name list to get data. If the value is |None|,
-            get data from all of the columns in the table.
+        :param str table_name: |arg_select_table_name|
+        :param list column_list: |arg_select_as_xx_column_list|
+        :param str where: |arg_select_where|
+        :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`pytablereader.TableData` instance.
         :rtype: pytablereader.TableData
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -389,8 +387,15 @@ class SimpleSQLite(object):
     def select_as_dict(
             self, table_name, column_list=None, where=None, extra=None):
         """
-        :return: Table data as a |dict| instance.
-        :rtype: dict
+        Get data in the database and return fetched data as a
+        |OrderedDict| list.
+
+        :param str table_name: |arg_select_table_name|
+        :param list column_list: |arg_select_as_xx_column_list|
+        :param str where: |arg_select_where|
+        :param str extra: |arg_select_extra|
+        :return: Table data as |OrderedDict| instances.
+        :rtype: |list| of |OrderedDict|
         """
 
         return self.select_as_tabledata(
@@ -399,8 +404,15 @@ class SimpleSQLite(object):
     def select_as_memdb(
             self, table_name, column_list=None, where=None, extra=None):
         """
+        Get data in the database and return fetched data as a
+        in-memory |SimpleSQLite| instance.
+
+        :param str table_name: |arg_select_table_name|
+        :param list column_list: |arg_select_as_xx_column_list|
+        :param str where: |arg_select_where|
+        :param str extra: |arg_select_extra|
         :return:
-            Table data as a SimpleSQLite instance that connected to in
+            Table data as a |SimpleSQLite| instance that connected to in
             memory database.
         :rtype: |SimpleSQLite|
         """
