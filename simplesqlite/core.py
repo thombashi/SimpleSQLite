@@ -681,8 +681,10 @@ class SimpleSQLite(object):
 
     def get_num_records(self, table_name, where=None):
         """
-        :param str table_name: Table name to get records.
-        :param str where: Where clause of the query.
+        Get the number of records in a table.
+
+        :param str table_name: Table name to get number of records.
+        :param str where: Where clause for the query.
         :return: Number of records in the table.
         :rtype: int
         """
