@@ -538,7 +538,7 @@ class SimpleSQLite(object):
 
     def get_value(self, select, table_name, where=None, extra=None):
         """
-        Get a value from the table. Return None if no value matches
+        Get a value from the table. Return |None| if no value matches
         the conditions, or the table not found in the database.
 
         :param str select: Attribute for SELECT query
@@ -685,7 +685,10 @@ class SimpleSQLite(object):
 
         :param str table_name: Table name to get number of records.
         :param str where: Where clause for the query.
-        :return: Number of records in the table.
+        :return:
+            Number of records in the table.
+            |None| if no value matches the conditions,
+            or the table not found in the database.
         :rtype: int
         """
 
