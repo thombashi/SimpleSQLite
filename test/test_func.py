@@ -47,7 +47,6 @@ class Test_validate_table_name(object):
         ["table", InvalidTableNameError],
         ["TABLE", InvalidTableNameError],
         ["Table", InvalidTableNameError],
-        ["_hoge", InvalidTableNameError],
         ["%hoge", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
@@ -70,7 +69,6 @@ class Test_validate_attr_name(object):
         ["table", InvalidAttributeNameError],
         ["TABLE", InvalidAttributeNameError],
         ["Table", InvalidAttributeNameError],
-        ["_hoge", InvalidAttributeNameError],
         ["%hoge", InvalidAttributeNameError],
     ])
     def test_exception(self, value, expected):
