@@ -1124,7 +1124,7 @@ class SimpleSQLite(object):
             query_format = "CREATE INDEX IF NOT EXISTS {:s} ON {:s}('{:s}')"
 
         query = query_format.format(
-            index_name, SqlQuery.to_table_str(table_name), attr_name)
+            index_name, SqlQuery.to_table_name(table_name), attr_name)
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 

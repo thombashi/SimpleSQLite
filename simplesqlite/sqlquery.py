@@ -8,6 +8,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import re
+import warnings
 
 import typepy
 
@@ -65,6 +66,15 @@ class SqlQuery(object):
 
     @classmethod
     def to_table_str(cls, name):
+        warnings.warn(
+            "to_table_str will be deleted in the future, "
+            "use to_table_name instead.",
+            DeprecationWarning)
+
+        return cls.to_table_name(name)
+
+    @classmethod
+    def to_table_name(cls, name):
         """
         :param str name: Table name.
         :return: String that suitable for table name of a SQLite query.
@@ -72,11 +82,11 @@ class SqlQuery(object):
 
         :Examples:
             >>> from simplesqlite.sqlquery import SqlQuery
-            >>> SqlQuery.to_table_str("length")
+            >>> SqlQuery.to_table_name("length")
             'length'
-            >>> SqlQuery.to_table_str("length(cm)")
+            >>> SqlQuery.to_table_name("length(cm)")
             '[length(cm)]'
-            >>> SqlQuery.to_table_str("string length")
+            >>> SqlQuery.to_table_name("string length")
             "'string length'"
         """
 
@@ -252,7 +262,7 @@ class SqlQuery(object):
 
         query_list = [
             "SELECT {:s}".format(select),
-            "FROM {:s}".format(cls.to_table_str(table)),
+            "FROM {:s}".format(cls.to_table_name(table)),
         ]
         if typepy.is_not_null_string(where):
             query_list.append("WHERE {:s}".format(where))
@@ -277,7 +287,7 @@ class SqlQuery(object):
 
         validate_table_name(table)
 
-        table = cls.to_table_str(table)
+        table = cls.to_table_name(table)
 
         if typepy.is_empty_sequence(insert_tuple):
             raise ValueError("empty insert list/tuple")
@@ -307,7 +317,7 @@ class SqlQuery(object):
             raise ValueError("SET query is null")
 
         query_list = [
-            "UPDATE {:s}".format(cls.to_table_str(table)),
+            "UPDATE {:s}".format(cls.to_table_name(table)),
             "SET {:s}".format(set_query),
         ]
         if typepy.is_not_null_string(where):

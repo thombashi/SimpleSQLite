@@ -68,7 +68,7 @@ class Test_SqlQuery_to_table_str(object):
         ["te st", "'te st'"],
     ])
     def test_normal(self, value, expected):
-        assert SqlQuery.to_table_str(value) == expected
+        assert SqlQuery.to_table_name(value) == expected
 
     @pytest.mark.parametrize(["value", "expected"], [
         [None, TypeError],
@@ -77,7 +77,7 @@ class Test_SqlQuery_to_table_str(object):
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
-            assert SqlQuery.to_table_str(value)
+            assert SqlQuery.to_table_name(value)
 
 
 class Test_SqlQuery_to_attr_str(object):
