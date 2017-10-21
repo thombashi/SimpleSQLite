@@ -265,7 +265,7 @@ class SimpleSQLite(object):
                 caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             message_list = [
-                "failed to execute query at %{:s}({:d}) {:s}".format(
+                "failed to execute query at {:s}({:d}) {:s}".format(
                     file_path, line_no, func_name),
                 "  - query: {}".format(query),
                 "  - msg:   {}".format(str(e)),
