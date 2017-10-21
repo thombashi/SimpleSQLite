@@ -456,13 +456,13 @@ class SimpleSQLite(object):
 
         self.insert_many(table_name, [record])
 
-    def insert_many(self, table_name, insert_record_list):
+    def insert_many(self, table_name, record_list):
         """
         Send an INSERT query with multiple records to the database.
 
         :param str table: Table name of executing the query.
-        :param insert_record: Records to be inserted.
-        :type insert_record: |dict|/|namedtuple|/|list|/|tuple|
+        :param record_list: Records to be inserted.
+        :type record_list: |dict|/|namedtuple|/|list|/|tuple|
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -480,13 +480,13 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         logger.debug("insert {} records".format(
-            len(insert_record_list) if insert_record_list else 0))
+            len(record_list) if record_list else 0))
 
-        if typepy.is_empty_sequence(insert_record_list):
+        if typepy.is_empty_sequence(record_list):
             return
 
         record_list = RecordConvertor.to_record_list(
-            self.get_attr_name_list(table_name), insert_record_list)
+            self.get_attr_name_list(table_name), record_list)
         query = SqlQuery.make_insert(table_name, record_list[0])
 
         try:
