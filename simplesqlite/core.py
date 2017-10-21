@@ -267,11 +267,11 @@ class SimpleSQLite(object):
             message_list = [
                 "failed to execute query at {:s}({:d}) {:s}".format(
                     file_path, line_no, func_name),
-                "  - query: {}".format(query),
+                "  - query: {}".format(MultiByteStrDecoder(query).unicode_str),
                 "  - msg:   {}".format(str(e)),
                 "  - db:    {}".format(self.database_path),
             ]
-            raise OperationalError(os.linesep.join(message_list))
+            raise OperationalError(message="\n".join(message_list))
 
         if self.__is_profile:
             self.__dict_query_count[query] = (
