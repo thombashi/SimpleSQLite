@@ -148,6 +148,7 @@ class Test_SqlQuery_to_value_str(object):
         [1.1, "1.1"],
         ["test", "'test'"],
         ["te st", "'te st'"],
+        ["I'm", '"I\'m"'],
         [None, "NULL"],
         [False, "'False'"],
     ])

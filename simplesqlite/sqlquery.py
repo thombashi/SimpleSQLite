@@ -190,6 +190,12 @@ class SqlQuery(object):
         ]):
             return str(value)
 
+        try:
+            if value.find("'") != -1:
+                return '"{}"'.format(value)
+        except (TypeError, AttributeError):
+            pass
+
         return "'{}'".format(value)
 
     @classmethod
