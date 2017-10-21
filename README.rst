@@ -177,7 +177,7 @@ Insert dictionary
 
         con.insert(
             table_name,
-            insert_record={
+            record={
                 "attr_a": 4,
                 "attr_b": 4.4,
                 "attr_c": "ddd",
@@ -186,7 +186,7 @@ Insert dictionary
             })
         con.insert_many(
             table_name,
-            insert_record_list=[
+            record_list=[
                 {
                     "attr_a": 5,
                     "attr_b": 5.5,
@@ -232,10 +232,10 @@ Insert list/tuple/namedtuple
         SampleTuple = namedtuple(
             "SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
 
-        con.insert(table_name, insert_record=[7, 7.7, "fff", 7.77, "bar"])
+        con.insert(table_name, record=[7, 7.7, "fff", 7.77, "bar"])
         con.insert_many(
             table_name,
-            insert_record_list=[
+            record_list=[
                 (8, 8.8, "ggg", 8.88, "foobar"),
                 SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
             ])
