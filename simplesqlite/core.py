@@ -41,7 +41,7 @@ MEMORY_DB_NAME = ":memory:"
 
 class SimpleSQLite(object):
     """
-    Wrapper class of |sqlite3| module.
+    Wrapper class for |sqlite3| module.
 
     :param str database_src:
         SQLite database source:
