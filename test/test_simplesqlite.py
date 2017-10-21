@@ -212,7 +212,7 @@ class Test_SimpleSQLite_insert(object):
     ])
     def test_normal(self, con, value, expeted):
         assert con.get_num_records(TEST_TABLE_NAME) == 2
-        con.insert(TEST_TABLE_NAME, insert_record=value)
+        con.insert(TEST_TABLE_NAME, record=value)
         assert con.get_num_records(TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
@@ -223,7 +223,7 @@ class Test_SimpleSQLite_insert(object):
     ])
     def test_mix(self, con_mix, value, expeted):
         assert con_mix.get_num_records(TEST_TABLE_NAME) == 2
-        con_mix.insert(TEST_TABLE_NAME, insert_record=value)
+        con_mix.insert(TEST_TABLE_NAME, record=value)
         assert con_mix.get_num_records(TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
@@ -232,12 +232,12 @@ class Test_SimpleSQLite_insert(object):
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
             con_ro.insert(
-                TEST_TABLE_NAME, insert_record=[5, 6])
+                TEST_TABLE_NAME, record=[5, 6])
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.insert(
-                TEST_TABLE_NAME, insert_record=[5, 6])
+                TEST_TABLE_NAME, record=[5, 6])
 
 
 class Test_SimpleSQLite_insert_many(object):

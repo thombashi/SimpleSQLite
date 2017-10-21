@@ -438,13 +438,13 @@ class SimpleSQLite(object):
 
         return memdb
 
-    def insert(self, table_name, insert_record):
+    def insert(self, table_name, record):
         """
         Send an INSERT query to the database.
 
         :param str table_name: Table name of executing the query.
-        :param insert_record: Record to be inserted.
-        :type insert_record: |dict|/|namedtuple|/|list|/|tuple|
+        :param record: Record to be inserted.
+        :type record: |dict|/|namedtuple|/|list|/|tuple|
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -454,7 +454,7 @@ class SimpleSQLite(object):
             :ref:`example-insert-records`
         """
 
-        self.insert_many(table_name, [insert_record])
+        self.insert_many(table_name, [record])
 
     def insert_many(self, table_name, insert_record_list):
         """
