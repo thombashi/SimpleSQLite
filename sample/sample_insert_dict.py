@@ -15,7 +15,7 @@ con.create_table_from_data_matrix(
 
 con.insert(
     table_name,
-    insert_record={
+    record={
         "attr_a": 4,
         "attr_b": 4.4,
         "attr_c": "ddd",
@@ -24,7 +24,7 @@ con.insert(
     })
 con.insert_many(
     table_name,
-    insert_record_list=[
+    record_list=[
         {
             "attr_a": 5,
             "attr_b": 5.5,
