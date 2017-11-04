@@ -1,4 +1,4 @@
-DataProperty>=0.25.6
+DataProperty>=0.26.0
 logbook>=1.1.0
 mbstrdecoder
 pathvalidate>=0.16.2
