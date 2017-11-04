@@ -555,7 +555,7 @@ class SimpleSQLite(object):
         try:
             self.verify_table_existence(table_name)
         except TableNotFoundError as e:
-            logger.debug(e)
+            logger.debug("{:s}: {}".format(e.__class__.__name__, e))
             return None
 
         query = SqlQuery.make_select(select, table_name, where, extra)
