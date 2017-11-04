@@ -289,7 +289,6 @@ More examples are available at
 http://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
 Installation
 ============
-
 ::
 
     pip install SimpleSQLite
@@ -297,7 +296,7 @@ Installation
 
 Dependencies
 ============
-Python 2.7+ or 3.3+
+Python 2.7+ or 3.4+
 
 Mandatory
 -----------------
