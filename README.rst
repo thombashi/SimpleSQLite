@@ -17,6 +17,8 @@ SimpleSQLite
 .. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
    :target: https://github.com/thombashi/SimpleSQLite
 
+.. contents:: Table of Contents
+   :depth: 2
 
 Summary
 ---------
