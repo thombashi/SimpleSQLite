@@ -19,8 +19,6 @@ import pathvalidate
 import six
 import typepy
 
-import pytablereader as ptr
-
 from ._error import (
     DatabaseError,
     AttributeNotFoundError,
@@ -351,14 +349,14 @@ class SimpleSQLite(object):
             self, table_name, column_list=None, where=None, extra=None):
         """
         Get data in the database and return fetched data as a
-        :py:class:`pytablereader.TableData` instance.
+        :py:class:`tabledata.TableData` instance.
 
         :param str table_name: |arg_select_table_name|
         :param list column_list: |arg_select_as_xx_column_list|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
-        :return: Table data as a :py:class:`pytablereader.TableData` instance.
-        :rtype: pytablereader.TableData
+        :return: Table data as a :py:class:`tabledata.TableData` instance.
+        :rtype: tabledata.TableData
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises simplesqlite.TableNotFoundError:
@@ -377,10 +375,10 @@ class SimpleSQLite(object):
             table_name=table_name, where=where, extra=extra)
 
         if result is None:
-            return ptr.TableData(
+            return TableData(
                 table_name=None, header_list=[], record_list=[])
 
-        return ptr.TableData(
+        return TableData(
             table_name=table_name, header_list=column_list,
             record_list=result.fetchall())
 
@@ -1188,12 +1186,12 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            tabledata=ptr.TableData(table_name, attr_name_list, data_matrix),
+            tabledata=TableData(table_name, attr_name_list, data_matrix),
             index_attr_list=index_attr_list)
 
     def create_table_from_tabledata(self, tabledata, index_attr_list=None):
         """
-        Create a table from :py:class:`pytablereader.TableData`.
+        Create a table from :py:class:`tabledata.TableData`.
 
         :param TableData tabledata: Table data to create.
         :param tuple index_attr_list: |index_attr_list|
@@ -1230,6 +1228,9 @@ class SimpleSQLite(object):
         :param tuple index_attr_list: |index_attr_list|
         :raises ValueError: If the CSV data is invalid.
 
+        :Dependency Packages:
+            - `pytablereader <https://github.com/thombashi/pytablereader>`__
+
         :Example:
             :ref:`example-create-table-from-csv`
 
@@ -1239,6 +1240,8 @@ class SimpleSQLite(object):
             :py:meth:`.pytablereader.CsvTableFileLoader.load`
             :py:meth:`.pytablereader.CsvTableTextLoader.load`
         """
+
+        import pytablereader as ptr
 
         loader = ptr.CsvTableFileLoader(csv_source)
         if typepy.is_not_null_string(table_name):
@@ -1275,6 +1278,9 @@ class SimpleSQLite(object):
         :param str table_name: Table name to create.
         :param tuple index_attr_list: |index_attr_list|
 
+        :Dependency Packages:
+            - `pytablereader <https://github.com/thombashi/pytablereader>`__
+
         :Examples:
             :ref:`example-create-table-from-json`
 
@@ -1282,6 +1288,8 @@ class SimpleSQLite(object):
             :py:meth:`.pytablereader.JsonTableFileLoader.load`
             :py:meth:`.pytablereader.JsonTableTextLoader.load`
         """
+
+        import pytablereader as ptr
 
         loader = ptr.JsonTableFileLoader(json_source)
         if typepy.is_not_null_string(table_name):
@@ -1314,7 +1322,7 @@ class SimpleSQLite(object):
             :ref:`example-create-table-from-df`
         """
 
-        tabledata = ptr.TableData.from_dataframe(
+        tabledata = TableData.from_dataframe(
             dataframe=dataframe, table_name=table_name)
         self.create_table_from_tabledata(
             tabledata, index_attr_list=index_attr_list)
