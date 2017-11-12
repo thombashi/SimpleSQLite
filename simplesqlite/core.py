@@ -17,6 +17,7 @@ import dataproperty
 from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
 import six
+from tabledata import TableData
 import typepy
 
 from ._error import (
