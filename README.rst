@@ -1,4 +1,3 @@
-
 SimpleSQLite
 ==============
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
@@ -37,20 +36,17 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `pytablereader.TableData <http://pytablereader.rtfd.io/en/latest/pages/reference/data.html#tabledata>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `pytablereader.TableData <http://pytablereader.rtfd.io/en/latest/pages/reference/data.html#tabledata>`__ instance
-
+    - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
 
 
 
 Examples
 ==========
-
 Create a table
 ----------------
-
 Create a table from data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
@@ -97,7 +93,6 @@ Create a table from data matrix
             "attr_e": " TEXT"
         }
 
-
 Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
@@ -132,7 +127,6 @@ Create a table from CSV
         (2, 2.1, u'bb')
         (3, 120.9, u'ccc')
 
-
 Create a table from pandas.DataFrame
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
@@ -158,7 +152,6 @@ Create a table from pandas.DataFrame
         $ sqlite3 pandas_df.sqlite
         sqlite> .schema
         CREATE TABLE 'pandas_df' (id INTEGER, value REAL, name TEXT);
-
 
 Insert records into a table
 -----------------------------
@@ -254,7 +247,6 @@ Insert list/tuple/namedtuple
         (8, 8.8, u'ggg', 8.88, u'foobar')
         (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
-
 Get Data from a table as pandas DataFrame
 -------------------------------------------
 :Sample Code:
@@ -284,11 +276,11 @@ Get Data from a table as pandas DataFrame
         1  2  2.2  bbb  2.2  2.2
         2  3  3.3  ccc  3.0  ccc
 
-
 For more information
 ----------------------
 More examples are available at 
 http://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
+
 Installation
 ============
 ::
@@ -300,22 +292,25 @@ Dependencies
 ============
 Python 2.7+ or 3.4+
 
-Mandatory
------------------
+Mandatory Dependencies
+----------------------------------
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
-- `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `six <https://pypi.python.org/pypi/six/>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
-Test dependencies
------------------
+Optional Dependencies
+----------------------------------
+- `pandas <http://pandas.pydata.org/>`__
+- `pytablereader <https://github.com/thombashi/pytablereader>`__
+
+Test Dependencies
+----------------------------------
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
-
 
 Documentation
 ===============
@@ -324,3 +319,4 @@ http://simplesqlite.rtfd.io/
 Related project
 =================
 - `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets SQLite database by using SimpleSQLite
+
