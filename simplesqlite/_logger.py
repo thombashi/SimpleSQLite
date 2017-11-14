@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 
 import dataproperty
 import logbook
-import pytablereader
 
 
 logger = logbook.Logger("SimpleSQLie")
@@ -26,7 +25,11 @@ def set_logger(is_enable):
         logger.disable()
 
     dataproperty.set_logger(is_enable)
-    pytablereader.set_logger(is_enable)
+    try:
+        import pytablereader
+        pytablereader.set_logger(is_enable)
+    except ImportError:
+        pass
 
 
 def set_log_level(log_level):
@@ -54,4 +57,8 @@ def set_log_level(log_level):
 
     logger.level = log_level
     dataproperty.set_log_level(log_level)
-    pytablereader.set_log_level(log_level)
+    try:
+        import pytablereader
+        pytablereader.set_log_level(log_level)
+    except ImportError:
+        pass
