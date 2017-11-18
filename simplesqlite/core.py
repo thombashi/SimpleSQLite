@@ -1458,10 +1458,10 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __get_attr_desc_list(self, attr_name_list, data_matrix):
+    def __get_attr_desc_list_from_tabledata(self, attr_name_list, data_matrix):
         attr_description_list = []
         for col, value_type in sorted(six.iteritems(
-                self.__get_col_valuetype_from_data_matrix(data_matrix))):
+                self.__get_col_valuetype_from_tabledata(data_matrix))):
             attr_name = attr_name_list[col]
             attr_description_list.append("{:s} {:s}".format(
                 SqlQuery.to_attr_str(attr_name), value_type))
@@ -1469,7 +1469,7 @@ class SimpleSQLite(object):
         return attr_description_list
 
     @staticmethod
-    def __get_col_valuetype_from_data_matrix(data_matrix):
+    def __get_col_valuetype_from_tabledata(data_matrix):
         """
         Get value type for each column.
 
@@ -1521,7 +1521,7 @@ class SimpleSQLite(object):
 
         self.create_table(
             tabledata.table_name,
-            self.__get_attr_desc_list(
+            self.__get_attr_desc_list_from_tabledata(
                 attr_name_list, tabledata.value_matrix))
         self.insert_many(tabledata.table_name, tabledata.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
