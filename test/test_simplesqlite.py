@@ -23,6 +23,7 @@ from simplesqlite import (
     connect_sqlite_memdb,
 )
 from simplesqlite.sqlquery import SqlQuery
+from tabledata import TableData
 import typepy
 
 import pytablereader as ptr
@@ -159,7 +160,7 @@ class Test_SimpleSQLite_select_as_dict(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [
-            ptr.TableData(
+            TableData(
                 "json1",
                 ["attr_a", "attr_b", "attr_c"],
                 [
@@ -713,7 +714,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [
-            ptr.TableData(
+            TableData(
                 "json1",
                 ["attr_a", "attr_b", "attr_c"],
                 [
@@ -726,7 +727,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
             [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')]
         ],
         [
-            ptr.TableData(
+            TableData(
                 "multibyte_char",
                 ["姓", "名", "生年月日", "郵便番号", "住所", "電話番号"],
                 [
