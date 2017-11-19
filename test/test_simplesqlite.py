@@ -26,8 +26,6 @@ from simplesqlite.sqlquery import SqlQuery
 from tabledata import TableData
 import typepy
 
-import pytablereader as ptr
-
 from .fixture import (
     TEST_TABLE_NAME,
     con,
