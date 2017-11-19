@@ -11,6 +11,7 @@ import os
 
 import pytest
 from simplesqlite import SimpleSQLite
+from tabledata import SQLiteTableDataSanitizer
 
 import pytablereader as ptr
 import pytablewriter as ptw
@@ -39,7 +40,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
 
             try:
                 con.create_table_from_tabledata(
-                    ptr.SQLiteTableDataSanitizer(tabledata).sanitize())
+                    SQLiteTableDataSanitizer(tabledata).sanitize())
                 success_count += 1
             except ValueError as e:
                 print(e)
