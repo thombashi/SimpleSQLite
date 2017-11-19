@@ -1485,8 +1485,7 @@ class SimpleSQLite(object):
         }
 
         dp_extractor = dataproperty.DataPropertyExtractor()
-        col_dp_list = dp_extractor.to_col_dataproperty_list(
-            tabledata.value_dp_matrix)
+        col_dp_list = dp_extractor.to_column_dp_list(tabledata.value_dp_matrix)
 
         return dict([
             [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
