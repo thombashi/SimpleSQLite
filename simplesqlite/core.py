@@ -430,10 +430,8 @@ class SimpleSQLite(object):
         """
 
         memdb = connect_sqlite_memdb()
-        tabledata = self.select_as_tabledata(
-            table_name, column_list, where, extra)
-
-        memdb.create_table_from_tabledata(tabledata)
+        memdb.create_table_from_tabledata(self.select_as_tabledata(
+            table_name, column_list, where, extra))
 
         return memdb
 
@@ -1187,14 +1185,14 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            tabledata=TableData(table_name, attr_name_list, data_matrix),
+            table_data=TableData(table_name, attr_name_list, data_matrix),
             index_attr_list=index_attr_list)
 
-    def create_table_from_tabledata(self, tabledata, index_attr_list=None):
+    def create_table_from_tabledata(self, table_data, index_attr_list=None):
         """
         Create a table from :py:class:`tabledata.TableData`.
 
-        :param TableData tabledata: Table data to create.
+        :param tabledata.TableData table_data: Table data to create.
         :param tuple index_attr_list: |index_attr_list|
 
         .. seealso::
@@ -1202,7 +1200,7 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            tabledata=tabledata, index_attr_list=index_attr_list)
+            table_data=table_data, index_attr_list=index_attr_list)
 
     def create_table_from_csv(
             self, csv_source, table_name="", attr_name_list=(),
@@ -1252,9 +1250,9 @@ class SimpleSQLite(object):
         loader.quotechar = quotechar
         loader.encoding = encoding
         try:
-            for tabledata in loader.load():
+            for table_data in loader.load():
                 self.create_table_from_tabledata(
-                    tabledata, index_attr_list=index_attr_list)
+                    table_data, index_attr_list=index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1266,9 +1264,9 @@ class SimpleSQLite(object):
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
-        for tabledata in loader.load():
+        for table_data in loader.load():
             self.create_table_from_tabledata(
-                tabledata, index_attr_list=index_attr_list)
+                table_data, index_attr_list=index_attr_list)
 
     def create_table_from_json(
             self, json_source, table_name="", index_attr_list=None):
@@ -1296,9 +1294,9 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         try:
-            for tabledata in loader.load():
+            for table_data in loader.load():
                 self.create_table_from_tabledata(
-                    tabledata, index_attr_list=index_attr_list)
+                    table_data, index_attr_list=index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1306,9 +1304,9 @@ class SimpleSQLite(object):
         loader = ptr.JsonTableTextLoader(json_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        for tabledata in loader.load():
+        for table_data in loader.load():
             self.create_table_from_tabledata(
-                tabledata, index_attr_list=index_attr_list)
+                table_data, index_attr_list=index_attr_list)
 
     def create_table_from_dataframe(
             self, dataframe, table_name="", index_attr_list=None):
@@ -1323,10 +1321,10 @@ class SimpleSQLite(object):
             :ref:`example-create-table-from-df`
         """
 
-        tabledata = TableData.from_dataframe(
-            dataframe=dataframe, table_name=table_name)
         self.create_table_from_tabledata(
-            tabledata, index_attr_list=index_attr_list)
+            TableData.from_dataframe(
+                dataframe=dataframe, table_name=table_name),
+            index_attr_list=index_attr_list)
 
     def rollback(self):
         """
@@ -1458,10 +1456,10 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __get_attr_desc_list_from_tabledata(self, attr_name_list, tabledata):
+    def __get_attr_desc_list_from_tabledata(self, attr_name_list, table_data):
         attr_description_list = []
         for col, value_type in sorted(six.iteritems(
-                self.__get_col_valuetype_from_tabledata(tabledata))):
+                self.__get_col_valuetype_from_tabledata(table_data))):
             attr_name = attr_name_list[col]
             attr_description_list.append("{:s} {:s}".format(
                 SqlQuery.to_attr_str(attr_name), value_type))
@@ -1469,11 +1467,11 @@ class SimpleSQLite(object):
         return attr_description_list
 
     @staticmethod
-    def __get_col_valuetype_from_tabledata(tabledata):
+    def __get_col_valuetype_from_tabledata(table_data):
         """
         Get value type for each column.
 
-        :param tabledata.TableData tabledata:
+        :param tabledata.TableData table_data:
         :return: { column_number : value_type }
         :rtype: dictionary
         """
@@ -1485,7 +1483,8 @@ class SimpleSQLite(object):
         }
 
         dp_extractor = dataproperty.DataPropertyExtractor()
-        col_dp_list = dp_extractor.to_column_dp_list(tabledata.value_dp_matrix)
+        col_dp_list = dp_extractor.to_column_dp_list(
+            table_data.value_dp_matrix)
 
         return dict([
             [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
@@ -1498,34 +1497,34 @@ class SimpleSQLite(object):
             for attr_name in attr_name_list
         ]
 
-    def __create_table_from_tabledata(self, tabledata, index_attr_list=None):
+    def __create_table_from_tabledata(self, table_data, index_attr_list=None):
         self.validate_access_permission(["w", "a"])
-        validate_table_name(tabledata.table_name)
+        validate_table_name(table_data.table_name)
 
         logger.debug(
             "__create_table_from_tabledata: table={}, headers={}".format(
-                tabledata.table_name, tabledata.header_list))
+                table_data.table_name, table_data.header_list))
 
-        attr_name_list = self.__sanitize_attr_name_list(tabledata.header_list)
+        attr_name_list = self.__sanitize_attr_name_list(table_data.header_list)
         try:
             self.__validate_attr_name_list(attr_name_list)
         except pathvalidate.ReservedNameError:
             pass
 
-        if tabledata.is_empty():
-            raise ValueError("input tabledata is empty: {}".format(
-                tabledata))
+        if table_data.is_empty():
+            raise ValueError("input table_data is empty: {}".format(
+                table_data))
 
-        self.__verify_value_matrix(attr_name_list, tabledata.value_matrix)
+        self.__verify_value_matrix(attr_name_list, table_data.value_matrix)
 
         self.create_table(
-            tabledata.table_name,
+            table_data.table_name,
             self.__get_attr_desc_list_from_tabledata(
-                attr_name_list, tabledata))
-        self.insert_many(tabledata.table_name, tabledata.value_matrix)
+                attr_name_list, table_data))
+        self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
-                tabledata.table_name,
+                table_data.table_name,
                 self.__sanitize_attr_name_list(index_attr_list))
         self.commit()
 
