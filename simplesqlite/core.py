@@ -277,6 +277,11 @@ class SimpleSQLite(object):
 
         return result
 
+    def set_row_factory(self, row_factory):
+        self.check_connection()
+
+        self.__connection.row_factory = row_factory
+
     def select(self, select, table_name, where=None, extra=None):
         """
         Send a SELECT query to the database.
