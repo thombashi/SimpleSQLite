@@ -91,6 +91,8 @@ class SimpleSQLite(object):
     def __init__(
             self, database_src, mode="a",
             is_create_table_config=True, profile=False):
+        self.debug_query = False
+
         self.__initialize_connection()
         self.__is_profile = profile
         self.__is_create_table_config = is_create_table_config
@@ -248,6 +250,9 @@ class SimpleSQLite(object):
         self.check_connection()
         if typepy.is_null_string(query):
             return None
+
+        if self.debug_query:
+            logger.debug(query)
 
         if self.__is_profile:
             exec_start_time = time.time()
@@ -491,6 +496,11 @@ class SimpleSQLite(object):
         record_list = RecordConvertor.to_record_list(
             self.get_attr_name_list(table_name), record_list)
         query = SqlQuery.make_insert(table_name, record_list[0])
+
+        if self.debug_query:
+            logger.debug(query)
+            for i, record in enumerate(record_list):
+                logger.debug("    record {:4d}: {}".format(i, record))
 
         try:
             self.connection.executemany(query, record_list)
