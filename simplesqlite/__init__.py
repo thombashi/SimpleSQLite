@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import
 
+from .__version__ import __author__, __copyright__, __email__, __license__, __version__
 from ._error import (
     AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
     NullDatabaseConnectionError, OperationalError, SqlSyntaxError, TableNotFoundError)
