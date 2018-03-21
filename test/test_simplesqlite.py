@@ -4,39 +4,23 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
-from collections import (namedtuple, OrderedDict)
 import datetime
-from decimal import Decimal
 import itertools
+from collections import OrderedDict, namedtuple
+from decimal import Decimal
 
 import pytest
+import typepy
 from simplesqlite import (
-    SimpleSQLite,
-    AttributeNotFoundError,
-    DatabaseError,
-    InvalidTableNameError,
-    NullDatabaseConnectionError,
-    OperationalError,
-    TableNotFoundError,
-    connect_sqlite_memdb,
-)
+    AttributeNotFoundError, DatabaseError, InvalidTableNameError, NullDatabaseConnectionError,
+    OperationalError, SimpleSQLite, TableNotFoundError, connect_sqlite_memdb)
 from simplesqlite.sqlquery import SqlQuery
 from tabledata import TableData
-import typepy
 
 from .fixture import (
-    TEST_TABLE_NAME,
-    con,
-    con_mix,
-    con_ro,
-    con_profile,
-    con_index,
-    con_null,
-    con_empty,
-)
+    TEST_TABLE_NAME, con, con_empty, con_index, con_mix, con_null, con_profile, con_ro)
 
 
 nan = float("nan")

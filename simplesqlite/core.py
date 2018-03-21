@@ -4,8 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import logging
 import os
@@ -14,21 +13,15 @@ import sqlite3
 import warnings
 
 import dataproperty
-from mbstrdecoder import MultiByteStrDecoder
 import pathvalidate
 import six
-from tabledata import TableData
 import typepy
+from mbstrdecoder import MultiByteStrDecoder
+from tabledata import TableData
 
 from ._error import (
-    DatabaseError,
-    AttributeNotFoundError,
-    NullDatabaseConnectionError,
-    TableNotFoundError,
-    InvalidTableNameError,
-    InvalidAttributeNameError,
-    OperationalError,
-)
+    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
+    NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor

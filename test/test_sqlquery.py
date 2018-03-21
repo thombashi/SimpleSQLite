@@ -11,10 +11,7 @@ import re
 import string
 
 import pytest
-from simplesqlite import (
-    SqlSyntaxError,
-    InvalidTableNameError,
-)
+from simplesqlite import InvalidTableNameError, SqlSyntaxError
 from simplesqlite.sqlquery import SqlQuery
 
 

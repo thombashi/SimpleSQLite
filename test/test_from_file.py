@@ -4,17 +4,15 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 import os
 
+import pytablereader as ptr
+import pytablewriter as ptw
 import pytest
 from simplesqlite import SimpleSQLite
 from tabledata import SQLiteTableDataSanitizer
-
-import pytablereader as ptr
-import pytablewriter as ptw
 
 
 class Test_SimpleSQLite_create_table_from_tabledata(object):

@@ -4,15 +4,11 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 import logbook
 import pytest
-from simplesqlite import (
-    set_logger,
-    set_log_level,
-)
+from simplesqlite import set_log_level, set_logger
 
 
 class Test_set_logger(object):

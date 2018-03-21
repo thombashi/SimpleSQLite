@@ -3,11 +3,7 @@
 
 from __future__ import print_function
 
-from simplesqlite import (
-    SimpleSQLite,
-    TableNotFoundError,
-    AttributeNotFoundError
-)
+from simplesqlite import AttributeNotFoundError, SimpleSQLite, TableNotFoundError
 
 
 table_name = "sample_table"

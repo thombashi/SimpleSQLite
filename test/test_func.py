@@ -4,32 +4,15 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
 from simplesqlite import (
-    append_table,
-    copy_table,
-    connect_sqlite_memdb,
-    InvalidAttributeNameError,
-    InvalidTableNameError,
-    NullDatabaseConnectionError,
-)
-from simplesqlite._func import (
-    validate_attr_name,
-    validate_table_name,
-)
+    InvalidAttributeNameError, InvalidTableNameError, NullDatabaseConnectionError, append_table,
+    connect_sqlite_memdb, copy_table)
+from simplesqlite._func import validate_attr_name, validate_table_name
 
-from .fixture import (
-    TEST_TABLE_NAME,
-    con_mix,
-    con_ro,
-    con_profile,
-    con_null,
-    con_empty,
-)
+from .fixture import TEST_TABLE_NAME, con_empty, con_mix, con_null, con_profile, con_ro
 
 
 class Test_validate_table_name(object):

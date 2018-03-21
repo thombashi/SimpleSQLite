@@ -2,9 +2,11 @@
 # encoding: utf-8
 
 from __future__ import print_function
+
 import json
 
 from simplesqlite import SimpleSQLite
+
 
 con = SimpleSQLite("sample.sqlite", "w")
 data_matrix = [

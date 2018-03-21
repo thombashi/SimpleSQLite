@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 from collections import namedtuple
+
 from simplesqlite import SimpleSQLite
 
 
