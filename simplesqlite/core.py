@@ -530,6 +530,23 @@ class SimpleSQLite(object):
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
+    def delete(self, table_name, where=None):
+        """
+        Send a DELETE query to the database.
+
+        :param str table_name: Table name of executing the query.
+        :param str where:
+        """
+
+        self.validate_access_permission(["w", "a"])
+        self.verify_table_existence(table_name)
+
+        query = "DELETE FROM {:s}".format(table_name)
+        if where:
+            query += " WHERE {:s}".format(where)
+
+        return self.execute_query(query, logging.getLogger().findCaller())
+
     def get_total_changes(self):
         """
         .. seealso::
