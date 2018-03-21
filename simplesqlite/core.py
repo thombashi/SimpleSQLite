@@ -48,6 +48,8 @@ class SimpleSQLite(object):
         :py:meth:`.get_profile`
     """
 
+    __SQLITE_INTERNAL_TABLE_LIST = ["sqlite_sequence"]
+
     @property
     def database_path(self):
         """
@@ -1061,6 +1063,9 @@ class SimpleSQLite(object):
         """
 
         self.validate_access_permission(["w", "a"])
+
+        if table_name in self.__SQLITE_INTERNAL_TABLE_LIST:
+            return
 
         if self.has_table(table_name):
             query = "DROP TABLE IF EXISTS '{:s}'".format(table_name)
