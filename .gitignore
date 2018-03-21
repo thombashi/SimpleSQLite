@@ -55,11 +55,4 @@ docs/_build/
 
 # PyBuilder
 target/
-desktop.ini
-README.md
-*.ipynb
-misc/README_HEADER.rst
-misc/readme_converter.py
-upgrade.sh
-sandbox/
 uml/
