@@ -500,6 +500,7 @@ class SimpleSQLite(object):
 
         :param str table_name: Table name of executing the query.
         :param str set_query:
+        :param str where:
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
