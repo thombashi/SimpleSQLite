@@ -17,6 +17,24 @@ REQUIREMENT_DIR = "requirements"
 pkg_info = {}
 
 
+class ReleaseCommand(setuptools.Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        tag = "v{}".format(pkg_info["__version__"])
+
+        print("Pushing git tags: {}".format(tag))
+
+        os.system("git tag {}".format(tag))
+        os.system("git push --tags")
+
+
 with open(os.path.join(MODULE_NAME.lower(), "__version__.py")) as f:
     exec(f.read(), pkg_info)
 
@@ -77,4 +95,7 @@ setuptools.setup(
         "Topic :: Database",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
-    ])
+    ],
+    cmdclass={
+        "release": ReleaseCommand,
+    })
