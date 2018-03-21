@@ -1363,6 +1363,8 @@ class SimpleSQLite(object):
         except NullDatabaseConnectionError:
             return
 
+        logger.debug("rollback: path='{}'".format(self.database_path))
+
         self.connection.rollback()
 
     def commit(self):
@@ -1374,6 +1376,8 @@ class SimpleSQLite(object):
             self.check_connection()
         except NullDatabaseConnectionError:
             return
+
+        logger.debug("commit: path='{}'".format(self.database_path))
 
         self.connection.commit()
 
