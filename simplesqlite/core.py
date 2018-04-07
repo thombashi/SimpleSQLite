@@ -1253,7 +1253,7 @@ class SimpleSQLite(object):
         :param list attr_name_list:
             Attribute names of the table.
             Use the first line of the CSV file as attribute list
-            if attribute_name_list is empty.
+            if attr_name_list is empty.
         :param str delimiter:
             A one-character string used to separate fields.
         :param str quotechar:
