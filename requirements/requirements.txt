@@ -3,5 +3,5 @@ logbook
 mbstrdecoder
 pathvalidate>=0.16.3
 six
-tabledata>=0.0.5
-typepy>=0.0.22
+tabledata>=0.0.6
+typepy>=0.0.23
