@@ -3,8 +3,9 @@
 
 from __future__ import print_function
 
-import pytablereader as ptr
 import simplesqlite
+
+import pytablereader as ptr
 
 
 credentials_file = "sample-xxxxxxxxxxxx.json"

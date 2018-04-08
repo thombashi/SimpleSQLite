@@ -3,8 +3,9 @@
 
 from __future__ import print_function
 
-import pytablereader
 import simplesqlite
+
+import pytablereader
 import xlsxwriter
 
 
