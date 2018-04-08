@@ -285,8 +285,6 @@ class SimpleSQLite(object):
     def set_row_factory(self, row_factory):
         """
         Set row_factory to the database connection.
-
-        :param str row_factory:
         """
 
         self.check_connection()
