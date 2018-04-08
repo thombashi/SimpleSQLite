@@ -830,17 +830,18 @@ class SimpleSQLite(object):
         """
 
         self.check_connection()
+        stash_row_factory = self.connection.row_factory
 
-        old_row_factory = self.connection.row_factory
-        self.connection.row_factory = sqlite3.Row
+        try:
+            self.set_row_factory(sqlite3.Row)
 
-        sqlite_master_list = []
-        result = self.execute_query("select * from sqlite_master")
-        for item in result.fetchall():
-            sqlite_master_list.append(
-                dict([[key, item[key]] for key in item.keys()]))
-
-        self.connection.row_factory = old_row_factory
+            sqlite_master_list = []
+            result = self.execute_query("select * from sqlite_master")
+            for item in result.fetchall():
+                sqlite_master_list.append(
+                    dict([[key, item[key]] for key in item.keys()]))
+        finally:
+            self.set_row_factory(stash_row_factory)
 
         return sqlite_master_list
 
@@ -1104,6 +1105,7 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
 
         if table_name in self.__SQLITE_INTERNAL_TABLE_LIST:
+            # warning message
             return
 
         if self.has_table(table_name):
