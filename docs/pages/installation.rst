@@ -14,6 +14,7 @@ Mandatory Dependencies
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
+- `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `six <https://pypi.python.org/pypi/six/>`__
 - `tabledata <https://github.com/thombashi/tabledata>`__
