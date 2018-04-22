@@ -17,6 +17,7 @@ import pathvalidate
 import six
 import typepy
 from mbstrdecoder import MultiByteStrDecoder
+import msgfy
 from tabledata import TableData
 
 from ._error import (
@@ -570,7 +571,7 @@ class SimpleSQLite(object):
         try:
             self.verify_table_existence(table_name)
         except TableNotFoundError as e:
-            logger.debug("{:s}: {}".format(e.__class__.__name__, e))
+            logger.debug(msgfy.to_error_message(e))
             return None
 
         query = SqlQuery.make_select(select, table_name, where, extra)
