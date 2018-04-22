@@ -5,6 +5,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+import io
 import os.path
 import sys
 
@@ -13,6 +14,7 @@ import setuptools
 
 MODULE_NAME = "SimpleSQLite"
 REQUIREMENT_DIR = "requirements"
+ENCODING = "utf8"
 
 pkg_info = {}
 
@@ -38,10 +40,10 @@ class ReleaseCommand(setuptools.Command):
 with open(os.path.join(MODULE_NAME.lower(), "__version__.py")) as f:
     exec(f.read(), pkg_info)
 
-with open("README.rst") as fp:
+with io.open("README.rst", encoding=ENCODING) as fp:
     long_description = fp.read()
 
-with open(os.path.join("docs", "pages", "introduction", "summary.txt")) as f:
+with io.open(os.path.join("docs", "pages", "introduction", "summary.txt"), encoding=ENCODING) as f:
     summary = f.read().strip()
 
 with open(os.path.join(REQUIREMENT_DIR, "requirements.txt")) as f:
