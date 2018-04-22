@@ -52,9 +52,7 @@ class RecordConvertor(object):
             pass
 
         if typepy.is_list_or_tuple(values):
-            return [
-                cls.__to_sqlite_element(value) for value in values
-            ]
+            return [cls.__to_sqlite_element(value) for value in values]
 
         raise ValueError("cannot convert to list")
 
@@ -71,7 +69,4 @@ class RecordConvertor(object):
         .. seealso:: :py:meth:`.to_record`
         """
 
-        return [
-            cls.to_record(attr_name_list, record)
-            for record in data_matrix
-        ]
+        return [cls.to_record(attr_name_list, record) for record in data_matrix]
