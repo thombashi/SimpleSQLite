@@ -6,6 +6,8 @@
 
 import sqlite3
 
+from tabledata import InvalidTableNameError
+
 
 class DatabaseError(sqlite3.DatabaseError):
     """
@@ -33,12 +35,6 @@ class TableNotFoundError(Exception):
 class AttributeNotFoundError(Exception):
     """
     Exception raised when accessed the attribute that not exists in the table.
-    """
-
-
-class InvalidTableNameError(ValueError):
-    """
-    Exception raised when used invalid table name for SQLite.
     """
 
 
