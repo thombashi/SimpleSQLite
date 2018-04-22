@@ -161,12 +161,10 @@ class SimpleSQLite(object):
         """
 
         if self.connection is None:
-            raise NullDatabaseConnectionError(
-                "null database connection")
+            raise NullDatabaseConnectionError("null database connection")
 
         if typepy.is_null_string(self.database_path):
-            raise NullDatabaseConnectionError(
-                "null database file path")
+            raise NullDatabaseConnectionError("null database file path")
 
     def connect(self, database_path, mode="a"):
         """
@@ -269,8 +267,7 @@ class SimpleSQLite(object):
             raise OperationalError(message="\n".join(message_list))
 
         if self.__is_profile:
-            self.__dict_query_count[query] = (
-                self.__dict_query_count.get(query, 0) + 1)
+            self.__dict_query_count[query] = (self.__dict_query_count.get(query, 0) + 1)
 
             elapse_time = time.time() - exec_start_time
             self.__dict_query_totalexectime[query] = (
@@ -736,8 +733,7 @@ class SimpleSQLite(object):
 
         value_matrix = [
             [query, execute_time, self.__dict_query_count.get(query, 0)]
-            for query, execute_time
-            in six.iteritems(self.__dict_query_totalexectime)
+            for query, execute_time in six.iteritems(self.__dict_query_totalexectime)
         ]
         attr_name_list = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_sqlite_memdb()
@@ -1535,8 +1531,7 @@ class SimpleSQLite(object):
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(
-                table_data.table_name,
-                self.__sanitize_attr_name_list(index_attr_list))
+                table_data.table_name, self.__sanitize_attr_name_list(index_attr_list))
         self.commit()
 
 
