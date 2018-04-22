@@ -1,5 +1,8 @@
-SimpleSQLite
-==============
+**SimpleSQLite**
+
+.. contents:: Table of Contents
+   :depth: 2
+
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
 
@@ -16,16 +19,12 @@ SimpleSQLite
 .. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
    :target: https://github.com/thombashi/SimpleSQLite
 
-.. contents:: Table of Contents
-   :depth: 2
-
 Summary
----------
+=========
 SimpleSQLite is a Python library to simplify SQLite database operations: table creation, data insertion and get data as other data formats.
 
 Features
 --------
-
 - Automated SQLite table creation from data
 - Support various data types of record(s) insertion into a table:
     - ``dict``
@@ -36,12 +35,10 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `tabledata.TableData <http://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
-
-
 
 Examples
 ==========
@@ -79,7 +76,7 @@ Create a table from data matrix
         print(json.dumps(con.get_attr_type(table_name), indent=4))
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
         (1, 1.1, u'aaa', 1.0, u'1')
@@ -120,7 +117,7 @@ Create a table from CSV
             print(record)
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         ['attr_a', 'attr_b', 'attr_c']
         (1, 4.0, u'a')
@@ -147,7 +144,7 @@ Create a table from pandas.DataFrame
         ), table_name="pandas_df")
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         $ sqlite3 pandas_df.sqlite
         sqlite> .schema
@@ -200,7 +197,7 @@ Insert dictionary
             print(record)
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         (1, 1.1, 'aaa', 1, 1)
         (4, 4.4, 'ddd', 4.44, 'hoge')
@@ -240,7 +237,7 @@ Insert list/tuple/namedtuple
             print(record)
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         (1, 1.1, u'aaa', 1, 1)
         (7, 7.7, u'fff', 7.77, u'bar')
@@ -268,7 +265,7 @@ Get Data from a table as pandas DataFrame
         print(con.select_as_dataframe(table_name="sample_table"))
 
 :Output:
-    .. code-block:: none
+    .. code-block::
 
         $ sample/select_as_dataframe.py
            a    b    c    d    e
@@ -297,6 +294,7 @@ Mandatory Dependencies
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
+- `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `six <https://pypi.python.org/pypi/six/>`__
 - `tabledata <https://github.com/thombashi/tabledata>`__
