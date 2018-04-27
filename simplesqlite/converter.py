@@ -51,7 +51,7 @@ class RecordConvertor(object):
         except AttributeError:
             pass
 
-        if typepy.is_list_or_tuple(values):
+        if isinstance(values, (tuple, list)):
             return [cls.__to_sqlite_element(value) for value in values]
 
         raise ValueError("cannot convert to list")
