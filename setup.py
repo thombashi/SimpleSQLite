@@ -71,6 +71,7 @@ setuptools.setup(
         "Documentation": "http://{:s}.rtfd.io/".format(MODULE_NAME),
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
     },
+    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
 
     install_requires=setuptools_require + install_requires,
     setup_requires=setuptools_require + pytest_runner_require,
