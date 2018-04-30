@@ -12,4 +12,5 @@ from ._error import (
     NullDatabaseConnectionError, OperationalError, SqlSyntaxError, TableNotFoundError)
 from ._func import append_table, copy_table
 from ._logger import set_log_level, set_logger
-from .core import SimpleSQLite, connect_sqlite_db_mem, connect_sqlite_memdb
+from .core import (
+    SQLITE_INTERNAL_TABLE_LIST, SimpleSQLite, connect_sqlite_db_mem, connect_sqlite_memdb)

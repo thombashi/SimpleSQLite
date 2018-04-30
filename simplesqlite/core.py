@@ -30,6 +30,7 @@ from .sqlquery import SqlQuery
 
 
 MEMORY_DB_NAME = ":memory:"
+SQLITE_INTERNAL_TABLE_LIST = ["sqlite_sequence"]
 
 
 class SimpleSQLite(object):
@@ -48,8 +49,6 @@ class SimpleSQLite(object):
         :py:meth:`.connect`
         :py:meth:`.get_profile`
     """
-
-    __SQLITE_INTERNAL_TABLE_LIST = ["sqlite_sequence"]
 
     @property
     def database_path(self):
@@ -1081,7 +1080,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if table_name in self.__SQLITE_INTERNAL_TABLE_LIST:
+        if table_name in SQLITE_INTERNAL_TABLE_LIST:
             # warning message
             return
 
