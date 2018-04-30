@@ -13,8 +13,8 @@ import pathvalidate as pv
 import typepy
 from six.moves import map
 
-from ._error import SqlSyntaxError
 from ._func import validate_table_name
+from .error import SqlSyntaxError
 
 
 class SqlQuery(object):

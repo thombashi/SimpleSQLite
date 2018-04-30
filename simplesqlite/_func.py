@@ -15,7 +15,7 @@ def validate_table_name(name):
     :raises InvalidTableNameError: |raises_validate_table_name|
     """
 
-    from ._error import InvalidTableNameError
+    from .error import InvalidTableNameError
 
     try:
         pathvalidate.validate_sqlite_table_name(name)
@@ -33,7 +33,7 @@ def validate_attr_name(name):
     :raises InvalidAttributeNameError: |raises_validate_attr_name|
     """
 
-    from ._error import InvalidAttributeNameError
+    from .error import InvalidAttributeNameError
 
     try:
         pathvalidate.validate_sqlite_attr_name(name)

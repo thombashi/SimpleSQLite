@@ -20,12 +20,12 @@ import typepy
 from mbstrdecoder import MultiByteStrDecoder
 from tabledata import TableData
 
-from ._error import (
-    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
-    NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor
+from .error import (
+    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
+    NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from .sqlquery import SqlQuery
 
 
