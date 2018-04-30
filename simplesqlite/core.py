@@ -30,7 +30,7 @@ from .sqlquery import SqlQuery
 
 
 MEMORY_DB_NAME = ":memory:"
-SQLITE_INTERNAL_TABLE_LIST = ["sqlite_sequence"]
+SQLITE_SYSTEM_TABLE_LIST = ["sqlite_sequence"]
 
 
 class SimpleSQLite(object):
@@ -1080,7 +1080,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if table_name in SQLITE_INTERNAL_TABLE_LIST:
+        if table_name in SQLITE_SYSTEM_TABLE_LIST:
             # warning message
             return
 

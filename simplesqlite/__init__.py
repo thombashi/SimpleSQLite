@@ -13,4 +13,4 @@ from ._error import (
 from ._func import append_table, copy_table
 from ._logger import set_log_level, set_logger
 from .core import (
-    SQLITE_INTERNAL_TABLE_LIST, SimpleSQLite, connect_sqlite_db_mem, connect_sqlite_memdb)
+    SQLITE_SYSTEM_TABLE_LIST, SimpleSQLite, connect_sqlite_db_mem, connect_sqlite_memdb)
