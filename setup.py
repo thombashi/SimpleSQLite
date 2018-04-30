@@ -51,8 +51,8 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
-setuptools_require = ["setuptools>=38.3.0"]
-pytest_runner_require = ["pytest-runner"] if need_pytest() else []
+SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
+PYTEST_RUNNER_REQUIRES = ["pytest-runner"] if need_pytest() else []
 
 setuptools.setup(
     name=MODULE_NAME,
@@ -71,10 +71,10 @@ setuptools.setup(
         "Documentation": "http://{:s}.rtfd.io/".format(MODULE_NAME),
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
     },
-    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
 
-    install_requires=setuptools_require + install_requires,
-    setup_requires=setuptools_require + pytest_runner_require,
+    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
+    install_requires=SETUPTOOLS_REQUIRES + install_requires,
+    setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
     tests_require=tests_requires,
     extras_require={
         "build": "wheel",
