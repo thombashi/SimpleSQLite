@@ -1,5 +1,5 @@
 pytablereader
-pytablewriter>=0.27.2
+pytablewriter>=0.28.0
 pytest-cov
 pytest
 tox

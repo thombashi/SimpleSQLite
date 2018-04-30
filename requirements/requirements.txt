@@ -1,8 +1,8 @@
-DataProperty>=0.30.2
+DataProperty>=0.30.3
 logbook
 mbstrdecoder
 msgfy>=0.0.2
 pathvalidate>=0.17.1
 six
 tabledata>=0.0.8
-typepy>=0.0.26
+typepy>=0.0.27
