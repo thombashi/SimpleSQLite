@@ -475,7 +475,9 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        logger.debug("insert {} records".format(len(record_list) if record_list else 0))
+        logger.debug("insert {number} records into {table}".format(
+            number=len(record_list) if record_list else 0,
+            table=table_name))
 
         if typepy.is_empty_sequence(record_list):
             return
