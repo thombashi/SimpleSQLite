@@ -1316,11 +1316,9 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for table_data in loader.load():
-            self.create_table_from_tabledata(
-                table_data, index_attr_list=index_attr_list)
+            self.create_table_from_tabledata(table_data, index_attr_list=index_attr_list)
 
-    def create_table_from_dataframe(
-            self, dataframe, table_name="", index_attr_list=None):
+    def create_table_from_dataframe(self, dataframe, table_name="", index_attr_list=None):
         """
         Create a table from a pandas.DataFrame instance.
 
@@ -1376,8 +1374,7 @@ class SimpleSQLite(object):
         except (SystemError, NullDatabaseConnectionError):
             return
 
-        logger.debug(
-            "close connection to a SQLite database: path='{}'".format(self.database_path))
+        logger.debug("close connection to a SQLite database: path='{}'".format(self.database_path))
 
         self.commit()
         self.connection.close()
@@ -1512,9 +1509,8 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         validate_table_name(table_data.table_name)
 
-        logger.debug(
-            "__create_table_from_tabledata: table={}, headers={}".format(
-                table_data.table_name, table_data.header_list))
+        logger.debug("__create_table_from_tabledata: table={}, headers={}".format(
+            table_data.table_name, table_data.header_list))
 
         attr_name_list = self.__sanitize_attr_name_list(table_data.header_list)
         try:
@@ -1523,8 +1519,7 @@ class SimpleSQLite(object):
             pass
 
         if table_data.is_empty():
-            raise ValueError("input table_data is empty: {}".format(
-                table_data))
+            raise ValueError("input table_data is empty: {}".format(table_data))
 
         self.__verify_value_matrix(attr_name_list, table_data.value_matrix)
 
