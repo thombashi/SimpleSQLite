@@ -353,7 +353,7 @@ class Test_SimpleSQLite_get_table_name_list(object):
             con_null.get_table_name_list()
 
 
-class Test_SimpleSQLite_get_attribute_name_list(object):
+class Test_SimpleSQLite_get_attr_name_list(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         [
@@ -418,7 +418,7 @@ class Test_SimpleSQLite_has_attribute(object):
             con_null.has_attr(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_has_attribute_list(object):
+class Test_SimpleSQLite_has_attr_list(object):
 
     @pytest.mark.parametrize(["table", "attr", "expected"], [
         [TEST_TABLE_NAME, ["attr_a"], True],
@@ -495,7 +495,7 @@ class Test_SimpleSQLite_verify_table_existence(object):
             con_null.verify_table_existence(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_verify_attribute_existence(object):
+class Test_SimpleSQLite_verify_attr_existence(object):
 
     @pytest.mark.parametrize(["table", "attr", "expected"], [
         [TEST_TABLE_NAME, "not_exist_attr", AttributeNotFoundError],
