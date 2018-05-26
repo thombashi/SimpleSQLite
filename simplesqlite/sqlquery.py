@@ -7,7 +7,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import re
-import warnings
 
 import pathvalidate as pv
 import six
