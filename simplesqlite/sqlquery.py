@@ -192,10 +192,7 @@ class SqlQuery(object):
         if value is None:
             return "NULL"
 
-        if any([
-                typepy.type.Integer(value).is_type(),
-                typepy.type.RealNumber(value).is_type()
-        ]):
+        if typepy.Integer(value).is_type() or typepy.RealNumber(value).is_type():
             return str(value)
 
         try:
