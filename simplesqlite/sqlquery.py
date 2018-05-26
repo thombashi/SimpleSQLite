@@ -10,6 +10,7 @@ import re
 import warnings
 
 import pathvalidate as pv
+import six
 import typepy
 from six.moves import map
 
@@ -193,7 +194,7 @@ class SqlQuery(object):
             return "NULL"
 
         if typepy.Integer(value).is_type() or typepy.RealNumber(value).is_type():
-            return str(value)
+            return six.text_type(value)
 
         try:
             if value.find("'") != -1:
