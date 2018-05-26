@@ -301,9 +301,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
-
-        .. seealso::
-            :py:meth:`.sqlquery.SqlQuery.make_select`
         """
 
         self.verify_table_existence(table_name)
@@ -467,8 +464,6 @@ class SimpleSQLite(object):
 
         :Example:
             :ref:`example-insert-records`
-
-        .. seealso:: :py:meth:`.sqlquery.SqlQuery.make_insert`
         """
 
         self.validate_access_permission(["w", "a"])
@@ -566,9 +561,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         :raises simplesqlite.OperationalError: |raises_operational_error|
-
-        .. seealso::
-            :py:meth:`.sqlquery.SqlQuery.make_select`
         """
 
         try:
