@@ -151,17 +151,14 @@ class Test_SimpleSQLite_select_as_dict(object):
                     {'attr_a': 2, 'attr_b': 2.1, 'attr_c': 'bb'},
                     {'attr_a': 3, 'attr_b': 120.9,
                      'attr_c': 'ccc'},
-                ]
-            ),
+                ]),
             [
                 OrderedDict([
                     ('attr_a', 1), ('attr_b', 4), ('attr_c', 'a')]),
                 OrderedDict([
-                    ('attr_a', 2),
-                    ('attr_b', Decimal("2.1")), ('attr_c', 'bb')]),
+                    ('attr_a', 2), ('attr_b', Decimal("2.1")), ('attr_c', 'bb')]),
                 OrderedDict([
-                    ('attr_a', 3), ('attr_b', Decimal("120.9")),
-                    ('attr_c', 'ccc')]),
+                    ('attr_a', 3), ('attr_b', Decimal("120.9")), ('attr_c', 'ccc')]),
             ],
         ],
     ])
@@ -236,24 +233,21 @@ class Test_SimpleSQLite_insert_many(object):
                 [9, 10],
                 [11, 12],
             ],
-        ],
-        [
+        ], [
             TEST_TABLE_NAME,
             [
                 {"attr_a": 7, "attr_b": 8},
                 {"attr_a": 9, "attr_b": 10},
                 {"attr_a": 11, "attr_b": 12},
             ],
-        ],
-        [
+        ], [
             TEST_TABLE_NAME,
             [
                 NamedTuple(7, 8),
                 NamedTuple(9, 10),
                 NamedTuple(11, 12),
             ],
-        ],
-        [
+        ], [
             TEST_TABLE_NAME,
             [
                 [7, 8],
@@ -308,8 +302,7 @@ class Test_SimpleSQLite_update(object):
     def test_normal(self, con):
         table_name = TEST_TABLE_NAME
         where = SqlQuery.make_where("attr_b", 2)
-        con.update(
-            table_name=table_name, set_query="attr_a = 100", where=where)
+        con.update(table_name=table_name, set_query="attr_a = 100", where=where)
         assert con.get_value(
             select="attr_a", table_name=table_name, where=where) == 100
 
@@ -474,8 +467,7 @@ class Test_SimpleSQLite_get_sqlite_master(object):
                 'type': 'table',
                 'name': 'test_table',
                 'rootpage': 2
-            },
-            {
+            }, {
                 'tbl_name': 'test_table',
                 'sql': "CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
                 'type': 'index',
@@ -542,10 +534,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
-        [
-            "attr_name_list", "data_matrix",
-            "index_attr_list", "expected_attr",
-        ],
+        ["attr_name_list", "data_matrix", "index_attr_list", "expected_attr"],
         [
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -560,8 +549,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '"attr_b"': 'REAL',
                     '"attr_a"': 'INTEGER'
                 },
-            ],
-            [
+            ], [
                 ["attr_a", "attr_b", "attr_c"],
                 [
                     {"attr_a": 1, "attr_b": 4,      "attr_c": "a"},
@@ -577,8 +565,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '"attr_c"': 'TEXT',
                     '"attr_b"': 'REAL',
                     '"attr_a"': 'INTEGER'},
-            ],
-            [
+            ], [
                 [
                     "attr'a", 'attr"b', "attr'c[%]", "attr($)",
                     "attr inf", "attr nan", "attr-f", "attr dt",
@@ -602,8 +589,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '[attr($)]': 'TEXT',
                     '[attr-f]': 'REAL'
                 }
-            ],
-            [
+            ], [
                 [
                     "index", "No", "Player_last_name", "Age", "Team"
                 ],
@@ -620,8 +606,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '"Player_last_name"': 'TEXT',
                     '"index"': 'INTEGER'
                 }
-            ],
-            [
+            ], [
                 ["姓", "名", "生年月日", "郵便番号", "住所", "電話番号"],
                 [
                     ["山田", "太郎", "2001/1/1", "100-0002",
@@ -643,8 +628,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
             ],
         ])
     def test_normal(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list,
-            expected_attr):
+            self, tmpdir, attr_name_list, data_matrix, index_attr_list, expected_attr):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
@@ -665,11 +649,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         assert con.get_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
-        [
-            "table_name",
-            "attr_name_list", "data_matrix",
-            "index_attr_list", "expected",
-        ],
+        ["table_name", "attr_name_list", "data_matrix", "index_attr_list", "expected"],
         [
             [
                 TEST_TABLE_NAME,
@@ -710,8 +690,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
                 ]
             ),
             [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')]
-        ],
-        [
+        ], [
             TableData(
                 "multibyte_char",
                 ["姓", "名", "生年月日", "郵便番号", "住所", "電話番号"],
@@ -737,8 +716,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         con.create_table_from_tabledata(value)
 
         assert con.get_table_name_list() == [value.table_name]
-        assert con.get_attr_name_list(
-            value.table_name) == value.header_list
+        assert con.get_attr_name_list(value.table_name) == value.header_list
 
         result = con.select(select="*", table_name=value.table_name)
         result_matrix = result.fetchall()
@@ -753,13 +731,8 @@ class Test_SimpleSQLite_create_table_from_csv(object):
 
     @pytest.mark.parametrize(
         [
-            "csv_text",
-            "csv_filename",
-            "table_name",
-            "attr_name_list",
-            "expected_table_name",
-            "expected_attr_name_list",
-            "expected_data_matrix",
+            "csv_text", "csv_filename", "table_name", "attr_name_list",
+            "expected_table_name", "expected_attr_name_list", "expected_data_matrix",
         ],
         [
             [
@@ -779,8 +752,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
                     (2, 2.1,   "bb"),
                     (3, 120.9, "ccc"),
                 ],
-            ],
-            [
+            ], [
                 "\n".join([
                     '"attr_a","attr_b","attr_c"',
                     '1,4,"a"',
@@ -801,9 +773,8 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             ],
         ])
     def test_normal_file(
-            self, tmpdir, csv_text, csv_filename,
-            table_name, attr_name_list, expected_table_name,
-            expected_attr_name_list, expected_data_matrix):
+            self, tmpdir, csv_text, csv_filename, table_name, attr_name_list,
+            expected_table_name, expected_attr_name_list, expected_data_matrix):
         p_db = tmpdir.join("tmp.db")
         p_csv = tmpdir.join(csv_filename)
 
@@ -814,8 +785,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attr_name_list(
-            expected_table_name)
+        assert expected_attr_name_list == con.get_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -824,12 +794,8 @@ class Test_SimpleSQLite_create_table_from_csv(object):
 
     @pytest.mark.parametrize(
         [
-            "csv_text",
-            "table_name",
-            "attr_name_list",
-            "expected_table_name",
-            "expected_attr_name_list",
-            "expected_data_matrix",
+            "csv_text", "table_name", "attr_name_list",
+            "expected_table_name", "expected_attr_name_list", "expected_data_matrix",
         ],
         [
             [
@@ -851,17 +817,15 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             ],
         ])
     def test_normal_text(
-            self, tmpdir, csv_text,
-            table_name, attr_name_list, expected_table_name,
-            expected_attr_name_list, expected_data_matrix):
+            self, tmpdir, csv_text, table_name, attr_name_list,
+            expected_table_name, expected_attr_name_list, expected_data_matrix):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attr_name_list(
-            expected_table_name)
+        assert expected_attr_name_list == con.get_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -873,12 +837,8 @@ class Test_SimpleSQLite_create_table_from_json(object):
 
     @pytest.mark.parametrize(
         [
-            "json_text",
-            "filename",
-            "table_name",
-            "expected_table_name",
-            "expected_attr_name_list",
-            "expected_data_matrix",
+            "json_text", "filename", "table_name",
+            "expected_table_name", "expected_attr_name_list", "expected_data_matrix",
         ],
         [
             [
@@ -897,8 +857,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
                     (2, 2.1,   "bb"),
                     (3, 120.9, "ccc"),
                 ],
-            ],
-            [
+            ], [
                 """{
                     "tablename" : [
                         {"attr_b": 4, "attr_c": "a", "attr_a": 1},
@@ -915,8 +874,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
                     (2, 2.1,   "bb"),
                     (3, 120.9, "ccc"),
                 ],
-            ],
-            [
+            ], [
                 """{
                     "tablename" : [
                         {"attr_b": 4, "attr_c": "a", "attr_a": 1},
@@ -937,8 +895,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         ])
     def test_normal_file(
             self, tmpdir, json_text, filename, table_name,
-            expected_table_name,
-            expected_attr_name_list, expected_data_matrix):
+            expected_table_name, expected_attr_name_list, expected_data_matrix):
         p_db = tmpdir.join("tmp.db")
         p_json = tmpdir.join(filename)
 
@@ -949,8 +906,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         con.create_table_from_json(str(p_json), table_name)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attr_name_list(
-            expected_table_name)
+        assert expected_attr_name_list == con.get_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -959,11 +915,8 @@ class Test_SimpleSQLite_create_table_from_json(object):
 
     @pytest.mark.parametrize(
         [
-            "json_text",
-            "table_name",
-            "expected_table_name",
-            "expected_attr_name_list",
-            "expected_data_matrix",
+            "json_text", "table_name",
+            "expected_table_name", "expected_attr_name_list", "expected_data_matrix",
         ],
         [
             [
@@ -981,8 +934,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
                     (2, 2.1,   "bb"),
                     (3, 120.9, "ccc"),
                 ],
-            ],
-            [
+            ], [
                 """{
                     "tablename" : [
                         {"attr_b": 4, "attr_c": "a", "attr_a": 1},
@@ -1003,16 +955,14 @@ class Test_SimpleSQLite_create_table_from_json(object):
         ])
     def test_normal_text(
             self, tmpdir, json_text, table_name,
-            expected_table_name,
-            expected_attr_name_list, expected_data_matrix):
+            expected_table_name, expected_attr_name_list, expected_data_matrix):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_json(json_text, table_name)
 
         assert con.get_table_name_list() == [expected_table_name]
-        assert expected_attr_name_list == con.get_attr_name_list(
-            expected_table_name)
+        assert expected_attr_name_list == con.get_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
