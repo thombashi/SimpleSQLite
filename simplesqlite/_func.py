@@ -6,6 +6,8 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from textwrap import dedent
+
 import pathvalidate
 
 
@@ -67,11 +69,11 @@ def append_table(src_con, dst_con, table_name):
         src_attr_list = src_con.get_attr_name_list(table_name)
         dst_attr_list = dst_con.get_attr_name_list(table_name)
         if src_attr_list != dst_attr_list:
-            raise ValueError("""
-            source and destination attribute is different from each other
-              src: {:s}
-              dst: {:s}
-            """.format(str(src_attr_list), str(dst_attr_list)))
+            raise ValueError(dedent("""
+                source and destination attribute is different from each other
+                src: {}
+                dst: {}
+                """.format(src_attr_list, dst_attr_list)))
 
     result = src_con.select(select="*", table_name=table_name)
     if result is None:
