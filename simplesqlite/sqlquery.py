@@ -64,15 +64,6 @@ class SqlQuery(object):
         return cls.__RE_SANITIZE_ATTR.sub("_", query_item)
 
     @classmethod
-    def to_table_str(cls, name):
-        warnings.warn(
-            "to_table_str will be deleted in the future, "
-            "use to_table_name instead.",
-            DeprecationWarning)
-
-        return cls.to_table_name(name)
-
-    @classmethod
     def to_table_name(cls, name):
         """
         :param str name: Table name.

@@ -903,11 +903,6 @@ class SimpleSQLite(object):
 
         return attr_name in self.get_attr_name_list(table_name)
 
-    def has_attribute(self, table_name, attribute_name):
-        warnings.warn(
-            "has_attribute deleted in the future, use has_attr instead.",
-            DeprecationWarning)
-
     def has_attr_list(self, table_name, attr_name_list):
         """
         :param str table_name: Table name that attributes exists.
@@ -958,12 +953,6 @@ class SimpleSQLite(object):
             return False
 
         return True
-
-    def has_attribute_list(self, table_name, attribute_name_list):
-        warnings.warn(
-            "has_attribute_list deleted in the future, use "
-            "has_attr_list instead.",
-            DeprecationWarning)
 
     def verify_table_existence(self, table_name):
         """
@@ -1165,16 +1154,6 @@ class SimpleSQLite(object):
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
-
-    def create_table_with_data(
-            self, table_name, attribute_name_list, data_matrix, index_attribute_list=None):
-        warnings.warn(
-            "create_table_with_data() deleted in the future, "
-            "use create_table_from_data_matrix() instead.",
-            DeprecationWarning)
-
-        self.create_table_from_data_matrix(
-            table_name, attribute_name_list, data_matrix, index_attribute_list)
 
     def create_table_from_data_matrix(
             self, table_name, attr_name_list, data_matrix, index_attr_list=None):
