@@ -348,7 +348,7 @@ class SqlQuery(object):
         """
 
         if operation not in cls.__VALID_WHERE_OPERATION_LIST:
-            raise SqlSyntaxError("operation not supported: " + str(operation))
+            raise SqlSyntaxError("operation not supported: {}".format(operation))
 
         if value is not None:
             return "{:s} {:s} {:s}".format(
