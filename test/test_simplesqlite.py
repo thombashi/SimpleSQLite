@@ -214,13 +214,11 @@ class Test_SimpleSQLite_insert(object):
 
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
-            con_ro.insert(
-                TEST_TABLE_NAME, record=[5, 6])
+            con_ro.insert(TEST_TABLE_NAME, record=[5, 6])
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.insert(
-                TEST_TABLE_NAME, record=[5, 6])
+            con_null.insert(TEST_TABLE_NAME, record=[5, 6])
 
 
 class Test_SimpleSQLite_insert_many(object):
@@ -288,13 +286,11 @@ class Test_SimpleSQLite_insert_many(object):
 
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
-            con_ro.insert(
-                TEST_TABLE_NAME, [])
+            con_ro.insert(TEST_TABLE_NAME, [])
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.insert_many(
-                TEST_TABLE_NAME, [])
+            con_null.insert_many(TEST_TABLE_NAME, [])
 
 
 class Test_SimpleSQLite_update(object):
@@ -303,8 +299,7 @@ class Test_SimpleSQLite_update(object):
         table_name = TEST_TABLE_NAME
         where = SqlQuery.make_where("attr_b", 2)
         con.update(table_name=table_name, set_query="attr_a = 100", where=where)
-        assert con.get_value(
-            select="attr_a", table_name=table_name, where=where) == 100
+        assert con.get_value(select="attr_a", table_name=table_name, where=where) == 100
 
     @pytest.mark.parametrize(["table_name", "set_query", "expected"], [
         [TEST_TABLE_NAME, "", ValueError],
@@ -323,8 +318,7 @@ class Test_SimpleSQLite_update(object):
 
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
-            con_ro.update(
-                table_name=TEST_TABLE_NAME, set_query="attr_a = 100")
+            con_ro.update(table_name=TEST_TABLE_NAME, set_query="attr_a = 100")
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
@@ -564,7 +558,8 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 {
                     '"attr_c"': 'TEXT',
                     '"attr_b"': 'REAL',
-                    '"attr_a"': 'INTEGER'},
+                    '"attr_a"': 'INTEGER'
+                },
             ], [
                 [
                     "attr'a", 'attr"b', "attr'c[%]", "attr($)",
