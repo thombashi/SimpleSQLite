@@ -563,16 +563,16 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
             ], [
                 [
                     "attr'a", 'attr"b', "attr'c[%]", "attr($)", "attr inf",
-                    "attr nan", "attr-f", "attr dt", "aa,bb"
+                    "attr nan", "attr-f", "attr dt", "aa,bb", "sp a ce",
                 ],
                 [
-                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA, ",,,"],
-                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA, "!!!"],
-                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA, ""],
+                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA, ",,,", "a  "],
+                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA, "!!!", "  b"],
+                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA, "vvv", " c "],
                 ],
                 [
                     "attr'a", 'attr"b', "attr'c[%]", "attr($)", "attr inf",
-                    "attr nan", "attr-f", "attr dt", "aa,bb"
+                    "attr nan", "attr-f", "attr dt", "aa,bb", "sp a ce",
                 ],
                 {
                     '"attr_a"': 'INTEGER',
@@ -584,6 +584,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '[attr-f]': 'REAL',
                     '[attr dt]': 'TEXT',
                     '"aa_bb"': 'TEXT',
+                    '[sp a ce]': 'TEXT',
                 }
             ], [
                 [
@@ -989,3 +990,31 @@ class Test_SimpleSQLite_close(object):
 
     def test_null(self, con_null):
         con_null.close()
+
+
+class Test_SimpleSQLite_create_index(object):
+
+    CHARS = [
+        "/", ":", "*", "?", '"', "<", ">", "|", "\\",
+        "!", "#", '&', "'",
+        "=", "~", "^", "@", "`", "[", "]", "+", "-", ";", "{", "}",
+        ",", ".", "(", ")", "%",
+        " ", "\t", "\n", "\r", "\f", "\v",
+    ]
+
+    @pytest.mark.parametrize(["symbol"], [
+        [c] for c in CHARS
+    ])
+    def test_normal(self, con, symbol):
+        attr = "a{}b".format(symbol)
+        attr_description_list = [
+            "{:s} {:s}".format(Attr(attr), "TEXT")
+        ]
+
+        table_name = "new_table"
+        con.create_table(table_name, attr_description_list)
+        con.create_index(table_name, attr)
+
+    def test_null(self, con_null):
+        with pytest.raises(NullDatabaseConnectionError):
+            con_null.create_index(TEST_TABLE_NAME, "dummy")
