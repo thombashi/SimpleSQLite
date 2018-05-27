@@ -54,6 +54,29 @@ class Test_Table(object):
 
 class Test_Attr(object):
 
+    RESERVED_KEYWORDS = [
+        'ADD', 'ALL', 'ALTER', 'AND', 'AS', 'AUTOINCREMENT',
+        'BETWEEN',
+        'CASE', 'CHECK', 'COLLATE', 'COMMIT', 'CONSTRAINT', 'CREATE',
+        'DEFAULT', 'DEFERRABLE', 'DELETE', 'DISTINCT', 'DROP',
+        'ELSE', 'ESCAPE', 'EXCEPT', 'EXISTS', 'FOREIGN',
+        'FROM',
+        'GROUP',
+        'HAVING',
+        'IN', 'INDEX', 'INSERT', 'INTERSECT', 'INTO', 'IS', 'ISNULL',
+        'JOIN',
+        'LIMIT',
+        'NOT', 'NOTNULL', 'NULL',
+        'ON', 'OR', 'ORDER',
+        'PRIMARY',
+        'REFERENCES',
+        'SELECT', 'SET',
+        'TABLE', 'THEN', 'TO', 'TRANSACTION',
+        'UNION', 'UNIQUE', 'UPDATE', 'USING',
+        'VALUES',
+        'WHEN', 'WHERE',
+    ]
+
     @pytest.mark.parametrize(["value", "operation", "expected"], [
         ["test", None, "test"],
         ["te'st", None, '"te_st"'],
@@ -74,6 +97,13 @@ class Test_Attr(object):
     ])
     def test_normal(self, value, operation, expected):
         assert_query_item(Attr(value, operation), expected)
+
+    @pytest.mark.parametrize(["value", "expected"], [
+        [word, '"{}"'.format(word)]
+        for word in RESERVED_KEYWORDS
+    ])
+    def test_normal_reserved(self, value, expected):
+        assert_query_item(Attr(value), expected)
 
     @pytest.mark.parametrize(["value", "expected"], [
         [None, TypeError],
