@@ -238,7 +238,11 @@ class Test_make_index_name(object):
             ]
         ])
     def test_normal(self, value, expected):
-        assert re.search("\w+_index_\w{4}", make_index_name(value, value), re.ASCII)
+        flags = 0
+        if six.PY3:
+            flags = re.ASCII
+
+        assert re.search("\w+_index_\w{4}", make_index_name(value, value), flags)
 
     def test_normal_symbol(self):
         assert make_index_name("table", "ABCD>8.5") != make_index_name("table", "ABCD<8.5")
