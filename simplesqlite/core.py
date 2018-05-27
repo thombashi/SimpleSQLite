@@ -26,6 +26,7 @@ from .error import (
     AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
     NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from .sqlquery import SqlQuery
+from .query import Attr, AttrList, Table, Value, Select, make_index_name
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -255,7 +256,7 @@ class SimpleSQLite(object):
             exec_start_time = time.time()
 
         try:
-            result = self.connection.execute(query)
+            result = self.connection.execute(six.text_type(query))
         except sqlite3.OperationalError as e:
             if caller is None:
                 caller = logging.getLogger().findCaller()
@@ -304,9 +305,10 @@ class SimpleSQLite(object):
         """
 
         self.verify_table_existence(table_name)
-        query = SqlQuery.make_select(select, table_name, where, extra)
 
-        return self.execute_query(query, logging.getLogger().findCaller())
+        return self.execute_query(
+            six.text_type(Select(select, table_name, where, extra)),
+            logging.getLogger().findCaller())
 
     def select_as_dataframe(self, table_name, column_list=None, where=None, extra=None):
         """
@@ -338,8 +340,7 @@ class SimpleSQLite(object):
             column_list = self.get_attr_name_list(table_name)
 
         result = self.select(
-            select=",".join(SqlQuery.to_attr_str_list(column_list)),
-            table_name=table_name, where=where, extra=extra)
+            select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
 
         if result is None:
             return pandas.DataFrame()
@@ -371,8 +372,7 @@ class SimpleSQLite(object):
             column_list = self.get_attr_name_list(table_name)
 
         result = self.select(
-            select=",".join(SqlQuery.to_attr_str_list(column_list)),
-            table_name=table_name, where=where, extra=extra)
+            select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
 
         if result is None:
             return TableData(table_name=None, header_list=[], record_list=[])
@@ -566,8 +566,8 @@ class SimpleSQLite(object):
             logger.debug(msgfy.to_debug_message(e))
             return None
 
-        query = SqlQuery.make_select(select, table_name, where, extra)
-        result = self.execute_query(query, logging.getLogger().findCaller())
+        result = self.execute_query(
+            Select(select, table_name, where, extra), logging.getLogger().findCaller())
         if result is None:
             return None
 
@@ -672,7 +672,7 @@ class SimpleSQLite(object):
 
         result = self.execute_query(
             "SELECT sql FROM sqlite_master WHERE type='table' and name={:s}".format(
-                SqlQuery.to_value_str(table_name)))
+                Value(table_name)))
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
 
@@ -1110,15 +1110,12 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
         self.validate_access_permission(["w", "a"])
 
-        index_name = "{:s}_{:s}_index".format(
-            SqlQuery.sanitize(table_name), SqlQuery.sanitize(attr_name))
-        if attr_name.find("'") != -1:
-            query_format = 'CREATE INDEX IF NOT EXISTS {:s} ON {:s}("{:s})'
-        else:
-            query_format = "CREATE INDEX IF NOT EXISTS {:s} ON {:s}('{:s}')"
-
+        query_format = 'CREATE INDEX IF NOT EXISTS {index:s} ON {table}({attr})'
         query = query_format.format(
-            index_name, SqlQuery.to_table_name(table_name), attr_name)
+            index=make_index_name(table_name, attr_name),
+            table=Table(table_name),
+            attr=Attr(attr_name))
+
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
@@ -1138,7 +1135,7 @@ class SimpleSQLite(object):
             return
 
         table_attr_set = set(self.get_attr_name_list(table_name))
-        index_attr_set = set(attr_name_list)
+        index_attr_set = set(AttrList.sanitize(attr_name_list))
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
@@ -1439,8 +1436,7 @@ class SimpleSQLite(object):
         for col, value_type in sorted(six.iteritems(
                 self.__get_col_valuetype_from_tabledata(table_data))):
             attr_name = attr_name_list[col]
-            attr_description_list.append("{:s} {:s}".format(
-                SqlQuery.to_attr_str(attr_name), value_type))
+            attr_description_list.append("{} {:s}".format(Attr(attr_name), value_type))
 
         return attr_description_list
 
@@ -1468,12 +1464,6 @@ class SimpleSQLite(object):
             for col_idx, col_dp in enumerate(col_dp_list)
         ])
 
-    def __sanitize_attr_name_list(self, attr_name_list):
-        return [
-            SqlQuery.sanitize_attr(attr_name)
-            for attr_name in attr_name_list
-        ]
-
     def __create_table_from_tabledata(self, table_data, index_attr_list=None):
         self.validate_access_permission(["w", "a"])
         validate_table_name(table_data.table_name)
@@ -1481,7 +1471,7 @@ class SimpleSQLite(object):
         logger.debug("__create_table_from_tabledata: table={}, headers={}".format(
             table_data.table_name, table_data.header_list))
 
-        attr_name_list = self.__sanitize_attr_name_list(table_data.header_list)
+        attr_name_list = AttrList.sanitize(table_data.header_list)
         try:
             self.__validate_attr_name_list(attr_name_list)
         except pathvalidate.ReservedNameError:
@@ -1497,8 +1487,7 @@ class SimpleSQLite(object):
             self.__get_attr_desc_list_from_tabledata(attr_name_list, table_data))
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
-            self.create_index_list(
-                table_data.table_name, self.__sanitize_attr_name_list(index_attr_list))
+            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))
         self.commit()
 
 

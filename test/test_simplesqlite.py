@@ -8,6 +8,7 @@ from __future__ import print_function, unicode_literals
 
 import datetime
 import itertools
+import json
 from collections import OrderedDict, namedtuple
 from decimal import Decimal
 
@@ -16,12 +17,11 @@ import typepy
 from simplesqlite import (
     AttributeNotFoundError, DatabaseError, InvalidTableNameError, NullDatabaseConnectionError,
     OperationalError, SimpleSQLite, TableNotFoundError, connect_sqlite_memdb)
-from simplesqlite.sqlquery import SqlQuery
+from simplesqlite.query import Attr, AttrList, Where
 from tabledata import TableData
 
 from .fixture import (
     TEST_TABLE_NAME, con, con_empty, con_index, con_mix, con_null, con_profile, con_ro)
-
 
 nan = float("nan")
 inf = float("inf")
@@ -297,7 +297,7 @@ class Test_SimpleSQLite_update(object):
 
     def test_normal(self, con):
         table_name = TEST_TABLE_NAME
-        where = SqlQuery.make_where("attr_b", 2)
+        where = Where("attr_b", 2)
         con.update(table_name=table_name, set_query="attr_a = 100", where=where)
         assert con.get_value(select="attr_a", table_name=table_name, where=where) == 100
 
@@ -453,7 +453,7 @@ class Test_SimpleSQLite_get_profile(object):
 class Test_SimpleSQLite_get_sqlite_master(object):
 
     def test_normal(self, con_index):
-        print(con_index.get_sqlite_master())
+        print(json.dumps(con_index.get_sqlite_master(), indent=4))
         assert con_index.get_sqlite_master() == [
             {
                 'tbl_name': 'test_table',
@@ -463,9 +463,9 @@ class Test_SimpleSQLite_get_sqlite_master(object):
                 'rootpage': 2
             }, {
                 'tbl_name': 'test_table',
-                'sql': "CREATE INDEX test_table_attr_a_index ON test_table('attr_a')",
+                'sql': 'CREATE INDEX test_table_attr_a_index_3013 ON test_table("attr_a")',
                 'type': 'index',
-                'name': 'test_table_attr_a_index',
+                'name': 'test_table_attr_a_index_3013',
                 'rootpage': 3
             },
         ]
@@ -562,27 +562,28 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 },
             ], [
                 [
-                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
-                    "attr inf", "attr nan", "attr-f", "attr dt",
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)", "attr inf",
+                    "attr nan", "attr-f", "attr dt", "aa,bb"
                 ],
                 [
-                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA],
-                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA],
-                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA],
+                    [1, 4,   "a",  None, inf, nan, 0,   DATATIME_DATA, ",,,"],
+                    [2, 2.1, "bb", None, inf, nan, inf, DATATIME_DATA, "!!!"],
+                    [2, 2.1, "bb", None, inf, nan, nan, DATATIME_DATA, ""],
                 ],
                 [
-                    "attr'a", 'attr"b', "attr'c[%]", "attr($)",
-                    "attr inf", "attr nan", "attr-f", "attr dt",
+                    "attr'a", 'attr"b', "attr'c[%]", "attr($)", "attr inf",
+                    "attr nan", "attr-f", "attr dt", "aa,bb"
                 ],
                 {
-                    '"attr_c[%]"': 'TEXT',
                     '"attr_a"': 'INTEGER',
-                    '[attr nan]': 'TEXT',
-                    '[attr inf]': 'TEXT',
                     '"attr_b"': 'REAL',
-                    '[attr dt]': 'TEXT',
+                    '"attr_c[%]"': 'TEXT',
                     '[attr($)]': 'TEXT',
-                    '[attr-f]': 'REAL'
+                    '[attr inf]': 'TEXT',
+                    '[attr nan]': 'TEXT',
+                    '[attr-f]': 'REAL',
+                    '[attr dt]': 'TEXT',
+                    '"aa_bb"': 'TEXT',
                 }
             ], [
                 [
@@ -633,9 +634,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         con.commit()
 
         # check data ---
-        result = con.select(
-            select=",".join(SqlQuery.to_attr_str_list(attr_name_list)),
-            table_name=table_name)
+        result = con.select(select=AttrList(attr_name_list), table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 

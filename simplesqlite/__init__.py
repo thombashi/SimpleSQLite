@@ -6,6 +6,8 @@
 
 from __future__ import absolute_import
 
+import simplesqlite.query
+
 from .__version__ import __author__, __copyright__, __email__, __license__, __version__
 from ._func import append_table, copy_table
 from ._logger import set_log_level, set_logger
