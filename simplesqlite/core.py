@@ -511,9 +511,6 @@ class SimpleSQLite(object):
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
         :raises simplesqlite.OperationalError: |raises_operational_error|
-
-        .. seealso::
-            :py:meth:`.sqlquery.SqlQuery.make_update`
         """
 
         self.validate_access_permission(["w", "a"])
