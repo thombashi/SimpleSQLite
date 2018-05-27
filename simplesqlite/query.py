@@ -103,9 +103,7 @@ class Attr(QueryItem):
         self.__operation = operation
 
     def to_query(self):
-        #name = self._value
         name = self.sanitize(self._value)
-
         need_quote = self.__RE_NEED_QUOTE.search(name) is not None
 
         try:
