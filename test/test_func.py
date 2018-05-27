@@ -20,6 +20,7 @@ class Test_validate_table_name(object):
     @pytest.mark.parametrize(["value"], [
         ["valid_table_name"],
         ["table_"],
+        ["%CPU"],
     ])
     def test_normal(self, value):
         validate_table_name(value)
@@ -30,7 +31,6 @@ class Test_validate_table_name(object):
         ["table", InvalidTableNameError],
         ["TABLE", InvalidTableNameError],
         ["Table", InvalidTableNameError],
-        ["%hoge", InvalidTableNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
@@ -42,6 +42,7 @@ class Test_validate_attr_name(object):
     @pytest.mark.parametrize(["value"], [
         ["valid_attr_name"],
         ["attr_"],
+        ["%CPU"],
     ])
     def test_normal(self, value):
         validate_attr_name(value)
@@ -52,7 +53,6 @@ class Test_validate_attr_name(object):
         ["table", InvalidAttributeNameError],
         ["TABLE", InvalidAttributeNameError],
         ["Table", InvalidAttributeNameError],
-        ["%hoge", InvalidAttributeNameError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):
