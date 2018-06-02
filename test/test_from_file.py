@@ -11,8 +11,7 @@ import os
 import pytablereader as ptr
 import pytablewriter as ptw
 import pytest
-from simplesqlite import SimpleSQLite
-from tabledata import SQLiteTableDataSanitizer
+from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
 class Test_SimpleSQLite_create_table_from_tabledata(object):
