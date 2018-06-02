@@ -82,6 +82,8 @@ class Test_Attr(object):
         ["te'st", None, '"te_st"'],
         ['te"st', None, '"te_st"'],
         ['te,st', None, '"te_st"'],
+        ['te\nst', None, '"te_st"'],
+        ['t\ne\ns\r\nt', None, '"t_e_s__t"'],
         ['te.st', None, '[te.st]'],
         ["test", "AVG", "AVG(test)"],
         ["attr_a", 2, '"attr_a"'],

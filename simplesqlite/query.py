@@ -91,7 +91,7 @@ class Attr(QueryItem):
     __RE_NEED_QUOTE = re.compile("[{:s}]".format(re.escape("[]_")))
     __RE_NEED_BRACKET = re.compile(
         "[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@")))
-    __RE_SANITIZE = re.compile("[{:s}]".format(re.escape("'\",")))
+    __RE_SANITIZE = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
 
     @classmethod
     def sanitize(cls, name):
