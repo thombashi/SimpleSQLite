@@ -89,9 +89,8 @@ class Test_SQLiteTableDataSanitizer(object):
             ],
         ])
     def test_normal(self, table_name, header_list, record_list, expected):
-        sanitizer = SQLiteTableDataSanitizer(
-            TableData(table_name, header_list, record_list))
         new_tabledata = sanitizer.sanitize()
+        sanitizer = SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list))
 
         print("lhs: {}".format(ptw.dump_tabledata(new_tabledata)))
         print("rhs: {}".format(ptw.dump_tabledata(expected)))
@@ -105,8 +104,7 @@ class Test_SQLiteTableDataSanitizer(object):
             ["dummy", [], [], tabledata.DataError],
         ])
     def test_exception_invalid_data(self, table_name, header_list, record_list, expected):
-        sanitizer = SQLiteTableDataSanitizer(
-            TableData(table_name, header_list, record_list))
+        sanitizer = SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list))
 
         with pytest.raises(expected):
             sanitizer.sanitize()

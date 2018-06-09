@@ -23,8 +23,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
 
-        test_data_file_path = os.path.join(
-            os.path.dirname(__file__), "data", filename)
+        test_data_file_path = os.path.join(os.path.dirname(__file__), "data", filename)
         loader = ptr.TableFileLoader(test_data_file_path)
 
         success_count = 0
