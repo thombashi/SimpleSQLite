@@ -24,8 +24,8 @@ class RecordConvertor(object):
         Convert values to a record to be inserted into a database.
 
         :param list attr_name_list:
-            List of the attributes for the converting record.
-        :param values: Value to be converted.
+            List of attributes for the converting record.
+        :param values: Values to be converted.
         :type values: |dict|/|namedtuple|/|list|/|tuple|
         :raises ValueError: If the ``values`` is invalid.
         """
@@ -53,11 +53,11 @@ class RecordConvertor(object):
     @classmethod
     def to_record_list(cls, attr_name_list, value_matrix):
         """
-        Convert matrix to records to be inserted into a database.
+        Convert a value matrix to records to be inserted into a database.
 
         :param list attr_name_list:
-            List of the attributes for the converting record.
-        :param value_matrix: Value to be converted.
+            List of attributes for the converting records.
+        :param value_matrix: Values to be converted.
         :type value_matrix: list of |dict|/|namedtuple|/|list|/|tuple|
 
         .. seealso:: :py:meth:`.to_record`
