@@ -31,19 +31,15 @@ class RecordConvertor(object):
         """
 
         try:
-            # dictionary to list
-            return [
-                cls.__to_sqlite_element(values.get(attr_name))
-                for attr_name in attr_name_list
-            ]
+            # from a namedtuple to a dict
+            values = values._asdict()
         except AttributeError:
             pass
 
         try:
-            # namedtuple to list
-            dict_value = values._asdict()
+            # from a dictionary to a list
             return [
-                cls.__to_sqlite_element(dict_value.get(attr_name))
+                cls.__to_sqlite_element(values.get(attr_name))
                 for attr_name in attr_name_list
             ]
         except AttributeError:
