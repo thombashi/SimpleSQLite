@@ -55,16 +55,16 @@ class RecordConvertor(object):
         raise ValueError("cannot convert to list")
 
     @classmethod
-    def to_record_list(cls, attr_name_list, data_matrix):
+    def to_record_list(cls, attr_name_list, value_matrix):
         """
         Convert matrix to records to be inserted into a database.
 
         :param list attr_name_list:
             List of the attributes for the converting record.
-        :param data_matrix: Value to be converted.
-        :type data_matrix: list of |dict|/|namedtuple|/|list|/|tuple|
+        :param value_matrix: Value to be converted.
+        :type value_matrix: list of |dict|/|namedtuple|/|list|/|tuple|
 
         .. seealso:: :py:meth:`.to_record`
         """
 
-        return [cls.to_record(attr_name_list, record) for record in data_matrix]
+        return [cls.to_record(attr_name_list, record) for record in value_matrix]
