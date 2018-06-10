@@ -12,7 +12,7 @@ import string
 
 import pytest
 import six
-from simplesqlite import InvalidTableNameError, SqlSyntaxError
+from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.query import And, Attr, AttrList, Select, Table, Value, Where, make_index_name
 
 
@@ -217,11 +217,11 @@ class Test_Select(object):
 
     @pytest.mark.parametrize(
         ["select", "table", "where", "extra", "expected"], [
-            ["A", None, None, None, InvalidTableNameError],
+            ["A", None, None, None, NameValidationError],
             ["", "B", None, None, ValueError],
-            [None, None, None, None, InvalidTableNameError],
+            [None, None, None, None, NameValidationError],
             [None, "B", None, None, ValueError],
-            [nan, None, None, None, InvalidTableNameError],
+            [nan, None, None, None, NameValidationError],
             [nan, nan, None, None, TypeError],
             [nan, nan, nan, None, TypeError],
             [nan, nan, nan, nan, TypeError],

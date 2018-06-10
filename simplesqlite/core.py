@@ -23,7 +23,7 @@ from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor
 from .error import (
-    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, NameValidationError,
+    AttributeNotFoundError, DatabaseError, NameValidationError,
     NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from .sqlquery import SqlQuery
 from .query import Attr, AttrList, Table, Value, Select, make_index_name
@@ -1153,7 +1153,7 @@ class SimpleSQLite(object):
         :param tuple index_attr_list: |index_attr_list|
         :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
-        :raises simplesqlite.InvalidAttributeNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_attr_name|
         :raises ValueError: If the ``data_matrix`` is empty.
 
@@ -1387,7 +1387,7 @@ class SimpleSQLite(object):
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
         if typepy.is_empty_sequence(attr_name_list):
-            raise InvalidAttributeNameError("attribute name list is empty")
+            raise NameValidationError("attribute name list is empty")
 
         for attr_name in attr_name_list:
             pathvalidate.validate_sqlite_attr_name(attr_name)

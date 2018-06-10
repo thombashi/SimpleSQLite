@@ -10,14 +10,14 @@ from textwrap import dedent
 
 import pathvalidate
 
+from .error import NameValidationError
+
 
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
     :raises NameValidationError: |raises_validate_table_name|
     """
-
-    from .error import NameValidationError
 
     try:
         pathvalidate.validate_sqlite_table_name(name)
@@ -32,19 +32,17 @@ def validate_table_name(name):
 def validate_attr_name(name):
     """
     :param str name: Name to validate.
-    :raises InvalidAttributeNameError: |raises_validate_attr_name|
+    :raises NameValidationError: |raises_validate_attr_name|
     """
-
-    from .error import InvalidAttributeNameError
 
     try:
         pathvalidate.validate_sqlite_attr_name(name)
     except pathvalidate.InvalidReservedNameError as e:
-        raise InvalidAttributeNameError(e)
+        raise NameValidationError(e)
     except pathvalidate.NullNameError:
-        raise InvalidAttributeNameError("attribute name is empty")
+        raise NameValidationError("attribute name is empty")
     except pathvalidate.InvalidCharError as e:
-        raise InvalidAttributeNameError(e)
+        raise NameValidationError(e)
 
 
 def append_table(src_con, dst_con, table_name):

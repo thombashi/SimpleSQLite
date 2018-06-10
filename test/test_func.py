@@ -8,7 +8,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
 from simplesqlite import (
-    InvalidAttributeNameError, NameValidationError, NullDatabaseConnectionError, append_table,
+    NameValidationError, NullDatabaseConnectionError, append_table,
     connect_sqlite_memdb, copy_table)
 from simplesqlite._func import validate_attr_name, validate_table_name
 
@@ -48,11 +48,11 @@ class Test_validate_attr_name(object):
         validate_attr_name(value)
 
     @pytest.mark.parametrize(["value", "expected"], [
-        [None, InvalidAttributeNameError],
-        ["", InvalidAttributeNameError],
-        ["table", InvalidAttributeNameError],
-        ["TABLE", InvalidAttributeNameError],
-        ["Table", InvalidAttributeNameError],
+        [None, NameValidationError],
+        ["", NameValidationError],
+        ["table", NameValidationError],
+        ["TABLE", NameValidationError],
+        ["Table", NameValidationError],
     ])
     def test_exception(self, value, expected):
         with pytest.raises(expected):

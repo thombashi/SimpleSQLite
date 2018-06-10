@@ -39,7 +39,7 @@ class AttributeNotFoundError(Exception):
 
 
 class InvalidAttributeNameError(ValueError):
-    """
+    """[Deprecated]
     Exception raised when used invalid attribute name for SQLite.
     """
 

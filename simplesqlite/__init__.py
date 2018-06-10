@@ -15,5 +15,5 @@ from ._sanitizer import SQLiteTableDataSanitizer
 from .core import (
     SQLITE_SYSTEM_TABLE_LIST, SimpleSQLite, connect_sqlite_db_mem, connect_sqlite_memdb)
 from .error import (
-    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, NameValidationError,
-    NullDatabaseConnectionError, OperationalError, SqlSyntaxError, TableNotFoundError)
+    AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
+    OperationalError, SqlSyntaxError, TableNotFoundError)
