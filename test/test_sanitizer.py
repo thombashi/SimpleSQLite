@@ -8,8 +8,7 @@ from __future__ import unicode_literals
 
 import pytablewriter as ptw
 import pytest
-import tabledata
-from simplesqlite import SQLiteTableDataSanitizer, NameValidationError
+from simplesqlite import NameValidationError, SQLiteTableDataSanitizer
 from tabledata import TableData
 
 
@@ -89,13 +88,13 @@ class Test_SQLiteTableDataSanitizer(object):
             ],
         ])
     def test_normal(self, table_name, header_list, record_list, expected):
-        new_tabledata = sanitizer.sanitize()
         sanitizer = SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list))
+        new_tabledata = sanitizer.normalize()
 
         print("lhs: {}".format(ptw.dump_tabledata(new_tabledata)))
         print("rhs: {}".format(ptw.dump_tabledata(expected)))
 
-        assert new_tabledata == expected
+        assert new_tabledata.equals(expected)
 
     @pytest.mark.parametrize(
         ["table_name", "header_list", "record_list", "expected"], [
@@ -107,4 +106,4 @@ class Test_SQLiteTableDataSanitizer(object):
         sanitizer = SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list))
 
         with pytest.raises(expected):
-            sanitizer.sanitize()
+            sanitizer.normalize()

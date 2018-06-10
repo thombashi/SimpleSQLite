@@ -23,6 +23,7 @@ from tabledata import TableData
 from .fixture import (
     TEST_TABLE_NAME, con, con_empty, con_index, con_mix, con_null, con_profile, con_ro)
 
+
 nan = float("nan")
 inf = float("inf")
 TEST_DB_NAME = "test_db"
@@ -587,9 +588,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                     '[sp a ce]': 'TEXT',
                 }
             ], [
-                [
-                    "index", "No", "Player_last_name", "Age", "Team"
-                ],
+                ["index", "No", "Player_last_name", "Age", "Team"],
                 [
                     [1, 55, "D Sam", 31, "Raven"],
                     [2, 36, "J Ifdgg", 30, "Raven"],
@@ -644,25 +643,22 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         assert con.get_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
-        ["table_name", "attr_name_list", "data_matrix", "index_attr_list", "expected"],
+        ["table_name", "attr_name_list", "data_matrix", "expected"],
         [
             [
                 TEST_TABLE_NAME,
-                [""],
-                [["a"], ["bb"], ["ccc"]],
-                [],
-                ValueError,
+                ["", None],
+                [["a", 1], ["bb", 2], ],
+                ["A", "B"],
             ],
         ])
-    def test_exception_empty_header(
-            self, tmpdir, table_name, attr_name_list, data_matrix,
-            index_attr_list, expected):
+    def test_normal_empty_header(self, tmpdir, table_name, attr_name_list, data_matrix, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
 
-        with pytest.raises(expected):
-            con.create_table_from_data_matrix(
-                table_name, attr_name_list, data_matrix, index_attr_list)
+        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+
+        assert con.get_attr_name_list(table_name) == expected
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
@@ -719,7 +715,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
 
         actual = con.select_as_tabledata(
             column_list=value.header_list, table_name=value.table_name)
-        assert actual == value
+        assert actual.equals(value)
 
 
 class Test_SimpleSQLite_create_table_from_csv(object):

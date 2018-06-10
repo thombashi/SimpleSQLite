@@ -35,8 +35,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
             print(ptw.dump_tabledata(tabledata))
 
             try:
-                con.create_table_from_tabledata(
-                    SQLiteTableDataSanitizer(tabledata).sanitize())
+                con.create_table_from_tabledata(SQLiteTableDataSanitizer(tabledata).normalize())
                 success_count += 1
             except ValueError as e:
                 print(e)

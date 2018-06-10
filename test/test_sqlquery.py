@@ -6,12 +6,7 @@
 
 from __future__ import unicode_literals
 
-import os
-import re
-import string
-
 import pytest
-from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.sqlquery import SqlQuery
 
 

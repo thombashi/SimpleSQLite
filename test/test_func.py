@@ -8,8 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
 from simplesqlite import (
-    NameValidationError, NullDatabaseConnectionError, append_table,
-    connect_sqlite_memdb, copy_table)
+    NameValidationError, NullDatabaseConnectionError, append_table, connect_sqlite_memdb,
+    copy_table)
 from simplesqlite._func import validate_attr_name, validate_table_name
 
 from .fixture import TEST_TABLE_NAME, con_empty, con_mix, con_null, con_profile, con_ro
