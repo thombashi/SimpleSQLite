@@ -6,7 +6,7 @@
 
 import sqlite3
 
-from tabledata import NameValidationError
+from tabledata import NameValidationError  # noqa: W0611
 
 
 class DatabaseError(sqlite3.DatabaseError):
