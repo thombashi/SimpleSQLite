@@ -24,7 +24,7 @@ con.insert(
     })
 con.insert_many(
     table_name,
-    record_list=[
+    row_list=[
         {
             "attr_a": 5,
             "attr_b": 5.5,

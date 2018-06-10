@@ -375,10 +375,10 @@ class SimpleSQLite(object):
             select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
 
         if result is None:
-            return TableData(table_name=None, header_list=[], record_list=[])
+            return TableData(table_name=None, header_list=[], row_list=[])
 
         return TableData(
-            table_name=table_name, header_list=column_list, record_list=result.fetchall())
+            table_name=table_name, header_list=column_list, row_list=result.fetchall())
 
     def select_as_dict(self, table_name, column_list=None, where=None, extra=None):
         """
