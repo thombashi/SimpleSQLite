@@ -21,6 +21,7 @@ from tabledata import TableData
 
 from ._func import validate_table_name
 from ._logger import logger
+from ._sanitizer import SQLiteTableDataSanitizer
 from .converter import RecordConvertor
 from .error import (
     AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
@@ -1401,11 +1402,11 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __get_attr_desc_list_from_tabledata(self, attr_name_list, table_data):
+    def __get_attr_desc_list_from_tabledata(self, table_data):
         attr_description_list = []
         for col, value_type in sorted(six.iteritems(
                 self.__get_col_valuetype_from_tabledata(table_data))):
-            attr_name = attr_name_list[col]
+            attr_name = table_data.header_list[col]
             attr_description_list.append("{} {:s}".format(Attr(attr_name), value_type))
 
         return attr_description_list
@@ -1442,16 +1443,12 @@ class SimpleSQLite(object):
         if table_data.is_empty():
             raise ValueError("input table_data is empty: {}".format(table_data))
 
-        from ._sanitizer import SQLiteTableDataSanitizer
-
         table_data.validate_rows()
 
-        sanitizer = SQLiteTableDataSanitizer(table_data)
-        table_data = sanitizer.normalize()
+        table_data = SQLiteTableDataSanitizer(table_data).normalize()
 
         self.create_table(
-            table_data.table_name,
-            self.__get_attr_desc_list_from_tabledata(table_data.header_list, table_data))
+            table_data.table_name, self.__get_attr_desc_list_from_tabledata(table_data))
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))
