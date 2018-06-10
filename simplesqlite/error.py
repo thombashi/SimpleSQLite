@@ -26,13 +26,13 @@ class NullDatabaseConnectionError(Exception):
     """
 
 
-class TableNotFoundError(Exception):
+class TableNotFoundError(DatabaseError):
     """
     Exception raised when accessed the table that not exists in the database.
     """
 
 
-class AttributeNotFoundError(Exception):
+class AttributeNotFoundError(DatabaseError):
     """
     Exception raised when accessed the attribute that not exists in the table.
     """
