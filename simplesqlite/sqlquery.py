@@ -37,7 +37,7 @@ class SqlQuery(object):
 
     @classmethod
     def sanitize(cls, query_item):
-        """
+        """[Deprecated]
         Replace invalid characters in a SQLite query with empty characters.
 
         :param str query_item: String to be sanitized.
@@ -60,11 +60,13 @@ class SqlQuery(object):
 
     @classmethod
     def sanitize_attr(cls, query_item):
+        """[Deprecated]"""
+
         return cls.__RE_SANITIZE_ATTR.sub("_", query_item)
 
     @classmethod
     def to_table_name(cls, name):
-        """
+        """[Deprecated]
         :param str name: Table name.
         :return: String that suitable for table name of a SQLite query.
         :rtype: str
@@ -89,7 +91,7 @@ class SqlQuery(object):
 
     @classmethod
     def to_attr_str(cls, name, operation_query=""):
-        """
+        """[Deprecated]
         :param str name: Attribute name.
         :param str operation_query:
             Used as a SQLite function if the value is not empty.
@@ -133,7 +135,7 @@ class SqlQuery(object):
 
     @classmethod
     def to_attr_str_list(cls, name_list, operation_query=""):
-        """
+        """[Deprecated]
         :param list/tuple name_list: List of attribute names.
         :param str operation_query:
             Used as a SQLite function if the value is not empty.
@@ -163,7 +165,7 @@ class SqlQuery(object):
 
     @classmethod
     def to_value_str(cls, value):
-        """
+        """[Deprecated]
         :param str value: Value associated with a key.
         :return:
             String that suitable for a value of a key.
@@ -196,7 +198,7 @@ class SqlQuery(object):
 
     @classmethod
     def to_value_str_list(cls, value_list):
-        """
+        """[Deprecated]
         :param list value_list: List of values associated with a key.
         :return:
             List of values that executed ``to_value_str`` method for each item.
@@ -215,7 +217,7 @@ class SqlQuery(object):
 
     @classmethod
     def make_select(cls, select, table, where=None, extra=None):
-        """
+        """[Deprecated]
         Make SELECT query.
 
         :param str select: Attribute for SELECT query.
@@ -313,7 +315,7 @@ class SqlQuery(object):
 
     @classmethod
     def make_where(cls, key, value, operation="="):
-        """
+        """[Deprecated]
         Make part of WHERE query.
 
         :param str key: Attribute name of the key.
