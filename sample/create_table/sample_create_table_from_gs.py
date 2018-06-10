@@ -15,8 +15,8 @@ con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 loader = ptr.GoogleSheetsTableLoader(credentials_file)
 loader.title = "samplebook"
 
-for tabledata in loader.load():
-    con.create_table_from_tabledata(tabledata)
+for table_data in loader.load():
+    con.create_table_from_tabledata(table_data)
 
 # output ---
 for table_name in con.get_table_name_list():

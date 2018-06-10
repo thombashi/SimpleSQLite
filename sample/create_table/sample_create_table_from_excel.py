@@ -46,8 +46,8 @@ workbook.close()
 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
 loader = pytablereader.ExcelTableFileLoader(file_path)
-for tabledata in loader.load():
-    con.create_table_from_tabledata(tabledata)
+for table_data in loader.load():
+    con.create_table_from_tabledata(table_data)
 
 # output ---
 for table_name in con.get_table_name_list():
