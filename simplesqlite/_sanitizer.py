@@ -11,10 +11,10 @@ import re
 import dataproperty
 import pathvalidate as pv
 import typepy
+from six.moves import range
 from tabledata import (
     DataError, InvalidHeaderNameError, InvalidTableNameError, convert_idx_to_alphabet)
 from tabledata.normalizer import AbstractTableDataNormalizer
-from six.moves import range
 
 from .converter import RecordConvertor
 from .error import NameValidationError
