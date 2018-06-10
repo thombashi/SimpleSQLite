@@ -1500,10 +1500,3 @@ def connect_sqlite_memdb():
     """
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
-
-
-def connect_sqlite_db_mem():
-    # connect_sqlite_db_mem will be deleted in the future, use
-    # connect_sqlite_memdb instead.
-
-    return connect_sqlite_memdb()
