@@ -3,9 +3,9 @@
 import os
 import sys
 
-from simplesqlite import __author__, __copyright__, __name__, __version__
 import pkg_resources
 import sphinx_rtd_theme
+from simplesqlite import __author__, __copyright__, __name__, __version__
 
 
 # If extensions (or modules to document with autodoc) are in another directory,

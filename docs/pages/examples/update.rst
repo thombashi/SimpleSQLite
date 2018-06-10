@@ -6,9 +6,9 @@ method can update record(s) in a table.
 
 :Sample Code:
     .. code-block:: python
-        
+
         from simplesqlite import SimpleSQLite
-        from simplesqlite.sqlquery import SqlQuery
+        from simplesqlite.query import Where
 
 
         table_name = "sample_table"
@@ -28,10 +28,7 @@ method can update record(s) in a table.
             print(record)
         print()
 
-        con.update(
-            table_name,
-            set_query="value = 'ccc'",
-            where=SqlQuery.make_where(key="key", value=1))
+        con.update(table_name, set_query="value = 'ccc'", where=Where(key="key", value=1))
 
         print("---- after update ----")
         for record in con.select(select="*", table_name=table_name).fetchall():
