@@ -28,14 +28,14 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
 
         success_count = 0
 
-        for tabledata in loader.load():
-            if tabledata.is_empty():
+        for table_data in loader.load():
+            if table_data.is_empty():
                 continue
 
-            print(ptw.dump_tabledata(tabledata))
+            print(ptw.dump_tabledata(table_data))
 
             try:
-                con.create_table_from_tabledata(SQLiteTableDataSanitizer(tabledata).normalize())
+                con.create_table_from_tabledata(SQLiteTableDataSanitizer(table_data).normalize())
                 success_count += 1
             except ValueError as e:
                 print(e)
