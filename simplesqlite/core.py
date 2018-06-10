@@ -23,7 +23,7 @@ from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor
 from .error import (
-    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, InvalidTableNameError,
+    AttributeNotFoundError, DatabaseError, InvalidAttributeNameError, NameValidationError,
     NullDatabaseConnectionError, OperationalError, TableNotFoundError)
 from .sqlquery import SqlQuery
 from .query import Attr, AttrList, Table, Value, Select, make_index_name
@@ -844,7 +844,7 @@ class SimpleSQLite(object):
 
         try:
             validate_table_name(table_name)
-        except InvalidTableNameError:
+        except NameValidationError:
             return False
 
         return table_name in self.get_table_name_list()
@@ -947,7 +947,7 @@ class SimpleSQLite(object):
         :param str table_name: Table name to be tested.
         :raises simplesqlite.TableNotFoundError:
             |raises_verify_table_existence|
-        :raises simplesqlite.InvalidTableNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
 
         :Sample Code:
@@ -1151,7 +1151,7 @@ class SimpleSQLite(object):
         :param data_matrix: Data to be inserted into the table.
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param tuple index_attr_list: |index_attr_list|
-        :raises simplesqlite.InvalidTableNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
         :raises simplesqlite.InvalidAttributeNameError:
             |raises_validate_attr_name|

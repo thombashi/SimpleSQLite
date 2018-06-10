@@ -229,7 +229,7 @@ class SqlQuery(object):
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: ``select`` is empty string.
-        :raises simplesqlite.InvalidTableNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
 
         :Examples:
@@ -267,7 +267,7 @@ class SqlQuery(object):
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``insert_tuple`` is empty |list|/|tuple|.
-        :raises simplesqlite.InvalidTableNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
         """
 
@@ -294,7 +294,7 @@ class SqlQuery(object):
         :return: Query of SQLite.
         :rtype: str
         :raises ValueError: If ``set_query`` is empty string.
-        :raises simplesqlite.InvalidTableNameError:
+        :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
         """
 

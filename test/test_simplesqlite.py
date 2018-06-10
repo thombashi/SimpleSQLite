@@ -15,7 +15,7 @@ from decimal import Decimal
 import pytest
 import typepy
 from simplesqlite import (
-    AttributeNotFoundError, DatabaseError, InvalidTableNameError, NullDatabaseConnectionError,
+    AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
     OperationalError, SimpleSQLite, TableNotFoundError, connect_sqlite_memdb)
 from simplesqlite.query import Attr, AttrList, Where
 from tabledata import TableData
@@ -360,7 +360,7 @@ class Test_SimpleSQLite_get_attr_name_list(object):
 
     @pytest.mark.parametrize(["value", "expected"], [
         ["not_exist_table", TableNotFoundError],
-        [None, InvalidTableNameError],
+        [None, NameValidationError],
     ])
     def test_null_table(self, con, value, expected):
         with pytest.raises(expected):

@@ -6,7 +6,7 @@
 
 import sqlite3
 
-from tabledata import InvalidTableNameError
+from tabledata import NameValidationError
 
 
 class DatabaseError(sqlite3.DatabaseError):

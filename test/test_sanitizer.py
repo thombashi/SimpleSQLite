@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 import pytablewriter as ptw
 import pytest
 import tabledata
-from simplesqlite import SQLiteTableDataSanitizer
+from simplesqlite import SQLiteTableDataSanitizer, NameValidationError
 from tabledata import TableData
 
 
@@ -99,9 +99,9 @@ class Test_SQLiteTableDataSanitizer(object):
 
     @pytest.mark.parametrize(
         ["table_name", "header_list", "record_list", "expected"], [
-            ["", ["a", "b"], [], tabledata.InvalidTableNameError],
-            [None, ["a", "b"], [], tabledata.InvalidTableNameError],
-            ["dummy", [], [], tabledata.DataError],
+            ["", ["a", "b"], [], NameValidationError],
+            [None, ["a", "b"], [], NameValidationError],
+            ["dummy", [], [], ValueError],
         ])
     def test_exception_invalid_data(self, table_name, header_list, record_list, expected):
         sanitizer = SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list))

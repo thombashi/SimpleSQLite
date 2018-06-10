@@ -14,19 +14,19 @@ import pathvalidate
 def validate_table_name(name):
     """
     :param str name: Table name to validate.
-    :raises InvalidTableNameError: |raises_validate_table_name|
+    :raises NameValidationError: |raises_validate_table_name|
     """
 
-    from .error import InvalidTableNameError
+    from .error import NameValidationError
 
     try:
         pathvalidate.validate_sqlite_table_name(name)
     except pathvalidate.InvalidReservedNameError as e:
-        raise InvalidTableNameError(e)
+        raise NameValidationError(e)
     except pathvalidate.NullNameError:
-        raise InvalidTableNameError("table name is empty")
+        raise NameValidationError("table name is empty")
     except pathvalidate.InvalidCharError as e:
-        raise InvalidTableNameError(e)
+        raise NameValidationError(e)
 
 
 def validate_attr_name(name):

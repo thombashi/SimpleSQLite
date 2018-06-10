@@ -271,7 +271,7 @@ class Select(QueryItem):
     :param extra extra:
         Add additional clause to execute query, if the value is not |None|.
     :raises ValueError: ``select`` is empty string.
-    :raises simplesqlite.InvalidTableNameError:
+    :raises simplesqlite.NameValidationError:
         |raises_validate_table_name|
 
     :Examples:

@@ -11,12 +11,11 @@ import re
 import dataproperty
 import pathvalidate as pv
 import typepy
-from tabledata import (
-    DataError, InvalidHeaderNameError, InvalidTableNameError, convert_idx_to_alphabet)
-from tabledata._sanitizer import AbstractTableDataSanitizer
+from tabledata.normalizer import AbstractTableDataNormalizer
 
 from six.moves import range
 
+from .error import NameValidationError
 from .query import Attr
 
 
@@ -37,7 +36,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
             new_name = self.__RE_PREPROCESS.sub("_", self._tabledata.table_name)
             return new_name.strip("_")
         except TypeError:
-            raise InvalidTableNameError("table name must be a string: actual='{}'".format(
+            raise NameValidationError("table name must be a string: actual='{}'".format(
                 self._tabledata.table_name))
 
     def _validate_table_name(self, table_name):
@@ -45,8 +44,8 @@ class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
             pv.validate_sqlite_table_name(table_name)
         except pv.ValidReservedNameError:
             pass
-        except (pv.InvalidReservedNameError, pv.InvalidCharError) as e:
-            raise InvalidTableNameError(e)
+        except (pv.InvalidReservedNameError, pv.InvalidCharError, pv.NullNameError) as e:
+            raise NameValidationError(e)
 
     def _sanitize_table_name(self, table_name):
         return self.__RENAME_TEMPLATE.format(table_name)

@@ -11,7 +11,7 @@ import re
 import string
 
 import pytest
-from simplesqlite import InvalidTableNameError, SqlSyntaxError
+from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.sqlquery import SqlQuery
 
 
@@ -207,11 +207,11 @@ class Test_SqlQuery_make_select(object):
 
     @pytest.mark.parametrize(
         ["select", "table", "where", "extra", "expected"], [
-            ["A", None, None, None, InvalidTableNameError],
+            ["A", None, None, None, NameValidationError],
             ["", "B", None, None, ValueError],
-            [None, None, None, None, InvalidTableNameError],
+            [None, None, None, None, NameValidationError],
             [None, "B", None, None, ValueError],
-            [nan, None, None, None, InvalidTableNameError],
+            [nan, None, None, None, NameValidationError],
             [nan, nan, None, None, TypeError],
             [nan, nan, nan, None, TypeError],
             [nan, nan, nan, nan, TypeError],
