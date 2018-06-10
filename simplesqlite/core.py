@@ -23,10 +23,10 @@ from ._func import validate_table_name
 from ._logger import logger
 from .converter import RecordConvertor
 from .error import (
-    AttributeNotFoundError, DatabaseError, NameValidationError,
-    NullDatabaseConnectionError, OperationalError, TableNotFoundError)
+    AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
+    OperationalError, TableNotFoundError)
+from .query import Attr, AttrList, Select, Table, Value, make_index_name
 from .sqlquery import SqlQuery
-from .query import Attr, AttrList, Table, Value, Select, make_index_name
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -1393,36 +1393,6 @@ class SimpleSQLite(object):
             pathvalidate.validate_sqlite_attr_name(attr_name)
 
     @staticmethod
-    def __verify_value_matrix(field_list, value_matrix):
-        """
-        :param list/tuple field_list:
-        :param list/tuple value_matrix: the list to test.
-        :raises ValueError:
-        """
-
-        miss_match_idx_list = []
-
-        for list_idx, value_list in enumerate(value_matrix):
-            if len(field_list) == len(value_list):
-                continue
-
-            miss_match_idx_list.append(list_idx)
-
-        if not miss_match_idx_list:
-            return
-
-        sample_miss_match_list = value_matrix[miss_match_idx_list[0]]
-
-        raise ValueError(
-            "miss match header length and value length:" +
-            "  header: {} {}\n".format(len(field_list), field_list) +
-            "  # of miss match line: {} ouf of {}\n".format(
-                len(miss_match_idx_list), len(value_matrix)) +
-            "  e.g. value at line={}, col-size={}: {}\n".format(
-                miss_match_idx_list[0],
-                len(sample_miss_match_list), sample_miss_match_list))
-
-    @staticmethod
     def __get_list_from_fetch(result):
         """
         :params tuple result: Return value from a Cursor.fetchall()
@@ -1466,24 +1436,22 @@ class SimpleSQLite(object):
 
     def __create_table_from_tabledata(self, table_data, index_attr_list=None):
         self.validate_access_permission(["w", "a"])
-        validate_table_name(table_data.table_name)
 
         logger.debug("__create_table_from_tabledata: {}".format(table_data))
-
-        attr_name_list = AttrList.sanitize(table_data.header_list)
-        try:
-            self.__validate_attr_name_list(attr_name_list)
-        except pathvalidate.ReservedNameError:
-            pass
 
         if table_data.is_empty():
             raise ValueError("input table_data is empty: {}".format(table_data))
 
-        self.__verify_value_matrix(attr_name_list, table_data.value_matrix)
+        from ._sanitizer import SQLiteTableDataSanitizer
+
+        table_data.validate_rows()
+
+        sanitizer = SQLiteTableDataSanitizer(table_data)
+        table_data = sanitizer.normalize()
 
         self.create_table(
             table_data.table_name,
-            self.__get_attr_desc_list_from_tabledata(attr_name_list, table_data))
+            self.__get_attr_desc_list_from_tabledata(table_data.header_list, table_data))
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))

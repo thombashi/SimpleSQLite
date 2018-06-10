@@ -11,15 +11,17 @@ import re
 import dataproperty
 import pathvalidate as pv
 import typepy
+from tabledata import (
+    DataError, InvalidHeaderNameError, InvalidTableNameError, convert_idx_to_alphabet)
 from tabledata.normalizer import AbstractTableDataNormalizer
-
 from six.moves import range
 
+from .converter import RecordConvertor
 from .error import NameValidationError
-from .query import Attr
+from .query import Attr, AttrList
 
 
-class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
+class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     __RE_PREPROCESS = re.compile("[^a-zA-Z0-9_]+")
     __RENAME_TEMPLATE = "rename_{:s}"
@@ -44,10 +46,10 @@ class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
             pv.validate_sqlite_table_name(table_name)
         except pv.ValidReservedNameError:
             pass
-        except (pv.InvalidReservedNameError, pv.InvalidCharError, pv.NullNameError) as e:
-            raise NameValidationError(e)
+        except (pv.InvalidReservedNameError, pv.InvalidCharError) as e:
+            raise InvalidTableNameError(e)
 
-    def _sanitize_table_name(self, table_name):
+    def _normalize_table_name(self, table_name):
         return self.__RENAME_TEMPLATE.format(table_name)
 
     def _preprocess_header(self, col_idx, header):
@@ -59,6 +61,13 @@ class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
 
         return Attr.sanitize(header)
 
+    def _validate_header_list(self):
+        if typepy.is_empty_sequence(self._tabledata.header_list):
+            raise ValueError("attribute name list is empty")
+
+        for header in self._tabledata.header_list:
+            self._validate_header(header)
+
     def _validate_header(self, header):
         try:
             pv.validate_sqlite_attr_name(header)
@@ -67,20 +76,33 @@ class SQLiteTableDataSanitizer(AbstractTableDataSanitizer):
         except pv.InvalidCharError as e:
             raise InvalidHeaderNameError(e)
 
-    def _sanitize_header(self, header):
+    def _normalize_header(self, header):
         return self.__RENAME_TEMPLATE.format(header)
 
-    def _sanitize_header_list(self):
+    def _normalize_header_list(self):
         if typepy.is_empty_sequence(self._tabledata.header_list):
             try:
                 return [
                     self.__get_default_header(col_idx)
-                    for col_idx in range(len(self._tabledata.value_dp_matrix[0]))
+                    for col_idx in range(len(self._tabledata.row_list[0]))
                 ]
             except IndexError:
                 raise DataError("header list and data body are empty")
 
-        return super(SQLiteTableDataSanitizer, self)._sanitize_header_list()
+        attr_name_list = AttrList.sanitize(
+            super(SQLiteTableDataSanitizer, self)._normalize_header_list())
+
+        try:
+            for attr_name in attr_name_list:
+                pv.validate_sqlite_attr_name(attr_name)
+        except pv.ReservedNameError:
+            pass
+
+        return attr_name_list
+
+    def _normalize_row_list(self):
+        return RecordConvertor.to_record_list(
+            self._tabledata.header_list, self._tabledata.row_list)
 
     def __get_default_header(self, col_idx):
         i = 0
