@@ -1414,10 +1414,10 @@ class SimpleSQLite(object):
     @staticmethod
     def __extract_col_type_from_tabledata(table_data):
         """
-        Get value type for each column.
+        Extract data type name for each column as SQLite names.
 
         :param tabledata.TableData table_data:
-        :return: { column_number : value_type }
+        :return: { column_number : column_data_type }
         :rtype: dictionary
         """
 
