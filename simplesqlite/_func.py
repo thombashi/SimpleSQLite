@@ -64,8 +64,8 @@ def append_table(src_con, dst_con, table_name):
     dst_con.validate_access_permission(["w", "a"])
 
     if dst_con.has_table(table_name):
-        src_attr_list = src_con.get_attr_name_list(table_name)
-        dst_attr_list = dst_con.get_attr_name_list(table_name)
+        src_attr_list = src_con.fetch_attr_name_list(table_name)
+        dst_attr_list = dst_con.fetch_attr_name_list(table_name)
         if src_attr_list != dst_attr_list:
             raise ValueError(dedent("""
                 source and destination attribute is different from each other
@@ -79,7 +79,7 @@ def append_table(src_con, dst_con, table_name):
 
     dst_con.create_table_from_data_matrix(
         table_name,
-        src_con.get_attr_name_list(table_name),
+        src_con.fetch_attr_name_list(table_name),
         result.fetchall())
 
     return True
@@ -124,7 +124,7 @@ def copy_table(
 
     dst_con.create_table_from_data_matrix(
         dst_table_name,
-        src_con.get_attr_name_list(src_table_name),
+        src_con.fetch_attr_name_list(src_table_name),
         result.fetchall())
 
     return True

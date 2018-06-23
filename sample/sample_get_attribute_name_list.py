@@ -13,9 +13,9 @@ con.create_table_from_data_matrix(
     attr_name_list=["attr_a", "attr_b"],
     data_matrix=[[1, "a"], [2, "b"]])
 
-print(con.get_attr_name_list(table_name))
+print(con.fetch_attr_name_list(table_name))
 
 try:
-    print(con.get_attr_name_list("not_existing"))
+    print(con.fetch_attr_name_list("not_existing"))
 except simplesqlite.TableNotFoundError as e:
     print(e)

@@ -23,7 +23,7 @@ con.create_table_from_data_matrix(
     data_matrix=data_matrix)
 
 # display values in the table -----
-print(con.get_attr_name_list(table_name))
+print(con.fetch_attr_name_list(table_name))
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():
     print(record)

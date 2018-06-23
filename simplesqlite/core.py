@@ -338,7 +338,7 @@ class SimpleSQLite(object):
         import pandas
 
         if column_list is None:
-            column_list = self.get_attr_name_list(table_name)
+            column_list = self.fetch_attr_name_list(table_name)
 
         result = self.select(
             select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
@@ -370,7 +370,7 @@ class SimpleSQLite(object):
         """
 
         if column_list is None:
-            column_list = self.get_attr_name_list(table_name)
+            column_list = self.fetch_attr_name_list(table_name)
 
         result = self.select(
             select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
@@ -478,7 +478,7 @@ class SimpleSQLite(object):
             return
 
         record_list = RecordConvertor.to_record_list(
-            self.get_attr_name_list(table_name), record_list)
+            self.fetch_attr_name_list(table_name), record_list)
         query = SqlQuery.make_insert(table_name, record_list[0])
 
         if self.debug_query:
@@ -617,7 +617,7 @@ class SimpleSQLite(object):
 
         return self.__extract_list_from_fetch_result(result.fetchall())
 
-    def get_attr_name_list(self, table_name):
+    def fetch_attr_name_list(self, table_name):
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -639,10 +639,10 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                print(con.get_attr_name_list(table_name))
+                print(con.fetch_attr_name_list(table_name))
 
                 try:
-                    print(con.get_attr_name_list("not_existing"))
+                    print(con.fetch_attr_name_list("not_existing"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
         :Output:
@@ -661,6 +661,11 @@ class SimpleSQLite(object):
             MultiByteStrDecoder(attr).unicode_str
             for attr in self.__extract_list_from_fetch_result(result.description)
         ]
+
+    def get_attr_name_list(self, table_name):
+        """[Deprecated] alias to fetch_attr_name_list"""
+
+        return self.fetch_attr_name_list(table_name)
 
     def fetch_attr_type(self, table_name):
         """
@@ -910,7 +915,7 @@ class SimpleSQLite(object):
         if typepy.is_null_string(attr_name):
             return False
 
-        return attr_name in self.get_attr_name_list(table_name)
+        return attr_name in self.fetch_attr_name_list(table_name)
 
     def has_attr_list(self, table_name, attr_name_list):
         """
@@ -1155,7 +1160,7 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(attr_name_list):
             return
 
-        table_attr_set = set(self.get_attr_name_list(table_name))
+        table_attr_set = set(self.fetch_attr_name_list(table_name))
         index_attr_set = set(AttrList.sanitize(attr_name_list))
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):

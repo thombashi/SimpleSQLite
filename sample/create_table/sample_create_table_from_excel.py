@@ -52,7 +52,7 @@ for table_data in loader.load():
 # output ---
 for table_name in con.get_table_name_list():
     print("table: " + table_name)
-    print(con.get_attr_name_list(table_name))
+    print(con.fetch_attr_name_list(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
         print(record)
