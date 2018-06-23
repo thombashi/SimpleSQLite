@@ -610,7 +610,7 @@ class SimpleSQLite(object):
         if result is None:
             return []
 
-        return self.__get_list_from_fetch(result.fetchall())
+        return self.__extract_list_from_fetch_result(result.fetchall())
 
     def get_attr_name_list(self, table_name):
         """
@@ -654,7 +654,7 @@ class SimpleSQLite(object):
 
         return [
             MultiByteStrDecoder(attr).unicode_str
-            for attr in self.__get_list_from_fetch(result.description)
+            for attr in self.__extract_list_from_fetch_result(result.description)
         ]
 
     def get_attr_type(self, table_name):
@@ -1394,7 +1394,7 @@ class SimpleSQLite(object):
             pathvalidate.validate_sqlite_attr_name(attr_name)
 
     @staticmethod
-    def __get_list_from_fetch(result):
+    def __extract_list_from_fetch_result(result):
         """
         :params tuple result: Return value from a Cursor.fetchall()
         :rtype: list
