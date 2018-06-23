@@ -699,7 +699,7 @@ class SimpleSQLite(object):
         ])
 
     def get_attr_type(self, table_name):
-        """[Deprecated] alias to fetch_num_records"""
+        """[Deprecated] alias to fetch_attr_type"""
 
         return self.fetch_attr_type(table_name)
 
