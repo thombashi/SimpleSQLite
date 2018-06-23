@@ -579,7 +579,7 @@ class SimpleSQLite(object):
         return fetch[0]
 
     def get_value(self, select, table_name, where=None, extra=None):
-        """[Deprecated] alias to fetch_value"""
+        # [Deprecated] alias to fetch_value
 
         return self.fetch_value(select, table_name, where, extra)
 
@@ -668,7 +668,7 @@ class SimpleSQLite(object):
         ]
 
     def get_attr_name_list(self, table_name):
-        """[Deprecated] alias to fetch_attr_name_list"""
+        # [Deprecated] alias to fetch_attr_name_list
 
         return self.fetch_attr_name_list(table_name)
 
@@ -704,7 +704,7 @@ class SimpleSQLite(object):
         ])
 
     def get_attr_type(self, table_name):
-        """[Deprecated] alias to fetch_attr_type"""
+        # [Deprecated] alias to fetch_attr_type
 
         return self.fetch_attr_type(table_name)
 
@@ -724,7 +724,7 @@ class SimpleSQLite(object):
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
     def get_num_records(self, table_name, where=None):
-        """[Deprecated] alias to fetch_num_records"""
+        # [Deprecated] alias to fetch_num_records
 
         return self.fetch_num_records(table_name, where)
 
@@ -843,7 +843,7 @@ class SimpleSQLite(object):
         return sqlite_master_list
 
     def get_sqlite_master(self):
-        """[Deprecated] alias to fetch_num_records"""
+        # [Deprecated] alias to fetch_num_records
 
         return self.fetch_sqlite_master()
 
