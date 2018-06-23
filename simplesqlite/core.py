@@ -688,9 +688,9 @@ class SimpleSQLite(object):
             for item in match.group().strip("()").split(", ")
         ])
 
-    def get_num_records(self, table_name, where=None):
+    def fetch_num_records(self, table_name, where=None):
         """
-        Get the number of records in a table.
+        Fetch the number of records in a table.
 
         :param str table_name: Table name to get number of records.
         :param str where: Where clause for the query.
@@ -702,6 +702,13 @@ class SimpleSQLite(object):
         """
 
         return self.get_value(select="COUNT(*)", table_name=table_name, where=where)
+
+    def get_num_records(self, table_name, where=None):
+        """
+        [Deprecated] alias to fetch_num_records
+        """
+
+        self.fetch_num_records(table_name, where)
 
     def get_profile(self, profile_count=50):
         """
