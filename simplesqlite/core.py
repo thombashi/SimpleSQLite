@@ -1402,7 +1402,7 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __get_attr_desc_list_from_tabledata(self, table_data):
+    def __extract_attr_desc_list_from_tabledata(self, table_data):
         attr_description_list = []
         for col, value_type in sorted(six.iteritems(
                 self.__extract_col_type_from_tabledata(table_data))):
@@ -1448,7 +1448,7 @@ class SimpleSQLite(object):
         table_data = SQLiteTableDataSanitizer(table_data).normalize()
 
         self.create_table(
-            table_data.table_name, self.__get_attr_desc_list_from_tabledata(table_data))
+            table_data.table_name, self.__extract_attr_desc_list_from_tabledata(table_data))
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))
