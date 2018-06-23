@@ -1405,14 +1405,14 @@ class SimpleSQLite(object):
     def __get_attr_desc_list_from_tabledata(self, table_data):
         attr_description_list = []
         for col, value_type in sorted(six.iteritems(
-                self.__get_col_valuetype_from_tabledata(table_data))):
+                self.__extract_col_type_from_tabledata(table_data))):
             attr_name = table_data.header_list[col]
             attr_description_list.append("{} {:s}".format(Attr(attr_name), value_type))
 
         return attr_description_list
 
     @staticmethod
-    def __get_col_valuetype_from_tabledata(table_data):
+    def __extract_col_type_from_tabledata(table_data):
         """
         Get value type for each column.
 
