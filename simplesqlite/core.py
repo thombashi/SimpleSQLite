@@ -215,14 +215,14 @@ class SimpleSQLite(object):
 
         try:
             # validate connection after connect
-            self.get_table_name_list()
+            self.fetch_table_name_list()
         except sqlite3.DatabaseError as e:
             raise DatabaseError(e)
 
         if mode != "w":
             return
 
-        for table in self.get_table_name_list():
+        for table in self.fetch_table_name_list():
             self.drop_table(table)
 
     def execute_query(self, query, caller=None):
@@ -583,7 +583,7 @@ class SimpleSQLite(object):
 
         return self.fetch_value(select, table_name, where, extra)
 
-    def get_table_name_list(self):
+    def fetch_table_name_list(self):
         """
         :return: List of table names in the database.
         :rtype: list
@@ -601,7 +601,7 @@ class SimpleSQLite(object):
                     table_name="hoge",
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
-                print(con.get_table_name_list())
+                print(con.fetch_table_name_list())
         :Output:
             .. code-block:: python
 
@@ -617,6 +617,11 @@ class SimpleSQLite(object):
 
         return self.__extract_list_from_fetch_result(result.fetchall())
 
+    def get_table_name_list(self):
+        # [Deprecated] alias to fetch_table_name_list
+
+        return self.fetch_table_name_list()
+        
     def fetch_attr_name_list(self, table_name):
         """
         :return: List of attribute names in the table.
@@ -873,7 +878,7 @@ class SimpleSQLite(object):
         except NameValidationError:
             return False
 
-        return table_name in self.get_table_name_list()
+        return table_name in self.fetch_table_name_list()
 
     def has_attr(self, table_name, attr_name):
         """

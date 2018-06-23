@@ -336,16 +336,16 @@ class Test_SimpleSQLite_get_total_changes(object):
             con_null.get_total_changes()
 
 
-class Test_SimpleSQLite_get_table_name_list(object):
+class Test_SimpleSQLite_fetch_table_name_list(object):
 
     def test_normal(self, con):
         expected = set([TEST_TABLE_NAME])
 
-        assert set(con.get_table_name_list()) == expected
+        assert set(con.fetch_table_name_list()) == expected
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.get_table_name_list()
+            con_null.fetch_table_name_list()
 
 
 class Test_SimpleSQLite_fetch_attr_name_list(object):
@@ -701,7 +701,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_tabledata(value)
 
-        assert con.get_table_name_list() == [value.table_name]
+        assert con.fetch_table_name_list() == [value.table_name]
         assert con.fetch_attr_name_list(value.table_name) == value.header_list
 
         result = con.select(select="*", table_name=value.table_name)
@@ -770,7 +770,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
 
-        assert con.get_table_name_list() == [expected_table_name]
+        assert con.fetch_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.fetch_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -810,7 +810,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
-        assert con.get_table_name_list() == [expected_table_name]
+        assert con.fetch_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.fetch_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -891,7 +891,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_json(str(p_json), table_name)
 
-        assert con.get_table_name_list() == [expected_table_name]
+        assert con.fetch_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.fetch_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
@@ -947,7 +947,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_json(json_text, table_name)
 
-        assert con.get_table_name_list() == [expected_table_name]
+        assert con.fetch_table_name_list() == [expected_table_name]
         assert expected_attr_name_list == con.fetch_attr_name_list(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
