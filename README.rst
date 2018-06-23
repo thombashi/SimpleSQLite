@@ -67,13 +67,13 @@ Create a table from data matrix
             data_matrix=data_matrix)
 
         # display values in the table -----
-        print(con.get_attr_name_list(table_name))
+        print(con.fetch_attr_name_list(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
             print(record)
 
         # display data type for each column in the table -----
-        print(json.dumps(con.get_attr_type(table_name), indent=4))
+        print(json.dumps(con.fetch_attr_type(table_name), indent=4))
 
 :Output:
     .. code-block::
@@ -111,7 +111,7 @@ Create a table from CSV
 
         # output ---
         table_name = "sample_data"
-        print(con.get_attr_name_list(table_name))
+        print(con.fetch_attr_name_list(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
             print(record)
