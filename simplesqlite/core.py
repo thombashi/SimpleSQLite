@@ -548,9 +548,9 @@ class SimpleSQLite(object):
 
         return self.connection.total_changes
 
-    def get_value(self, select, table_name, where=None, extra=None):
+    def fetch_value(self, select, table_name, where=None, extra=None):
         """
-        Get a value from the table. Return |None| if no value matches
+        Fetch a value from the table. Return |None| if no value matches
         the conditions, or the table not found in the database.
 
         :param str select: Attribute for SELECT query
@@ -577,6 +577,11 @@ class SimpleSQLite(object):
             return None
 
         return fetch[0]
+
+    def get_value(self, select, table_name, where=None, extra=None):
+        """[Deprecated] alias to fetch_value"""
+
+        return self.fetch_value(select, table_name, where, extra)
 
     def get_table_name_list(self):
         """
@@ -706,7 +711,7 @@ class SimpleSQLite(object):
         :rtype: int
         """
 
-        return self.get_value(select="COUNT(*)", table_name=table_name, where=where)
+        return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
     def get_num_records(self, table_name, where=None):
         """[Deprecated] alias to fetch_num_records"""
