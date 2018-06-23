@@ -827,7 +827,6 @@ class SimpleSQLite(object):
 
         return self.fetch_sqlite_master()
 
-
     def has_table(self, table_name):
         """
         :param str table_name: Table name to be tested.

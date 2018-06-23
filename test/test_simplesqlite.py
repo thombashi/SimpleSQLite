@@ -506,10 +506,7 @@ class Test_SimpleSQLite_verify_attr_existence(object):
 class Test_SimpleSQLite_drop_table(object):
 
     def test_normal(self, con):
-        attr_description_list = [
-            "'{:s}' {:s}".format("attr_name", "TEXT")
-        ]
-
+        attr_description_list = ["'{:s}' {:s}".format("attr_name", "TEXT")]
         table_name = "new_table"
 
         assert not con.has_table(table_name)
@@ -623,8 +620,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
                 }
             ],
         ])
-    def test_normal(
-            self, tmpdir, attr_name_list, data_matrix, index_attr_list, expected_attr):
+    def test_normal(self, tmpdir, attr_name_list, data_matrix, index_attr_list, expected_attr):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
@@ -662,8 +658,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.create_table_from_data_matrix(
-                TEST_TABLE_NAME, [], [])
+            con_null.create_table_from_data_matrix(TEST_TABLE_NAME, [], [])
 
 
 class Test_SimpleSQLite_create_table_from_tabledata(object):
@@ -1003,9 +998,7 @@ class Test_SimpleSQLite_create_index(object):
     ])
     def test_normal(self, con, symbol):
         attr = "a{}b".format(symbol)
-        attr_description_list = [
-            "{:s} {:s}".format(Attr(attr), "TEXT")
-        ]
+        attr_description_list = ["{:s} {:s}".format(Attr(attr), "TEXT")]
 
         table_name = "new_table"
         con.create_table(table_name, attr_description_list)
