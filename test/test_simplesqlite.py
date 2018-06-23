@@ -639,8 +639,8 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         assert len(result_matrix) == 3
 
         print("expected: {}".format(expected_attr))
-        print("actual: {}".format(con.get_attr_type(table_name)))
-        assert con.get_attr_type(table_name) == expected_attr
+        print("actual: {}".format(con.fetch_attr_type(table_name)))
+        assert con.fetch_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
         ["table_name", "attr_name_list", "data_matrix", "expected"],

@@ -29,4 +29,4 @@ for record in result.fetchall():
     print(record)
 
 # display data type for each column in the table -----
-print(json.dumps(con.get_attr_type(table_name), indent=4))
+print(json.dumps(con.fetch_attr_type(table_name), indent=4))

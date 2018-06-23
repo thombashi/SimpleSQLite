@@ -657,7 +657,7 @@ class SimpleSQLite(object):
             for attr in self.__extract_list_from_fetch_result(result.description)
         ]
 
-    def get_attr_type(self, table_name):
+    def fetch_attr_type(self, table_name):
         """
         :return:
             Dictionary of attribute names and attribute types in the table.
