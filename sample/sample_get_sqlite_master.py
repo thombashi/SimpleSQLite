@@ -20,4 +20,4 @@ con.create_table_from_data_matrix(
     data_matrix=data_matrix,
     index_attr_list=["a"])
 
-print(json.dumps(con.get_sqlite_master(), indent=4))
+print(json.dumps(con.fetch_sqlite_master(), indent=4))

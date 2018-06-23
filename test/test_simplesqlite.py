@@ -451,11 +451,11 @@ class Test_SimpleSQLite_get_profile(object):
         assert typepy.is_not_empty_sequence(profile_list)
 
 
-class Test_SimpleSQLite_get_sqlite_master(object):
+class Test_SimpleSQLite_fetch_sqlite_master(object):
 
     def test_normal(self, con_index):
-        print(json.dumps(con_index.get_sqlite_master(), indent=4))
-        assert con_index.get_sqlite_master() == [
+        print(json.dumps(con_index.fetch_sqlite_master(), indent=4))
+        assert con_index.fetch_sqlite_master() == [
             {
                 'tbl_name': 'test_table',
                 'sql': 'CREATE TABLE \'test_table\' ("attr_a" INTEGER, "attr_b" INTEGER)',
@@ -473,7 +473,7 @@ class Test_SimpleSQLite_get_sqlite_master(object):
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.get_sqlite_master()
+            con_null.fetch_sqlite_master()
 
 
 class Test_SimpleSQLite_verify_table_existence(object):

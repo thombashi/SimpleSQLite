@@ -757,7 +757,7 @@ class SimpleSQLite(object):
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
-    def get_sqlite_master(self):
+    def fetch_sqlite_master(self):
         """
         Get sqlite_master table information as a list of dictionaries.
 
@@ -785,7 +785,7 @@ class SimpleSQLite(object):
                     data_matrix=data_matrix,
                     index_attr_list=["a"])
 
-                print(json.dumps(con.get_sqlite_master(), indent=4))
+                print(json.dumps(con.fetch_sqlite_master(), indent=4))
         :Output:
             .. code-block:: json
 
@@ -821,6 +821,12 @@ class SimpleSQLite(object):
             self.set_row_factory(stash_row_factory)
 
         return sqlite_master_list
+
+    def get_sqlite_master(self):
+        """[Deprecated] alias to fetch_num_records"""
+
+        return self.fetch_sqlite_master()
+
 
     def has_table(self, table_name):
         """
