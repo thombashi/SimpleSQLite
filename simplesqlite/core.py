@@ -688,6 +688,11 @@ class SimpleSQLite(object):
             for item in match.group().strip("()").split(", ")
         ])
 
+    def get_attr_type(self, table_name):
+        """[Deprecated] alias to fetch_num_records"""
+
+        return self.fetch_attr_type(table_name)
+
     def fetch_num_records(self, table_name, where=None):
         """
         Fetch the number of records in a table.
