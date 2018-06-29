@@ -11,6 +11,8 @@ import pytest
 from simplesqlite import NameValidationError, SQLiteTableDataSanitizer
 from tabledata import TableData
 
+from ._common import print_test_result
+
 
 class Test_SQLiteTableDataSanitizer(object):
 
@@ -91,8 +93,8 @@ class Test_SQLiteTableDataSanitizer(object):
         new_tabledata = SQLiteTableDataSanitizer(
             TableData(table_name, header_list, record_list)).normalize()
 
-        print("lhs: {}".format(ptw.dump_tabledata(new_tabledata)))
-        print("rhs: {}".format(ptw.dump_tabledata(expected)))
+        print_test_result(
+            expected=ptw.dump_tabledata(expected), actual=ptw.dump_tabledata(new_tabledata))
 
         assert new_tabledata.equals(expected)
 

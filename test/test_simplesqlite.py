@@ -20,6 +20,7 @@ from simplesqlite import (
 from simplesqlite.query import Attr, AttrList, Where
 from tabledata import TableData
 
+from ._common import print_test_result
 from .fixture import (
     TEST_TABLE_NAME, con, con_empty, con_index, con_mix, con_null, con_profile, con_ro)
 
@@ -634,8 +635,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
-        print("expected: {}".format(expected_attr))
-        print("actual: {}".format(con.fetch_attr_type(table_name)))
+        print_test_result(expected=expected_attr, actual=con.fetch_attr_type(table_name))
         assert con.fetch_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(

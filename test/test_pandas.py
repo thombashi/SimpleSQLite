@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 import pytest
 from simplesqlite import connect_sqlite_memdb
 
+from ._common import print_test_result
 
 try:
     import pandas
@@ -35,8 +36,8 @@ class Test_fromto_pandas_dataframe(object):
         con.create_table_from_dataframe(dataframe, table_name)
 
         actual_all = con.select_as_dataframe(table_name=table_name)
-        print("[expected]\n{}\n".format(dataframe))
-        print("[actual]\n{}\n".format(actual_all))
+        print_test_result(expected=dataframe, actual=actual_all)
+
         assert actual_all.equals(dataframe)
 
         select_column_list = ["value", "name"]
