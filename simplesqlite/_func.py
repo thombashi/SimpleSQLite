@@ -114,8 +114,7 @@ def copy_table(
         else:
             logger.error(
                 "failed to copy table: the table already exists "
-                "(src_table={}, dst_table={})".format(
-                    src_table_name, dst_table_name))
+                "(src_table={}, dst_table={})".format(src_table_name, dst_table_name))
             return False
 
     result = src_con.select(select="*", table_name=src_table_name)
