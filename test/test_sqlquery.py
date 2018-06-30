@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 
 import pytest
 from simplesqlite.sqlquery import SqlQuery
+from simplesqlite.query import Where
 
 
 nan = float("nan")
@@ -52,17 +53,10 @@ class Test_SqlQuery_make_insert(object):
 
 class Test_SqlQuery_make_update(object):
 
-    @pytest.mark.parametrize(
-        ["table", "set_query", "where", "expected"], [
-            [
-                "A", "B=1", None,
-                "UPDATE A SET B=1"
-            ],
-            [
-                "A", "B=1", SqlQuery.make_where("C", 1, ">"),
-                "UPDATE A SET B=1 WHERE C > 1"
-            ],
-        ])
+    @pytest.mark.parametrize(["table", "set_query", "where", "expected"], [
+        ["A", "B=1", None, "UPDATE A SET B=1"],
+        ["A", "B=1", Where("C", 1, ">").to_query(), "UPDATE A SET B=1 WHERE C > 1"],
+    ])
     def test_normal(self, table, set_query, where, expected):
         assert SqlQuery.make_update(table, set_query, where) == expected
 
