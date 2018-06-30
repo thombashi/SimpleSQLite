@@ -54,6 +54,8 @@ class SimpleSQLite(object):
         :py:meth:`.get_profile`
     """
 
+    dup_col_handler = "error"
+
     @property
     def database_path(self):
         """
@@ -1475,7 +1477,8 @@ class SimpleSQLite(object):
 
         table_data.validate_rows()
 
-        table_data = SQLiteTableDataSanitizer(table_data).normalize()
+        table_data = SQLiteTableDataSanitizer(
+            table_data, dup_col_handler=self.dup_col_handler).normalize()
 
         self.create_table(
             table_data.table_name, self.__extract_attr_desc_list_from_tabledata(table_data))

@@ -26,12 +26,12 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     __RE_PREPROCESS = re.compile("[^a-zA-Z0-9_]+")
     __RENAME_TEMPLATE = "rename_{:s}"
 
-    def __init__(self, tabledata):
+    def __init__(self, tabledata, dup_col_handler="error"):
         super(SQLiteTableDataSanitizer, self).__init__(tabledata)
 
         self.__upper_header_list = [
-            header.upper() for header in self._tabledata.header_list if header
-        ]
+            header.upper() for header in self._tabledata.header_list if header]
+        self.__dup_col_handler = dup_col_handler
 
     def _preprocess_table_name(self):
         try:
@@ -97,6 +97,30 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
                 pv.validate_sqlite_attr_name(attr_name)
         except pv.ReservedNameError:
             pass
+
+        # duplicated attribute name handling ---
+        from collections import Counter
+
+        for key, count in Counter(attr_name_list).most_common():
+            if count <= 1:
+                continue
+
+            if self.__dup_col_handler == "error":
+                raise ValueError("duplicate column name: {}".format(key))
+
+            rename_target_idx_list = [
+                i for i, attr in enumerate(attr_name_list) if attr == key][1:]
+
+            suffix_no = 0
+            for rename_target_idx in rename_target_idx_list:
+                while True:
+                    suffix_no += 1
+                    attr_name_candidate = "{:s}_{:d}".format(key, suffix_no)
+                    if attr_name_candidate in attr_name_list:
+                        continue
+
+                    attr_name_list[rename_target_idx] = attr_name_candidate
+                    break
 
         return attr_name_list
 
