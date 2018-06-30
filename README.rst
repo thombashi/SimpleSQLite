@@ -10,6 +10,9 @@ SimpleSQLite is a Python library to simplify SQLite database operations: table c
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
 
+.. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
+    :target: https://pypi.python.org/pypi/SimpleSQLite
+
 .. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux
     :target: https://travis-ci.org/thombashi/SimpleSQLite
     :alt: Linux CI test status
