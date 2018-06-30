@@ -621,7 +621,7 @@ class SimpleSQLite(object):
         # [Deprecated] alias to fetch_table_name_list
 
         return self.fetch_table_name_list()
-        
+
     def fetch_attr_name_list(self, table_name):
         """
         :return: List of attribute names in the table.
