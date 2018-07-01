@@ -94,12 +94,11 @@ class SimpleSQLite(object):
 
         return self.__mode
 
-    def __init__(self, database_src, mode="a", is_create_table_config=True, profile=False):
+    def __init__(self, database_src, mode="a", profile=False):
         self.debug_query = False
 
         self.__initialize_connection()
         self.__is_profile = profile
-        self.__is_create_table_config = is_create_table_config
 
         if isinstance(database_src, sqlite3.Connection):
             self.__connection = database_src
