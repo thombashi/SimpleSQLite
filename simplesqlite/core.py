@@ -72,6 +72,9 @@ class SimpleSQLite(object):
             None
         """
 
+        if self.__delayed_connection_path:
+            return self.__delayed_connection_path
+
         return self.__database_path
 
     @property
@@ -80,6 +83,8 @@ class SimpleSQLite(object):
         :return: |Connection| instance of the connected database.
         :rtype: sqlite3.Connection
         """
+
+        self.__delayed_connect()
 
         return self.__connection
 
@@ -94,15 +99,20 @@ class SimpleSQLite(object):
 
         return self.__mode
 
-    def __init__(self, database_src, mode="a", profile=False):
+    def __init__(self, database_src, mode="a", delayed_connection=True, profile=False):
         self.debug_query = False
 
         self.__initialize_connection()
+        self.__mode = mode
         self.__is_profile = profile
+        self.__delayed_connection_path = None
 
         if isinstance(database_src, sqlite3.Connection):
             self.__connection = database_src
-            self.__mode = mode
+            return
+
+        if delayed_connection:
+            self.__delayed_connection_path = database_src
             return
 
         self.connect(database_src, mode)
@@ -166,6 +176,9 @@ class SimpleSQLite(object):
         """
 
         if self.connection is None:
+            if self.__delayed_connect():
+                return
+
             raise NullDatabaseConnectionError("null database connection")
 
         if typepy.is_null_string(self.database_path):
@@ -1415,6 +1428,19 @@ class SimpleSQLite(object):
             raise OperationalError(e)
 
         connection.close()
+
+    def __delayed_connect(self):
+        if self.__delayed_connection_path is None:
+            return False
+
+        # save and clear delayed_connection_path to avoid infinite recursion before 
+        # calling the connect method
+        connection_path = self.__delayed_connection_path
+        self.__delayed_connection_path = None
+
+        self.connect(connection_path, self.__mode)
+
+        return True
 
     @staticmethod
     def __validate_attr_name_list(attr_name_list):

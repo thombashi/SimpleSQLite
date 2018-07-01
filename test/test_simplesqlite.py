@@ -71,14 +71,11 @@ class Test_SimpleSQLite_init(object):
         ["", "r", ValueError],
     ] + [
         arg_list for arg_list in itertools.product(
-            [None], ["r", "w", "a"], [ValueError])
-    ] + [
-        arg_list for arg_list in itertools.product(
             [nan], ["r", "w", "a"], [TypeError])
     ])
     def test_exception_invalid_arg(self, value, mode, expected):
         with pytest.raises(expected):
-            SimpleSQLite(value, mode)
+            SimpleSQLite(value, mode).connection
 
     @pytest.mark.parametrize(["mode", "expected"], [
         ["r", DatabaseError],
@@ -92,7 +89,7 @@ class Test_SimpleSQLite_init(object):
             f.write("dummy data")
 
         with pytest.raises(expected):
-            SimpleSQLite(str(p), mode)
+            SimpleSQLite(str(p), mode).connection
 
 
 class Test_SimpleSQLite_is_connected(object):
