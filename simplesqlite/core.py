@@ -105,7 +105,6 @@ class SimpleSQLite(object):
         self.__initialize_connection()
         self.__mode = mode
         self.__is_profile = profile
-        self.__delayed_connection_path = None
 
         if isinstance(database_src, sqlite3.Connection):
             self.__connection = database_src
@@ -1380,6 +1379,10 @@ class SimpleSQLite(object):
         .. seealso:: :py:meth:`sqlite3.Connection.close`
         """
 
+        if self.__delayed_connection_path and self.__connection is None:
+            self.__initialize_connection()
+            return
+
         try:
             self.check_connection()
         except (SystemError, NullDatabaseConnectionError):
@@ -1395,6 +1398,7 @@ class SimpleSQLite(object):
         self.__database_path = None
         self.__connection = None
         self.__mode = None
+        self.__delayed_connection_path = None
 
         self.__dict_query_count = {}
         self.__dict_query_totalexectime = {}
