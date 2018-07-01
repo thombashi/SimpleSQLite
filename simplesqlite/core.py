@@ -596,7 +596,7 @@ class SimpleSQLite(object):
 
         return self.fetch_value(select, table_name, where, extra)
 
-    def fetch_table_name_list(self):
+    def fetch_table_name_list(self, include_system_table=False):
         """
         :return: List of table names in the database.
         :rtype: list
@@ -628,7 +628,12 @@ class SimpleSQLite(object):
         if result is None:
             return []
 
-        return self.__extract_list_from_fetch_result(result.fetchall())
+        table_name_list = self.__extract_list_from_fetch_result(result.fetchall())
+
+        if include_system_table:
+            return table_name_list
+
+        return [table for table in table_name_list if table not in SQLITE_SYSTEM_TABLE_LIST]
 
     def get_table_name_list(self):
         # [Deprecated] alias to fetch_table_name_list
