@@ -6,8 +6,8 @@
 
 from __future__ import absolute_import, unicode_literals
 
-import dataproperty
 import logbook
+import tabledata
 
 
 logger = logbook.Logger("SimpleSQLie")
@@ -23,7 +23,7 @@ def set_logger(is_enable):
     else:
         logger.disable()
 
-    dataproperty.set_logger(is_enable)
+    tabledata.set_logger(is_enable)
     try:
         import pytablereader
         pytablereader.set_logger(is_enable)
@@ -55,7 +55,7 @@ def set_log_level(log_level):
         set_logger(is_enable=True)
 
     logger.level = log_level
-    dataproperty.set_log_level(log_level)
+    tabledata.set_log_level(log_level)
     try:
         import pytablereader
         pytablereader.set_log_level(log_level)
