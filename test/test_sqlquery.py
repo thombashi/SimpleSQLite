@@ -7,8 +7,8 @@
 from __future__ import unicode_literals
 
 import pytest
-from simplesqlite.sqlquery import SqlQuery
 from simplesqlite.query import Where
+from simplesqlite.sqlquery import SqlQuery
 
 
 nan = float("nan")

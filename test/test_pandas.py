@@ -11,6 +11,7 @@ from simplesqlite import connect_sqlite_memdb
 
 from ._common import print_test_result
 
+
 try:
     import pandas
     PANDAS_IMPORT = True
