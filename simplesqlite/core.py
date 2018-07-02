@@ -1509,8 +1509,6 @@ class SimpleSQLite(object):
         if table_data.is_empty():
             raise ValueError("input table_data is empty: {}".format(table_data))
 
-        table_data.validate_rows()
-
         table_data = SQLiteTableDataSanitizer(
             table_data, dup_col_handler=self.dup_col_handler).normalize()
 
