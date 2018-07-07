@@ -48,7 +48,7 @@ class RecordConvertor(object):
         if isinstance(values, (tuple, list)):
             return [cls.__to_sqlite_element(value) for value in values]
 
-        raise ValueError("cannot convert to list")
+        raise ValueError("cannot convert from {} to list".format(type(values)))
 
     @classmethod
     def to_record_list(cls, attr_name_list, value_matrix):
