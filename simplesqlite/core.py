@@ -1429,7 +1429,7 @@ class SimpleSQLite(object):
         if self.__delayed_connection_path is None:
             return False
 
-        # save and clear delayed_connection_path to avoid infinite recursion before 
+        # save and clear delayed_connection_path to avoid infinite recursion before
         # calling the connect method
         connection_path = self.__delayed_connection_path
         self.__delayed_connection_path = None

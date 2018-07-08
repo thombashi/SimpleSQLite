@@ -8,9 +8,7 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 
-import six
 import typepy
-from six.moves import map
 
 from ._func import validate_table_name
 from .query import Attr, Table, Value
