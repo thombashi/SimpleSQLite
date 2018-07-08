@@ -85,8 +85,7 @@ def append_table(src_con, dst_con, table_name):
     return True
 
 
-def copy_table(
-        src_con, dst_con, src_table_name, dst_table_name, is_overwrite=True):
+def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=True):
     """
     Copy a table from source to destination.
 
