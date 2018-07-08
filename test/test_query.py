@@ -278,3 +278,6 @@ class Test_make_index_name(object):
 
     def test_normal_symbol(self):
         assert make_index_name("table", "ABCD>8.5") != make_index_name("table", "ABCD<8.5")
+
+    def test_normal_unicode(self):
+        assert make_index_name("テーブル", "ほげ")

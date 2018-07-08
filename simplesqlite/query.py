@@ -331,9 +331,13 @@ class And(list, QueryItemInterface):
 
 def make_index_name(table_name, attr_name):
     import hashlib
+    from pathvalidate import ascii_symbol_list, unprintable_ascii_char_list
 
-    sanitize = re.compile("[^a-zA-Z0-9_]")
-    index_hash = hashlib.md5(six.b(table_name + attr_name)).hexdigest()[:4]
+    re_invalid_chars = re.compile(
+        "[{:s}]".format(re.escape("".join(ascii_symbol_list + unprintable_ascii_char_list))),
+        re.UNICODE)
+
+    index_hash = hashlib.md5((table_name + attr_name).encode("utf8")).hexdigest()[:4]
 
     return "{:s}_{:s}_index_{}".format(
-        sanitize.sub("", table_name), sanitize.sub("", attr_name), index_hash)
+        re_invalid_chars.sub("", table_name), re_invalid_chars.sub("", attr_name), index_hash)
