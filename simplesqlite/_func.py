@@ -27,6 +27,8 @@ def validate_table_name(name):
         raise NameValidationError("table name is empty")
     except pathvalidate.InvalidCharError as e:
         raise NameValidationError(e)
+    except pathvalidate.ValidReservedNameError:
+        pass
 
 
 def validate_attr_name(name):
@@ -73,14 +75,7 @@ def append_table(src_con, dst_con, table_name):
                 dst: {}
                 """.format(src_attr_list, dst_attr_list)))
 
-    result = src_con.select(select="*", table_name=table_name)
-    if result is None:
-        return False
-
-    dst_con.create_table_from_data_matrix(
-        table_name,
-        src_con.fetch_attr_name_list(table_name),
-        result.fetchall())
+    dst_con.create_table_from_tabledata(src_con.select_as_tabledata(table_name))
 
     return True
 

@@ -28,13 +28,10 @@ from .error import (
     OperationalError, TableNotFoundError)
 from .query import Attr, AttrList, Select, Table, Value, make_index_name
 from .sqlquery import SqlQuery
+from sqliteschema import SQLITE_SYSTEM_TABLE_LIST, SQLiteSchemaExtractor
 
 
 MEMORY_DB_NAME = ":memory:"
-
-# https://www.sqlite.org/fileformat2.html
-SQLITE_SYSTEM_TABLE_LIST = ["sqlite_master", "sqlite_sequence",
-                            "sqlite_stat1", "sqlite_stat2", "sqlite_stat3", "sqlite_stat4"]
 
 
 class SimpleSQLite(object):
@@ -629,17 +626,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        query = "SELECT name FROM sqlite_master WHERE TYPE='table'"
-        result = self.execute_query(query, logging.getLogger().findCaller())
-        if result is None:
-            return []
-
-        table_name_list = self.__extract_list_from_fetch_result(result.fetchall())
-
-        if include_system_table:
-            return table_name_list
-
-        return [table for table in table_name_list if table not in SQLITE_SYSTEM_TABLE_LIST]
+        return SQLiteSchemaExtractor(self).fetch_table_name_list()
 
     def get_table_name_list(self):
         # [Deprecated] alias to fetch_table_name_list
@@ -683,13 +670,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        query = "SELECT * FROM '{:s}'".format(table_name)
-        result = self.execute_query(query, logging.getLogger().findCaller())
-
-        return [
-            MultiByteStrDecoder(attr).unicode_str
-            for attr in self.__extract_list_from_fetch_result(result.description)
-        ]
+        return SQLiteSchemaExtractor(self).fetch_table_schema(table_name).get_attr_name_list()
 
     def get_attr_name_list(self, table_name):
         # [Deprecated] alias to fetch_attr_name_list

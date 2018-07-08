@@ -23,11 +23,13 @@ from .query import Attr, AttrList
 
 class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
-    __RE_PREPROCESS = re.compile("[^a-zA-Z0-9_]+")
     __RENAME_TEMPLATE = "rename_{:s}"
 
     def __init__(self, tabledata, dup_col_handler="error"):
         super(SQLiteTableDataSanitizer, self).__init__(tabledata)
+
+        if typepy.is_null_string(tabledata.table_name):
+            raise NameValidationError("table_name is empty")
 
         self.__upper_header_list = [
             header.upper() for header in self._tabledata.header_list if header]
@@ -35,7 +37,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def _preprocess_table_name(self):
         try:
-            new_name = self.__RE_PREPROCESS.sub("_", self._tabledata.table_name)
+            new_name = pv.sanitize_filename(self._tabledata.table_name, replacement_text="_")
+            new_name = pv.replace_symbol(new_name, replacement_text="_")
+            new_name = re.sub("_+", "_", new_name)
+            new_name = new_name.replace(" ", "_")
+
             return new_name.strip("_")
         except TypeError:
             raise NameValidationError("table name must be a string: actual='{}'".format(
@@ -124,9 +130,9 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return attr_name_list
 
-    def _normalize_row_list(self):
+    def _normalize_row_list(self, normalize_header_list):
         return RecordConvertor.to_record_list(
-            self._tabledata.header_list, self._tabledata.row_list)
+            normalize_header_list, self._tabledata.row_list)
 
     def __get_default_header(self, col_idx):
         i = 0
