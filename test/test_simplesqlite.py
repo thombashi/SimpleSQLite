@@ -327,11 +327,11 @@ class Test_SimpleSQLite_update(object):
 class Test_SimpleSQLite_get_total_changes(object):
 
     def test_smoke(self, con):
-        assert con.get_total_changes() > 0
+        assert con.total_changes > 0
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.get_total_changes()
+            con_null.total_changes
 
 
 class Test_SimpleSQLite_fetch_table_name_list(object):

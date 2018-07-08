@@ -89,6 +89,17 @@ class SimpleSQLite(object):
         return self.__connection
 
     @property
+    def total_changes(self):
+        """
+        .. seealso::
+            :py:attr:`sqlite3.Connection.total_changes`
+        """
+
+        self.check_connection()
+
+        return self.connection.total_changes
+
+    @property
     def mode(self):
         """
         :return: Connection mode: ``"r"``/``"w"``/``"a"``.
@@ -552,14 +563,9 @@ class SimpleSQLite(object):
         return self.execute_query(query, logging.getLogger().findCaller())
 
     def get_total_changes(self):
-        """
-        .. seealso::
-            :py:attr:`sqlite3.Connection.total_changes`
-        """
+        # [Deprecated] alias to total_changes
 
-        self.check_connection()
-
-        return self.connection.total_changes
+        return self.total_changes
 
     def fetch_value(self, select, table_name, where=None, extra=None):
         """
