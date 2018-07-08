@@ -85,10 +85,12 @@ class Test_Attr(object):
         ['te\nst', None, '"te_st"'],
         ['t\ne\ns\r\nt', None, '"t_e_s__t"'],
         ['te.st', None, '[te.st]'],
+        ["t[es]t", None, '"t[es]t"'],
         ["test", "AVG", "AVG(test)"],
         ["attr_a", 2, '"attr_a"'],
         ["attr_a", True, '"attr_a"'],
         ["ABCD>8.5", None, "[ABCD>8.5]"],
+        ["k@l[m]n{o}p;q:r,s.t/u", None, '"k@l[m]n{o}p;q:r_s.t/u"'],
     ] + [
         [
             "te{:s}st".format(re.escape(c)),

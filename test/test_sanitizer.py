@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 import pytablewriter as ptw
 import pytest
-from simplesqlite import NameValidationError, SQLiteTableDataSanitizer
+from simplesqlite import NameValidationError, connect_sqlite_memdb, SQLiteTableDataSanitizer
 from tabledata import TableData
 
 from ._common import print_test_result
@@ -35,17 +35,17 @@ class Test_SQLiteTableDataSanitizer(object):
                 "missing_all_header", [], [[1, 2], [3, 4]],
                 TableData("missing_all_header", ["A", "B"], [[1, 2], [3, 4]])
             ], [
-                "missing_part_of_header", ["", "bb", None], [],
-                TableData("missing_part_of_header", ["A", "bb", "C"], [])
+                "missing_part_of_header", ["", "bb", None], [[1, 2, 3]],
+                TableData("missing_part_of_header", ["A", "bb", "C"], [[1, 2, 3]])
             ], [
-                "avoid_duplicate_default_header_0", ["", "a", None], [],
-                TableData("avoid_duplicate_default_header_0", ["B", "a", "C"], [])
+                "avoid_duplicate_default_header_0", ["", "a", None], [[1, 2, 3]],
+                TableData("avoid_duplicate_default_header_0", ["B", "a", "C"], [[1, 2, 3]])
             ], [
                 "avoid_duplicate_default_header_1",
-                ["", "A", "B", "c", ""], [],
+                ["", "A", "B", "c", ""], [[1, 2, 3, 4, 5]],
                 TableData(
                     "avoid_duplicate_default_header_1",
-                    ["D", "A", "B", "c", "E"], [])
+                    ["D", "A", "B", "c", "E"], [[1, 2, 3, 4, 5]])
             ], [
                 r"@a!b\c#d$e%f&g'h(i)j_",
                 [r"a!bc#d$e%f&g'h(i)j", r"k@l[m]n{o}p;q:r,s.t/u", "a b"],
@@ -95,6 +95,10 @@ class Test_SQLiteTableDataSanitizer(object):
 
         print_test_result(
             expected=ptw.dump_tabledata(expected), actual=ptw.dump_tabledata(new_tabledata))
+
+        con = connect_sqlite_memdb()
+        con.create_table_from_tabledata(new_tabledata)
+        assert con.select_as_tabledata(new_tabledata.table_name) == expected
 
         assert new_tabledata.equals(expected)
 

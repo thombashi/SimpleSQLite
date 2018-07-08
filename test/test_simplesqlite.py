@@ -462,9 +462,9 @@ class Test_SimpleSQLite_fetch_sqlite_master(object):
                 'rootpage': 2
             }, {
                 'tbl_name': 'test_table',
-                'sql': 'CREATE INDEX test_table_attr_a_index_3013 ON test_table("attr_a")',
+                'sql': 'CREATE INDEX testtable_attra_index_3013 ON test_table("attr_a")',
                 'type': 'index',
-                'name': 'test_table_attr_a_index_3013',
+                'name': 'testtable_attra_index_3013',
                 'rootpage': 3
             },
         ]
@@ -648,6 +648,21 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
     def test_normal_empty_header(self, tmpdir, table_name, attr_name_list, data_matrix, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
+
+        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+
+        assert con.fetch_attr_name_list(table_name) == expected
+
+    def test_normal_symbol_header(self, tmpdir, ):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+        table_name = "symbols"
+        attr_name_list = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
+        data_matrix = [
+            {"ABCD>8.5": "aaa", "ABCD<8.5": 0},
+            {"ABCD>8.5": "bbb", "ABCD<8.5": 9}
+        ]
+        expected = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
 
         con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
 
