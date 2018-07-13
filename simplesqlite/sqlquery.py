@@ -19,18 +19,14 @@ class SqlQuery(object):
     Support class for making SQLite query.
     """
 
-    __RE_SANITIZE = re.compile(
-        "[{:s}]".format(re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
+    __RE_SANITIZE = re.compile("[{:s}]".format(re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
     __RE_SANITIZE_ATTR = re.compile("[{:s}]".format(re.escape("'\"")))
     __RE_TABLE_STR = re.compile("[{:s}]".format(re.escape("%()-+/.")))
     __RE_TO_ATTR_QUOTE = re.compile("[{:s}]".format(re.escape("[_]")))
-    __RE_TO_ATTR_BRACKET = re.compile(
-        "[{:s}0-9\s#]".format(re.escape("%()-+/.'\"")))
+    __RE_TO_ATTR_BRACKET = re.compile("[{:s}0-9\s#]".format(re.escape("%()-+/.'\"")))
     __RE_SPACE = re.compile("[\s]+")
 
-    __VALID_WHERE_OPERATION_LIST = [
-        "=", "==", "!=", "<>", ">", ">=", "<", "<=",
-    ]
+    __VALID_WHERE_OPERATION_LIST = ["=", "==", "!=", "<>", ">", ">=", "<", "<="]
 
     @classmethod
     def sanitize(cls, query_item):
@@ -77,7 +73,8 @@ class SqlQuery(object):
             raise ValueError("empty insert list/tuple")
 
         return "INSERT INTO {:s} VALUES ({:s})".format(
-            table, ",".join(['?' for _i in insert_tuple]))
+            table, ",".join(["?" for _i in insert_tuple])
+        )
 
     @classmethod
     def make_update(cls, table, set_query, where=None):
@@ -100,10 +97,7 @@ class SqlQuery(object):
         if typepy.is_null_string(set_query):
             raise ValueError("SET query is null")
 
-        query_list = [
-            "UPDATE {:s}".format(Table(table)),
-            "SET {:s}".format(set_query),
-        ]
+        query_list = ["UPDATE {:s}".format(Table(table)), "SET {:s}".format(set_query)]
         if typepy.is_not_null_string(where):
             query_list.append("WHERE {:s}".format(where))
 
@@ -127,7 +121,8 @@ class SqlQuery(object):
         """
 
         return "{:s} IN ({:s})".format(
-            Attr(key), ", ".join([Value(value).to_query() for value in value_list]))
+            Attr(key), ", ".join([Value(value).to_query() for value in value_list])
+        )
 
     @classmethod
     def make_where_not_in(cls, key, value_list):
@@ -147,4 +142,5 @@ class SqlQuery(object):
         """
 
         return "{:s} NOT IN ({:s})".format(
-            Attr(key), ", ".join([Value(value).to_query() for value in value_list]))
+            Attr(key), ", ".join([Value(value).to_query() for value in value_list])
+        )

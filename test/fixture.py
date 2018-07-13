@@ -21,10 +21,8 @@ def con(tmpdir):
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
+        data_matrix=[[1, 2], [3, 4]],
+    )
 
     return con
 
@@ -37,10 +35,8 @@ def con_mix(tmpdir):
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
         attr_name_list=["attr_i", "attr_f", "attr_s"],
-        data_matrix=[
-            [1, 2.2, "aa"],
-            [3, 4.4, "bb"],
-        ])
+        data_matrix=[[1, 2.2, "aa"], [3, 4.4, "bb"]],
+    )
 
     return con
 
@@ -53,10 +49,8 @@ def con_ro(tmpdir):
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
+        data_matrix=[[1, 2], [3, 4]],
+    )
     con.close()
     con.connect(str(p), "r")
 
@@ -71,10 +65,8 @@ def con_profile(tmpdir):
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
+        data_matrix=[[1, 2], [3, 4]],
+    )
     con.commit()
 
     return con
@@ -88,11 +80,9 @@ def con_index(tmpdir):
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ],
-        index_attr_list=["attr_a"])
+        data_matrix=[[1, 2], [3, 4]],
+        index_attr_list=["attr_a"],
+    )
 
     return con
 

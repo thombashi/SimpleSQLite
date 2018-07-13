@@ -69,11 +69,17 @@ def append_table(src_con, dst_con, table_name):
         src_attr_list = src_con.fetch_attr_name_list(table_name)
         dst_attr_list = dst_con.fetch_attr_name_list(table_name)
         if src_attr_list != dst_attr_list:
-            raise ValueError(dedent("""
+            raise ValueError(
+                dedent(
+                    """
                 source and destination attribute is different from each other
                 src: {}
                 dst: {}
-                """.format(src_attr_list, dst_attr_list)))
+                """.format(
+                        src_attr_list, dst_attr_list
+                    )
+                )
+            )
 
     dst_con.create_table_from_tabledata(src_con.select_as_tabledata(table_name))
 
@@ -108,7 +114,8 @@ def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=Tr
         else:
             logger.error(
                 "failed to copy table: the table already exists "
-                "(src_table={}, dst_table={})".format(src_table_name, dst_table_name))
+                "(src_table={}, dst_table={})".format(src_table_name, dst_table_name)
+            )
             return False
 
     result = src_con.select(select="*", table_name=src_table_name)
@@ -116,8 +123,7 @@ def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=Tr
         return False
 
     dst_con.create_table_from_data_matrix(
-        dst_table_name,
-        src_con.fetch_attr_name_list(src_table_name),
-        result.fetchall())
+        dst_table_name, src_con.fetch_attr_name_list(src_table_name), result.fetchall()
+    )
 
     return True

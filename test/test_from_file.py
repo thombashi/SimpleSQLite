@@ -15,10 +15,7 @@ from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
 class Test_SimpleSQLite_create_table_from_tabledata(object):
-
-    @pytest.mark.parametrize(["filename"], [
-        ["python - Wiktionary.html"],
-    ])
+    @pytest.mark.parametrize(["filename"], [["python - Wiktionary.html"]])
     def test_smoke(self, tmpdir, filename):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")

@@ -14,5 +14,11 @@ from ._logger import set_log_level, set_logger
 from ._sanitizer import SQLiteTableDataSanitizer
 from .core import SQLITE_SYSTEM_TABLE_LIST, SimpleSQLite, connect_sqlite_memdb
 from .error import (
-    AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
-    OperationalError, SqlSyntaxError, TableNotFoundError)
+    AttributeNotFoundError,
+    DatabaseError,
+    NameValidationError,
+    NullDatabaseConnectionError,
+    OperationalError,
+    SqlSyntaxError,
+    TableNotFoundError,
+)

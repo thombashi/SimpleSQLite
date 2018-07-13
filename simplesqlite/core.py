@@ -24,8 +24,13 @@ from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
 from .converter import RecordConvertor
 from .error import (
-    AttributeNotFoundError, DatabaseError, NameValidationError, NullDatabaseConnectionError,
-    OperationalError, TableNotFoundError)
+    AttributeNotFoundError,
+    DatabaseError,
+    NameValidationError,
+    NullDatabaseConnectionError,
+    OperationalError,
+    TableNotFoundError,
+)
 from .query import Attr, AttrList, Select, Table, Value, make_index_name
 from .sqlquery import SqlQuery
 from sqliteschema import SQLITE_SYSTEM_TABLE_LIST, SQLiteSchemaExtractor
@@ -212,8 +217,7 @@ class SimpleSQLite(object):
 
         self.close()
 
-        logger.debug("connect to a SQLite database: path='{}', mode={}".format(
-            database_path, mode))
+        logger.debug("connect to a SQLite database: path='{}', mode={}".format(database_path, mode))
 
         if mode == "r":
             self.__verify_db_file_existence(database_path)
@@ -292,11 +296,12 @@ class SimpleSQLite(object):
             raise OperationalError(message="\n".join(message_list))
 
         if self.__is_profile:
-            self.__dict_query_count[query] = (self.__dict_query_count.get(query, 0) + 1)
+            self.__dict_query_count[query] = self.__dict_query_count.get(query, 0) + 1
 
             elapse_time = time.time() - exec_start_time
             self.__dict_query_totalexectime[query] = (
-                self.__dict_query_totalexectime.get(query, 0) + elapse_time)
+                self.__dict_query_totalexectime.get(query, 0) + elapse_time
+            )
 
         return result
 
@@ -330,7 +335,8 @@ class SimpleSQLite(object):
 
         return self.execute_query(
             six.text_type(Select(select, table_name, where, extra)),
-            logging.getLogger().findCaller())
+            logging.getLogger().findCaller(),
+        )
 
     def select_as_dataframe(self, table_name, column_list=None, where=None, extra=None):
         """
@@ -362,7 +368,8 @@ class SimpleSQLite(object):
             column_list = self.fetch_attr_name_list(table_name)
 
         result = self.select(
-            select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
+            select=AttrList(column_list), table_name=table_name, where=where, extra=extra
+        )
 
         if result is None:
             return pandas.DataFrame()
@@ -394,13 +401,13 @@ class SimpleSQLite(object):
             column_list = self.fetch_attr_name_list(table_name)
 
         result = self.select(
-            select=AttrList(column_list), table_name=table_name, where=where, extra=extra)
+            select=AttrList(column_list), table_name=table_name, where=where, extra=extra
+        )
 
         if result is None:
             return TableData(table_name=None, header_list=[], row_list=[])
 
-        return TableData(
-            table_name=table_name, header_list=column_list, row_list=result.fetchall())
+        return TableData(table_name=table_name, header_list=column_list, row_list=result.fetchall())
 
     def select_as_dict(self, table_name, column_list=None, where=None, extra=None):
         """
@@ -423,8 +430,11 @@ class SimpleSQLite(object):
             :ref:`example-select-as-dict`
         """
 
-        return self.select_as_tabledata(
-            table_name, column_list, where, extra).as_dict().get(table_name)
+        return (
+            self.select_as_tabledata(table_name, column_list, where, extra)
+            .as_dict()
+            .get(table_name)
+        )
 
     def select_as_memdb(self, table_name, column_list=None, where=None, extra=None):
         """
@@ -447,8 +457,9 @@ class SimpleSQLite(object):
         """
 
         memdb = connect_sqlite_memdb()
-        memdb.create_table_from_tabledata(self.select_as_tabledata(
-            table_name, column_list, where, extra))
+        memdb.create_table_from_tabledata(
+            self.select_as_tabledata(table_name, column_list, where, extra)
+        )
 
         return memdb
 
@@ -493,15 +504,18 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        logger.debug("insert {number} records into {table}".format(
-            number=len(record_list) if record_list else 0,
-            table=table_name))
+        logger.debug(
+            "insert {number} records into {table}".format(
+                number=len(record_list) if record_list else 0, table=table_name
+            )
+        )
 
         if typepy.is_empty_sequence(record_list):
             return 0
 
         record_list = RecordConvertor.to_record_list(
-            self.fetch_attr_name_list(table_name), record_list)
+            self.fetch_attr_name_list(table_name), record_list
+        )
         query = SqlQuery.make_insert(table_name, record_list[0])
 
         if self.debug_query:
@@ -515,12 +529,12 @@ class SimpleSQLite(object):
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             raise OperationalError(
-                "{:s}({:d}) {:s}: failed to execute query:\n".format(
-                    file_path, line_no, func_name) +
-                "  query={}\n".format(query) +
-                "  msg='{}'\n".format(str(e)) +
-                "  db={}\n".format(self.database_path) +
-                "  records={}\n".format(record_list[:2]))
+                "{:s}({:d}) {:s}: failed to execute query:\n".format(file_path, line_no, func_name)
+                + "  query={}\n".format(query)
+                + "  msg='{}'\n".format(str(e))
+                + "  db={}\n".format(self.database_path)
+                + "  records={}\n".format(record_list[:2])
+            )
 
         return len(record_list)
 
@@ -583,7 +597,8 @@ class SimpleSQLite(object):
             return None
 
         result = self.execute_query(
-            Select(select, table_name, where, extra), logging.getLogger().findCaller())
+            Select(select, table_name, where, extra), logging.getLogger().findCaller()
+        )
         if result is None:
             return None
 
@@ -677,7 +692,9 @@ class SimpleSQLite(object):
 
         result = self.execute_query(
             "SELECT sql FROM sqlite_master WHERE type='table' and name={:s}".format(
-                Value(table_name)))
+                Value(table_name)
+            )
+        )
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
 
@@ -687,10 +704,7 @@ class SimpleSQLite(object):
 
             return [key, value]
 
-        return dict([
-            get_entry(item.split(" "))
-            for item in match.group().strip("()").split(", ")
-        ])
+        return dict([get_entry(item.split(" ")) for item in match.group().strip("()").split(", ")])
 
     def fetch_num_records(self, table_name, where=None):
         """
@@ -737,7 +751,8 @@ class SimpleSQLite(object):
         con_tmp = connect_sqlite_memdb()
         try:
             con_tmp.create_table_from_data_matrix(
-                profile_table_name, attr_name_list, data_matrix=value_matrix)
+                profile_table_name, attr_name_list, data_matrix=value_matrix
+            )
         except ValueError:
             return []
 
@@ -746,7 +761,9 @@ class SimpleSQLite(object):
                 select="{:s},SUM({:s}),SUM({:s})".format(*attr_name_list),
                 table_name=profile_table_name,
                 extra="GROUP BY {:s} ORDER BY {:s} DESC LIMIT {:d}".format(
-                    attr_name_list[0], attr_name_list[1], profile_count))
+                    attr_name_list[0], attr_name_list[1], profile_count
+                ),
+            )
         except sqlite3.OperationalError:
             return []
         if result is None:
@@ -938,8 +955,7 @@ class SimpleSQLite(object):
             return False
 
         not_exist_field_list = [
-            attr_name for attr_name in attr_name_list
-            if not self.has_attr(table_name, attr_name)
+            attr_name for attr_name in attr_name_list if not self.has_attr(table_name, attr_name)
         ]
 
         if not_exist_field_list:
@@ -984,7 +1000,8 @@ class SimpleSQLite(object):
             return
 
         raise TableNotFoundError(
-            "'{}' table not found in '{}' database".format(table_name, self.database_path))
+            "'{}' table not found in '{}' database".format(table_name, self.database_path)
+        )
 
     def verify_attr_existence(self, table_name, attr_name):
         """
@@ -1033,7 +1050,8 @@ class SimpleSQLite(object):
             return
 
         raise AttributeNotFoundError(
-            "'{}' attribute not found in '{}' table".format(attr_name, table_name))
+            "'{}' attribute not found in '{}' table".format(attr_name, table_name)
+        )
 
     def validate_access_permission(self, valid_permission_list):
         """
@@ -1055,7 +1073,9 @@ class SimpleSQLite(object):
         if self.mode not in valid_permission_list:
             raise IOError(
                 "invalid access: expected-mode='{}', current-mode='{}'".format(
-                    "' or '".join(valid_permission_list), self.mode))
+                    "' or '".join(valid_permission_list), self.mode
+                )
+            )
 
     def drop_table(self, table_name):
         """
@@ -1092,7 +1112,8 @@ class SimpleSQLite(object):
             return True
 
         query = "CREATE TABLE IF NOT EXISTS '{:s}' ({:s})".format(
-            table_name, ", ".join(attr_description_list))
+            table_name, ", ".join(attr_description_list)
+        )
         logger.debug(query)
 
         if self.execute_query(query, logging.getLogger().findCaller()) is None:
@@ -1115,11 +1136,12 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
         self.validate_access_permission(["w", "a"])
 
-        query_format = 'CREATE INDEX IF NOT EXISTS {index:s} ON {table}({attr})'
+        query_format = "CREATE INDEX IF NOT EXISTS {index:s} ON {table}({attr})"
         query = query_format.format(
             index=make_index_name(table_name, attr_name),
             table=Table(table_name),
-            attr=Attr(attr_name))
+            attr=Attr(attr_name),
+        )
 
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
@@ -1146,7 +1168,8 @@ class SimpleSQLite(object):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
-            self, table_name, attr_name_list, data_matrix, index_attr_list=None):
+        self, table_name, attr_name_list, data_matrix, index_attr_list=None
+    ):
         """
         Create a table if not exists. Moreover, insert data into the created
         table.
@@ -1173,7 +1196,8 @@ class SimpleSQLite(object):
 
         self.__create_table_from_tabledata(
             table_data=TableData(table_name, attr_name_list, data_matrix),
-            index_attr_list=index_attr_list)
+            index_attr_list=index_attr_list,
+        )
 
     def create_table_from_tabledata(self, table_data, index_attr_list=None):
         """
@@ -1186,12 +1210,18 @@ class SimpleSQLite(object):
             :py:meth:`.create_table_from_data_matrix`
         """
 
-        self.__create_table_from_tabledata(
-            table_data=table_data, index_attr_list=index_attr_list)
+        self.__create_table_from_tabledata(table_data=table_data, index_attr_list=index_attr_list)
 
     def create_table_from_csv(
-            self, csv_source, table_name="", attr_name_list=(), delimiter=",", quotechar='"',
-            encoding="utf-8", index_attr_list=None):
+        self,
+        csv_source,
+        table_name="",
+        attr_name_list=(),
+        delimiter=",",
+        quotechar='"',
+        encoding="utf-8",
+        index_attr_list=None,
+    ):
         """
         Create a table from a CSV file/text.
 
@@ -1303,7 +1333,8 @@ class SimpleSQLite(object):
 
         self.create_table_from_tabledata(
             TableData.from_dataframe(dataframe=dataframe, table_name=table_name),
-            index_attr_list=index_attr_list)
+            index_attr_list=index_attr_list,
+        )
 
     def rollback(self):
         """
@@ -1375,8 +1406,7 @@ class SimpleSQLite(object):
         try:
             pathvalidate.validate_filename(os.path.basename(database_path))
         except AttributeError:
-            raise TypeError(
-                "database path must be a string: actual={}".format(type(database_path)))
+            raise TypeError("database path must be a string: actual={}".format(type(database_path)))
 
     def __verify_db_file_existence(self, database_path):
         """
@@ -1426,8 +1456,9 @@ class SimpleSQLite(object):
 
     def __extract_attr_desc_list_from_tabledata(self, table_data):
         attr_description_list = []
-        for col, value_type in sorted(six.iteritems(
-                self.__extract_col_type_from_tabledata(table_data))):
+        for col, value_type in sorted(
+            six.iteritems(self.__extract_col_type_from_tabledata(table_data))
+        ):
             attr_name = table_data.header_list[col]
             attr_description_list.append("{} {:s}".format(Attr(attr_name), value_type))
 
@@ -1452,10 +1483,12 @@ class SimpleSQLite(object):
         dp_extractor = dataproperty.DataPropertyExtractor()
         col_dp_list = dp_extractor.to_column_dp_list(table_data.value_dp_matrix)
 
-        return dict([
-            [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
-            for col_idx, col_dp in enumerate(col_dp_list)
-        ])
+        return dict(
+            [
+                [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
+                for col_idx, col_dp in enumerate(col_dp_list)
+            ]
+        )
 
     def __create_table_from_tabledata(self, table_data, index_attr_list=None):
         self.validate_access_permission(["w", "a"])
@@ -1466,10 +1499,12 @@ class SimpleSQLite(object):
             raise ValueError("input table_data is empty: {}".format(table_data))
 
         table_data = SQLiteTableDataSanitizer(
-            table_data, dup_col_handler=self.dup_col_handler).normalize()
+            table_data, dup_col_handler=self.dup_col_handler
+        ).normalize()
 
         self.create_table(
-            table_data.table_name, self.__extract_attr_desc_list_from_tabledata(table_data))
+            table_data.table_name, self.__extract_attr_desc_list_from_tabledata(table_data)
+        )
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attr_list):
             self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))

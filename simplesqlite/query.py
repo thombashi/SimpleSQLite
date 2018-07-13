@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -19,14 +19,12 @@ from .error import SqlSyntaxError
 
 @six.add_metaclass(abc.ABCMeta)
 class QueryItemInterface(object):
-
     @abc.abstractmethod
     def to_query(self):  # pragma: no cover
         pass
 
 
 class QueryItem(QueryItemInterface):
-
     def __init__(self, value):
         try:
             self._value = value.strip()
@@ -90,7 +88,8 @@ class Attr(QueryItem):
 
     __RE_NEED_QUOTE = re.compile("[{:s}]".format(re.escape("[]_")))
     __RE_NEED_BRACKET = re.compile(
-        "[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@")))
+        "[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@"))
+    )
     __RE_SANITIZE = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
 
     @classmethod
@@ -254,8 +253,8 @@ class Where(QueryItem):
                 return "{} IS NOT NULL".format(Attr(self.key))
 
             raise SqlSyntaxError(
-                "Invalid operator ({:s}) with None right-hand side".format(
-                    self.__cmp_operator))
+                "Invalid operator ({:s}) with None right-hand side".format(self.__cmp_operator)
+            )
 
         return "{} {:s} {}".format(Attr(self.key), self.__cmp_operator, Value(self.value))
 
@@ -296,10 +295,7 @@ class Select(QueryItem):
             raise ValueError("SELECT query required")
 
     def to_query(self):
-        query_list = [
-            "SELECT {}".format(self.__select),
-            "FROM {}".format(Table(self.__table)),
-        ]
+        query_list = ["SELECT {}".format(self.__select), "FROM {}".format(Table(self.__table))]
 
         if self.__where:
             query_list.append("WHERE {}".format(self.__where))
@@ -310,12 +306,10 @@ class Select(QueryItem):
 
 
 class And(list, QueryItemInterface):
-
     def __init__(self, where_list):
         for where in where_list:
             if not isinstance(where, (six.text_type, Where)):
-                raise TypeError(
-                    "where clause item must be either string or Where class instance")
+                raise TypeError("where clause item must be either string or Where class instance")
 
         super(And, self).__init__(where_list)
 
@@ -335,9 +329,11 @@ def make_index_name(table_name, attr_name):
 
     re_invalid_chars = re.compile(
         "[{:s}]".format(re.escape("".join(ascii_symbol_list + unprintable_ascii_char_list))),
-        re.UNICODE)
+        re.UNICODE,
+    )
 
     index_hash = hashlib.md5((table_name + attr_name).encode("utf8")).hexdigest()[:4]
 
     return "{:s}_{:s}_index_{}".format(
-        re_invalid_chars.sub("", table_name), re_invalid_chars.sub("", attr_name), index_hash)
+        re_invalid_chars.sub("", table_name), re_invalid_chars.sub("", attr_name), index_hash
+    )

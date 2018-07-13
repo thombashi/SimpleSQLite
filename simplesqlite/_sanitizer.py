@@ -13,7 +13,11 @@ import pathvalidate as pv
 import typepy
 from six.moves import range
 from tabledata import (
-    DataError, InvalidHeaderNameError, InvalidTableNameError, convert_idx_to_alphabet)
+    DataError,
+    InvalidHeaderNameError,
+    InvalidTableNameError,
+    convert_idx_to_alphabet,
+)
 from tabledata.normalizer import AbstractTableDataNormalizer
 
 from .converter import RecordConvertor
@@ -32,7 +36,8 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             raise NameValidationError("table_name is empty")
 
         self.__upper_header_list = [
-            header.upper() for header in self._tabledata.header_list if header]
+            header.upper() for header in self._tabledata.header_list if header
+        ]
         self.__dup_col_handler = dup_col_handler
 
     def _preprocess_table_name(self):
@@ -44,8 +49,9 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
             return new_name.strip("_")
         except TypeError:
-            raise NameValidationError("table name must be a string: actual='{}'".format(
-                self._tabledata.table_name))
+            raise NameValidationError(
+                "table name must be a string: actual='{}'".format(self._tabledata.table_name)
+            )
 
     def _validate_table_name(self, table_name):
         try:
@@ -96,7 +102,8 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
                 raise DataError("header list and data body are empty")
 
         attr_name_list = AttrList.sanitize(
-            super(SQLiteTableDataSanitizer, self)._normalize_header_list())
+            super(SQLiteTableDataSanitizer, self)._normalize_header_list()
+        )
 
         try:
             for attr_name in attr_name_list:
@@ -114,8 +121,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             if self.__dup_col_handler == "error":
                 raise ValueError("duplicate column name: {}".format(key))
 
-            rename_target_idx_list = [
-                i for i, attr in enumerate(attr_name_list) if attr == key][1:]
+            rename_target_idx_list = [i for i, attr in enumerate(attr_name_list) if attr == key][1:]
 
             suffix_no = 0
             for rename_target_idx in rename_target_idx_list:
@@ -131,8 +137,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         return attr_name_list
 
     def _normalize_row_list(self, normalize_header_list):
-        return RecordConvertor.to_record_list(
-            normalize_header_list, self._tabledata.row_list)
+        return RecordConvertor.to_record_list(normalize_header_list, self._tabledata.row_list)
 
     def __get_default_header(self, col_idx):
         i = 0

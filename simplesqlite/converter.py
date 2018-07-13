@@ -10,7 +10,6 @@ from decimal import Decimal
 
 
 class RecordConvertor(object):
-
     @staticmethod
     def __to_sqlite_element(value):
         if isinstance(value, Decimal):
@@ -38,10 +37,7 @@ class RecordConvertor(object):
 
         try:
             # from a dictionary to a list
-            return [
-                cls.__to_sqlite_element(values.get(attr_name))
-                for attr_name in attr_name_list
-            ]
+            return [cls.__to_sqlite_element(values.get(attr_name)) for attr_name in attr_name_list]
         except AttributeError:
             pass
 

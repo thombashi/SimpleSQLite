@@ -26,6 +26,7 @@ def set_logger(is_enable):
     tabledata.set_logger(is_enable)
     try:
         import pytablereader
+
         pytablereader.set_logger(is_enable)
     except ImportError:
         pass
@@ -58,6 +59,7 @@ def set_log_level(log_level):
     tabledata.set_log_level(log_level)
     try:
         import pytablereader
+
         pytablereader.set_log_level(log_level)
     except ImportError:
         pass
