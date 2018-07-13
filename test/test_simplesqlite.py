@@ -427,8 +427,7 @@ class Test_SimpleSQLite_get_profile(object):
 
 class Test_SimpleSQLite_fetch_sqlite_master(object):
     def test_normal(self, con_index):
-        print(json.dumps(con_index.fetch_sqlite_master(), indent=4))
-        assert con_index.fetch_sqlite_master() == [
+        expected = [
             {
                 "tbl_name": "test_table",
                 "sql": 'CREATE TABLE \'test_table\' ("attr_a" INTEGER, "attr_b" INTEGER)',
@@ -444,6 +443,12 @@ class Test_SimpleSQLite_fetch_sqlite_master(object):
                 "rootpage": 3,
             },
         ]
+        actual = con_index.fetch_sqlite_master()
+        print_test_result(
+            expected=json.dumps(expected, indent=4), actual=json.dumps(actual, indent=4)
+        )
+
+        assert expected == actual
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):

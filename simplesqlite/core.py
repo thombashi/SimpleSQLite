@@ -824,19 +824,8 @@ class SimpleSQLite(object):
         """
 
         self.check_connection()
-        stash_row_factory = self.connection.row_factory
 
-        try:
-            self.set_row_factory(sqlite3.Row)
-
-            sqlite_master_list = []
-            result = self.execute_query("select * from sqlite_master")
-            for item in result.fetchall():
-                sqlite_master_list.append(dict([[key, item[key]] for key in item.keys()]))
-        finally:
-            self.set_row_factory(stash_row_factory)
-
-        return sqlite_master_list
+        return SQLiteSchemaExtractor(self).fetch_sqlite_master()
 
     def has_table(self, table_name):
         """
