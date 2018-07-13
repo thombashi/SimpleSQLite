@@ -7,6 +7,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import logbook
+import sqliteschema
 import tabledata
 
 
@@ -24,6 +25,7 @@ def set_logger(is_enable):
         logger.disable()
 
     tabledata.set_logger(is_enable)
+    sqliteschema.set_logger(is_enable)
     try:
         import pytablereader
 
@@ -57,6 +59,7 @@ def set_log_level(log_level):
 
     logger.level = log_level
     tabledata.set_log_level(log_level)
+    sqliteschema.set_log_level(log_level)
     try:
         import pytablereader
 
