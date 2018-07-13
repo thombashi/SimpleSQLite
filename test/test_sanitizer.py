@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 import pytablewriter as ptw
 import pytest
-from simplesqlite import NameValidationError, connect_sqlite_memdb, SQLiteTableDataSanitizer
+from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_sqlite_memdb
 from tabledata import TableData
 
 from ._common import print_test_result

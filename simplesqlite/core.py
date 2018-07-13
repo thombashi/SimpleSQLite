@@ -17,6 +17,7 @@ import pathvalidate
 import six
 import typepy
 from mbstrdecoder import MultiByteStrDecoder
+from sqliteschema import SQLITE_SYSTEM_TABLE_LIST, SQLiteSchemaExtractor
 from tabledata import TableData
 
 from ._func import validate_table_name
@@ -33,7 +34,6 @@ from .error import (
 )
 from .query import Attr, AttrList, Select, Table, Value, make_index_name
 from .sqlquery import SqlQuery
-from sqliteschema import SQLITE_SYSTEM_TABLE_LIST, SQLiteSchemaExtractor
 
 
 MEMORY_DB_NAME = ":memory:"
