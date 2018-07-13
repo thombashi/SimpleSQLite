@@ -477,6 +477,8 @@ class SimpleSQLite(object):
         :param str table: Table name of executing the query.
         :param record_list: Records to be inserted.
         :type record_list: |dict|/|namedtuple|/|list|/|tuple|
+        :return: Number of inserted records.
+        :rtype: int
         :raises IOError: |raises_write_permission|
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -496,7 +498,7 @@ class SimpleSQLite(object):
             table=table_name))
 
         if typepy.is_empty_sequence(record_list):
-            return
+            return 0
 
         record_list = RecordConvertor.to_record_list(
             self.fetch_attr_name_list(table_name), record_list)
@@ -519,6 +521,8 @@ class SimpleSQLite(object):
                 "  msg='{}'\n".format(str(e)) +
                 "  db={}\n".format(self.database_path) +
                 "  records={}\n".format(record_list[:2]))
+
+        return len(record_list)
 
     def update(self, table_name, set_query, where=None):
         """

@@ -261,7 +261,7 @@ class Test_SimpleSQLite_insert_many(object):
         ]
 
         assert con.fetch_num_records(TEST_TABLE_NAME) == 2
-        con.insert_many(TEST_TABLE_NAME, value)
+        assert con.insert_many(TEST_TABLE_NAME, value) == len(value)
         assert con.fetch_num_records(TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
@@ -272,7 +272,7 @@ class Test_SimpleSQLite_insert_many(object):
         [TEST_TABLE_NAME, None],
     ])
     def test_empty(self, con, table_name, value):
-        con.insert_many(TEST_TABLE_NAME, value)
+        assert con.insert_many(TEST_TABLE_NAME, value) == 0
 
     @pytest.mark.parametrize(["table_name", "value", "expected"], [
         [None, None, ValueError],
