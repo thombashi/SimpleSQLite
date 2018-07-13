@@ -563,11 +563,6 @@ class SimpleSQLite(object):
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
-    def get_total_changes(self):
-        # [Deprecated] alias to total_changes
-
-        return self.total_changes
-
     def fetch_value(self, select, table_name, where=None, extra=None):
         """
         Fetch a value from the table. Return |None| if no value matches
@@ -598,11 +593,6 @@ class SimpleSQLite(object):
 
         return fetch[0]
 
-    def get_value(self, select, table_name, where=None, extra=None):
-        # [Deprecated] alias to fetch_value
-
-        return self.fetch_value(select, table_name, where, extra)
-
     def fetch_table_name_list(self, include_system_table=False):
         """
         :return: List of table names in the database.
@@ -631,11 +621,6 @@ class SimpleSQLite(object):
         self.check_connection()
 
         return SQLiteSchemaExtractor(self).fetch_table_name_list()
-
-    def get_table_name_list(self):
-        # [Deprecated] alias to fetch_table_name_list
-
-        return self.fetch_table_name_list()
 
     def fetch_attr_name_list(self, table_name):
         """
@@ -676,11 +661,6 @@ class SimpleSQLite(object):
 
         return SQLiteSchemaExtractor(self).fetch_table_schema(table_name).get_attr_name_list()
 
-    def get_attr_name_list(self, table_name):
-        # [Deprecated] alias to fetch_attr_name_list
-
-        return self.fetch_attr_name_list(table_name)
-
     def fetch_attr_type(self, table_name):
         """
         :return:
@@ -712,11 +692,6 @@ class SimpleSQLite(object):
             for item in match.group().strip("()").split(", ")
         ])
 
-    def get_attr_type(self, table_name):
-        # [Deprecated] alias to fetch_attr_type
-
-        return self.fetch_attr_type(table_name)
-
     def fetch_num_records(self, table_name, where=None):
         """
         Fetch the number of records in a table.
@@ -731,11 +706,6 @@ class SimpleSQLite(object):
         """
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
-
-    def get_num_records(self, table_name, where=None):
-        # [Deprecated] alias to fetch_num_records
-
-        return self.fetch_num_records(table_name, where)
 
     def get_profile(self, profile_count=50):
         """
@@ -850,11 +820,6 @@ class SimpleSQLite(object):
             self.set_row_factory(stash_row_factory)
 
         return sqlite_master_list
-
-    def get_sqlite_master(self):
-        # [Deprecated] alias to fetch_num_records
-
-        return self.fetch_sqlite_master()
 
     def has_table(self, table_name):
         """

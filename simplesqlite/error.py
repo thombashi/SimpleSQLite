@@ -38,12 +38,6 @@ class AttributeNotFoundError(DatabaseError):
     """
 
 
-class InvalidAttributeNameError(ValueError):
-    """[Deprecated]
-    Exception raised when used invalid attribute name for SQLite.
-    """
-
-
 class SqlSyntaxError(Exception):
     """
     Exception raised when a SQLite query syntax is invalid.
