@@ -324,7 +324,7 @@ class Test_SimpleSQLite_update(object):
             con_null.update(table_name=TEST_TABLE_NAME, set_query="hoge")
 
 
-class Test_SimpleSQLite_get_total_changes(object):
+class Test_SimpleSQLite_total_changes(object):
 
     def test_smoke(self, con):
         assert con.total_changes > 0
