@@ -42,6 +42,7 @@ Features
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
+- Simple object-relational mapping (ORM)
 
 Examples
 ==========
