@@ -36,11 +36,7 @@ class Model(object):
         if cls.__attr_name_list:
             return cls.__attr_name_list
 
-        attr_name_list = [
-            attr_name
-            for attr_name in cls.__dict__
-            if not attr_name.startswith("__") and attr_name not in ("connection", "hidden")
-        ]
+        attr_name_list = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
 
         if sys.version_info[:2] >= (3, 5):
             cls.__attr_name_list = attr_name_list
@@ -109,3 +105,11 @@ class Model(object):
     def __validate(cls):
         if cls.connection is None:
             raise DatabaseError("SimpleSQLite connection required")
+
+    @classmethod
+    def __is_attr(cls, attr_name):
+        return (
+            not attr_name.startswith("__")
+            and attr_name not in ("connection", "hidden")
+            and not callable(cls.__dict__.get(attr_name))
+        )
