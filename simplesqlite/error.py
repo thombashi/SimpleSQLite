@@ -18,7 +18,7 @@ class DatabaseError(sqlite3.DatabaseError):
     """
 
 
-class NullDatabaseConnectionError(Exception):
+class NullDatabaseConnectionError(DatabaseError):
     """
     Exception raised when executing an operation of
     :py:class:`~simplesqlite.SimpleSQLite` instance without connection to
