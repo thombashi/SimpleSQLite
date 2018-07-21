@@ -28,7 +28,7 @@ class Column(object):
         self.__primary_key = primary_key
         self.__unique = unique
 
-    def __repr__(self):
+    def get_desc(self):
         constraints = [self.data_type]
 
         if self.__primary_key:
@@ -115,7 +115,7 @@ class Model(object):
             cls.get_table_name(),
             [
                 "{attr} {constraints}".format(
-                    attr=Attr(attr_name), constraints=cls.__dict__.get(attr_name)
+                    attr=Attr(attr_name), constraints=cls.__dict__.get(attr_name).get_desc()
                 )
                 for attr_name in cls.get_attr_name_list()
             ],
