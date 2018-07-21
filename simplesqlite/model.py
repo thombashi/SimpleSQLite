@@ -23,14 +23,21 @@ class Column(object):
     def data_type(self):
         return ""
 
-    def __init__(self, not_null=False):
+    def __init__(self, not_null=False, primary_key=False, unique=False):
         self.__not_null = not_null
+        self.__primary_key = primary_key
+        self.__unique = unique
 
     def __repr__(self):
         constraints = [self.data_type]
 
-        if self.__not_null:
-            constraints.append("NOT NULL")
+        if self.__primary_key:
+            constraints.append("PRIMARY KEY")
+        else:
+            if self.__not_null:
+                constraints.append("NOT NULL")
+            if self.__unique:
+                constraints.append("UNIQUE")
 
         return " ".join(constraints)
 
