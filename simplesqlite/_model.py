@@ -22,6 +22,10 @@ class Model(object):
     __attr_name_list = None
 
     @classmethod
+    def attach(cls, connection):
+        cls.connection = connection
+
+    @classmethod
     def get_table_name(cls):
         if cls.__table_name:
             return cls.__table_name
