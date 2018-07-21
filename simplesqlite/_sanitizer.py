@@ -123,11 +123,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
             rename_target_idx_list = [i for i, attr in enumerate(attr_name_list) if attr == key][1:]
 
-            suffix_no = 0
+            suffix_count = 0
             for rename_target_idx in rename_target_idx_list:
                 while True:
-                    suffix_no += 1
-                    attr_name_candidate = "{:s}_{:d}".format(key, suffix_no)
+                    suffix_count += 1
+                    attr_name_candidate = "{:s}_{:d}".format(key, suffix_count)
                     if attr_name_candidate in attr_name_list:
                         continue
 
