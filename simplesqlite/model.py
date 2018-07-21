@@ -148,6 +148,10 @@ class Model(object):
             [getattr(model_obj, attr_name) for attr_name in cls.get_attr_name_list()],
         )
 
+    @classmethod
+    def commit(cls):
+        cls.__connection.commit()
+
     def __init__(self, *args, **kwargs):
         for attr_name in self.get_attr_name_list():
             setattr(self, attr_name, kwargs.get(attr_name))
