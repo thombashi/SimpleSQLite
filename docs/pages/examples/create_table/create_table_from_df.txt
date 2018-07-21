@@ -17,7 +17,7 @@
         ), table_name="pandas_df")
 
 :Output:
-    .. code-block:: none
+    .. code-block:: sql
         :caption: Output sqlite database file
 
         $ sqlite3 pandas_df.sqlite
