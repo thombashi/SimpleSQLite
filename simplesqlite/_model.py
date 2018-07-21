@@ -18,18 +18,24 @@ from .error import DatabaseError
 class Model(object):
     connection = None
     hidden = False
+    __table_name = None
     __attr_name_list = None
 
     @classmethod
     def get_table_name(cls):
+        if cls.__table_name:
+            return cls.__table_name
+
         table_name = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", cls.__name__)
         table_name = re.sub(r"([a-z\d])([A-Z])", r"\1_\2", table_name)
         table_name = table_name.replace("-", "_").lower()
 
         if cls.hidden:
-            return "_{:s}_".format(table_name)
+            table_name = "_{:s}_".format(table_name)
 
-        return table_name
+        cls.__table_name = table_name
+
+        return cls.__table_name
 
     @classmethod
     def get_attr_name_list(cls):
