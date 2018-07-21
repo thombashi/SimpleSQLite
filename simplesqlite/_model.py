@@ -6,13 +6,57 @@
 
 from __future__ import absolute_import, unicode_literals
 
+import abc
 import re
 import sys
 
+import six
 from simplesqlite.query import Attr, AttrList
 from six.moves import zip
 
 from .error import DatabaseError
+
+
+@six.add_metaclass(abc.ABCMeta)
+class Column(object):
+    @abc.abstractproperty
+    def data_type(self):
+        return ""
+
+    def __init__(self, not_null=False):
+        self.__not_null = not_null
+
+    def __repr__(self):
+        constraints = [self.data_type]
+
+        if self.__not_null:
+            constraints.append("NOT NULL")
+
+        return " ".join(constraints)
+
+
+class Integer(Column):
+    @property
+    def data_type(self):
+        return "INTEGER"
+
+
+class Real(Column):
+    @property
+    def data_type(self):
+        return "REAL"
+
+
+class Text(Column):
+    @property
+    def data_type(self):
+        return "TEXT"
+
+
+class Blob(Column):
+    @property
+    def data_type(self):
+        return "BLOB"
 
 
 class Model(object):
