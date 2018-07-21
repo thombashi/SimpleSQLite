@@ -108,8 +108,11 @@ class Model(object):
 
     @classmethod
     def __is_attr(cls, attr_name):
+        private_var_regexp = re.compile("^_{}__[a-zA-Z]+".format(Model.__name__))
+
         return (
             not attr_name.startswith("__")
+            and private_var_regexp.search(attr_name) is None
             and attr_name not in ("connection", "hidden")
             and not callable(cls.__dict__.get(attr_name))
         )
