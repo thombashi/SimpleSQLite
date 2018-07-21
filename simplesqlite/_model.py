@@ -16,14 +16,14 @@ from .error import DatabaseError
 
 
 class Model(object):
-    connection = None
     hidden = False
+    __connection = None
     __table_name = None
     __attr_name_list = None
 
     @classmethod
     def attach(cls, connection):
-        cls.connection = connection
+        cls.__connection = connection
 
     @classmethod
     def get_table_name(cls):
@@ -59,7 +59,7 @@ class Model(object):
     def create(cls):
         cls.__validate()
 
-        cls.connection.create_table(
+        cls.__connection.create_table(
             cls.get_table_name(),
             [
                 "{attr} {constraints}".format(
@@ -73,7 +73,7 @@ class Model(object):
     def select(cls, where=None, extra=None):
         cls.__validate()
 
-        result = cls.connection.select(
+        result = cls.__connection.select(
             select=AttrList(cls.get_attr_name_list()),
             table_name=cls.get_table_name(),
             where=where,
@@ -91,7 +91,7 @@ class Model(object):
         if type(model_obj).__name__ != cls.__name__:
             raise TypeError("unexpected type: expected={}".format(cls.__name__))
 
-        cls.connection.insert(
+        cls.__connection.insert(
             cls.get_table_name(),
             [getattr(model_obj, attr_name) for attr_name in cls.get_attr_name_list()],
         )
@@ -113,7 +113,7 @@ class Model(object):
 
     @classmethod
     def __validate(cls):
-        if cls.connection is None:
+        if cls.__connection is None:
             raise DatabaseError("SimpleSQLite connection required")
 
     @classmethod
@@ -123,6 +123,6 @@ class Model(object):
         return (
             not attr_name.startswith("__")
             and private_var_regexp.search(attr_name) is None
-            and attr_name not in ("connection", "hidden")
+            and attr_name not in ["hidden"]
             and not callable(cls.__dict__.get(attr_name))
         )
