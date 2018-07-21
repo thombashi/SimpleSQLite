@@ -121,8 +121,8 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             if self.__dup_col_handler == "error":
                 raise ValueError("duplicate column name: {}".format(key))
 
+            # rename duplicate headers
             rename_target_idx_list = [i for i, attr in enumerate(attr_name_list) if attr == key][1:]
-
             suffix_count = 0
             for rename_target_idx in rename_target_idx_list:
                 while True:
