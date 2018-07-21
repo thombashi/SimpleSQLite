@@ -11,7 +11,6 @@ import simplesqlite.query
 from .__version__ import __author__, __copyright__, __email__, __license__, __version__
 from ._func import append_table, copy_table
 from ._logger import set_log_level, set_logger
-from ._model import Model
 from ._sanitizer import SQLiteTableDataSanitizer
 from .core import SQLITE_SYSTEM_TABLE_LIST, SimpleSQLite, connect_sqlite_memdb
 from .error import (
