@@ -16,14 +16,15 @@ from .error import DatabaseError
 
 
 class Model(object):
-    hidden = False
     __connection = None
+    __is_hidden = False
     __table_name = None
     __attr_name_list = None
 
     @classmethod
-    def attach(cls, connection):
+    def attach(cls, connection, is_hidden=False):
         cls.__connection = connection
+        cls.__is_hidden = is_hidden
 
     @classmethod
     def get_table_name(cls):
@@ -34,7 +35,7 @@ class Model(object):
         table_name = re.sub(r"([a-z\d])([A-Z])", r"\1_\2", table_name)
         table_name = table_name.replace("-", "_").lower()
 
-        if cls.hidden:
+        if cls.__is_hidden:
             table_name = "_{:s}_".format(table_name)
 
         cls.__table_name = table_name
@@ -123,6 +124,5 @@ class Model(object):
         return (
             not attr_name.startswith("__")
             and private_var_regexp.search(attr_name) is None
-            and attr_name not in ["hidden"]
             and not callable(cls.__dict__.get(attr_name))
         )
