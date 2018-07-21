@@ -148,7 +148,7 @@ Create a table from pandas.DataFrame
         ), table_name="pandas_df")
 
 :Output:
-    .. code-block::
+    .. code-block:: sql
 
         $ sqlite3 pandas_df.sqlite
         sqlite> .schema
