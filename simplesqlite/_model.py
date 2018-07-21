@@ -9,7 +9,7 @@ from __future__ import absolute_import, unicode_literals
 import re
 import sys
 
-from simplesqlite.query import AttrList
+from simplesqlite.query import Attr, AttrList
 from six.moves import zip
 
 from .error import DatabaseError
@@ -53,7 +53,7 @@ class Model(object):
             cls.get_table_name(),
             [
                 "{attr} {constraints}".format(
-                    attr=attr_name, constraints=cls.__dict__.get(attr_name)
+                    attr=Attr(attr_name), constraints=cls.__dict__.get(attr_name)
                 )
                 for attr_name in cls.get_attr_name_list()
             ],
