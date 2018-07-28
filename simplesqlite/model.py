@@ -20,7 +20,7 @@ from .error import DatabaseError
 @six.add_metaclass(abc.ABCMeta)
 class Column(object):
     @abc.abstractproperty
-    def data_type(self):
+    def sqlite_datatype(self):
         return ""
 
     def __init__(self, not_null=False, primary_key=False, unique=False):
@@ -29,7 +29,7 @@ class Column(object):
         self.__unique = unique
 
     def get_desc(self):
-        constraints = [self.data_type]
+        constraints = [self.sqlite_datatype]
 
         if self.__primary_key:
             constraints.append("PRIMARY KEY")
@@ -44,25 +44,25 @@ class Column(object):
 
 class Integer(Column):
     @property
-    def data_type(self):
+    def sqlite_datatype(self):
         return "INTEGER"
 
 
 class Real(Column):
     @property
-    def data_type(self):
+    def sqlite_datatype(self):
         return "REAL"
 
 
 class Text(Column):
     @property
-    def data_type(self):
+    def sqlite_datatype(self):
         return "TEXT"
 
 
 class Blob(Column):
     @property
-    def data_type(self):
+    def sqlite_datatype(self):
         return "BLOB"
 
 
