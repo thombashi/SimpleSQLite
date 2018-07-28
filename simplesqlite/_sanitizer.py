@@ -43,6 +43,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _preprocess_table_name(self):
         try:
             new_name = pv.sanitize_filename(self._tabledata.table_name, replacement_text="_")
+            new_name = pv.replace_unprintable_char(new_name, replacement_text="")
             new_name = pv.replace_symbol(new_name, replacement_text="_")
             new_name = re.sub("_+", "_", new_name)
             new_name = new_name.replace(" ", "_")
