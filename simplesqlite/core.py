@@ -456,7 +456,7 @@ class SimpleSQLite(object):
         :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
-        memdb = connect_sqlite_memdb()
+        memdb = connect_memdb()
         memdb.create_table_from_tabledata(
             self.select_as_tabledata(table_name, column_list, where, extra)
         )
@@ -748,7 +748,7 @@ class SimpleSQLite(object):
             for query, execute_time in six.iteritems(self.__dict_query_totalexectime)
         ]
         attr_name_list = ("sql_query", "cumulative_time", "count")
-        con_tmp = connect_sqlite_memdb()
+        con_tmp = connect_memdb()
         try:
             con_tmp.create_table_from_data_matrix(
                 profile_table_name, attr_name_list, data_matrix=value_matrix
@@ -1500,7 +1500,7 @@ class SimpleSQLite(object):
         self.commit()
 
 
-def connect_sqlite_memdb():
+def connect_memdb():
     """
     :return: Instance of an in memory database.
     :rtype: SimpleSQLite
@@ -1510,3 +1510,8 @@ def connect_sqlite_memdb():
     """
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
+
+
+def connect_sqlite_memdb():
+    # [Deprecated]
+    return connect_memdb()

@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 
 import pytest
-from simplesqlite import connect_sqlite_memdb
+from simplesqlite import connect_memdb
 
 from ._common import print_test_result
 
@@ -23,7 +23,7 @@ except ImportError:
 @pytest.mark.skipif("PANDAS_IMPORT is False")
 class Test_fromto_pandas_dataframe(object):
     def test_normal(self):
-        con = connect_sqlite_memdb()
+        con = connect_memdb()
         column_list = ["id", "value", "name"]
         dataframe = pandas.DataFrame(
             [[0, 0.1, "a"], [1, 1.1, "bb"], [2, 2.2, "ccc"]], columns=column_list

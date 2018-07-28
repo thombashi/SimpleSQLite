@@ -22,7 +22,7 @@ from simplesqlite import (
     OperationalError,
     SimpleSQLite,
     TableNotFoundError,
-    connect_sqlite_memdb,
+    connect_memdb,
 )
 from simplesqlite.query import Attr, AttrList, Where
 from tabledata import TableData
@@ -61,7 +61,7 @@ class Test_SimpleSQLite_init(object):
 
     @pytest.mark.parametrize(["mode"], [["w"], ["a"]])
     def test_normal_con(self, mode):
-        con = SimpleSQLite(connect_sqlite_memdb().connection, mode)
+        con = SimpleSQLite(connect_memdb().connection, mode)
 
         assert con.database_path is None
         assert con.connection is not None

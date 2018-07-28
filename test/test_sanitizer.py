@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 import pytablewriter as ptw
 import pytest
-from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_sqlite_memdb
+from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 from tabledata import TableData
 
 from ._common import print_test_result
@@ -126,7 +126,7 @@ class Test_SQLiteTableDataSanitizer(object):
             expected=ptw.dump_tabledata(expected), actual=ptw.dump_tabledata(new_tabledata)
         )
 
-        con = connect_sqlite_memdb()
+        con = connect_memdb()
         con.create_table_from_tabledata(new_tabledata)
         assert con.select_as_tabledata(new_tabledata.table_name) == expected
 

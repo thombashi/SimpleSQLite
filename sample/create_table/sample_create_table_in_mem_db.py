@@ -9,7 +9,7 @@ import simplesqlite
 
 
 table_name = "sample_table"
-con = simplesqlite.connect_sqlite_memdb()
+con = simplesqlite.connect_memdb()
 
 # create table -----
 data_matrix = [

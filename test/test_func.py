@@ -11,7 +11,7 @@ from simplesqlite import (
     NameValidationError,
     NullDatabaseConnectionError,
     append_table,
-    connect_sqlite_memdb,
+    connect_memdb,
     copy_table,
 )
 from simplesqlite._func import validate_attr_name, validate_table_name
@@ -122,6 +122,6 @@ class Test_copy_table(object):
 
 class Test_connect_sqlite_db_mem(object):
     def test_normal(self):
-        con_mem = connect_sqlite_memdb()
+        con_mem = connect_memdb()
         assert con_mem is not None
         assert con_mem.database_path == ":memory:"
