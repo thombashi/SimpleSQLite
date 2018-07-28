@@ -141,7 +141,11 @@ class Model(object):
         cls.__validate()
 
         if type(model_obj).__name__ != cls.__name__:
-            raise TypeError("unexpected type: expected={}".format(cls.__name__))
+            raise TypeError(
+                "unexpected type: expected={}, actual={}".format(
+                    cls.__name__, type(model_obj).__name__
+                )
+            )
 
         cls.__connection.insert(
             cls.get_table_name(),
