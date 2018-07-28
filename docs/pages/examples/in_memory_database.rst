@@ -2,9 +2,9 @@
 
 Make an in-memory database
 --------------------------
-:py:func:`~simplesqlite.connect_sqlite_memdb` function can create a SQLite database in memory.
+:py:func:`~simplesqlite.connect_memdb` function can create a SQLite database in memory.
 This function return |SimpleSQLite| instance,
-the instance can execute methods as well as a |SimpleSQLite| instance opened with write mode. 
+the instance can execute methods as well as a |SimpleSQLite| instance opened with write mode.
 
 :Sample Code:
     .. code-block:: python
@@ -16,7 +16,7 @@ the instance can execute methods as well as a |SimpleSQLite| instance opened wit
 
 
         table_name = "sample_table"
-        con = simplesqlite.connect_sqlite_memdb()
+        con = simplesqlite.connect_memdb()
 
         # create table -----
         data_matrix = [
