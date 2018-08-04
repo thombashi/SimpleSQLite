@@ -290,7 +290,7 @@ class SimpleSQLite(object):
             message_list = [
                 "failed to execute query at {:s}({:d}) {:s}".format(file_path, line_no, func_name),
                 "  - query: {}".format(MultiByteStrDecoder(query).unicode_str),
-                "  - msg:   {}".format(str(e)),
+                "  - msg:   {}".format(e),
                 "  - db:    {}".format(self.database_path),
             ]
             raise OperationalError(message="\n".join(message_list))
@@ -531,7 +531,7 @@ class SimpleSQLite(object):
             raise OperationalError(
                 "{:s}({:d}) {:s}: failed to execute query:\n".format(file_path, line_no, func_name)
                 + "  query={}\n".format(query)
-                + "  msg='{}'\n".format(str(e))
+                + "  msg='{}'\n".format(e)
                 + "  db={}\n".format(self.database_path)
                 + "  records={}\n".format(record_list[:2])
             )
