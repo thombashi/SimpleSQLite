@@ -12,10 +12,10 @@ import sys
 
 import six
 import typepy
-from simplesqlite.query import Attr, AttrList
 from six.moves import zip
 
 from .error import DatabaseError
+from .query import Attr, AttrList
 
 
 @six.add_metaclass(abc.ABCMeta)
