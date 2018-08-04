@@ -109,7 +109,7 @@ class Model(object):
 
     @classmethod
     def create(cls):
-        cls.__validate()
+        cls.__validate_connection()
 
         cls.__connection.create_table(
             cls.get_table_name(),
@@ -123,7 +123,7 @@ class Model(object):
 
     @classmethod
     def select(cls, where=None, extra=None):
-        cls.__validate()
+        cls.__validate_connection()
 
         result = cls.__connection.select(
             select=AttrList(cls.get_attr_name_list()),
@@ -138,7 +138,7 @@ class Model(object):
 
     @classmethod
     def insert(cls, model_obj):
-        cls.__validate()
+        cls.__validate_connection()
 
         if type(model_obj).__name__ != cls.__name__:
             raise TypeError(
@@ -172,7 +172,7 @@ class Model(object):
         )
 
     @classmethod
-    def __validate(cls):
+    def __validate_connection(cls):
         if cls.__connection is None:
             raise DatabaseError("SimpleSQLite connection required")
 
