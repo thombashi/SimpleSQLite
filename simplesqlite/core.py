@@ -91,6 +91,10 @@ class SimpleSQLite(object):
         return self.__connection
 
     @property
+    def schema_extractor(self):
+        return SQLiteSchemaExtractor(self)
+
+    @property
     def total_changes(self):
         """
         .. seealso::
@@ -635,7 +639,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        return SQLiteSchemaExtractor(self).fetch_table_name_list()
+        return self.schema_extractor.fetch_table_name_list()
 
     def fetch_attr_name_list(self, table_name):
         """
@@ -674,7 +678,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        return SQLiteSchemaExtractor(self).fetch_table_schema(table_name).get_attr_name_list()
+        return self.schema_extractor.fetch_table_schema(table_name).get_attr_name_list()
 
     def fetch_attr_type(self, table_name):
         """
@@ -825,7 +829,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        return SQLiteSchemaExtractor(self).fetch_sqlite_master()
+        return self.schema_extractor.fetch_sqlite_master()
 
     def has_table(self, table_name):
         """
