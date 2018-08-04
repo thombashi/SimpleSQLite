@@ -23,6 +23,10 @@ class Column(object):
     def sqlite_datatype(self):
         return ""
 
+    @property
+    def not_null(self):
+        return self.__not_null
+
     def __init__(self, not_null=False, primary_key=False, unique=False):
         self.__not_null = not_null
         self.__primary_key = primary_key
