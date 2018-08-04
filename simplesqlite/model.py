@@ -11,6 +11,7 @@ import re
 import sys
 
 import six
+import typepy
 from simplesqlite.query import Attr, AttrList
 from six.moves import zip
 
@@ -22,6 +23,10 @@ class Column(object):
     @abc.abstractproperty
     def sqlite_datatype(self):
         return ""
+
+    @abc.abstractproperty
+    def typepy_class(self):
+        return None
 
     @property
     def not_null(self):
@@ -51,11 +56,19 @@ class Integer(Column):
     def sqlite_datatype(self):
         return "INTEGER"
 
+    @property
+    def typepy_class(self):
+        return typepy.Integer
+
 
 class Real(Column):
     @property
     def sqlite_datatype(self):
         return "REAL"
+
+    @property
+    def typepy_class(self):
+        return typepy.RealNumber
 
 
 class Text(Column):
@@ -63,11 +76,19 @@ class Text(Column):
     def sqlite_datatype(self):
         return "TEXT"
 
+    @property
+    def typepy_class(self):
+        return typepy.String
+
 
 class Blob(Column):
     @property
     def sqlite_datatype(self):
         return "BLOB"
+
+    @property
+    def typepy_class(self):
+        return typepy.Binary
 
 
 class Model(object):
@@ -119,7 +140,7 @@ class Model(object):
             cls.get_table_name(),
             [
                 "{attr} {constraints}".format(
-                    attr=Attr(attr_name), constraints=cls.__dict__.get(attr_name).get_desc()
+                    attr=Attr(attr_name), constraints=cls.__get_col(attr_name).get_desc()
                 )
                 for attr_name in cls.get_attr_name_list()
             ],
@@ -151,10 +172,19 @@ class Model(object):
                 )
             )
 
-        cls.__connection.insert(
-            cls.get_table_name(),
-            [getattr(model_obj, attr_name) for attr_name in cls.get_attr_name_list()],
-        )
+        record = []
+        for attr_name in cls.get_attr_name_list():
+            value = getattr(model_obj, attr_name)
+
+            if value is None:
+                record.append(value)
+                continue
+
+            cls.__validate_value(attr_name, value)
+
+            record.append(value)
+
+        cls.__connection.insert(cls.get_table_name(), record)
 
     @classmethod
     def commit(cls):
@@ -181,6 +211,15 @@ class Model(object):
             raise DatabaseError("SimpleSQLite connection required")
 
     @classmethod
+    def __validate_value(cls, attr_name, value):
+        column = cls.__get_col(attr_name)
+
+        if value is None and not column.not_null:
+            return
+
+        column.typepy_class(value).validate()
+
+    @classmethod
     def __is_attr(cls, attr_name):
         private_var_regexp = re.compile("^_{}__[a-zA-Z]+".format(Model.__name__))
 
@@ -189,3 +228,10 @@ class Model(object):
             and private_var_regexp.search(attr_name) is None
             and not callable(cls.__dict__.get(attr_name))
         )
+
+    @classmethod
+    def __get_col(cls, attr_name):
+        if attr_name not in cls.get_attr_name_list():
+            raise ValueError("invalid attribute: {}".format(attr_name))
+
+        return cls.__dict__.get(attr_name)
