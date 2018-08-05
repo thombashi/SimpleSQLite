@@ -42,7 +42,7 @@ Features
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
-- Simple object-relational mapping (ORM)
+- Simple object-relational mapping (ORM) functionality
 
 Examples
 ==========
@@ -53,46 +53,53 @@ Create a table from data matrix
 :Sample Code:
     .. code-block:: python
 
-        import json
         from simplesqlite import SimpleSQLite
+
 
         table_name = "sample_table"
         con = SimpleSQLite("sample.sqlite", "w")
 
         # create table -----
-        data_matrix = [
-            [1, 1.1, "aaa", 1,   1],
-            [2, 2.2, "bbb", 2.2, 2.2],
-            [3, 3.3, "ccc", 3,   "ccc"],
-        ]
+        data_matrix = [[1, 1.1, "aaa", 1, 1], [2, 2.2, "bbb", 2.2, 2.2], [3, 3.3, "ccc", 3, "ccc"]]
         con.create_table_from_data_matrix(
             table_name,
             attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-            data_matrix=data_matrix)
+            data_matrix=data_matrix,
+        )
+
+        # display data type for each column in the table -----
+        print(con.schema_extractor.fetch_table_schema(table_name).dumps())
 
         # display values in the table -----
-        print(con.fetch_attr_name_list(table_name))
+        print("records:")
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
             print(record)
 
-        # display data type for each column in the table -----
-        print(json.dumps(con.fetch_attr_type(table_name), indent=4))
-
 :Output:
     .. code-block::
 
-        ['attr_a', 'attr_b', 'attr_c', 'attr_d', 'attr_e']
-        (1, 1.1, u'aaa', 1.0, u'1')
-        (2, 2.2, u'bbb', 2.2, u'2.2')
-        (3, 3.3, u'ccc', 3.0, u'ccc')
-        {
-            "attr_b": " REAL",
-            "attr_c": " TEXT",
-            "attr_a": " INTEGER",
-            "attr_d": " REAL",
-            "attr_e": " TEXT"
-        }
+        .. table:: sample_table
+
+            +---------+-------+-----------+--------+------+-----+
+            |Attribute| Type  |PRIMARY KEY|NOT NULL|UNIQUE|Index|
+            +=========+=======+===========+========+======+=====+
+            |attr_a   |INTEGER|           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+            |attr_b   |REAL   |           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+            |attr_c   |TEXT   |           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+            |attr_d   |REAL   |           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+            |attr_e   |TEXT   |           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+
+
+        records:
+        (1, 1.1, 'aaa', 1.0, '1')
+        (2, 2.2, 'bbb', 2.2, '2.2')
+        (3, 3.3, 'ccc', 3.0, 'ccc')
 
 Create a table from CSV
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,8 +255,8 @@ Insert list/tuple/namedtuple
         (8, 8.8, u'ggg', 8.88, u'foobar')
         (9, 9.9, u'ggg', 9.99, u'hogehoge')
 
-Get Data from a table as pandas DataFrame
--------------------------------------------
+Fetch data from a table as pandas DataFrame
+---------------------------------------------
 :Sample Code:
     .. code-block:: python
 
@@ -276,6 +283,60 @@ Get Data from a table as pandas DataFrame
         0  1  1.1  aaa  1.0    1
         1  2  2.2  bbb  2.2  2.2
         2  3  3.3  ccc  3.0  ccc
+
+ORM functionality
+-------------------
+:Sample Code:
+    .. code-block:: python
+
+        from simplesqlite import connect_memdb
+        from simplesqlite.model import Integer, Model, Real, Text
+
+
+        class Sample(Model):
+            foo_id = Integer(not_null=True)
+            name = Text(not_null=True, unique=True)
+            value = Real()
+
+
+        def main():
+            con = connect_memdb()
+
+            Sample.attach(con)
+            Sample.create()
+            Sample.insert(Sample(foo_id=11, name="abc", value=0.1))
+            Sample.insert(Sample(foo_id=22, name="xyz", value=1.11))
+
+            print(Sample.fetch_schema().dumps())
+            print("records:")
+            for record in Sample.select():
+                print("  {}".format(record))
+
+            return 0
+
+
+        if __name__ == "__main__":
+            sys.exit(main())
+
+:Output:
+    .. code-block::
+
+        .. table:: sample
+
+            +---------+-------+-----------+--------+------+-----+
+            |Attribute| Type  |PRIMARY KEY|NOT NULL|UNIQUE|Index|
+            +=========+=======+===========+========+======+=====+
+            |foo_id   |INTEGER|           |X       |      |     |
+            +---------+-------+-----------+--------+------+-----+
+            |name     |TEXT   |           |X       |X     |     |
+            +---------+-------+-----------+--------+------+-----+
+            |value    |REAL   |           |        |      |     |
+            +---------+-------+-----------+--------+------+-----+
+
+
+        records:
+        Sample: foo_id=11, name=abc, value=0.1
+        Sample: foo_id=22, name=xyz, value=1.11
 
 For more information
 ----------------------
