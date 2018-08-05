@@ -8,7 +8,6 @@ exclude = """
 | _build/
 | build/
 | dist/
-| sample/
 | _sandbox/
 | docs/conf.py
 | setup.py
