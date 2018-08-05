@@ -191,6 +191,10 @@ class Model(object):
     def commit(cls):
         cls.__connection.commit()
 
+    @classmethod
+    def fetch_schema(cls):
+        return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
+
     def __init__(self, *args, **kwargs):
         for attr_name in self.get_attr_name_list():
             setattr(self, attr_name, kwargs.get(attr_name))
