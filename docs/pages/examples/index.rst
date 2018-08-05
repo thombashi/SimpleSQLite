@@ -8,5 +8,6 @@ Examples
    insert_record
    update
    select_as/index
+   orm/index
    get_profile
    in_memory_database
