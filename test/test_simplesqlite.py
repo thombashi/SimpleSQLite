@@ -66,7 +66,7 @@ class Test_SimpleSQLite_init(object):
         assert con.connection
 
         con = SimpleSQLite(connect_memdb(), mode)
-        assert con.database_path is None
+        assert con.database_path
         assert con.connection
 
     @pytest.mark.parametrize(
