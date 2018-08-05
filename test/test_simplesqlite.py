@@ -62,9 +62,12 @@ class Test_SimpleSQLite_init(object):
     @pytest.mark.parametrize(["mode"], [["w"], ["a"]])
     def test_normal_con(self, mode):
         con = SimpleSQLite(connect_memdb().connection, mode)
-
         assert con.database_path is None
-        assert con.connection is not None
+        assert con.connection
+
+        con = SimpleSQLite(connect_memdb(), mode)
+        assert con.database_path is None
+        assert con.connection
 
     @pytest.mark.parametrize(
         ["value", "mode", "expected"],

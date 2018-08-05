@@ -123,6 +123,10 @@ class SimpleSQLite(object):
         self.__mode = mode
         self.__is_profile = profile
 
+        if isinstance(database_src, SimpleSQLite):
+            self.__connection = database_src.connection
+            return
+
         if isinstance(database_src, sqlite3.Connection):
             self.__connection = database_src
             return
