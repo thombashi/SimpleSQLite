@@ -197,13 +197,8 @@ class SimpleSQLite(object):
         """
 
         if self.connection is None:
-            if self.__delayed_connect():
-                return
-
-            raise NullDatabaseConnectionError("null database connection")
-
-        if typepy.is_null_string(self.database_path):
-            raise NullDatabaseConnectionError("null database file path")
+            if not self.__delayed_connect():
+                raise NullDatabaseConnectionError("null database connection")
 
     def connect(self, database_path, mode="a"):
         """
