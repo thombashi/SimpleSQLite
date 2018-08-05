@@ -11,32 +11,20 @@ con = SimpleSQLite("sample.sqlite", "w")
 con.create_table_from_data_matrix(
     table_name,
     attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-    data_matrix=[[1, 1.1, "aaa", 1,   1]])
+    data_matrix=[[1, 1.1, "aaa", 1, 1]],
+)
 
 con.insert(
     table_name,
-    record={
-        "attr_a": 4,
-        "attr_b": 4.4,
-        "attr_c": "ddd",
-        "attr_d": 4.44,
-        "attr_e": "hoge",
-    })
+    record={"attr_a": 4, "attr_b": 4.4, "attr_c": "ddd", "attr_d": 4.44, "attr_e": "hoge"},
+)
 con.insert_many(
     table_name,
     row_list=[
-        {
-            "attr_a": 5,
-            "attr_b": 5.5,
-            "attr_c": "eee",
-            "attr_d": 5.55,
-            "attr_e": "foo",
-        },
-        {
-            "attr_a": 6,
-            "attr_c": "fff",
-        },
-    ])
+        {"attr_a": 5, "attr_b": 5.5, "attr_c": "eee", "attr_d": 5.55, "attr_e": "foo"},
+        {"attr_a": 6, "attr_c": "fff"},
+    ],
+)
 
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():

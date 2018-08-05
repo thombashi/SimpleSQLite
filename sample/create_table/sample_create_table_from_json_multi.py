@@ -10,7 +10,8 @@ file_path = "sample_data_multi.json"
 
 # create sample data file ---
 with open(file_path, "w") as f:
-    f.write("""{
+    f.write(
+        """{
         "table_a" : [
             {"attr_b": 4, "attr_c": "a", "attr_a": 1},
             {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
@@ -21,7 +22,8 @@ with open(file_path, "w") as f:
             {"a": 2 },
             {"a": 3, "b": 120.9}
         ]
-    }""")
+    }"""
+    )
 
 # create table ---
 con = SimpleSQLite("sample.sqlite", "w")

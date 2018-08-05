@@ -9,9 +9,8 @@ from simplesqlite import AttributeNotFoundError, SimpleSQLite, TableNotFoundErro
 table_name = "sample_table"
 con = SimpleSQLite("sample.sqlite", "w")
 con.create_table_from_data_matrix(
-    table_name=table_name,
-    attr_name_list=["attr_a", "attr_b"],
-    data_matrix=[[1, "a"], [2, "b"]])
+    table_name=table_name, attr_name_list=["attr_a", "attr_b"], data_matrix=[[1, "a"], [2, "b"]]
+)
 
 con.verify_attr_existence(table_name, "attr_a")
 try:

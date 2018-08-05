@@ -7,12 +7,7 @@ from simplesqlite import SimpleSQLite
 
 
 with open("sample_data.csv", "w") as f:
-    f.write("\n".join([
-        '"attr_a","attr_b","attr_c"',
-        '1,4,"a"',
-        '2,2.1,"bb"',
-        '3,120.9,"ccc"',
-    ]))
+    f.write("\n".join(['"attr_a","attr_b","attr_c"', '1,4,"a"', '2,2.1,"bb"', '3,120.9,"ccc"']))
 
 # create table ---
 con = SimpleSQLite("sample.sqlite", "w")
