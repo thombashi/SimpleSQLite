@@ -14,6 +14,7 @@ import six
 import typepy
 from six.moves import zip
 
+from .core import SimpleSQLite
 from .error import DatabaseError
 from .query import Attr, AttrList
 
@@ -98,8 +99,8 @@ class Model(object):
     __attr_name_list = None
 
     @classmethod
-    def attach(cls, connection, is_hidden=False):
-        cls.__connection = connection
+    def attach(cls, database_src, is_hidden=False):
+        cls.__connection = SimpleSQLite(database_src)
         cls.__is_hidden = is_hidden
 
     @classmethod
