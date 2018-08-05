@@ -1355,7 +1355,10 @@ class SimpleSQLite(object):
 
         logger.debug("commit: path='{}'".format(self.database_path))
 
-        self.connection.commit()
+        try:
+            self.connection.commit()
+        except sqlite3.ProgrammingError:
+            pass
 
     def close(self):
         """
