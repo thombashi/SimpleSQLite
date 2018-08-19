@@ -10,7 +10,7 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `tabledata.TableData <http://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `tabledata.TableData <https://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
