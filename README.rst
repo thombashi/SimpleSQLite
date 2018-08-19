@@ -38,7 +38,7 @@ Features
     - CSV file/text
     - JSON file/text
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
-    - `tabledata.TableData <http://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
+    - `tabledata.TableData <https://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
     - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
@@ -341,7 +341,7 @@ ORM functionality
 For more information
 ----------------------
 More examples are available at 
-http://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
+https://simplesqlite.rtfd.io/en/latest/pages/examples/index.html
 
 Installation
 ============
@@ -379,9 +379,9 @@ Test Dependencies
 
 Documentation
 ===============
-http://simplesqlite.rtfd.io/
+https://simplesqlite.rtfd.io/
 
-Related project
+Related Project
 =================
 - `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets SQLite database by using SimpleSQLite
 

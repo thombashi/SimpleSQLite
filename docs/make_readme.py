@@ -71,7 +71,7 @@ def main():
     maker.write_chapter("Documentation")
     maker.write_line_list(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
 
-    maker.write_chapter("Related project")
+    maker.write_chapter("Related Project")
     maker.write_line_list(
         [
             "- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: "
