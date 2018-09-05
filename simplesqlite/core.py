@@ -523,9 +523,15 @@ class SimpleSQLite(object):
         query = SqlQuery.make_insert(table_name, record_list[0])
 
         if self.debug_query:
-            logger.debug(query)
-            for i, record in enumerate(record_list):
-                logger.debug("    record {:4d}: {}".format(i, record))
+            logger.debug(
+                "\n".join(
+                    [query]
+                    + [
+                        "    record {:4d}: {}".format(i, record)
+                        for i, record in enumerate(record_list)
+                    ]
+                )
+            )
 
         try:
             self.connection.executemany(query, record_list)
