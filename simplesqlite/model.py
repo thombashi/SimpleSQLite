@@ -33,10 +33,11 @@ class Column(object):
     def not_null(self):
         return self.__not_null
 
-    def __init__(self, not_null=False, primary_key=False, unique=False):
+    def __init__(self, not_null=False, primary_key=False, unique=False, autoincrement=False):
         self.__not_null = not_null
         self.__primary_key = primary_key
         self.__unique = unique
+        self.__autoincrement = autoincrement
 
     def get_desc(self):
         constraints = [self.sqlite_datatype]
@@ -48,6 +49,9 @@ class Column(object):
                 constraints.append("NOT NULL")
             if self.__unique:
                 constraints.append("UNIQUE")
+
+        if self.__autoincrement and self.sqlite_datatype == "INTEGER":
+            constraints.append("AUTOINCREMENT")
 
         return " ".join(constraints)
 
