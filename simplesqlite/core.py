@@ -126,6 +126,8 @@ class SimpleSQLite(object):
         if isinstance(database_src, SimpleSQLite):
             self.__connection = database_src.connection
             self.__database_path = database_src.database_path
+
+            self.debug_query = database_src.debug_query
             return
 
         if isinstance(database_src, sqlite3.Connection):
