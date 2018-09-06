@@ -609,8 +609,13 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
-        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix, index_attr_list)
-        con.commit()
+        con.create_table_from_data_matrix(
+            table_name=table_name,
+            attr_name_list=attr_name_list,
+            data_matrix=data_matrix,
+            primary_key=None,
+            index_attr_list=index_attr_list,
+        )
 
         # check data ---
         result = con.select(select=AttrList(attr_name_list), table_name=table_name)
@@ -631,6 +636,24 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
 
         assert con.fetch_attr_name_list(table_name) == expected
+
+    @pytest.mark.parametrize(
+        ["table_name", "attr_name_list", "data_matrix", "expected"],
+        [[TEST_TABLE_NAME, ["AA", "BB"], [["a", 1], ["bb", 2]], ["AA", "BB"]]],
+    )
+    def test_normal_primary_key(self, tmpdir, table_name, attr_name_list, data_matrix, expected):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+        table_name = TEST_TABLE_NAME
+
+        con.create_table_from_data_matrix(
+            table_name=table_name,
+            attr_name_list=attr_name_list,
+            data_matrix=data_matrix,
+            primary_key=attr_name_list[0],
+        )
+
+        assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "AA"
 
     def test_normal_symbol_header(self, tmpdir):
         p = tmpdir.join("tmp.db")
