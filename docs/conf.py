@@ -325,7 +325,7 @@ rp_module = u"""
 rp_attr = u"""
 .. |attr_mode| replace:: :py:attr:`.mode`
 
-.. |attr_table_name_description| replace:: 
+.. |attr_table_name_description| replace::
     Table name string.
     Following format specifiers are replaced with specific string.
 
@@ -333,12 +333,15 @@ rp_attr = u"""
 """
 
 rp_method = u"""
-.. |make_table_name| replace:: 
+.. |make_table_name| replace::
     Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
     Following format specifiers are replaced with specific string.
 """
 
 rp_param = u"""
+.. |primary_key| replace::
+    Primary key of the creating table.
+
 .. |index_attr_list| replace::
     List of attribute names that creating indices.
 
@@ -354,10 +357,10 @@ rp_param = u"""
 rp_raises = u"""
 .. |raises_check_connection| replace::
     If not connected to a SQLite database file.
-    
+
 .. |raises_verify_table_existence| replace::
     If the table not found in the database.
-    
+
 .. |raises_operational_error| replace::
     If failed to execute a query.
 
