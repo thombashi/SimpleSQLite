@@ -644,7 +644,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
 
         assert con.fetch_attr_name_list(table_name) == expected
 
-    def test_null(self, con_null):
+    def test_exception_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_table_from_data_matrix(TEST_TABLE_NAME, [], [])
 
