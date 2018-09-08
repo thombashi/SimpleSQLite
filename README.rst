@@ -37,10 +37,10 @@ Features
 - Create table(s) from:
     - CSV file/text
     - JSON file/text
-    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
+    - `pandas.DataFrame <https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://tabledata.readthedocs.io/en/latest/pages/reference/data.html>`__ instance loaded by `pytablereader <https://github.com/thombashi/pytablereader>`__
 - Get data from a table as:
-    - `pandas.DataFrame <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
+    - `pandas.DataFrame <https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html>`__ instance
     - `tabledata.TableData <https://github.com/thombashi/tabledata>`__ instance
 - Simple object-relational mapping (ORM) functionality
 
@@ -359,7 +359,7 @@ Python 2.7+ or 3.4+
 Mandatory Dependencies
 ----------------------------------
 - `DataPropery <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
-- `logbook <http://logbook.readthedocs.io/en/stable/>`__
+- `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
@@ -370,12 +370,12 @@ Mandatory Dependencies
 
 Optional Dependencies
 ----------------------------------
-- `pandas <http://pandas.pydata.org/>`__
+- `pandas <https://pandas.pydata.org/>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 
 Test Dependencies
 ----------------------------------
-- `pytest <http://pytest.org/latest/>`__
+- `pytest <https://docs.pytest.org/en/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
