@@ -68,6 +68,6 @@ can create a table from Google Spreadsheet.
 
     .. seealso::
     
-        http://gspread.readthedocs.io/en/latest/oauth2.html
+        https://gspread.rtfd.io/en/latest/oauth2.html
 
 .. include:: create_table_from_gs.txt
