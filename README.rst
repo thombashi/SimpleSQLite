@@ -11,7 +11,7 @@ SimpleSQLite is a Python library to simplify SQLite database operations: table c
     :target: https://badge.fury.io/py/SimpleSQLite
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
-    :target: https://pypi.python.org/pypi/SimpleSQLite
+    :target: https://pypi.org/project/SimpleSQLite
 
 .. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS
     :target: https://travis-ci.org/thombashi/SimpleSQLite
@@ -363,7 +363,7 @@ Mandatory Dependencies
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
-- `six <https://pypi.python.org/pypi/six/>`__
+- `six <https://pypi.org/project/six/>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `tabledata <https://github.com/thombashi/tabledata>`__
 - `typepy <https://github.com/thombashi/typepy>`__
@@ -376,7 +376,7 @@ Optional Dependencies
 Test Dependencies
 ----------------------------------
 - `pytest <https://docs.pytest.org/en/latest/>`__
-- `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
+- `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Documentation
