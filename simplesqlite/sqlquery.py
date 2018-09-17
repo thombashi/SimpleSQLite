@@ -19,7 +19,6 @@ class SqlQuery(object):
     Support class for making SQLite query.
     """
 
-    __RE_SANITIZE = re.compile("[{:s}]".format(re.escape("%/()[]<>.:;'\"!\# -+=\n\r")))
     __RE_SANITIZE_ATTR = re.compile("[{:s}]".format(re.escape("'\"")))
     __RE_TABLE_STR = re.compile("[{:s}]".format(re.escape("%()-+/.")))
     __RE_TO_ATTR_QUOTE = re.compile("[{:s}]".format(re.escape("[_]")))
@@ -27,29 +26,6 @@ class SqlQuery(object):
     __RE_SPACE = re.compile("[\s]+")
 
     __VALID_WHERE_OPERATION_LIST = ["=", "==", "!=", "<>", ">", ">=", "<", "<="]
-
-    @classmethod
-    def sanitize(cls, query_item):
-        """[Deprecated]
-        Replace invalid characters in a SQLite query with empty characters.
-
-        :param str query_item: String to be sanitized.
-        :return:
-            String that exclude invalid chars.
-            Invalid operators are as follows:
-            ``"%"``, ``"/"``, ``"("``, ``")"``, ``"["``, ``"]"``,
-            ``"<"``, ``">"``, ``"."``, ``":"``, ``";"``, ``"'"``,
-            ``"!"``, ``"\"``, ``"#"``, ``"-"``, ``"+"``, ``"="``,
-            ``"\\n"``, ``"\\r"``
-        :rtype: str
-
-        :Example:
-            >>> from simplesqlite.sqlquery import SqlQuery
-            >>> SqlQuery.sanitize("k<e:y")
-            'key'
-        """
-
-        return cls.__RE_SANITIZE.sub("", query_item)
 
     @classmethod
     def make_insert(cls, table, insert_tuple):
