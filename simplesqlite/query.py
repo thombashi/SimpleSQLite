@@ -54,7 +54,7 @@ class Table(QueryItem):
     """
 
     __RE_NEED_BRACKET = re.compile("[{:s}]".format(re.escape("%()-+/.,")))
-    __RE_NEED_QUOTE = re.compile("[\s]+")
+    __RE_NEED_QUOTE = re.compile(r"[\s]+")
 
     def to_query(self):
         name = self._value
@@ -88,7 +88,7 @@ class Attr(QueryItem):
 
     __RE_NEED_QUOTE = re.compile("[{:s}]".format(re.escape("[]_")))
     __RE_NEED_BRACKET = re.compile(
-        "[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@"))
+        r"[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@"))
     )
     __RE_SANITIZE = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
 
