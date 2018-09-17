@@ -19,14 +19,6 @@ class SqlQuery(object):
     Support class for making SQLite query.
     """
 
-    __RE_SANITIZE_ATTR = re.compile("[{:s}]".format(re.escape("'\"")))
-    __RE_TABLE_STR = re.compile("[{:s}]".format(re.escape("%()-+/.")))
-    __RE_TO_ATTR_QUOTE = re.compile("[{:s}]".format(re.escape("[_]")))
-    __RE_TO_ATTR_BRACKET = re.compile("[{:s}0-9\s#]".format(re.escape("%()-+/.'\"")))
-    __RE_SPACE = re.compile("[\s]+")
-
-    __VALID_WHERE_OPERATION_LIST = ["=", "==", "!=", "<>", ">", ">=", "<", "<="]
-
     @classmethod
     def make_insert(cls, table, insert_tuple):
         """
