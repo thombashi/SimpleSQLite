@@ -81,7 +81,7 @@ class Test_SimpleSQLite_init(object):
             [NOT_EXIT_FILE_PATH, "b", ValueError],
             ["", "r", ValueError],
         ]
-        + [arg_list for arg_list in itertools.product([nan], ["r", "w", "a"], [TypeError])],
+        + [arg_list for arg_list in itertools.product([None, nan], ["r", "w", "a"], [TypeError])],
     )
     def test_exception_invalid_arg(self, value, mode, expected):
         with pytest.raises(expected):

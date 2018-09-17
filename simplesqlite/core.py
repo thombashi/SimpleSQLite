@@ -123,6 +123,9 @@ class SimpleSQLite(object):
         self.__mode = mode
         self.__is_profile = profile
 
+        if database_src is None:
+            raise TypeError("database_src must be not None")
+
         if isinstance(database_src, SimpleSQLite):
             self.__connection = database_src.connection
             self.__database_path = database_src.database_path
