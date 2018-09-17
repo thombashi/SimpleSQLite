@@ -6,8 +6,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-import re
-
 import typepy
 
 from ._func import validate_table_name
