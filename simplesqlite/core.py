@@ -44,10 +44,14 @@ class SimpleSQLite(object):
     Wrapper class for |sqlite3| module.
 
     :param str database_src:
-        SQLite database source:
+        SQLite database source. Acceptable types are:
         (1) File path to a database to be connected.
         (2) sqlite3.Connection instance.
+        (3) SimpleSQLite instance
     :param str mode: Open mode.
+    :param bool delayed_connection:
+        Delaying connection to a database until access to the database the first time,
+        if the value is |True|.
     :param bool profile:
         Recording SQL query execution time profile, if the value is |True|.
 
