@@ -6,8 +6,8 @@
 
 from __future__ import unicode_literals
 
-import pytablewriter as ptw
 import pytest
+from pytablewriter import dump_tabledata
 from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 from tabledata import TableData
 
@@ -122,9 +122,7 @@ class Test_SQLiteTableDataSanitizer(object):
             TableData(table_name, header_list, record_list)
         ).normalize()
 
-        print_test_result(
-            expected=ptw.dump_tabledata(expected), actual=ptw.dump_tabledata(new_tabledata)
-        )
+        print_test_result(expected=dump_tabledata(expected), actual=dump_tabledata(new_tabledata))
 
         con = connect_memdb()
         con.create_table_from_tabledata(new_tabledata)
@@ -172,9 +170,7 @@ class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
             TableData(table_name, header_list, []), dup_col_handler=dup_col_handler
         ).normalize()
 
-        print_test_result(
-            expected=ptw.dump_tabledata(expected), actual=ptw.dump_tabledata(new_tabledata)
-        )
+        print_test_result(expected=dump_tabledata(expected), actual=dump_tabledata(new_tabledata))
 
         assert new_tabledata.equals(expected)
 
