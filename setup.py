@@ -77,8 +77,8 @@ setuptools.setup(
     setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
     tests_require=tests_requires,
     extras_require={
-        "build": "wheel",
-        "release": "releasecmd>=0.0.12",
+        "build": ["wheel"],
+        "release": ["releasecmd>=0.0.12"],
         "test": tests_requires,
         "docs": docs_requires,
     },
