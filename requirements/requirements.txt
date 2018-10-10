@@ -1,9 +1,9 @@
-DataProperty>=0.31.2
+DataProperty>=0.34.0
 logbook
 mbstrdecoder
 msgfy>=0.0.3
-pathvalidate>=0.21.1
+pathvalidate>=0.21.3
 six
-sqliteschema>=0.13.0
-tabledata>=0.0.23
-typepy>=0.2.1
+sqliteschema>=0.13.3
+tabledata>=0.0.24
+typepy>=0.2.4
