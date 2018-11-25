@@ -203,6 +203,18 @@ class Model(object):
         for attr_name in self.get_attr_name_list():
             setattr(self, attr_name, kwargs.get(attr_name))
 
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        if type(self) != type(other):
+            return True
+
+        return self.__dict__ != other.__dict__
+
     def __repr__(self):
         return "{name:s}: {attributes:s}".format(
             name=type(self).__name__,
