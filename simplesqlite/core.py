@@ -1569,5 +1569,5 @@ def connect_memdb():
 
 
 def connect_sqlite_memdb():
-    # [Deprecated]
+    # Deprecated
     return connect_memdb()

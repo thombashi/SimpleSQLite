@@ -16,7 +16,14 @@ from simplesqlite import (
 )
 from simplesqlite._func import validate_attr_name, validate_table_name
 
-from .fixture import TEST_TABLE_NAME, con_empty, con_mix, con_null, con_profile, con_ro
+from .fixture import (  # noqa: W0611
+    TEST_TABLE_NAME,
+    con_empty,
+    con_mix,
+    con_null,
+    con_profile,
+    con_ro,
+)
 
 
 class Test_validate_table_name(object):

@@ -2,9 +2,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import sys
-
-import pytest
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
 
