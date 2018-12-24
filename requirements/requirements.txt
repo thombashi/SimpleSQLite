@@ -4,6 +4,6 @@ mbstrdecoder
 msgfy>=0.0.4
 pathvalidate>=0.22.0
 six
-sqliteschema>=0.13.4
+sqliteschema>=0.13.5
 tabledata>=0.0.25
 typepy>=0.3.0
