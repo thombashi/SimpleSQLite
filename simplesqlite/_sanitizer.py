@@ -11,6 +11,13 @@ import re
 import dataproperty
 import pathvalidate as pv
 import typepy
+from pathvalidate import (
+    InvalidCharError,
+    InvalidReservedNameError,
+    NullNameError,
+    ReservedNameError,
+    ValidReservedNameError,
+)
 from six.moves import range
 from tabledata import (
     DataError,
@@ -20,6 +27,7 @@ from tabledata import (
 )
 from tabledata.normalizer import AbstractTableDataNormalizer
 
+from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .converter import RecordConvertor
 from .error import NameValidationError
 from .query import Attr, AttrList
@@ -56,10 +64,10 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def _validate_table_name(self, table_name):
         try:
-            pv.validate_sqlite_table_name(table_name)
-        except pv.ValidReservedNameError:
+            validate_sqlite_table_name(table_name)
+        except ValidReservedNameError:
             pass
-        except (pv.InvalidReservedNameError, pv.InvalidCharError) as e:
+        except (InvalidReservedNameError, InvalidCharError) as e:
             raise InvalidTableNameError(e)
 
     def _normalize_table_name(self, table_name):
@@ -83,10 +91,10 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def _validate_header(self, header):
         try:
-            pv.validate_sqlite_attr_name(header)
-        except (pv.NullNameError, pv.ReservedNameError):
+            validate_sqlite_attr_name(header)
+        except (NullNameError, ReservedNameError):
             pass
-        except pv.InvalidCharError as e:
+        except InvalidCharError as e:
             raise InvalidHeaderNameError(e)
 
     def _normalize_header(self, header):
@@ -108,8 +116,8 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         try:
             for attr_name in attr_name_list:
-                pv.validate_sqlite_attr_name(attr_name)
-        except pv.ReservedNameError:
+                validate_sqlite_attr_name(attr_name)
+        except ReservedNameError:
             pass
 
         # duplicated attribute name handling ---
