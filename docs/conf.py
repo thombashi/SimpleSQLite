@@ -26,6 +26,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
 ]
 
 intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
