@@ -9,7 +9,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import abc
 import re
 
-import pathvalidate as pv
 import six
 import typepy
 from pathvalidate import (
@@ -22,6 +21,7 @@ from pathvalidate import (
 )
 
 from ._func import validate_table_name
+from ._validator import validate_sqlite_attr_name
 from .error import SqlSyntaxError
 
 
@@ -114,7 +114,7 @@ class Attr(QueryItem):
         need_quote = self.__RE_NEED_QUOTE.search(name) is not None
 
         try:
-            pv.validate_sqlite_attr_name(name)
+            validate_sqlite_attr_name(name)
         except InvalidReservedNameError:
             need_quote = True
         except (ValidReservedNameError, NullNameError, InvalidCharError):

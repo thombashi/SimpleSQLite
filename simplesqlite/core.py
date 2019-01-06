@@ -23,6 +23,7 @@ from tabledata import TableData
 from ._func import validate_table_name
 from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
+from ._validator import validate_sqlite_attr_name
 from .converter import RecordConvertor
 from .error import (
     AttributeNotFoundError,
@@ -1480,7 +1481,7 @@ class SimpleSQLite(object):
             raise NameValidationError("attribute name list is empty")
 
         for attr_name in attr_name_list:
-            pathvalidate.validate_sqlite_attr_name(attr_name)
+            validate_sqlite_attr_name(attr_name)
 
     @staticmethod
     def __extract_list_from_fetch_result(result):
