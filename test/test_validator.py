@@ -10,7 +10,7 @@ from pathvalidate import (
     InvalidReservedNameError,
     NullNameError,
     ValidReservedNameError,
-    unprintable_ascii_char_list,
+    unprintable_ascii_chars,
 )
 from simplesqlite._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 
@@ -192,8 +192,8 @@ class Test_validate_sqlite_table_name(object):
 
     @pytest.mark.parametrize(
         ["value"],
-        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_char_list]
-        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_char_list],
+        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_chars]
+        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
         with pytest.raises(InvalidCharError):
@@ -261,8 +261,8 @@ class Test_validate_sqlite_attr_name(object):
 
     @pytest.mark.parametrize(
         ["value"],
-        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_char_list]
-        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_char_list],
+        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_chars]
+        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
         with pytest.raises(InvalidCharError):

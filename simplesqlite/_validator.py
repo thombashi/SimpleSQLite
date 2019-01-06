@@ -4,7 +4,7 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 
-from pathvalidate import unprintable_ascii_char_list
+from pathvalidate import unprintable_ascii_chars
 from pathvalidate.error import (
     InvalidCharError,
     InvalidReservedNameError,
@@ -148,7 +148,7 @@ __SQLITE_VALID_RESERVED_KEYWORDS_ATTR = __SQLITE_VALID_RESERVED_KEYWORDS + ["IF"
 __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR = __SQLITE_INVALID_RESERVED_KEYWORDS
 
 __RE_INVALID_CHARS = re.compile(
-    "[{:s}]".format(re.escape("".join(unprintable_ascii_char_list))), re.UNICODE
+    "[{:s}]".format(re.escape("".join(unprintable_ascii_chars))), re.UNICODE
 )
 
 
