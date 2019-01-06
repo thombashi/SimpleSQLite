@@ -12,6 +12,14 @@ import re
 import pathvalidate as pv
 import six
 import typepy
+from pathvalidate import (
+    InvalidCharError,
+    InvalidReservedNameError,
+    NullNameError,
+    ValidReservedNameError,
+    ascii_symbols,
+    unprintable_ascii_chars,
+)
 
 from ._func import validate_table_name
 from .error import SqlSyntaxError
@@ -107,9 +115,9 @@ class Attr(QueryItem):
 
         try:
             pv.validate_sqlite_attr_name(name)
-        except pv.InvalidReservedNameError:
+        except InvalidReservedNameError:
             need_quote = True
-        except (pv.ValidReservedNameError, pv.NullNameError, pv.InvalidCharError):
+        except (ValidReservedNameError, NullNameError, InvalidCharError):
             pass
 
         if need_quote:
@@ -325,7 +333,6 @@ class And(list, QueryItemInterface):
 
 def make_index_name(table_name, attr_name):
     import hashlib
-    from pathvalidate import ascii_symbols, unprintable_ascii_chars
 
     re_invalid_chars = re.compile(
         "[{:s}]".format(re.escape("".join(ascii_symbols + unprintable_ascii_chars))), re.UNICODE
