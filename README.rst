@@ -9,22 +9,27 @@ SimpleSQLite is a Python library to simplify SQLite database operations: table c
 
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
+    :alt: PyPI package version
 
 .. image:: https://img.shields.io/pypi/pyversions/SimpleSQLite.svg
     :target: https://pypi.org/project/SimpleSQLite
+    :alt: Supported Python versions
 
-.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS
+.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS-CI
     :target: https://travis-ci.org/thombashi/SimpleSQLite
-    :alt: Linux CI test status
+    :alt: Linux/macOS CI status
 
-.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows
+.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows-CI
     :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
+    :alt: Windows CI status
 
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
+    :alt: Test coverage
 
 .. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
-   :target: https://github.com/thombashi/SimpleSQLite
+    :target: https://github.com/thombashi/SimpleSQLite
+    :alt: GitHub stars
 
 Features
 --------
