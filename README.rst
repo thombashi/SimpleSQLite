@@ -1,11 +1,10 @@
-**SimpleSQLite**
-
-.. contents:: Table of Contents
+.. contents:: **SimpleSQLite**
+   :backlinks: top
    :depth: 2
 
 Summary
 =========
-SimpleSQLite is a Python library to simplify SQLite database operations: table creation, data insertion and get data as other data formats. Simple ORM functionality for SQLite.
+`SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__ is a Python library to simplify SQLite database operations: table creation, data insertion and get data as other data formats. Simple ORM functionality for SQLite.
 
 .. image:: https://badge.fury.io/py/SimpleSQLite.svg
     :target: https://badge.fury.io/py/SimpleSQLite
@@ -15,11 +14,11 @@ SimpleSQLite is a Python library to simplify SQLite database operations: table c
     :target: https://pypi.org/project/SimpleSQLite
     :alt: Supported Python versions
 
-.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS-CI
+.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS%20CI
     :target: https://travis-ci.org/thombashi/SimpleSQLite
     :alt: Linux/macOS CI status
 
-.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows-CI
+.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows%20CI
     :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
     :alt: Windows CI status
 
@@ -364,9 +363,7 @@ Python 2.7+ or 3.4+
 Mandatory Dependencies
 ----------------------------------
 - `DataProperty <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
-- `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
-- `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `six <https://pypi.org/project/six/>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
@@ -375,6 +372,8 @@ Mandatory Dependencies
 
 Optional Dependencies
 ----------------------------------
+- `logbook <https://logbook.readthedocs.io/en/stable/>`__
+    - Logging using logbook if the package installed
 - `pandas <https://pandas.pydata.org/>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 

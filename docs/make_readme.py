@@ -9,8 +9,8 @@ from __future__ import unicode_literals
 
 import sys
 
-import readmemaker
 from path import Path
+from readmemaker import ReadmeMaker
 
 
 PROJECT_NAME = "SimpleSQLite"
@@ -47,7 +47,7 @@ def write_examples(maker):
     maker.write_file(examples_root.joinpath("orm/orm_model.txt"))
 
     maker.write_chapter("For more information")
-    maker.write_line_list(
+    maker.write_lines(
         [
             "More examples are available at ",
             "https://{:s}.rtfd.io/en/latest/pages/examples/index.html".format(PROJECT_NAME.lower()),
@@ -56,7 +56,12 @@ def write_examples(maker):
 
 
 def main():
-    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR, is_make_toc=True)
+    maker = ReadmeMaker(
+        PROJECT_NAME,
+        OUTPUT_DIR,
+        is_make_toc=True,
+        project_url="https://github.com/thombashi/{}".format(PROJECT_NAME),
+    )
 
     maker.write_chapter("Summary")
     maker.write_introduction_file("summary.txt")
@@ -69,10 +74,10 @@ def main():
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")
-    maker.write_line_list(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
+    maker.write_lines(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
 
     maker.write_chapter("Related Project")
-    maker.write_line_list(
+    maker.write_lines(
         [
             "- `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: "
             "CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets "
