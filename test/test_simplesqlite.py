@@ -356,7 +356,7 @@ class Test_SimpleSQLite_has_table(object):
             con_null.has_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_has_attribute(object):
+class Test_SimpleSQLite_has_attr(object):
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],
         [
