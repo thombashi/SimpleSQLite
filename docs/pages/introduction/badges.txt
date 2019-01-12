@@ -6,11 +6,11 @@
     :target: https://pypi.org/project/SimpleSQLite
     :alt: Supported Python versions
 
-.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS-CI
+.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS%20CI
     :target: https://travis-ci.org/thombashi/SimpleSQLite
     :alt: Linux/macOS CI status
 
-.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows-CI
+.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows%20CI
     :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
     :alt: Windows CI status
 

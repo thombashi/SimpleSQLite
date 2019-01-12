@@ -12,9 +12,7 @@ Python 2.7+ or 3.4+
 Mandatory Dependencies
 ----------------------------------
 - `DataProperty <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
-- `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
-- `msgfy <https://github.com/thombashi/msgfy>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `six <https://pypi.org/project/six/>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
@@ -23,6 +21,8 @@ Mandatory Dependencies
 
 Optional Dependencies
 ----------------------------------
+- `logbook <https://logbook.readthedocs.io/en/stable/>`__
+    - Logging using logbook if the package installed
 - `pandas <https://pandas.pydata.org/>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 
