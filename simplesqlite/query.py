@@ -102,7 +102,10 @@ class Attr(QueryItem):
 
     @classmethod
     def sanitize(cls, name):
-        return cls.__RE_SANITIZE.sub("_", name)
+        try:
+            return cls.__RE_SANITIZE.sub("_", name)
+        except TypeError:
+            return six.text_type(name)
 
     def __init__(self, name, operation=""):
         super(Attr, self).__init__(name)

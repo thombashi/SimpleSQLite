@@ -10,6 +10,7 @@ import re
 
 import dataproperty
 import pathvalidate as pv
+import six
 import typepy
 from pathvalidate import (
     InvalidCharError,
@@ -43,9 +44,17 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if typepy.is_null_string(tabledata.table_name):
             raise NameValidationError("table_name is empty")
 
-        self.__upper_header_list = [
-            header.upper() for header in self._tabledata.header_list if header
-        ]
+        self.__upper_header_list = []
+        for header in self._tabledata.header_list:
+            if not header:
+                continue
+            try:
+                header = header.upper()
+            except AttributeError:
+                header = six.text_type(header).upper()
+
+            self.__upper_header_list.append(header)
+
         self.__dup_col_handler = dup_col_handler
 
     def _preprocess_table_name(self):

@@ -47,6 +47,12 @@ class Test_SQLiteTableDataSanitizer(object):
                 TableData("missing_all_header", ["A", "B"], [[1, 2], [3, 4]]),
             ],
             [
+                "num_header",
+                [1, 123456789],
+                [[1, 2], [3, 4]],
+                TableData("num_header", ["1", "123456789"], [[1, 2], [3, 4]]),
+            ],
+            [
                 "missing_part_of_header",
                 ["", "bb", None],
                 [[1, 2, 3]],

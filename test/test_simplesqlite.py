@@ -667,6 +667,18 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
 
         assert con.fetch_attr_name_list(table_name) == expected
 
+    def test_normal_number_header(self, tmpdir):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+        table_name = "numbers"
+        attr_name_list = [1, 123456789]
+        data_matrix = [[1, 2], [1, 2]]
+        expected = ["1", "123456789"]
+
+        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+
+        assert con.fetch_attr_name_list(table_name) == expected
+
     def test_exception_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_table_from_data_matrix(TEST_TABLE_NAME, [], [])
