@@ -78,10 +78,10 @@ setuptools.setup(
     tests_require=tests_requires,
     extras_require={
         "build": ["wheel"],
+        "docs": docs_requires,
         "logging": ["Logbook>=1.1.0,<2.0.0"],
         "release": ["releasecmd>=0.0.12,<0.1.0"],
         "test": tests_requires,
-        "docs": docs_requires,
     },
 
     classifiers=[
