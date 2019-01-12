@@ -1,5 +1,4 @@
 DataProperty>=0.37.1,<1.0.0
-logbook>=1.1.0,<2.0.0
 mbstrdecoder[all]>=0.6.2,<1.0.0
 msgfy>=0.0.4,<0.1.0
 pathvalidate>=0.23.0,<1.0.0
