@@ -12,7 +12,6 @@ import re
 import sqlite3
 
 import dataproperty
-import msgfy
 import pathvalidate
 import six
 import typepy
@@ -617,7 +616,7 @@ class SimpleSQLite(object):
         try:
             self.verify_table_existence(table_name)
         except TableNotFoundError as e:
-            logger.debug(msgfy.to_debug_message(e))
+            logger.debug(e)
             return None
 
         result = self.execute_query(
