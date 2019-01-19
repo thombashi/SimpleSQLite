@@ -729,7 +729,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         result_matrix = result.fetchall()
         assert result_matrix == expected
 
-        actual = con.select_as_tabledata(column_list=value.headers, table_name=value.table_name)
+        actual = con.select_as_tabledata(columns=value.headers, table_name=value.table_name)
         assert actual.equals(value)
 
 

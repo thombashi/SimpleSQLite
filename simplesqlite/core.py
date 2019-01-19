@@ -389,13 +389,13 @@ class SimpleSQLite(object):
 
         return pandas.DataFrame(result.fetchall(), columns=columns)
 
-    def select_as_tabledata(self, table_name, column_list=None, where=None, extra=None):
+    def select_as_tabledata(self, table_name, columns=None, where=None, extra=None):
         """
         Get data in the database and return fetched data as a
         :py:class:`tabledata.TableData` instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list column_list: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_column_list|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`tabledata.TableData` instance.
@@ -410,17 +410,17 @@ class SimpleSQLite(object):
             ``pandas`` package required to execute this method.
         """
 
-        if column_list is None:
-            column_list = self.fetch_attr_name_list(table_name)
+        if columns is None:
+            columns = self.fetch_attr_name_list(table_name)
 
         result = self.select(
-            select=AttrList(column_list), table_name=table_name, where=where, extra=extra
+            select=AttrList(columns), table_name=table_name, where=where, extra=extra
         )
 
         if result is None:
             return TableData(None, [], [])
 
-        return TableData(table_name, column_list, result.fetchall())
+        return TableData(table_name, columns, result.fetchall())
 
     def select_as_dict(self, table_name, column_list=None, where=None, extra=None):
         """
