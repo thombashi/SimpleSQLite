@@ -11,9 +11,7 @@ from simplesqlite import SimpleSQLite
 table_name = "sample_table"
 con = SimpleSQLite("sample.sqlite", "w")
 con.create_table_from_data_matrix(
-    table_name,
-    attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-    data_matrix=[[1, 1.1, "aaa", 1, 1]],
+    table_name, ["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"], [[1, 1.1, "aaa", 1, 1]]
 )
 
 # insert namedtuple
