@@ -498,13 +498,13 @@ class SimpleSQLite(object):
 
         self.insert_many(table_name, [record])
 
-    def insert_many(self, table_name, record_list):
+    def insert_many(self, table_name, records):
         """
         Send an INSERT query with multiple records to the database.
 
         :param str table: Table name of executing the query.
-        :param record_list: Records to be inserted.
-        :type record_list: |dict|/|namedtuple|/|list|/|tuple|
+        :param records: Records to be inserted.
+        :type records: |dict|/|namedtuple|/|list|/|tuple|
         :return: Number of inserted records.
         :rtype: int
         :raises IOError: |raises_write_permission|
@@ -523,31 +523,26 @@ class SimpleSQLite(object):
 
         logger.debug(
             "insert {number} records into {table}".format(
-                number=len(record_list) if record_list else 0, table=table_name
+                number=len(records) if records else 0, table=table_name
             )
         )
 
-        if typepy.is_empty_sequence(record_list):
+        if typepy.is_empty_sequence(records):
             return 0
 
-        record_list = RecordConvertor.to_record_list(
-            self.fetch_attr_name_list(table_name), record_list
-        )
-        query = SqlQuery.make_insert(table_name, record_list[0])
+        records = RecordConvertor.to_record_list(self.fetch_attr_name_list(table_name), records)
+        query = SqlQuery.make_insert(table_name, records[0])
 
         if self.debug_query:
             logger.debug(
                 "\n".join(
                     [query]
-                    + [
-                        "    record {:4d}: {}".format(i, record)
-                        for i, record in enumerate(record_list)
-                    ]
+                    + ["    record {:4d}: {}".format(i, record) for i, record in enumerate(records)]
                 )
             )
 
         try:
-            self.connection.executemany(query, record_list)
+            self.connection.executemany(query, records)
         except (sqlite3.OperationalError, sqlite3.IntegrityError) as e:
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
@@ -556,10 +551,10 @@ class SimpleSQLite(object):
                 + "  query={}\n".format(query)
                 + "  msg='{}'\n".format(e)
                 + "  db={}\n".format(self.database_path)
-                + "  records={}\n".format(record_list[:2])
+                + "  records={}\n".format(records[:2])
             )
 
-        return len(record_list)
+        return len(records)
 
     def update(self, table_name, set_query, where=None):
         """

@@ -20,7 +20,7 @@ con.insert(
 )
 con.insert_many(
     table_name,
-    row_list=[
+    records=[
         {"attr_a": 5, "attr_b": 5.5, "attr_c": "eee", "attr_d": 5.55, "attr_e": "foo"},
         {"attr_a": 6, "attr_c": "fff"},
     ],
