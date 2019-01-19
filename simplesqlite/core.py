@@ -357,7 +357,7 @@ class SimpleSQLite(object):
         :py:class:`pandas.Dataframe` instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_columns|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`pandas.Dataframe` instance.
@@ -395,7 +395,7 @@ class SimpleSQLite(object):
         :py:class:`tabledata.TableData` instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_columns|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`tabledata.TableData` instance.
@@ -428,7 +428,7 @@ class SimpleSQLite(object):
         |OrderedDict| list.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_columns|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return: Table data as |OrderedDict| instances.
@@ -451,7 +451,7 @@ class SimpleSQLite(object):
         in-memory |SimpleSQLite| instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_columns|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return:

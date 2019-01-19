@@ -350,8 +350,8 @@ rp_param = u"""
 .. |arg_select_where| replace:: ``WHERE`` clause for the query.
 .. |arg_select_extra| replace:: Any other SQL clause for the query.
 
-.. |arg_select_as_xx_column_list| replace::
-    Column name list to get data. If the value is |None|,
+.. |arg_select_as_xx_columns| replace::
+    Column names to get data. If the value is |None|,
     get data from all of the columns in the table.
 """
 
