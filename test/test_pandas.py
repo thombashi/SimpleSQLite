@@ -24,9 +24,8 @@ except ImportError:
 class Test_fromto_pandas_dataframe(object):
     def test_normal(self):
         con = connect_memdb()
-        column_list = ["id", "value", "name"]
         dataframe = pandas.DataFrame(
-            [[0, 0.1, "a"], [1, 1.1, "bb"], [2, 2.2, "ccc"]], columns=column_list
+            [[0, 0.1, "a"], [1, 1.1, "bb"], [2, 2.2, "ccc"]], columns=["id", "value", "name"]
         )
         table_name = "tablename"
 
