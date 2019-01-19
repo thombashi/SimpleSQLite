@@ -45,7 +45,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             raise NameValidationError("table_name is empty")
 
         self.__upper_header_list = []
-        for header in self._tabledata.header_list:
+        for header in self._tabledata.headers:
             if not header:
                 continue
             try:
@@ -91,11 +91,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return Attr.sanitize(header)
 
-    def _validate_header_list(self):
-        if typepy.is_empty_sequence(self._tabledata.header_list):
+    def _validate_headers(self):
+        if typepy.is_empty_sequence(self._tabledata.headers):
             raise ValueError("attribute name list is empty")
 
-        for header in self._tabledata.header_list:
+        for header in self._tabledata.headers:
             self._validate_header(header)
 
     def _validate_header(self, header):
@@ -109,18 +109,18 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _normalize_header(self, header):
         return self.__RENAME_TEMPLATE.format(header)
 
-    def _normalize_header_list(self):
-        if typepy.is_empty_sequence(self._tabledata.header_list):
+    def _normalize_headers(self):
+        if typepy.is_empty_sequence(self._tabledata.headers):
             try:
                 return [
                     self.__get_default_header(col_idx)
-                    for col_idx in range(len(self._tabledata.row_list[0]))
+                    for col_idx in range(len(self._tabledata.rows[0]))
                 ]
             except IndexError:
                 raise DataError("header list and data body are empty")
 
         attr_name_list = AttrList.sanitize(
-            super(SQLiteTableDataSanitizer, self)._normalize_header_list()
+            super(SQLiteTableDataSanitizer, self)._normalize_headers()
         )
 
         try:
@@ -154,7 +154,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return attr_name_list
 
-    def _normalize_row_list(self, normalize_headers):
+    def _normalize_rows(self, normalize_headers):
         return RecordConvertor.to_record_list(normalize_headers, self._tabledata.rows)
 
     def __get_default_header(self, col_idx):

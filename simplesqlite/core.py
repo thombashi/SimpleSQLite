@@ -418,9 +418,9 @@ class SimpleSQLite(object):
         )
 
         if result is None:
-            return TableData(table_name=None, header_list=[], row_list=[])
+            return TableData(None, [], [])
 
-        return TableData(table_name=table_name, header_list=column_list, row_list=result.fetchall())
+        return TableData(table_name, column_list, result.fetchall())
 
     def select_as_dict(self, table_name, column_list=None, where=None, extra=None):
         """
@@ -1492,14 +1492,14 @@ class SimpleSQLite(object):
         return [record[0] for record in result]
 
     def __extract_attr_desc_list_from_tabledata(self, table_data, primary_key):
-        if primary_key and primary_key not in table_data.header_list:
+        if primary_key and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
 
         attr_description_list = []
         for col, value_type in sorted(
             six.iteritems(self.__extract_col_type_from_tabledata(table_data))
         ):
-            attr_name = table_data.header_list[col]
+            attr_name = table_data.headers[col]
             attr_description = "{} {:s}".format(Attr(attr_name), value_type)
             if attr_name == primary_key:
                 attr_description += " PRIMARY KEY"

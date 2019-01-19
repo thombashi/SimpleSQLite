@@ -723,13 +723,13 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         con.create_table_from_tabledata(value)
 
         assert con.fetch_table_name_list() == [value.table_name]
-        assert con.fetch_attr_name_list(value.table_name) == value.header_list
+        assert con.fetch_attr_name_list(value.table_name) == value.headers
 
         result = con.select(select="*", table_name=value.table_name)
         result_matrix = result.fetchall()
         assert result_matrix == expected
 
-        actual = con.select_as_tabledata(column_list=value.header_list, table_name=value.table_name)
+        actual = con.select_as_tabledata(column_list=value.headers, table_name=value.table_name)
         assert actual.equals(value)
 
 
