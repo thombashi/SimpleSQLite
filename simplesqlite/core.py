@@ -637,9 +637,9 @@ class SimpleSQLite(object):
 
                 con = SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
-                    table_name="hoge",
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    "hoge",
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
                 print(con.fetch_table_names())
         :Output:
             .. code-block:: python
@@ -674,8 +674,8 @@ class SimpleSQLite(object):
                 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
                     table_name,
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 print(con.fetch_attr_names(table_name))
 
@@ -818,9 +818,9 @@ class SimpleSQLite(object):
                     [3, 3.3, "ccc", 3,   "ccc"],
                 ]
                 con.create_table_from_data_matrix(
-                    table_name="sample_table",
-                    attr_name_list=["a", "b", "c", "d", "e"],
-                    data_matrix=data_matrix,
+                    "sample_table",
+                    ["a", "b", "c", "d", "e"],
+                    data_matrix,
                     index_attr_list=["a"])
 
                 print(json.dumps(con.fetch_sqlite_master(), indent=4))
@@ -862,9 +862,9 @@ class SimpleSQLite(object):
 
                 con = SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
-                    table_name="hoge",
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    "hoge",
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 print(con.has_table("hoge"))
                 print(con.has_table("not_existing"))
@@ -899,9 +899,9 @@ class SimpleSQLite(object):
                 table_name = "sample_table"
                 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
-                    table_name=table_name,
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    table_name,
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 print(con.has_attr(table_name, "attr_a"))
                 print(con.has_attr(table_name, "not_existing"))
@@ -941,9 +941,9 @@ class SimpleSQLite(object):
                 table_name = "sample_table"
                 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
-                    table_name=table_name,
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    table_name,
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 print(con.has_attr_list(table_name, ["attr_a"]))
                 print(con.has_attr_list(table_name, ["attr_a", "attr_b"]))
@@ -991,8 +991,8 @@ class SimpleSQLite(object):
                 con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
                     table_name,
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 con.verify_table_existence(table_name)
                 try:
@@ -1035,9 +1035,9 @@ class SimpleSQLite(object):
                 table_name = "sample_table"
                 con = SimpleSQLite("sample.sqlite", "w")
                 con.create_table_from_data_matrix(
-                    table_name=table_name,
-                    attr_name_list=["attr_a", "attr_b"],
-                    data_matrix=[[1, "a"], [2, "b"]])
+                    table_name,
+                    ["attr_a", "attr_b"],
+                    [[1, "a"], [2, "b"]])
 
                 con.verify_attr_existence(table_name, "attr_a")
                 try:
