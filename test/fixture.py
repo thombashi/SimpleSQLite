@@ -18,11 +18,7 @@ def con(tmpdir):
     p = tmpdir.join("tmp.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[[1, 2], [3, 4]],
-    )
+    con.create_table_from_data_matrix(TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]])
 
     return con
 
@@ -33,9 +29,7 @@ def con_mix(tmpdir):
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_i", "attr_f", "attr_s"],
-        data_matrix=[[1, 2.2, "aa"], [3, 4.4, "bb"]],
+        TEST_TABLE_NAME, ["attr_i", "attr_f", "attr_s"], [[1, 2.2, "aa"], [3, 4.4, "bb"]]
     )
 
     return con
@@ -46,11 +40,7 @@ def con_ro(tmpdir):
     p = tmpdir.join("tmp_readonly.db")
     con = SimpleSQLite(str(p), "w")
 
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[[1, 2], [3, 4]],
-    )
+    con.create_table_from_data_matrix(TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]])
     con.close()
     con.connect(str(p), "r")
 
@@ -62,11 +52,7 @@ def con_profile(tmpdir):
     p = tmpdir.join("tmp_profile.db")
     con = SimpleSQLite(str(p), "w", profile=True)
 
-    con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[[1, 2], [3, 4]],
-    )
+    con.create_table_from_data_matrix(TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]])
     con.commit()
 
     return con
@@ -78,10 +64,7 @@ def con_index(tmpdir):
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_from_data_matrix(
-        table_name=TEST_TABLE_NAME,
-        attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[[1, 2], [3, 4]],
-        index_attr_list=["attr_a"],
+        TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]], index_attr_list=["attr_a"]
     )
 
     return con

@@ -610,9 +610,9 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         table_name = TEST_TABLE_NAME
 
         con.create_table_from_data_matrix(
-            table_name=table_name,
-            attr_name_list=attr_name_list,
-            data_matrix=data_matrix,
+            table_name,
+            attr_name_list,
+            data_matrix,
             primary_key=None,
             index_attr_list=index_attr_list,
         )
@@ -647,10 +647,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         table_name = TEST_TABLE_NAME
 
         con.create_table_from_data_matrix(
-            table_name=table_name,
-            attr_name_list=attr_name_list,
-            data_matrix=data_matrix,
-            primary_key=attr_name_list[0],
+            table_name, attr_name_list, data_matrix, primary_key=attr_name_list[0]
         )
 
         assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "AA"
