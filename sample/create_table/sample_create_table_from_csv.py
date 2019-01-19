@@ -15,7 +15,7 @@ con.create_table_from_csv("sample_data.csv")
 
 # output ---
 table_name = "sample_data"
-print(con.fetch_attr_name_list(table_name))
+print(con.fetch_attr_names(table_name))
 result = con.select(select="*", table_name=table_name)
 for record in result.fetchall():
     print(record)

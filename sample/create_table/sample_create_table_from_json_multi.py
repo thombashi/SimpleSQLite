@@ -32,7 +32,7 @@ con.create_table_from_json(file_path)
 # output ---
 for table_name in con.fetch_table_names():
     print("table: " + table_name)
-    print(con.fetch_attr_name_list(table_name))
+    print(con.fetch_attr_names(table_name))
     result = con.select(select="*", table_name=table_name)
     for record in result.fetchall():
         print(record)

@@ -378,7 +378,7 @@ class SimpleSQLite(object):
         import pandas
 
         if columns is None:
-            columns = self.fetch_attr_name_list(table_name)
+            columns = self.fetch_attr_names(table_name)
 
         result = self.select(
             select=AttrList(columns), table_name=table_name, where=where, extra=extra
@@ -411,7 +411,7 @@ class SimpleSQLite(object):
         """
 
         if columns is None:
-            columns = self.fetch_attr_name_list(table_name)
+            columns = self.fetch_attr_names(table_name)
 
         result = self.select(
             select=AttrList(columns), table_name=table_name, where=where, extra=extra
@@ -526,7 +526,7 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(records):
             return 0
 
-        records = RecordConvertor.to_records(self.fetch_attr_name_list(table_name), records)
+        records = RecordConvertor.to_records(self.fetch_attr_names(table_name), records)
         query = SqlQuery.make_insert(table_name, records[0])
 
         if self.debug_query:
@@ -655,7 +655,7 @@ class SimpleSQLite(object):
         """alias to :py:meth:`~.fetch_table_names` method."""
         return self.fetch_table_names(include_system_table)
 
-    def fetch_attr_name_list(self, table_name):
+    def fetch_attr_names(self, table_name):
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -677,10 +677,10 @@ class SimpleSQLite(object):
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
 
-                print(con.fetch_attr_name_list(table_name))
+                print(con.fetch_attr_names(table_name))
 
                 try:
-                    print(con.fetch_attr_name_list("not_existing"))
+                    print(con.fetch_attr_names("not_existing"))
                 except simplesqlite.TableNotFoundError as e:
                     print(e)
         :Output:
@@ -693,6 +693,10 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_name_list()
+
+    def fetch_attr_name_list(self, table_name):
+        """alias to :py:meth:`~.fetch_attr_names` method."""
+        return self.fetch_attr_names(table_name)
 
     def fetch_attr_type(self, table_name):
         """
@@ -918,7 +922,7 @@ class SimpleSQLite(object):
         if typepy.is_null_string(attr_name):
             return False
 
-        return attr_name in self.fetch_attr_name_list(table_name)
+        return attr_name in self.fetch_attr_names(table_name)
 
     def has_attr_list(self, table_name, attr_name_list):
         """
@@ -1168,7 +1172,7 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(attr_name_list):
             return
 
-        table_attr_set = set(self.fetch_attr_name_list(table_name))
+        table_attr_set = set(self.fetch_attr_names(table_name))
         index_attr_set = set(AttrList.sanitize(attr_name_list))
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
