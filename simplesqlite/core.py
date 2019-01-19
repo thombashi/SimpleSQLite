@@ -692,7 +692,7 @@ class SimpleSQLite(object):
 
         self.verify_table_existence(table_name)
 
-        return self.schema_extractor.fetch_table_schema(table_name).get_attr_name_list()
+        return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
     def fetch_attr_name_list(self, table_name):
         """alias to :py:meth:`~.fetch_attr_names` method."""
