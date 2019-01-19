@@ -741,7 +741,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             "table_name",
             "attr_name_list",
             "expected_table_name",
-            "expected_attr_name_list",
+            "expected_attr_names",
             "expected_data_matrix",
         ],
         [
@@ -773,7 +773,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         table_name,
         attr_name_list,
         expected_table_name,
-        expected_attr_name_list,
+        expected_attr_names,
         expected_data_matrix,
     ):
         p_db = tmpdir.join("tmp.db")
@@ -786,7 +786,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_name_list == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -799,7 +799,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             "table_name",
             "attr_name_list",
             "expected_table_name",
-            "expected_attr_name_list",
+            "expected_attr_names",
             "expected_data_matrix",
         ],
         [
@@ -820,7 +820,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         table_name,
         attr_name_list,
         expected_table_name,
-        expected_attr_name_list,
+        expected_attr_names,
         expected_data_matrix,
     ):
         p_db = tmpdir.join("tmp.db")
@@ -829,7 +829,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         con.create_table_from_csv(csv_text, table_name, attr_name_list)
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_name_list == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -844,7 +844,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
             "filename",
             "table_name",
             "expected_table_name",
-            "expected_attr_name_list",
+            "expected_attr_names",
             "expected_data_matrix",
         ],
         [
@@ -897,7 +897,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         filename,
         table_name,
         expected_table_name,
-        expected_attr_name_list,
+        expected_attr_names,
         expected_data_matrix,
     ):
         p_db = tmpdir.join("tmp.db")
@@ -910,7 +910,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         con.create_table_from_json(str(p_json), table_name)
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_name_list == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -922,7 +922,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
             "json_text",
             "table_name",
             "expected_table_name",
-            "expected_attr_name_list",
+            "expected_attr_names",
             "expected_data_matrix",
         ],
         [
@@ -958,7 +958,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         json_text,
         table_name,
         expected_table_name,
-        expected_attr_name_list,
+        expected_attr_names,
         expected_data_matrix,
     ):
         p_db = tmpdir.join("tmp.db")
@@ -967,7 +967,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         con.create_table_from_json(json_text, table_name)
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_name_list == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
