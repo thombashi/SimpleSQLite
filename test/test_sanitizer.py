@@ -16,7 +16,7 @@ from ._common import print_test_result
 
 class Test_SQLiteTableDataSanitizer(object):
     @pytest.mark.parametrize(
-        ["table_name", "header_list", "record_list", "expected"],
+        ["table_name", "headers", "records", "expected"],
         [
             [
                 "normal",
@@ -123,9 +123,9 @@ class Test_SQLiteTableDataSanitizer(object):
             ],
         ],
     )
-    def test_normal(self, table_name, header_list, record_list, expected):
+    def test_normal(self, table_name, headers, records, expected):
         new_tabledata = SQLiteTableDataSanitizer(
-            TableData(table_name, header_list, record_list)
+            TableData(table_name, headers, records)
         ).normalize()
 
         print_test_result(expected=dump_tabledata(expected), actual=dump_tabledata(new_tabledata))
@@ -137,21 +137,21 @@ class Test_SQLiteTableDataSanitizer(object):
         assert new_tabledata.equals(expected)
 
     @pytest.mark.parametrize(
-        ["table_name", "header_list", "record_list", "expected"],
+        ["table_name", "headers", "records", "expected"],
         [
             ["", ["a", "b"], [], NameValidationError],
             [None, ["a", "b"], [], NameValidationError],
             ["dummy", [], [], ValueError],
         ],
     )
-    def test_exception_invalid_data(self, table_name, header_list, record_list, expected):
+    def test_exception_invalid_data(self, table_name, headers, records, expected):
         with pytest.raises(expected):
-            SQLiteTableDataSanitizer(TableData(table_name, header_list, record_list)).normalize()
+            SQLiteTableDataSanitizer(TableData(table_name, headers, records)).normalize()
 
 
 class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
     @pytest.mark.parametrize(
-        ["table_name", "header_list", "dup_col_handler", "expected"],
+        ["table_name", "headers", "dup_col_handler", "expected"],
         [
             [
                 "all attrs are duplicated",
@@ -171,9 +171,9 @@ class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
             ],
         ],
     )
-    def test_normal_(self, table_name, header_list, dup_col_handler, expected):
+    def test_normal_(self, table_name, headers, dup_col_handler, expected):
         new_tabledata = SQLiteTableDataSanitizer(
-            TableData(table_name, header_list, []), dup_col_handler=dup_col_handler
+            TableData(table_name, headers, []), dup_col_handler=dup_col_handler
         ).normalize()
 
         print_test_result(expected=dump_tabledata(expected), actual=dump_tabledata(new_tabledata))
@@ -181,14 +181,14 @@ class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
         assert new_tabledata.equals(expected)
 
     @pytest.mark.parametrize(
-        ["table_name", "header_list", "expected"],
+        ["table_name", "headers", "expected"],
         [
             ["duplicate columns", ["a", "a"], ValueError],
             ["duplicate columns", ["AA", "b", "AA"], ValueError],
         ],
     )
-    def test_exception(self, table_name, header_list, expected):
+    def test_exception(self, table_name, headers, expected):
         with pytest.raises(expected):
             SQLiteTableDataSanitizer(
-                TableData(table_name, header_list, []), dup_col_handler="error"
+                TableData(table_name, headers, []), dup_col_handler="error"
             ).normalize()

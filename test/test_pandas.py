@@ -37,8 +37,8 @@ class Test_fromto_pandas_dataframe(object):
 
         assert actual_all.equals(dataframe)
 
-        select_column_list = ["value", "name"]
-        actual_part = con.select_as_dataframe(table_name=table_name, columns=select_column_list)
+        select_columns = ["value", "name"]
+        actual_part = con.select_as_dataframe(table_name=table_name, columns=select_columns)
         assert actual_part.equals(
-            pandas.DataFrame([[0.1, "a"], [1.1, "bb"], [2.2, "ccc"]], columns=select_column_list)
+            pandas.DataFrame([[0.1, "a"], [1.1, "bb"], [2.2, "ccc"]], columns=select_columns)
         )

@@ -223,7 +223,7 @@ class Test_SimpleSQLite_insert(object):
 
 class Test_SimpleSQLite_insert_many(object):
     @pytest.mark.parametrize(
-        ["table_name", "value"],
+        ["table_name", "records"],
         [
             [TEST_TABLE_NAME, [[7, 8], [9, 10], [11, 12]]],
             [
@@ -238,11 +238,11 @@ class Test_SimpleSQLite_insert_many(object):
             [TEST_TABLE_NAME, [[7, 8], {"attr_a": 9, "attr_b": 10}, NamedTuple(11, 12)]],
         ],
     )
-    def test_normal(self, con, table_name, value):
+    def test_normal(self, con, table_name, records):
         expected = [(7, 8), (9, 10), (11, 12)]
 
         assert con.fetch_num_records(TEST_TABLE_NAME) == 2
-        assert con.insert_many(TEST_TABLE_NAME, value) == len(value)
+        assert con.insert_many(TEST_TABLE_NAME, records) == len(records)
         assert con.fetch_num_records(TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
