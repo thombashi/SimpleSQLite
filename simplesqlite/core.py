@@ -253,14 +253,14 @@ class SimpleSQLite(object):
 
         try:
             # validate connection after connect
-            self.fetch_table_name_list()
+            self.fetch_table_names()
         except sqlite3.DatabaseError as e:
             raise DatabaseError(e)
 
         if mode != "w":
             return
 
-        for table in self.fetch_table_name_list():
+        for table in self.fetch_table_names():
             self.drop_table(table)
 
     def execute_query(self, query, caller=None):
@@ -622,7 +622,7 @@ class SimpleSQLite(object):
 
         return fetch[0]
 
-    def fetch_table_name_list(self, include_system_table=False):
+    def fetch_table_names(self, include_system_table=False):
         """
         :return: List of table names in the database.
         :rtype: list
@@ -640,7 +640,7 @@ class SimpleSQLite(object):
                     table_name="hoge",
                     attr_name_list=["attr_a", "attr_b"],
                     data_matrix=[[1, "a"], [2, "b"]])
-                print(con.fetch_table_name_list())
+                print(con.fetch_table_names())
         :Output:
             .. code-block:: python
 
@@ -650,6 +650,10 @@ class SimpleSQLite(object):
         self.check_connection()
 
         return self.schema_extractor.fetch_table_names(include_system_table)
+
+    def fetch_table_name_list(self, include_system_table=False):
+        """alias to :py:meth:`~.fetch_table_names` method."""
+        return self.fetch_table_names(include_system_table)
 
     def fetch_attr_name_list(self, table_name):
         """
