@@ -526,7 +526,7 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(records):
             return 0
 
-        records = RecordConvertor.to_record_list(self.fetch_attr_name_list(table_name), records)
+        records = RecordConvertor.to_records(self.fetch_attr_name_list(table_name), records)
         query = SqlQuery.make_insert(table_name, records[0])
 
         if self.debug_query:
@@ -649,7 +649,7 @@ class SimpleSQLite(object):
 
         self.check_connection()
 
-        return self.schema_extractor.fetch_table_name_list()
+        return self.schema_extractor.fetch_table_names(include_system_table)
 
     def fetch_attr_name_list(self, table_name):
         """

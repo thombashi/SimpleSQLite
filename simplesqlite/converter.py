@@ -47,7 +47,7 @@ class RecordConvertor(object):
         raise ValueError("cannot convert from {} to list".format(type(values)))
 
     @classmethod
-    def to_record_list(cls, attr_name_list, value_matrix):
+    def to_records(cls, attr_name_list, value_matrix):
         """
         Convert a value matrix to records to be inserted into a database.
 
@@ -60,3 +60,8 @@ class RecordConvertor(object):
         """
 
         return [cls.to_record(attr_name_list, record) for record in value_matrix]
+
+    @classmethod
+    def to_record_list(cls, attr_name_list, value_matrix):
+        # deprecated: alias to to_records
+        return cls.to_records(attr_name_list, value_matrix)

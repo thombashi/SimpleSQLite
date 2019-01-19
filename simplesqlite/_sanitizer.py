@@ -155,7 +155,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         return attr_name_list
 
     def _normalize_rows(self, normalize_headers):
-        return RecordConvertor.to_record_list(normalize_headers, self._tabledata.rows)
+        return RecordConvertor.to_records(normalize_headers, self._tabledata.rows)
 
     def __get_default_header(self, col_idx):
         i = 0

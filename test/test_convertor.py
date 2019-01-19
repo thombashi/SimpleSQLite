@@ -50,7 +50,7 @@ class Test_RecordConvertor_to_record(object):
             RecordConvertor.to_record(attr_list, value)
 
 
-class Test_RecordConvertor_to_record_list(object):
+class Test_RecordConvertor_to_records(object):
     @pytest.mark.parametrize(
         ["attr_list", "value", "expeted"],
         [
@@ -71,7 +71,7 @@ class Test_RecordConvertor_to_record_list(object):
         ],
     )
     def test_normal(self, attr_list, value, expeted):
-        assert RecordConvertor.to_record_list(attr_list, value) == expeted
+        assert RecordConvertor.to_records(attr_list, value) == expeted
 
     @pytest.mark.parametrize(
         ["attr_list", "value", "expeted"],
@@ -79,4 +79,4 @@ class Test_RecordConvertor_to_record_list(object):
     )
     def test_exception(self, attr_list, value, expeted):
         with pytest.raises(expeted):
-            RecordConvertor.to_record_list(attr_list, value)
+            RecordConvertor.to_records(attr_list, value)
