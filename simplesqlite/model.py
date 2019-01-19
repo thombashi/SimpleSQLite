@@ -124,7 +124,7 @@ class Model(object):
         return cls.__table_name
 
     @classmethod
-    def get_attr_name_list(cls):
+    def get_attr_names(cls):
         if cls.__attr_name_list:
             return cls.__attr_name_list
 
@@ -138,6 +138,11 @@ class Model(object):
         return cls.__attr_name_list
 
     @classmethod
+    def get_attr_name_list(cls):
+        # deprecated: alias to get_attr_name_list method
+        return cls.get_attr_names()
+
+    @classmethod
     def create(cls):
         cls.__validate_connection()
 
@@ -147,7 +152,7 @@ class Model(object):
                 "{attr} {constraints}".format(
                     attr=Attr(attr_name), constraints=cls.__get_col(attr_name).get_desc()
                 )
-                for attr_name in cls.get_attr_name_list()
+                for attr_name in cls.get_attr_names()
             ],
         )
 
@@ -156,14 +161,14 @@ class Model(object):
         cls.__validate_connection()
 
         result = cls.__connection.select(
-            select=AttrList(cls.get_attr_name_list()),
+            select=AttrList(cls.get_attr_names()),
             table_name=cls.get_table_name(),
             where=where,
             extra=extra,
         )
         for record in result.fetchall():
             yield cls(
-                **{attr_name: value for attr_name, value in zip(cls.get_attr_name_list(), record)}
+                **{attr_name: value for attr_name, value in zip(cls.get_attr_names(), record)}
             )
 
     @classmethod
@@ -178,7 +183,7 @@ class Model(object):
             )
 
         record = []
-        for attr_name in cls.get_attr_name_list():
+        for attr_name in cls.get_attr_names():
             value = getattr(model_obj, attr_name)
 
             if value is None:
@@ -200,7 +205,7 @@ class Model(object):
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
     def __init__(self, *args, **kwargs):
-        for attr_name in self.get_attr_name_list():
+        for attr_name in self.get_attr_names():
             setattr(self, attr_name, kwargs.get(attr_name))
 
     def __eq__(self, other):
@@ -221,7 +226,7 @@ class Model(object):
             attributes=", ".join(
                 [
                     "{}={}".format(attr_name, getattr(self, attr_name))
-                    for attr_name in self.get_attr_name_list()
+                    for attr_name in self.get_attr_names()
                 ]
             ),
         )
@@ -252,7 +257,7 @@ class Model(object):
 
     @classmethod
     def __get_col(cls, attr_name):
-        if attr_name not in cls.get_attr_name_list():
+        if attr_name not in cls.get_attr_names():
             raise ValueError("invalid attribute: {}".format(attr_name))
 
         return cls.__dict__.get(attr_name)
