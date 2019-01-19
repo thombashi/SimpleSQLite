@@ -422,13 +422,13 @@ class SimpleSQLite(object):
 
         return TableData(table_name, columns, result.fetchall())
 
-    def select_as_dict(self, table_name, column_list=None, where=None, extra=None):
+    def select_as_dict(self, table_name, columns=None, where=None, extra=None):
         """
         Get data in the database and return fetched data as a
         |OrderedDict| list.
 
         :param str table_name: |arg_select_table_name|
-        :param list column_list: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_column_list|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return: Table data as |OrderedDict| instances.
@@ -443,19 +443,15 @@ class SimpleSQLite(object):
             :ref:`example-select-as-dict`
         """
 
-        return (
-            self.select_as_tabledata(table_name, column_list, where, extra)
-            .as_dict()
-            .get(table_name)
-        )
+        return self.select_as_tabledata(table_name, columns, where, extra).as_dict().get(table_name)
 
-    def select_as_memdb(self, table_name, column_list=None, where=None, extra=None):
+    def select_as_memdb(self, table_name, columns=None, where=None, extra=None):
         """
         Get data in the database and return fetched data as a
         in-memory |SimpleSQLite| instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list column_list: |arg_select_as_xx_column_list|
+        :param list columns: |arg_select_as_xx_column_list|
         :param str where: |arg_select_where|
         :param str extra: |arg_select_extra|
         :return:
@@ -473,7 +469,7 @@ class SimpleSQLite(object):
 
         memdb = connect_memdb()
         memdb.create_table_from_tabledata(
-            self.select_as_tabledata(table_name, column_list, where, extra),
+            self.select_as_tabledata(table_name, columns, where, extra),
             primary_key=table_schema.primary_key,
             index_attr_list=table_schema.index_list,
         )
