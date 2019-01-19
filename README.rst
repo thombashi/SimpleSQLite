@@ -67,8 +67,8 @@ Create a table from data matrix
         data_matrix = [[1, 1.1, "aaa", 1, 1], [2, 2.2, "bbb", 2.2, 2.2], [3, 3.3, "ccc", 3, "ccc"]]
         con.create_table_from_data_matrix(
             table_name,
-            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-            data_matrix=data_matrix,
+            ["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            data_matrix,
         )
 
         # display data type for each column in the table -----
@@ -126,7 +126,7 @@ Create a table from CSV
 
         # output ---
         table_name = "sample_data"
-        print(con.fetch_attr_name_list(table_name))
+        print(con.fetch_attr_names(table_name))
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
             print(record)
@@ -179,8 +179,8 @@ Insert dictionary
         con = SimpleSQLite("sample.sqlite", "w")
         con.create_table_from_data_matrix(
             table_name,
-            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-            data_matrix=[[1, 1.1, "aaa", 1,   1]])
+            ["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            [[1, 1.1, "aaa", 1,   1]])
 
         con.insert(
             table_name,
@@ -193,7 +193,7 @@ Insert dictionary
             })
         con.insert_many(
             table_name,
-            row_list=[
+            records=[
                 {
                     "attr_a": 5,
                     "attr_b": 5.5,
@@ -233,20 +233,20 @@ Insert list/tuple/namedtuple
         con = SimpleSQLite("sample.sqlite", "w")
         con.create_table_from_data_matrix(
             table_name,
-            attr_name_list=["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
-            data_matrix=[[1, 1.1, "aaa", 1,   1]])
+            ["attr_a", "attr_b", "attr_c", "attr_d", "attr_e"],
+            [[1, 1.1, "aaa", 1, 1]],
+        )
 
-        SampleTuple = namedtuple(
-            "SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
+        # insert namedtuple
+        SampleTuple = namedtuple("SampleTuple", "attr_a attr_b attr_c attr_d attr_e")
 
         con.insert(table_name, record=[7, 7.7, "fff", 7.77, "bar"])
         con.insert_many(
             table_name,
-            row_list=[
-                (8, 8.8, "ggg", 8.88, "foobar"),
-                SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge"),
-            ])
+            records=[(8, 8.8, "ggg", 8.88, "foobar"), SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge")],
+        )
 
+        # print
         result = con.select(select="*", table_name=table_name)
         for record in result.fetchall():
             print(record)
@@ -269,9 +269,9 @@ Fetch data from a table as pandas DataFrame
         con = SimpleSQLite("sample.sqlite", "w", profile=True)
 
         con.create_table_from_data_matrix(
-            table_name="sample_table",
-            attr_name_list=["a", "b", "c", "d", "e"],
-            data_matrix=[
+            "sample_table",
+            ["a", "b", "c", "d", "e"],
+            [
                 [1, 1.1, "aaa", 1,   1],
                 [2, 2.2, "bbb", 2.2, 2.2],
                 [3, 3.3, "ccc", 3,   "ccc"],
