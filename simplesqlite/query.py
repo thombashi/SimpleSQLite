@@ -302,8 +302,10 @@ class Select(QueryItem):
 
         validate_table_name(self.__table)
 
-        if self.__where and not isinstance(where, (six.text_type, Where)):
-            raise ValueError("where should be a string or Where instance")
+        if self.__where and not isinstance(where, (six.text_type, Where, And)):
+            raise ValueError(
+                "where should be a string or Where instance: actual={}".format(type(self.__where))
+            )
 
         if not self.__select:
             raise ValueError("SELECT query required")
