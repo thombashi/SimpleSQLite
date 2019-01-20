@@ -321,6 +321,42 @@ class Select(QueryItem):
         return " ".join(query_list)
 
 
+class Or(list, QueryItemInterface):
+    """
+    ``OR`` query clause.
+
+    Args:
+        where_list (list of |arg_where_type|):
+            Query items that concatenating with ``OR``.
+    """
+
+    def __init__(self, where_list):
+        for where in where_list:
+            if not isinstance(where, (six.text_type, Where, And, Or)):
+                raise TypeError(
+                    "where clause item must be either string or Where/And/Or class instance"
+                )
+
+        super(Or, self).__init__(where_list)
+
+    def __repr__(self):
+        return self.to_query()
+
+    def __format__(self, format_spec):
+        return self.to_query()
+
+    def to_query(self):
+        item_list = []
+
+        for where in self:
+            if isinstance(where, And):
+                item_list.append("({})".format(where))
+            else:
+                item_list.append("{}".format(where))
+
+        return " OR ".join(item_list)
+
+
 class And(list, QueryItemInterface):
     def __init__(self, where_list):
         for where in where_list:

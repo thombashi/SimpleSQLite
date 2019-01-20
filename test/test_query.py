@@ -13,7 +13,7 @@ import string
 import pytest
 import six
 from simplesqlite import NameValidationError, SqlSyntaxError
-from simplesqlite.query import And, Attr, AttrList, Select, Table, Value, Where, make_index_name
+from simplesqlite.query import And, Attr, AttrList, Or, Select, Table, Value, Where, make_index_name
 
 
 nan = float("nan")
@@ -263,6 +263,26 @@ class Test_Select(object):
     def test_exception(self, select, table, where, extra, expected):
         with pytest.raises(expected):
             "{}".format(Select(select, table, where, extra))
+
+
+class Test_Or(object):
+    @pytest.mark.parametrize(
+        ["where_list", "expected"],
+        [
+            [[Where("hoge", "abc"), Where("bar", 100, ">")], "hoge = 'abc' OR bar > 100"],
+            [
+                [Where("hoge", "abc"), And([Where("bar", 100, ">"), Where("foo", 200)])],
+                "hoge = 'abc' OR (bar > 100 AND foo = 200)",
+            ],
+            [
+                [Where("hoge", "abc"), Or([Where("bar", 100, ">"), Where("foo", 200)])],
+                "hoge = 'abc' OR bar > 100 OR foo = 200",
+            ],
+            [[], ""],
+        ],
+    )
+    def test_normal(self, where_list, expected):
+        assert_query_item(Or(where_list), expected)
 
 
 class Test_And(object):
