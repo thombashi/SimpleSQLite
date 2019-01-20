@@ -216,7 +216,7 @@ class Value(QueryItem):
 
 class Where(QueryItem):
     """
-    Make part of WHERE query.
+    ``WHERE`` query clause.
 
     :param str key: Attribute name of the key.
     :param str value: Value of the right hand side associated with the key.
@@ -272,7 +272,7 @@ class Where(QueryItem):
 
 class Select(QueryItem):
     """
-    Make SELECT query.
+    ``SELECT`` query clause.
 
     :param str select: Attribute for SELECT query.
     :param str table: Table name of executing the query.
@@ -358,6 +358,14 @@ class Or(list, QueryItemInterface):
 
 
 class And(list, QueryItemInterface):
+    """
+    ``AND`` query clause.
+
+    Args:
+        where_list (list of |arg_where_type|):
+            Query items that concatenating with ``AND``.
+    """
+
     def __init__(self, where_list):
         for where in where_list:
             if not isinstance(where, (six.text_type, Where, And, Or)):

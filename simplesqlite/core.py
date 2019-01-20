@@ -333,7 +333,8 @@ class SimpleSQLite(object):
 
         :param str select: Attribute for the ``SELECT`` query.
         :param str table_name: |arg_select_table_name|
-        :param str where: |arg_select_where|
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
         :return: Result of the query execution.
         :rtype: sqlite3.Cursor
@@ -396,7 +397,8 @@ class SimpleSQLite(object):
 
         :param str table_name: |arg_select_table_name|
         :param list columns: |arg_select_as_xx_columns|
-        :param str where: |arg_select_where|
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
         :return: Table data as a :py:class:`tabledata.TableData` instance.
         :rtype: tabledata.TableData
@@ -429,7 +431,8 @@ class SimpleSQLite(object):
 
         :param str table_name: |arg_select_table_name|
         :param list columns: |arg_select_as_xx_columns|
-        :param str where: |arg_select_where|
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
         :return: Table data as |OrderedDict| instances.
         :rtype: |list| of |OrderedDict|
@@ -452,7 +455,8 @@ class SimpleSQLite(object):
 
         :param str table_name: |arg_select_table_name|
         :param list columns: |arg_select_as_xx_columns|
-        :param str where: |arg_select_where|
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
         :return:
             Table data as a |SimpleSQLite| instance that connected to in
@@ -553,18 +557,26 @@ class SimpleSQLite(object):
         return len(records)
 
     def update(self, table_name, set_query, where=None):
-        """
-        Send an UPDATE query to the database.
+        """Execute an UPDATE query.
 
-        :param str table_name: Table name of executing the query.
-        :param str set_query:
-        :param str where:
-        :raises IOError: |raises_write_permission|
-        :raises simplesqlite.NullDatabaseConnectionError:
-            |raises_check_connection|
-        :raises simplesqlite.TableNotFoundError:
-            |raises_verify_table_existence|
-        :raises simplesqlite.OperationalError: |raises_operational_error|
+        Args:
+            table_name (|str|):
+                Table name of executing the query.
+            set_query (|str|):
+                ``SET`` clause for the update query.
+            where (|arg_where_type| , optional):
+                ``WHERE`` clause for the update query.
+                Defaults to |None|.
+
+        Raises:
+            IOError:
+                |raises_write_permission|
+            simplesqlite.NullDatabaseConnectionError:
+                |raises_check_connection|
+            simplesqlite.TableNotFoundError:
+                |raises_verify_table_existence|
+            simplesqlite.OperationalError:
+                |raises_operational_error|
         """
 
         self.validate_access_permission(["w", "a"])
@@ -579,7 +591,8 @@ class SimpleSQLite(object):
         Send a DELETE query to the database.
 
         :param str table_name: Table name of executing the query.
-        :param str where:
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         """
 
         self.validate_access_permission(["w", "a"])
@@ -598,6 +611,8 @@ class SimpleSQLite(object):
 
         :param str select: Attribute for SELECT query
         :param str table_name: Table name of executing the query.
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :return: Result of execution of the query.
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -733,7 +748,8 @@ class SimpleSQLite(object):
         Fetch the number of records in a table.
 
         :param str table_name: Table name to get number of records.
-        :param str where: Where clause for the query.
+        :param where: |arg_select_where|
+        :type where: |arg_where_type|
         :return:
             Number of records in the table.
             |None| if no value matches the conditions,
