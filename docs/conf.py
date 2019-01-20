@@ -317,6 +317,10 @@ rp_class = u"""
 
 .. |TableData| replace:: :py:class:`~simplesqlite.loader.data.TableData`
 .. |SimpleSQLite| replace:: :py:class:`~simplesqlite.SimpleSQLite`
+
+.. |And| replace:: :py:class:`~simplesqlite.query.And`
+.. |Or| replace:: :py:class:`~simplesqlite.query.Or`
+.. |Where| replace:: :py:class:`~simplesqlite.query.Where`
 """
 
 rp_module = u"""
@@ -349,6 +353,8 @@ rp_param = u"""
 .. |arg_select_table_name| replace:: Table name of executing the query.
 .. |arg_select_where| replace:: ``WHERE`` clause for the query.
 .. |arg_select_extra| replace:: Any other SQL clause for the query.
+
+.. |arg_where_type| replace:: |str|/|Where|/|And|/|Or|
 
 .. |arg_select_as_xx_columns| replace::
     Column names to get data. If the value is |None|,
