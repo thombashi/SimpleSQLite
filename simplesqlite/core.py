@@ -1232,7 +1232,7 @@ class SimpleSQLite(object):
         self,
         csv_source,
         table_name="",
-        attr_name_list=(),
+        attr_names=(),
         delimiter=",",
         quotechar='"',
         encoding="utf-8",
@@ -1279,7 +1279,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableFileLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attr_name_list
+        loader.header_list = attr_names
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
@@ -1295,7 +1295,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableTextLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attr_name_list
+        loader.header_list = attr_names
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
