@@ -1475,6 +1475,8 @@ class SimpleSQLite(object):
 
     @staticmethod
     def __validate_attr_name_list(attr_name_list):
+        # deprecated
+
         if typepy.is_empty_sequence(attr_name_list):
             raise NameValidationError("attribute name list is empty")
 
