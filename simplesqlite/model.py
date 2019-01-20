@@ -128,12 +128,12 @@ class Model(object):
         if cls.__attr_names:
             return cls.__attr_names
 
-        attr_name_list = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
+        attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
 
         if sys.version_info[:2] >= (3, 5):
-            cls.__attr_names = attr_name_list
+            cls.__attr_names = attr_names
         else:
-            cls.__attr_names = sorted(attr_name_list)
+            cls.__attr_names = sorted(attr_names)
 
         return cls.__attr_names
 
