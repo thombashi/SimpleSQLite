@@ -51,6 +51,7 @@ class Test_SqlQuery_make_update(object):
         [
             ["A", "B=1", None, "UPDATE A SET B=1"],
             ["A", "B=1", Where("C", 1, ">").to_query(), "UPDATE A SET B=1 WHERE C > 1"],
+            ["A", "B=1", Where("C", 1, ">"), "UPDATE A SET B=1 WHERE C > 1"],
         ],
     )
     def test_normal(self, table, set_query, where, expected):

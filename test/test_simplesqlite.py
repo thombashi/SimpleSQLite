@@ -277,6 +277,9 @@ class Test_SimpleSQLite_update(object):
         where = Where("attr_b", 2)
         con.update(table_name=table_name, set_query="attr_a = 100", where=where)
         assert con.fetch_value(select="attr_a", table_name=table_name, where=where) == 100
+        assert (
+            con.fetch_value(select="attr_a", table_name=table_name, where=Where("attr_b", 4)) == 3
+        )
 
     @pytest.mark.parametrize(
         ["table_name", "set_query", "expected"],

@@ -6,10 +6,11 @@
 
 from __future__ import absolute_import, unicode_literals
 
+import six
 import typepy
 
 from ._func import validate_table_name
-from .query import Attr, Table, Value
+from .query import And, Attr, Table, Value, Where
 
 
 class SqlQuery(object):
@@ -64,7 +65,7 @@ class SqlQuery(object):
             raise ValueError("SET query is null")
 
         query_list = ["UPDATE {:s}".format(Table(table)), "SET {:s}".format(set_query)]
-        if typepy.is_not_null_string(where):
+        if where and isinstance(where, (six.text_type, Where, And)):
             query_list.append("WHERE {:s}".format(where))
 
         return " ".join(query_list)
