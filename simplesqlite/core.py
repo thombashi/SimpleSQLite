@@ -769,21 +769,21 @@ class SimpleSQLite(object):
             [query, execute_time, self.__dict_query_count.get(query, 0)]
             for query, execute_time in six.iteritems(self.__dict_query_totalexectime)
         ]
-        attr_name_list = ("sql_query", "cumulative_time", "count")
+        attr_names = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_memdb()
         try:
             con_tmp.create_table_from_data_matrix(
-                profile_table_name, attr_name_list, data_matrix=value_matrix
+                profile_table_name, attr_names, data_matrix=value_matrix
             )
         except ValueError:
             return []
 
         try:
             result = con_tmp.select(
-                select="{:s},SUM({:s}),SUM({:s})".format(*attr_name_list),
+                select="{:s},SUM({:s}),SUM({:s})".format(*attr_names),
                 table_name=profile_table_name,
                 extra="GROUP BY {:s} ORDER BY {:s} DESC LIMIT {:d}".format(
-                    attr_name_list[0], attr_name_list[1], profile_count
+                    attr_names[0], attr_names[1], profile_count
                 ),
             )
         except sqlite3.OperationalError:
@@ -791,7 +791,7 @@ class SimpleSQLite(object):
         if result is None:
             return []
 
-        SqliteProfile = namedtuple("SqliteProfile", " ".join(attr_name_list))
+        SqliteProfile = namedtuple("SqliteProfile", " ".join(attr_names))
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
