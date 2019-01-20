@@ -18,11 +18,11 @@ class RecordConvertor(object):
         return value
 
     @classmethod
-    def to_record(cls, attr_name_list, values):
+    def to_record(cls, attr_names, values):
         """
         Convert values to a record to be inserted into a database.
 
-        :param list attr_name_list:
+        :param list attr_names:
             List of attributes for the converting record.
         :param values: Values to be converted.
         :type values: |dict|/|namedtuple|/|list|/|tuple|
@@ -37,7 +37,7 @@ class RecordConvertor(object):
 
         try:
             # from a dictionary to a list
-            return [cls.__to_sqlite_element(values.get(attr_name)) for attr_name in attr_name_list]
+            return [cls.__to_sqlite_element(values.get(attr_name)) for attr_name in attr_names]
         except AttributeError:
             pass
 
