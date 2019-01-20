@@ -508,7 +508,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
-        ["attr_name_list", "data_matrix", "index_attr_list", "expected_attr"],
+        ["attr_names", "data_matrix", "index_attr_list", "expected_attr"],
         [
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -604,21 +604,17 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
             ],
         ],
     )
-    def test_normal(self, tmpdir, attr_name_list, data_matrix, index_attr_list, expected_attr):
+    def test_normal(self, tmpdir, attr_names, data_matrix, index_attr_list, expected_attr):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
         con.create_table_from_data_matrix(
-            table_name,
-            attr_name_list,
-            data_matrix,
-            primary_key=None,
-            index_attr_list=index_attr_list,
+            table_name, attr_names, data_matrix, primary_key=None, index_attr_list=index_attr_list
         )
 
         # check data ---
-        result = con.select(select=AttrList(attr_name_list), table_name=table_name)
+        result = con.select(select=AttrList(attr_names), table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
@@ -626,28 +622,28 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         assert con.fetch_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
-        ["table_name", "attr_name_list", "data_matrix", "expected"],
+        ["table_name", "attr_names", "data_matrix", "expected"],
         [[TEST_TABLE_NAME, ["", None], [["a", 1], ["bb", 2]], ["A", "B"]]],
     )
-    def test_normal_empty_header(self, tmpdir, table_name, attr_name_list, data_matrix, expected):
+    def test_normal_empty_header(self, tmpdir, table_name, attr_names, data_matrix, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
 
-        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+        con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
         assert con.fetch_attr_names(table_name) == expected
 
     @pytest.mark.parametrize(
-        ["table_name", "attr_name_list", "data_matrix", "expected"],
+        ["table_name", "attr_names", "data_matrix", "expected"],
         [[TEST_TABLE_NAME, ["AA", "BB"], [["a", 1], ["bb", 2]], ["AA", "BB"]]],
     )
-    def test_normal_primary_key(self, tmpdir, table_name, attr_name_list, data_matrix, expected):
+    def test_normal_primary_key(self, tmpdir, table_name, attr_names, data_matrix, expected):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
         con.create_table_from_data_matrix(
-            table_name, attr_name_list, data_matrix, primary_key=attr_name_list[0]
+            table_name, attr_names, data_matrix, primary_key=attr_names[0]
         )
 
         assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "AA"
@@ -656,11 +652,11 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = "symbols"
-        attr_name_list = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
+        attr_names = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
         data_matrix = [{"ABCD>8.5": "aaa", "ABCD<8.5": 0}, {"ABCD>8.5": "bbb", "ABCD<8.5": 9}]
         expected = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
 
-        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+        con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
         assert con.fetch_attr_names(table_name) == expected
 
@@ -668,11 +664,11 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = "numbers"
-        attr_name_list = [1, 123456789]
+        attr_names = [1, 123456789]
         data_matrix = [[1, 2], [1, 2]]
         expected = ["1", "123456789"]
 
-        con.create_table_from_data_matrix(table_name, attr_name_list, data_matrix)
+        con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
         assert con.fetch_attr_names(table_name) == expected
 
@@ -736,7 +732,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             "csv_text",
             "csv_filename",
             "table_name",
-            "attr_name_list",
+            "attr_names",
             "expected_table_name",
             "expected_attr_names",
             "expected_data_matrix",
@@ -768,7 +764,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         csv_text,
         csv_filename,
         table_name,
-        attr_name_list,
+        attr_names,
         expected_table_name,
         expected_attr_names,
         expected_data_matrix,
@@ -780,7 +776,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             f.write(csv_text)
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_csv(str(p_csv), table_name, attr_name_list)
+        con.create_table_from_csv(str(p_csv), table_name, attr_names)
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
@@ -794,7 +790,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         [
             "csv_text",
             "table_name",
-            "attr_name_list",
+            "attr_names",
             "expected_table_name",
             "expected_attr_names",
             "expected_data_matrix",
@@ -815,7 +811,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         tmpdir,
         csv_text,
         table_name,
-        attr_name_list,
+        attr_names,
         expected_table_name,
         expected_attr_names,
         expected_data_matrix,
@@ -823,7 +819,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_csv(csv_text, table_name, attr_name_list)
+        con.create_table_from_csv(csv_text, table_name, attr_names)
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
