@@ -1246,10 +1246,9 @@ class SimpleSQLite(object):
         :param str table_name:
             Table name to create.
             Using CSV file basename as the table name if the value is empty.
-        :param list attr_name_list:
+        :param list attr_names:
             Attribute names of the table.
-            Use the first line of the CSV file as attribute list
-            if attr_name_list is empty.
+            Use the first line of the CSV file as attributes if ``attr_names`` is empty.
         :param str delimiter:
             A one-character string used to separate fields.
         :param str quotechar:
