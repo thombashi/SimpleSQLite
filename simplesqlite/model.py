@@ -100,7 +100,7 @@ class Model(object):
     __connection = None
     __is_hidden = False
     __table_name = None
-    __attr_name_list = None
+    __attr_names = None
 
     @classmethod
     def attach(cls, database_src, is_hidden=False):
@@ -125,17 +125,17 @@ class Model(object):
 
     @classmethod
     def get_attr_names(cls):
-        if cls.__attr_name_list:
-            return cls.__attr_name_list
+        if cls.__attr_names:
+            return cls.__attr_names
 
         attr_name_list = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
 
         if sys.version_info[:2] >= (3, 5):
-            cls.__attr_name_list = attr_name_list
+            cls.__attr_names = attr_name_list
         else:
-            cls.__attr_name_list = sorted(attr_name_list)
+            cls.__attr_names = sorted(attr_name_list)
 
-        return cls.__attr_name_list
+        return cls.__attr_names
 
     @classmethod
     def get_attr_name_list(cls):
