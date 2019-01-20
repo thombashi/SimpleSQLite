@@ -1207,9 +1207,7 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            table_data=TableData(table_name, attr_name_list, data_matrix),
-            primary_key=primary_key,
-            index_attr_list=index_attr_list,
+            TableData(table_name, attr_name_list, data_matrix), primary_key, index_attr_list
         )
 
     def create_table_from_tabledata(self, table_data, primary_key=None, index_attr_list=None):
@@ -1224,9 +1222,7 @@ class SimpleSQLite(object):
             :py:meth:`.create_table_from_data_matrix`
         """
 
-        self.__create_table_from_tabledata(
-            table_data=table_data, primary_key=primary_key, index_attr_list=index_attr_list
-        )
+        self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
 
     def create_table_from_csv(
         self,
@@ -1284,9 +1280,7 @@ class SimpleSQLite(object):
         loader.encoding = encoding
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(
-                    table_data, primary_key=primary_key, index_attr_list=index_attr_list
-                )
+                self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1299,9 +1293,7 @@ class SimpleSQLite(object):
         loader.quotechar = quotechar
         loader.encoding = encoding
         for table_data in loader.load():
-            self.__create_table_from_tabledata(
-                table_data, primary_key=primary_key, index_attr_list=index_attr_list
-            )
+            self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
 
     def create_table_from_json(
         self, json_source, table_name="", primary_key=None, index_attr_list=None
@@ -1332,9 +1324,7 @@ class SimpleSQLite(object):
             loader.table_name = table_name
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(
-                    table_data, primary_key=primary_key, index_attr_list=index_attr_list
-                )
+                self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1343,9 +1333,7 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for table_data in loader.load():
-            self.__create_table_from_tabledata(
-                table_data, primary_key=primary_key, index_attr_list=index_attr_list
-            )
+            self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
 
     def create_table_from_dataframe(
         self, dataframe, table_name="", primary_key=None, index_attr_list=None
@@ -1364,8 +1352,8 @@ class SimpleSQLite(object):
 
         self.__create_table_from_tabledata(
             TableData.from_dataframe(dataframe=dataframe, table_name=table_name),
-            primary_key=primary_key,
-            index_attr_list=index_attr_list,
+            primary_key,
+            index_attr_list,
         )
 
     def rollback(self):
