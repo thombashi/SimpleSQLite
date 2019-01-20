@@ -288,7 +288,18 @@ class Test_Or(object):
 class Test_And(object):
     @pytest.mark.parametrize(
         ["where_list", "expected"],
-        [[[Where("hoge", "abc"), Where("bar", 100, ">")], "hoge = 'abc' AND bar > 100"], [[], ""]],
+        [
+            [[Where("hoge", "abc"), Where("bar", 100, ">")], "hoge = 'abc' AND bar > 100"],
+            [
+                [Where("hoge", "abc"), And([Where("bar", 100, ">"), Where("foo", 200)])],
+                "hoge = 'abc' AND bar > 100 AND foo = 200",
+            ],
+            [
+                [Where("hoge", "abc"), Or([Where("bar", 100, ">"), Where("foo", 200)])],
+                "hoge = 'abc' AND (bar > 100 OR foo = 200)",
+            ],
+            [[], ""],
+        ],
     )
     def test_normal(self, where_list, expected):
         assert_query_item(And(where_list), expected)

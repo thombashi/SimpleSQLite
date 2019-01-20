@@ -360,8 +360,10 @@ class Or(list, QueryItemInterface):
 class And(list, QueryItemInterface):
     def __init__(self, where_list):
         for where in where_list:
-            if not isinstance(where, (six.text_type, Where)):
-                raise TypeError("where clause item must be either string or Where class instance")
+            if not isinstance(where, (six.text_type, Where, And, Or)):
+                raise TypeError(
+                    "where clause item must be either string or Where/And/Or class instance"
+                )
 
         super(And, self).__init__(where_list)
 
@@ -372,7 +374,15 @@ class And(list, QueryItemInterface):
         return self.to_query()
 
     def to_query(self):
-        return " AND ".join([six.text_type(where) for where in self])
+        item_list = []
+
+        for where in self:
+            if isinstance(where, Or):
+                item_list.append("({})".format(where))
+            else:
+                item_list.append("{}".format(where))
+
+        return " AND ".join(item_list)
 
 
 def make_index_name(table_name, attr_name):

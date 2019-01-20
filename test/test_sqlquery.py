@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 
 import pytest
-from simplesqlite.query import Where
+from simplesqlite.query import And, Or, Where
 from simplesqlite.sqlquery import SqlQuery
 
 
@@ -52,6 +52,18 @@ class Test_SqlQuery_make_update(object):
             ["A", "B=1", None, "UPDATE A SET B=1"],
             ["A", "B=1", Where("C", 1, ">").to_query(), "UPDATE A SET B=1 WHERE C > 1"],
             ["A", "B=1", Where("C", 1, ">"), "UPDATE A SET B=1 WHERE C > 1"],
+            [
+                "A",
+                "B=1",
+                And([Where("C", 1, ">"), Where("D", 10)]),
+                "UPDATE A SET B=1 WHERE C > 1 AND D = 10",
+            ],
+            [
+                "A",
+                "B=1",
+                Or([Where("C", 1, ">"), Where("D", 10)]),
+                "UPDATE A SET B=1 WHERE C > 1 OR D = 10",
+            ],
         ],
     )
     def test_normal(self, table, set_query, where, expected):
