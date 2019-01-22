@@ -61,6 +61,7 @@ class SimpleSQLite(object):
     """
 
     dup_col_handler = "error"
+    debug_query = False
 
     @property
     def database_path(self):
@@ -121,7 +122,7 @@ class SimpleSQLite(object):
         return self.__mode
 
     def __init__(self, database_src, mode="a", delayed_connection=True, profile=False):
-        self.debug_query = False
+        self.__debug_query = False
 
         self.__initialize_connection()
         self.__mode = mode
@@ -134,7 +135,7 @@ class SimpleSQLite(object):
             self.__connection = database_src.connection
             self.__database_path = database_src.database_path
 
-            self.debug_query = database_src.debug_query
+            self.__debug_query = database_src.debug_query
             return
 
         if isinstance(database_src, sqlite3.Connection):
@@ -288,7 +289,7 @@ class SimpleSQLite(object):
         if typepy.is_null_string(query):
             return None
 
-        if self.debug_query:
+        if self.__debug_query or self.debug_query:
             logger.debug(query)
 
         if self.__is_profile:
@@ -533,7 +534,7 @@ class SimpleSQLite(object):
         records = RecordConvertor.to_records(self.fetch_attr_names(table_name), records)
         query = SqlQuery.make_insert(table_name, records[0])
 
-        if self.debug_query:
+        if self.__debug_query or self.debug_query:
             logger.debug(
                 "\n".join(
                     [query]
