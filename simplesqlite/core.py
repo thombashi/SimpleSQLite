@@ -504,7 +504,7 @@ class SimpleSQLite(object):
 
         :param str table: Table name of executing the query.
         :param records: Records to be inserted.
-        :type records: |dict|/|namedtuple|/|list|/|tuple|
+        :type records: list of |dict|/|namedtuple|/|list|/|tuple|
         :return: Number of inserted records.
         :rtype: int
         :raises IOError: |raises_write_permission|
