@@ -85,7 +85,7 @@ Insert list/tuple/namedtuple
 :Output:
     .. code-block:: none
 
-        (1, 1.1, u'aaa', 1, 1)
-        (7, 7.7, u'fff', 7.77, u'bar')
-        (8, 8.8, u'ggg', 8.88, u'foobar')
-        (9, 9.9, u'ggg', 9.99, u'hogehoge')
+        (1, 1.1, 'aaa', 1, 1)
+        (7, 7.7, 'fff', 7.77, 'bar')
+        (8, 8.8, 'ggg', 8.88, 'foobar')
+        (9, 9.9, 'ggg', 9.99, 'hogehoge')
