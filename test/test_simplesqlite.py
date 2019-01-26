@@ -511,7 +511,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
-        ["attr_names", "data_matrix", "index_attr_list", "expected_attr"],
+        ["attr_names", "data_matrix", "index_attrs", "expected_attr"],
         [
             [
                 ["attr_a", "attr_b", "attr_c"],
@@ -607,13 +607,13 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
             ],
         ],
     )
-    def test_normal(self, tmpdir, attr_names, data_matrix, index_attr_list, expected_attr):
+    def test_normal(self, tmpdir, attr_names, data_matrix, index_attrs, expected_attr):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
         con.create_table_from_data_matrix(
-            table_name, attr_names, data_matrix, primary_key=None, index_attr_list=index_attr_list
+            table_name, attr_names, data_matrix, primary_key=None, index_attrs=index_attrs
         )
 
         # check data ---

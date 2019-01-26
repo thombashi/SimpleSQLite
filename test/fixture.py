@@ -64,7 +64,7 @@ def con_index(tmpdir):
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_from_data_matrix(
-        TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]], index_attr_list=["attr_a"]
+        TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]], index_attrs=["attr_a"]
     )
 
     return con

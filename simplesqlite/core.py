@@ -476,7 +476,7 @@ class SimpleSQLite(object):
         memdb.create_table_from_tabledata(
             self.select_as_tabledata(table_name, columns, where, extra),
             primary_key=table_schema.primary_key,
-            index_attr_list=table_schema.index_list,
+            index_attrs=table_schema.index_list,
         )
 
         return memdb
@@ -838,7 +838,7 @@ class SimpleSQLite(object):
                     "sample_table",
                     ["a", "b", "c", "d", "e"],
                     data_matrix,
-                    index_attr_list=["a"])
+                    index_attrs=["a"])
 
                 print(json.dumps(con.fetch_sqlite_master(), indent=4))
         :Output:
@@ -1196,7 +1196,7 @@ class SimpleSQLite(object):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
-        self, table_name, attr_name_list, data_matrix, primary_key=None, index_attr_list=None
+        self, table_name, attr_name_list, data_matrix, primary_key=None, index_attrs=None
     ):
         """
         Create a table if not exists. Moreover, insert data into the created
@@ -1207,7 +1207,7 @@ class SimpleSQLite(object):
         :param data_matrix: Data to be inserted into the table.
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param str primary_key: |primary_key|
-        :param tuple index_attr_list: |index_attr_list|
+        :param tuple index_attrs: |index_attrs|
         :raises simplesqlite.NameValidationError:
             |raises_validate_table_name|
         :raises simplesqlite.NameValidationError:
@@ -1224,22 +1224,22 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            TableData(table_name, attr_name_list, data_matrix), primary_key, index_attr_list
+            TableData(table_name, attr_name_list, data_matrix), primary_key, index_attrs
         )
 
-    def create_table_from_tabledata(self, table_data, primary_key=None, index_attr_list=None):
+    def create_table_from_tabledata(self, table_data, primary_key=None, index_attrs=None):
         """
         Create a table from :py:class:`tabledata.TableData`.
 
         :param tabledata.TableData table_data: Table data to create.
         :param str primary_key: |primary_key|
-        :param tuple index_attr_list: |index_attr_list|
+        :param tuple index_attrs: |index_attrs|
 
         .. seealso::
             :py:meth:`.create_table_from_data_matrix`
         """
 
-        self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
+        self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
 
     def create_table_from_csv(
         self,
@@ -1250,7 +1250,7 @@ class SimpleSQLite(object):
         quotechar='"',
         encoding="utf-8",
         primary_key=None,
-        index_attr_list=None,
+        index_attrs=None,
     ):
         """
         Create a table from a CSV file/text.
@@ -1270,7 +1270,7 @@ class SimpleSQLite(object):
             or which contain new-line characters.
         :param str encoding: CSV file encoding.
         :param str primary_key: |primary_key|
-        :param tuple index_attr_list: |index_attr_list|
+        :param tuple index_attrs: |index_attrs|
         :raises ValueError: If the CSV data is invalid.
 
         :Dependency Packages:
@@ -1297,7 +1297,7 @@ class SimpleSQLite(object):
         loader.encoding = encoding
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
+                self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1310,10 +1310,10 @@ class SimpleSQLite(object):
         loader.quotechar = quotechar
         loader.encoding = encoding
         for table_data in loader.load():
-            self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
+            self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
 
     def create_table_from_json(
-        self, json_source, table_name="", primary_key=None, index_attr_list=None
+        self, json_source, table_name="", primary_key=None, index_attrs=None
     ):
         """
         Create a table from a JSON file/text.
@@ -1321,7 +1321,7 @@ class SimpleSQLite(object):
         :param str json_source: Path to the JSON file or JSON text.
         :param str table_name: Table name to create.
         :param str primary_key: |primary_key|
-        :param tuple index_attr_list: |index_attr_list|
+        :param tuple index_attrs: |index_attrs|
 
         :Dependency Packages:
             - `pytablereader <https://github.com/thombashi/pytablereader>`__
@@ -1341,7 +1341,7 @@ class SimpleSQLite(object):
             loader.table_name = table_name
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
+                self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1350,10 +1350,10 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for table_data in loader.load():
-            self.__create_table_from_tabledata(table_data, primary_key, index_attr_list)
+            self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
 
     def create_table_from_dataframe(
-        self, dataframe, table_name="", primary_key=None, index_attr_list=None
+        self, dataframe, table_name="", primary_key=None, index_attrs=None
     ):
         """
         Create a table from a pandas.DataFrame instance.
@@ -1361,7 +1361,7 @@ class SimpleSQLite(object):
         :param pandas.DataFrame dataframe: DataFrame instance to convert.
         :param str table_name: Table name to create.
         :param str primary_key: |primary_key|
-        :param tuple index_attr_list: |index_attr_list|
+        :param tuple index_attrs: |index_attrs|
 
         :Examples:
             :ref:`example-create-table-from-df`
@@ -1370,7 +1370,7 @@ class SimpleSQLite(object):
         self.__create_table_from_tabledata(
             TableData.from_dataframe(dataframe=dataframe, table_name=table_name),
             primary_key,
-            index_attr_list,
+            index_attrs,
         )
 
     def rollback(self):
@@ -1539,7 +1539,7 @@ class SimpleSQLite(object):
             ]
         )
 
-    def __create_table_from_tabledata(self, table_data, primary_key, index_attr_list):
+    def __create_table_from_tabledata(self, table_data, primary_key, index_attrs):
         self.validate_access_permission(["w", "a"])
 
         logger.debug("__create_table_from_tabledata: {}".format(table_data))
@@ -1556,8 +1556,8 @@ class SimpleSQLite(object):
             self.__extract_attr_desc_list_from_tabledata(table_data, primary_key),
         )
         self.insert_many(table_data.table_name, table_data.value_matrix)
-        if typepy.is_not_empty_sequence(index_attr_list):
-            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attr_list))
+        if typepy.is_not_empty_sequence(index_attrs):
+            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attrs))
         self.commit()
 
 

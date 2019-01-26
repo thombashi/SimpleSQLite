@@ -21,7 +21,7 @@ method can get profile of query execution time.
             "sample_table",
             ["a", "b", "c", "d", "e"],
             data_matrix,
-            index_attr_list=["a"])
+            index_attrs=["a"])
 
         for profile in con.get_profile():
             print(profile)
