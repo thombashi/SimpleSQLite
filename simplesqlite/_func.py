@@ -15,6 +15,7 @@ from pathvalidate import (
     ValidReservedNameError,
 )
 
+from ._logger import logger
 from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .error import NameValidationError
 
@@ -63,8 +64,6 @@ def append_table(src_con, dst_con, table_name):
     :raises ValueError:
         If attributes of the table are different from each other.
     """
-
-    from ._logger import logger
 
     logger.debug(
         "append table: src={src_db}.{src_tbl}, dst={dst_db}.{dst_tbl}".format(
@@ -115,8 +114,6 @@ def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=Tr
     :raises ValueError:
         If attributes of the table are different from each other.
     """
-
-    from ._logger import logger
 
     logger.debug(
         "copy table: src={src_db}.{src_tbl}, dst={dst_db}.{dst_tbl}".format(
