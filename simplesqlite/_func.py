@@ -74,10 +74,10 @@ def append_table(src_con, dst_con, table_name):
             raise ValueError(
                 dedent(
                     """
-                source and destination attribute is different from each other
-                src: {}
-                dst: {}
-                """.format(
+                    source and destination attribute is different from each other
+                    src: {}
+                    dst: {}
+                    """.format(
                         src_attr_list, dst_attr_list
                     )
                 )
