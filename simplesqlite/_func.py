@@ -64,6 +64,17 @@ def append_table(src_con, dst_con, table_name):
         If attributes of the table are different from each other.
     """
 
+    from ._logger import logger
+
+    logger.debug(
+        "append table: src={src_db}.{src_tbl}, dst={dst_db}.{dst_tbl}".format(
+            src_db=src_con.database_path,
+            src_tbl=table_name,
+            dst_db=dst_con.database_path,
+            dst_tbl=table_name,
+        )
+    )
+
     src_con.verify_table_existence(table_name)
     dst_con.validate_access_permission(["w", "a"])
 
@@ -106,6 +117,15 @@ def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=Tr
     """
 
     from ._logger import logger
+
+    logger.debug(
+        "copy table: src={src_db}.{src_tbl}, dst={dst_db}.{dst_tbl}".format(
+            src_db=src_con.database_path,
+            src_tbl=src_table_name,
+            dst_db=dst_con.database_path,
+            dst_tbl=dst_table_name,
+        )
+    )
 
     src_con.verify_table_existence(src_table_name)
     dst_con.validate_access_permission(["w", "a"])
