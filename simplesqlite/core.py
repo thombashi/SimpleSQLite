@@ -1529,13 +1529,10 @@ class SimpleSQLite(object):
             typepy.Typecode.STRING: "TEXT",
         }
 
-        dp_extractor = dataproperty.DataPropertyExtractor()
-        col_dp_list = dp_extractor.to_column_dp_list(table_data.value_dp_matrix)
-
         return dict(
             [
                 [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
-                for col_idx, col_dp in enumerate(col_dp_list)
+                for col_idx, col_dp in enumerate(table_data.column_dp_list)
             ]
         )
 
