@@ -68,9 +68,9 @@ def append_table(src_con, dst_con, table_name):
     dst_con.validate_access_permission(["w", "a"])
 
     if dst_con.has_table(table_name):
-        src_attr_list = src_con.fetch_attr_names(table_name)
-        dst_attr_list = dst_con.fetch_attr_names(table_name)
-        if src_attr_list != dst_attr_list:
+        src_attrs = src_con.fetch_attr_names(table_name)
+        dst_attrs = dst_con.fetch_attr_names(table_name)
+        if src_attrs != dst_attrs:
             raise ValueError(
                 dedent(
                     """
@@ -78,7 +78,7 @@ def append_table(src_con, dst_con, table_name):
                     src: {}
                     dst: {}
                     """.format(
-                        src_attr_list, dst_attr_list
+                        src_attrs, dst_attrs
                     )
                 )
             )
