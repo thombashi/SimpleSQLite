@@ -347,7 +347,7 @@ rp_param = u"""
 .. |primary_key| replace::
     Primary key of the creating table.
 
-.. |index_attr_list| replace::
+.. |index_attrs| replace::
     List of attribute names that creating indices.
 
 .. |arg_select_table_name| replace:: Table name of executing the query.
