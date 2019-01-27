@@ -14,6 +14,8 @@ from pathvalidate import (
     NullNameError,
     ValidReservedNameError,
 )
+from sqliteschema import SchemaHeader
+from typepy import Integer, RealNumber, String
 
 from ._logger import logger
 from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
@@ -93,7 +95,25 @@ def append_table(src_con, dst_con, table_name):
                 )
             )
 
-    dst_con.create_table_from_tabledata(src_con.select_as_tabledata(table_name))
+    sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
+    index_attrs = []
+    type_hints = []
+    primary_key = None
+
+    for attr in src_con.schema_extractor.fetch_table_schema(table_name).as_dict()[table_name]:
+        if attr[SchemaHeader.INDEX]:
+            index_attrs.append(attr[SchemaHeader.ATTR_NAME])
+
+        type_hints.append(sqlitetype_to_typepy.get(attr[SchemaHeader.DATA_TYPE]))
+
+        if attr[SchemaHeader.PRIMARY_KEY]:
+            primary_key = attr[SchemaHeader.PRIMARY_KEY]
+
+    dst_con.create_table_from_tabledata(
+        src_con.select_as_tabledata(table_name, type_hints=type_hints),
+        primary_key=primary_key,
+        index_attrs=index_attrs,
+    )
 
     return True
 
