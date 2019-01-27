@@ -11,7 +11,6 @@ import os
 import re
 import sqlite3
 
-import dataproperty
 import pathvalidate
 import six
 import typepy
