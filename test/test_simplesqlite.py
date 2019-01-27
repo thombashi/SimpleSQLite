@@ -729,6 +729,36 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         assert actual.equals(value)
 
 
+class Test_SimpleSQLite_select_as_tabledata(object):
+    @pytest.mark.parametrize(
+        ["value", "type_hints", "expected"],
+        [
+            [
+                TableData(
+                    "typehints",
+                    ["aa", "ab", "ac"],
+                    [[1, 4, "10"], [2, 2.1, "11"], [3, 120.9, "12"]],
+                ),
+                (typepy.String, None, typepy.Integer),
+                [["1", 4, 10], ["2", Decimal("2.1"), 11], ["3", Decimal("120.9"), 12]],
+            ]
+        ],
+    )
+    def test_normal(self, tmpdir, value, type_hints, expected):
+        p_db = tmpdir.join("tmp.db")
+
+        con = SimpleSQLite(str(p_db), "w")
+        con.create_table_from_tabledata(value)
+
+        assert con.fetch_table_names() == [value.table_name]
+        assert con.fetch_attr_names(value.table_name) == value.headers
+
+        actual = con.select_as_tabledata(
+            columns=value.headers, table_name=value.table_name, type_hints=type_hints
+        )
+        assert actual.value_matrix == expected
+
+
 class Test_SimpleSQLite_create_table_from_csv(object):
     @pytest.mark.parametrize(
         [
