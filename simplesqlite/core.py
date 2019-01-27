@@ -391,7 +391,9 @@ class SimpleSQLite(object):
 
         return pandas.DataFrame(result.fetchall(), columns=columns)
 
-    def select_as_tabledata(self, table_name, columns=None, where=None, extra=None):
+    def select_as_tabledata(
+        self, table_name, columns=None, where=None, extra=None, type_hints=None
+    ):
         """
         Get data in the database and return fetched data as a
         :py:class:`tabledata.TableData` instance.
@@ -423,7 +425,7 @@ class SimpleSQLite(object):
         if result is None:
             return TableData(None, [], [])
 
-        return TableData(table_name, columns, result.fetchall())
+        return TableData(table_name, columns, result.fetchall(), type_hints=type_hints)
 
     def select_as_dict(self, table_name, columns=None, where=None, extra=None):
         """
