@@ -301,13 +301,19 @@ class SimpleSQLite(object):
             if caller is None:
                 caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
-            message_list = [
-                "failed to execute query at {:s}({:d}) {:s}".format(file_path, line_no, func_name),
-                "  - query: {}".format(MultiByteStrDecoder(query).unicode_str),
-                "  - msg:   {}".format(e),
-                "  - db:    {}".format(self.database_path),
-            ]
-            raise OperationalError(message="\n".join(message_list))
+
+            raise OperationalError(
+                message="\n".join(
+                    [
+                        "failed to execute query at {:s}({:d}) {:s}".format(
+                            file_path, line_no, func_name
+                        ),
+                        "  - query: {}".format(MultiByteStrDecoder(query).unicode_str),
+                        "  - msg:   {}".format(e),
+                        "  - db:    {}".format(self.database_path),
+                    ]
+                )
+            )
 
         if self.__is_profile:
             self.__dict_query_count[query] = self.__dict_query_count.get(query, 0) + 1
