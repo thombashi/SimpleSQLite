@@ -21,7 +21,6 @@ from tabledata import TableData
 from ._func import validate_table_name
 from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
-from ._validator import validate_sqlite_attr_name
 from .converter import RecordConvertor
 from .error import (
     AttributeNotFoundError,

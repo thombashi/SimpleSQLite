@@ -3,7 +3,6 @@
 import os
 import sys
 
-import pkg_resources
 import sphinx_rtd_theme
 from simplesqlite import __author__, __copyright__, __name__, __version__
 
