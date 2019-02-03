@@ -1485,16 +1485,6 @@ class SimpleSQLite(object):
         return True
 
     @staticmethod
-    def __validate_attr_name_list(attr_name_list):
-        # deprecated
-
-        if typepy.is_empty_sequence(attr_name_list):
-            raise NameValidationError("attribute name list is empty")
-
-        for attr_name in attr_name_list:
-            validate_sqlite_attr_name(attr_name)
-
-    @staticmethod
     def __extract_list_from_fetch_result(result):
         """
         :params tuple result: Return value from a Cursor.fetchall()
