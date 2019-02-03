@@ -1564,8 +1564,3 @@ def connect_memdb():
     """
 
     return SimpleSQLite(MEMORY_DB_NAME, "w")
-
-
-def connect_sqlite_memdb():
-    # Deprecated
-    return connect_memdb()
