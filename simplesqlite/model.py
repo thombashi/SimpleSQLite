@@ -139,7 +139,10 @@ class Model(object):
 
     @classmethod
     def get_attr_name_list(cls):
-        # deprecated: alias to get_attr_name_list method
+        import warnings
+
+        warnings.warn("'get_attr_name_list()' has moved to 'get_attr_names()'", DeprecationWarning)
+
         return cls.get_attr_names()
 
     @classmethod

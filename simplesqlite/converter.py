@@ -63,5 +63,8 @@ class RecordConvertor(object):
 
     @classmethod
     def to_record_list(cls, attr_name_list, value_matrix):
-        # deprecated: alias to to_records
+        import warnings
+
+        warnings.warn("'to_record_list()' has moved to 'to_record_list()'", DeprecationWarning)
+
         return cls.to_records(attr_name_list, value_matrix)
