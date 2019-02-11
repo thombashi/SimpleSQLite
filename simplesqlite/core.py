@@ -1297,7 +1297,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableFileLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attr_names
+        loader.headers = attr_names
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
@@ -1311,7 +1311,7 @@ class SimpleSQLite(object):
         loader = ptr.CsvTableTextLoader(csv_source)
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
-        loader.header_list = attr_names
+        loader.headers = attr_names
         loader.delimiter = delimiter
         loader.quotechar = quotechar
         loader.encoding = encoding
