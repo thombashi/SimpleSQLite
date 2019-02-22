@@ -156,12 +156,12 @@ class AttrList(list, QueryItemInterface):
     """
 
     @classmethod
-    def sanitize(self, name_list):
-        return [Attr.sanitize(name) for name in name_list]
+    def sanitize(self, names):
+        return [Attr.sanitize(name) for name in names]
 
-    def __init__(self, name_list, operation=""):
+    def __init__(self, names, operation=""):
         try:
-            super(AttrList, self).__init__([Attr(name, operation) for name in name_list])
+            super(AttrList, self).__init__([Attr(name, operation) for name in names])
         except AttributeError:
             raise TypeError("name must be a string")
 
