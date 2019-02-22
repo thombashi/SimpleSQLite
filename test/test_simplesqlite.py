@@ -328,7 +328,7 @@ class Test_SimpleSQLite_fetch_table_names(object):
             con_null.fetch_table_names()
 
 
-class Test_SimpleSQLite_fetch_attr_name_list(object):
+class Test_SimpleSQLite_fetch_attr_names(object):
     @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
     def test_normal(self, con, value, expected):
         assert con.fetch_attr_names(value) == expected
