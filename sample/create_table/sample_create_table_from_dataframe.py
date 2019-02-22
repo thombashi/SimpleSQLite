@@ -3,9 +3,8 @@
 
 from __future__ import print_function
 
-from simplesqlite import SimpleSQLite
-
 import pandas
+from simplesqlite import SimpleSQLite
 
 
 con = SimpleSQLite("pandas_df.sqlite")
