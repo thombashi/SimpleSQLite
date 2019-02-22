@@ -903,7 +903,7 @@ class SimpleSQLite(object):
         except NameValidationError:
             return False
 
-        return table_name in self.fetch_table_name_list()
+        return table_name in self.fetch_table_names()
 
     def has_attr(self, table_name, attr_name):
         """
