@@ -947,7 +947,7 @@ class SimpleSQLite(object):
 
         return attr_name in self.fetch_attr_names(table_name)
 
-    def has_attr_list(self, table_name, attr_name_list):
+    def has_attrs(self, table_name, attr_name_list):
         """
         :param str table_name: Table name that attributes exists.
         :param str attr_name_list: Attribute names to tested.
@@ -996,6 +996,9 @@ class SimpleSQLite(object):
             return False
 
         return True
+
+    def has_attr_list(self, table_name, attr_name_list):
+        return self.has_attrs(table_name, attr_name_list)
 
     def verify_table_existence(self, table_name):
         """

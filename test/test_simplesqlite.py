@@ -389,7 +389,7 @@ class Test_SimpleSQLite_has_attr(object):
             con_null.has_attr(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_has_attr_list(object):
+class Test_SimpleSQLite_has_attrs(object):
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],
         [
@@ -402,7 +402,7 @@ class Test_SimpleSQLite_has_attr_list(object):
         ],
     )
     def test_normal(self, con, table, attr, expected):
-        assert con.has_attr_list(table, attr) == expected
+        assert con.has_attrs(table, attr) == expected
 
     @pytest.mark.parametrize(
         ["value", "attr", "expected"],
@@ -414,11 +414,11 @@ class Test_SimpleSQLite_has_attr_list(object):
     )
     def test_exception(self, con, value, attr, expected):
         with pytest.raises(expected):
-            con.has_attr_list(value, attr)
+            con.has_attrs(value, attr)
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.has_attr_list(TEST_TABLE_NAME, "attr")
+            con_null.has_attrs(TEST_TABLE_NAME, "attr")
 
 
 class Test_SimpleSQLite_get_profile(object):
