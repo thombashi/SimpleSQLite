@@ -987,11 +987,11 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(attr_names):
             return False
 
-        not_exist_field_list = [
+        not_exist_fields = [
             attr_name for attr_name in attr_names if not self.has_attr(table_name, attr_name)
         ]
 
-        if not_exist_field_list:
+        if not_exist_fields:
             return False
 
         return True
