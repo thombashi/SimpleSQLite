@@ -950,7 +950,7 @@ class SimpleSQLite(object):
     def has_attrs(self, table_name, attr_names):
         """
         :param str table_name: Table name that attributes exists.
-        :param str attr_name_list: Attribute names to tested.
+        :param str attr_names: Attribute names to tested.
         :return: |True| if the table has all of the attribute.
         :rtype: bool
         :raises simplesqlite.TableNotFoundError:
@@ -968,10 +968,9 @@ class SimpleSQLite(object):
                     ["attr_a", "attr_b"],
                     [[1, "a"], [2, "b"]])
 
-                print(con.has_attr_list(table_name, ["attr_a"]))
-                print(con.has_attr_list(table_name, ["attr_a", "attr_b"]))
-                print(con.has_attr_list(
-                    table_name, ["attr_a", "attr_b", "not_existing"]))
+                print(con.has_attrs(table_name, ["attr_a"]))
+                print(con.has_attrs(table_name, ["attr_a", "attr_b"]))
+                print(con.has_attrs(table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
                     print(con.has_attr("not_existing", ["attr_a"]))
                 except simplesqlite.TableNotFoundError as e:
