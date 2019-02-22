@@ -317,7 +317,7 @@ class Test_SimpleSQLite_total_changes(object):
             con_null.total_changes
 
 
-class Test_SimpleSQLite_fetch_table_name_list(object):
+class Test_SimpleSQLite_fetch_table_names(object):
     def test_normal(self, con):
         expected = set([TEST_TABLE_NAME])
 
