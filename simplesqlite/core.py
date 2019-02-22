@@ -1492,7 +1492,7 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __extract_attr_desc_list_from_tabledata(self, table_data, primary_key):
+    def __extract_attr_descs_from_tabledata(self, table_data, primary_key):
         if primary_key and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
 
@@ -1545,8 +1545,7 @@ class SimpleSQLite(object):
         ).normalize()
 
         self.create_table(
-            table_data.table_name,
-            self.__extract_attr_desc_list_from_tabledata(table_data, primary_key),
+            table_data.table_name, self.__extract_attr_descs_from_tabledata(table_data, primary_key)
         )
         self.insert_many(table_data.table_name, table_data.value_matrix)
         if typepy.is_not_empty_sequence(index_attrs):
