@@ -674,7 +674,7 @@ class SimpleSQLite(object):
         return self.schema_extractor.fetch_table_names(include_system_table)
 
     def fetch_table_name_list(self, include_system_table=False):
-        """alias to :py:meth:`~.fetch_table_names` method."""
+        # alias to :py:meth:`~.fetch_table_names` method
         return self.fetch_table_names(include_system_table)
 
     def fetch_attr_names(self, table_name):
@@ -717,7 +717,7 @@ class SimpleSQLite(object):
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
     def fetch_attr_name_list(self, table_name):
-        """alias to :py:meth:`~.fetch_attr_names` method."""
+        # alias to :py:meth:`~.fetch_attr_names` method
         return self.fetch_attr_names(table_name)
 
     def fetch_attr_type(self, table_name):
