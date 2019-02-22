@@ -742,9 +742,9 @@ class SimpleSQLite(object):
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
 
-        def get_entry(item_list):
-            key = " ".join(item_list[:-1])
-            value = item_list[-1]
+        def get_entry(items):
+            key = " ".join(items[:-1])
+            value = items[-1]
 
             return [key, value]
 
