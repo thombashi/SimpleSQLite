@@ -1205,7 +1205,7 @@ class SimpleSQLite(object):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
-        self, table_name, attr_name_list, data_matrix, primary_key=None, index_attrs=None
+        self, table_name, attr_names, data_matrix, primary_key=None, index_attrs=None
     ):
         """
         Create a table if not exists. Moreover, insert data into the created
@@ -1233,7 +1233,7 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            TableData(table_name, attr_name_list, data_matrix), primary_key, index_attrs
+            TableData(table_name, attr_names, data_matrix), primary_key, index_attrs
         )
 
     def create_table_from_tabledata(self, table_data, primary_key=None, index_attrs=None):
