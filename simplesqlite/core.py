@@ -998,6 +998,7 @@ class SimpleSQLite(object):
         return True
 
     def has_attr_list(self, table_name, attr_name_list):
+        # alias to has_attrs
         return self.has_attrs(table_name, attr_name_list)
 
     def verify_table_existence(self, table_name):
