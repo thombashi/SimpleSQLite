@@ -1212,7 +1212,7 @@ class SimpleSQLite(object):
         table.
 
         :param str table_name: Table name to create.
-        :param list attr_name_list: List of attribute names of the table.
+        :param list attr_names: Attribute names of the table.
         :param data_matrix: Data to be inserted into the table.
         :type data_matrix: List of |dict|/|namedtuple|/|list|/|tuple|
         :param str primary_key: |primary_key|
