@@ -1090,14 +1090,14 @@ class SimpleSQLite(object):
             "'{}' attribute not found in '{}' table".format(attr_name, table_name)
         )
 
-    def validate_access_permission(self, valid_permission_list):
+    def validate_access_permission(self, valid_permissions):
         """
-        :param valid_permission_list:
+        :param valid_permissions:
             List of permissions that access is allowed.
-        :type valid_permission_list: |list|/|tuple|
+        :type valid_permissions: |list|/|tuple|
         :raises ValueError: If the |attr_mode| is invalid.
         :raises IOError:
-            If the |attr_mode| not in the ``valid_permission_list``.
+            If the |attr_mode| not in the ``valid_permissions``.
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
         """
@@ -1107,10 +1107,10 @@ class SimpleSQLite(object):
         if typepy.is_null_string(self.mode):
             raise ValueError("mode is not set")
 
-        if self.mode not in valid_permission_list:
+        if self.mode not in valid_permissions:
             raise IOError(
                 "invalid access: expected-mode='{}', current-mode='{}'".format(
-                    "' or '".join(valid_permission_list), self.mode
+                    "' or '".join(valid_permissions), self.mode
                 )
             )
 
