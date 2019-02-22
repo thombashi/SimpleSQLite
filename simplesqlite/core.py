@@ -947,7 +947,7 @@ class SimpleSQLite(object):
 
         return attr_name in self.fetch_attr_names(table_name)
 
-    def has_attrs(self, table_name, attr_name_list):
+    def has_attrs(self, table_name, attr_names):
         """
         :param str table_name: Table name that attributes exists.
         :param str attr_name_list: Attribute names to tested.
@@ -985,11 +985,11 @@ class SimpleSQLite(object):
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        if typepy.is_empty_sequence(attr_name_list):
+        if typepy.is_empty_sequence(attr_names):
             return False
 
         not_exist_field_list = [
-            attr_name for attr_name in attr_name_list if not self.has_attr(table_name, attr_name)
+            attr_name for attr_name in attr_names if not self.has_attr(table_name, attr_name)
         ]
 
         if not_exist_field_list:
