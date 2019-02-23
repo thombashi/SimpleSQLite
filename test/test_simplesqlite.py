@@ -651,6 +651,48 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
 
         assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "AA"
 
+    def test_normal_add_primary_key_column(self, tmpdir):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+
+        table_name = "table1"
+        con.create_table_from_data_matrix(
+            table_name=table_name,
+            attr_names=["AA", "BB"],
+            data_matrix=[["a", 11], ["bb", 12]],
+            add_primary_key_column=True,
+        )
+        assert con.select_as_tabledata(table_name) == TableData(
+            table_name=table_name, headers=["id", "AA", "BB"], rows=[[1, "a", 11], [2, "bb", 12]]
+        )
+        assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "id"
+
+        table_name = "table2"
+        con.create_table_from_data_matrix(
+            table_name=table_name,
+            attr_names=["AA", "BB"],
+            data_matrix=[["a", 11], ["bb", 12]],
+            primary_key="pkey",
+            add_primary_key_column=True,
+        )
+        assert con.select_as_tabledata(table_name) == TableData(
+            table_name=table_name, headers=["pkey", "AA", "BB"], rows=[[1, "a", 11], [2, "bb", 12]]
+        )
+        assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "pkey"
+
+    def test_except_add_primary_key_column(self, tmpdir):
+        p = tmpdir.join("tmp.db")
+        con = SimpleSQLite(str(p), "w")
+
+        with pytest.raises(ValueError):
+            con.create_table_from_data_matrix(
+                table_name="specify existing attr as a primary key",
+                attr_names=["AA", "BB"],
+                data_matrix=[["a", 11], ["bb", 12]],
+                primary_key="AA",
+                add_primary_key_column=True,
+            )
+
     def test_normal_symbol_header(self, tmpdir):
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")

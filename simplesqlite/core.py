@@ -1205,7 +1205,13 @@ class SimpleSQLite(object):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
-        self, table_name, attr_names, data_matrix, primary_key=None, index_attrs=None
+        self,
+        table_name,
+        attr_names,
+        data_matrix,
+        primary_key=None,
+        add_primary_key_column=False,
+        index_attrs=None,
     ):
         """
         Create a table if not exists. Moreover, insert data into the created
@@ -1233,10 +1239,15 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            TableData(table_name, attr_names, data_matrix), primary_key, index_attrs
+            TableData(table_name, attr_names, data_matrix),
+            primary_key,
+            add_primary_key_column,
+            index_attrs,
         )
 
-    def create_table_from_tabledata(self, table_data, primary_key=None, index_attrs=None):
+    def create_table_from_tabledata(
+        self, table_data, primary_key=None, add_primary_key_column=False, index_attrs=None
+    ):
         """
         Create a table from :py:class:`tabledata.TableData`.
 
@@ -1248,7 +1259,9 @@ class SimpleSQLite(object):
             :py:meth:`.create_table_from_data_matrix`
         """
 
-        self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
+        self.__create_table_from_tabledata(
+            table_data, primary_key, add_primary_key_column, index_attrs
+        )
 
     def create_table_from_csv(
         self,
@@ -1259,6 +1272,7 @@ class SimpleSQLite(object):
         quotechar='"',
         encoding="utf-8",
         primary_key=None,
+        add_primary_key_column=False,
         index_attrs=None,
     ):
         """
@@ -1306,7 +1320,9 @@ class SimpleSQLite(object):
         loader.encoding = encoding
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
+                self.__create_table_from_tabledata(
+                    table_data, primary_key, add_primary_key_column, index_attrs
+                )
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1319,10 +1335,17 @@ class SimpleSQLite(object):
         loader.quotechar = quotechar
         loader.encoding = encoding
         for table_data in loader.load():
-            self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
+            self.__create_table_from_tabledata(
+                table_data, primary_key, add_primary_key_column, index_attrs
+            )
 
     def create_table_from_json(
-        self, json_source, table_name="", primary_key=None, index_attrs=None
+        self,
+        json_source,
+        table_name="",
+        primary_key=None,
+        add_primary_key_column=False,
+        index_attrs=None,
     ):
         """
         Create a table from a JSON file/text.
@@ -1350,7 +1373,9 @@ class SimpleSQLite(object):
             loader.table_name = table_name
         try:
             for table_data in loader.load():
-                self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
+                self.__create_table_from_tabledata(
+                    table_data, primary_key, add_primary_key_column, index_attrs
+                )
             return
         except (ptr.InvalidFilePathError, IOError):
             pass
@@ -1359,10 +1384,17 @@ class SimpleSQLite(object):
         if typepy.is_not_null_string(table_name):
             loader.table_name = table_name
         for table_data in loader.load():
-            self.__create_table_from_tabledata(table_data, primary_key, index_attrs)
+            self.__create_table_from_tabledata(
+                table_data, primary_key, add_primary_key_column, index_attrs
+            )
 
     def create_table_from_dataframe(
-        self, dataframe, table_name="", primary_key=None, index_attrs=None
+        self,
+        dataframe,
+        table_name="",
+        primary_key=None,
+        add_primary_key_column=False,
+        index_attrs=None,
     ):
         """
         Create a table from a pandas.DataFrame instance.
@@ -1379,6 +1411,7 @@ class SimpleSQLite(object):
         self.__create_table_from_tabledata(
             TableData.from_dataframe(dataframe=dataframe, table_name=table_name),
             primary_key,
+            add_primary_key_column,
             index_attrs,
         )
 
@@ -1495,11 +1528,24 @@ class SimpleSQLite(object):
 
         return [record[0] for record in result]
 
-    def __extract_attr_descs_from_tabledata(self, table_data, primary_key):
-        if primary_key and primary_key not in table_data.headers:
+    def __extract_attr_descs_from_tabledata(self, table_data, primary_key, add_primary_key_column):
+        if primary_key and not add_primary_key_column and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
 
         attr_description_list = []
+
+        if add_primary_key_column:
+            if not primary_key:
+                primary_key = "id"
+
+            if primary_key in table_data.headers:
+                raise ValueError(
+                    "a primary key field that will be added should not conflict "
+                    "with existing fields."
+                )
+
+            attr_description_list.append("{} INTEGER PRIMARY KEY AUTOINCREMENT".format(primary_key))
+
         for col, value_type in sorted(
             six.iteritems(self.__extract_col_type_from_tabledata(table_data))
         ):
@@ -1535,10 +1581,19 @@ class SimpleSQLite(object):
             ]
         )
 
-    def __create_table_from_tabledata(self, table_data, primary_key, index_attrs):
+    def __create_table_from_tabledata(
+        self, table_data, primary_key, add_primary_key_column, index_attrs
+    ):
         self.validate_access_permission(["w", "a"])
 
-        logger.debug("__create_table_from_tabledata: {}".format(table_data))
+        debug_msg_list = ["__create_table_from_tabledata:", "    tbldata={}".format(table_data)]
+        if primary_key:
+            debug_msg_list.append("    primary_key={}".format(primary_key))
+        if add_primary_key_column:
+            debug_msg_list.append("    add_primary_key_column={}".format(add_primary_key_column))
+        if index_attrs:
+            debug_msg_list.append("    index_attrs={}".format(index_attrs))
+        logger.debug("\n".join(debug_msg_list))
 
         if table_data.is_empty():
             raise ValueError("input table_data is empty: {}".format(table_data))
@@ -1548,9 +1603,19 @@ class SimpleSQLite(object):
         ).normalize()
 
         self.create_table(
-            table_data.table_name, self.__extract_attr_descs_from_tabledata(table_data, primary_key)
+            table_data.table_name,
+            self.__extract_attr_descs_from_tabledata(
+                table_data, primary_key, add_primary_key_column
+            ),
         )
-        self.insert_many(table_data.table_name, table_data.value_matrix)
+
+        if add_primary_key_column:
+            self.insert_many(
+                table_data.table_name, [[None] + row for row in table_data.value_matrix]
+            )
+        else:
+            self.insert_many(table_data.table_name, table_data.value_matrix)
+
         if typepy.is_not_empty_sequence(index_attrs):
             self.create_index_list(table_data.table_name, AttrList.sanitize(index_attrs))
         self.commit()
