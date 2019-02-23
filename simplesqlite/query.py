@@ -140,7 +140,7 @@ class Attr(QueryItem):
 
 class AttrList(list, QueryItemInterface):
     """
-    :param list/tuple name_list: List of attribute names.
+    :param list/tuple names: Attribute names.
     :param str operation:
         Used as a SQLite function if the value is not empty.
 
