@@ -101,13 +101,12 @@ def append_table(src_con, dst_con, table_name):
     primary_key = None
 
     for attr in src_con.schema_extractor.fetch_table_schema(table_name).as_dict()[table_name]:
-        if attr[SchemaHeader.INDEX]:
+        if attr[SchemaHeader.KEY] == "PRI":
+            primary_key = attr[SchemaHeader.ATTR_NAME]
+        elif attr[SchemaHeader.INDEX]:
             index_attrs.append(attr[SchemaHeader.ATTR_NAME])
 
         type_hints.append(sqlitetype_to_typepy.get(attr[SchemaHeader.DATA_TYPE]))
-
-        if attr[SchemaHeader.PRIMARY_KEY]:
-            primary_key = attr[SchemaHeader.PRIMARY_KEY]
 
     dst_con.create_table_from_tabledata(
         src_con.select_as_tabledata(table_name, type_hints=type_hints),

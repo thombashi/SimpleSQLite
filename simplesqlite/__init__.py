@@ -12,7 +12,7 @@ from .__version__ import __author__, __copyright__, __email__, __license__, __ve
 from ._func import append_table, copy_table
 from ._logger import set_log_level, set_logger
 from ._sanitizer import SQLiteTableDataSanitizer
-from .core import SQLITE_SYSTEM_TABLE_LIST, SimpleSQLite, connect_memdb
+from .core import SQLITE_SYSTEM_TABLES, SimpleSQLite, connect_memdb
 from .error import (
     AttributeNotFoundError,
     DatabaseError,

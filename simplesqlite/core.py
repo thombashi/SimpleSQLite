@@ -15,7 +15,7 @@ import pathvalidate
 import six
 import typepy
 from mbstrdecoder import MultiByteStrDecoder
-from sqliteschema import SQLITE_SYSTEM_TABLE_LIST, SQLiteSchemaExtractor
+from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
 
 from ._func import validate_table_name
@@ -1124,7 +1124,7 @@ class SimpleSQLite(object):
 
         self.validate_access_permission(["w", "a"])
 
-        if table_name in SQLITE_SYSTEM_TABLE_LIST:
+        if table_name in SQLITE_SYSTEM_TABLES:
             # warning message
             return
 
