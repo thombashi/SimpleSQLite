@@ -649,6 +649,13 @@ class SimpleSQLite(object):
 
         return fetch[0]
 
+    def fetch_values(self, select, table_name, where=None, extra=None):
+        result = self.select(select=select, table_name=table_name, where=where, extra=extra)
+        if result is None:
+            return None
+
+        return [record[0] for record in result.fetchall()]
+
     def fetch_table_names(self, include_system_table=False):
         """
         :return: List of table names in the database.
