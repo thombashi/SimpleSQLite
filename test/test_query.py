@@ -273,6 +273,13 @@ class Test_Select(object):
                 "ORDER BY D",
                 "SELECT A FROM [B-B] WHERE C > 1 AND D != 'hoge' ORDER BY D",
             ],
+            [
+                "A",
+                "B-B",
+                Or([Where("C", 1, cmp_operator=">"), Where("D", "hoge", cmp_operator="!=")]),
+                "ORDER BY D",
+                "SELECT A FROM [B-B] WHERE C > 1 OR D != 'hoge' ORDER BY D",
+            ],
         ],
     )
     def test_normal(self, select, table, where, extra, expected):
