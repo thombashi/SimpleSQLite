@@ -13,7 +13,18 @@ import string
 import pytest
 import six
 from simplesqlite import NameValidationError, SqlSyntaxError
-from simplesqlite.query import And, Attr, AttrList, Or, Select, Table, Value, Where, make_index_name
+from simplesqlite.query import (
+    And,
+    Attr,
+    AttrList,
+    Distinct,
+    Or,
+    Select,
+    Table,
+    Value,
+    Where,
+    make_index_name,
+)
 
 
 nan = float("nan")
@@ -170,6 +181,26 @@ class Test_AttrList(object):
     def test_exception(self, value, expected):
         with pytest.raises(expected):
             AttrList(value)
+
+
+class Test_Distinct(object):
+    @pytest.mark.parametrize(
+        ["value", "expected"],
+        [
+            [Attr("hoge"), "DISTINCT hoge"],
+            [Attr("%user"), "DISTINCT [%user]"],
+            [AttrList(["%aaa", "bbb"]), "DISTINCT [%aaa],bbb"],
+        ],
+    )
+    def test_normal(self, value, expected):
+        assert_query_item(Distinct(value), expected)
+
+    @pytest.mark.parametrize(
+        ["value", "expected"], [[None, TypeError], [nan, TypeError], [True, TypeError]]
+    )
+    def test_exception(self, value, expected):
+        with pytest.raises(expected):
+            Distinct(value)
 
 
 class Test_Value(object):

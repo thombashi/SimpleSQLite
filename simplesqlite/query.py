@@ -175,6 +175,23 @@ class AttrList(list, QueryItemInterface):
         return ",".join([six.text_type(attr) for attr in self])
 
 
+class Distinct(QueryItem):
+    @property
+    def key(self):
+        return self.__key
+
+    def __init__(self, key):
+        if not isinstance(key, (six.text_type, Attr, AttrList)):
+            raise TypeError("key should be a string/Attr/AttrList instance: actual={}".format(key))
+
+        self.__key = key
+        if isinstance(key, six.text_type):
+            self.__key = Attr(key)
+
+    def to_query(self):
+        return "DISTINCT {}".format(self.key)
+
+
 class Value(QueryItem):
     """
     :param str value: Value associated with a key.
