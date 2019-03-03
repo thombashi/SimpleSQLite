@@ -541,12 +541,17 @@ class SimpleSQLite(object):
         query = SqlQuery.make_insert(table_name, records[0])
 
         if self.debug_query or self.global_debug_query:
-            logger.debug(
-                "\n".join(
-                    [query]
-                    + ["    record {:4d}: {}".format(i, record) for i, record in enumerate(records)]
-                )
-            )
+            logging_count = 8
+            num_records = len(records)
+
+            logs = [query] + [
+                "    record {:4d}: {}".format(i, record)
+                for i, record in enumerate(records[:logging_count])
+            ]
+            if num_records - logging_count > 0:
+                logs.append("    and other {} records are inserted".format(num_records))
+
+            logger.debug("\n".join(logs))
 
         try:
             self.connection.executemany(query, records)
