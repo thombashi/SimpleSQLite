@@ -61,5 +61,5 @@ readme:
 
 .PHONY: release
 release:
-	@python setup.py release --sign
+	@cd $(BUILD_WORK_DIR)/$(PACKAGE); python setup.py release --sign
 	@make clean
