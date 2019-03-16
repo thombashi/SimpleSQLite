@@ -1,6 +1,9 @@
 PACKAGE := SimpleSQLite
+AUTHOR := thombashi
+BUILD_WORK_DIR := _work
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
+DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 
 
 .PHONY: build
@@ -10,6 +13,17 @@ build:
 	@twine check dist/*
 	@python setup.py clean --all
 	ls -lh dist/*
+
+.PHONY: releasebuild
+releasebuild:
+	@rm -rf $(BUILD_WORK_DIR)/
+	@mkdir -p $(BUILD_WORK_DIR)/
+	@cd $(BUILD_WORK_DIR); \
+		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git; \
+		cd $(PACKAGE); \
+		python setup.py build
+	@twine check $(DIST_DIR)/*
+	ls -lh $(DIST_DIR)/*
 
 .PHONY: clean
 clean:
