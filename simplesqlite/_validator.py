@@ -172,10 +172,12 @@ def validate_sqlite_table_name(name):
     if __RE_INVALID_CHARS.search(name):
         raise InvalidCharError("unprintable character found")
 
-    if name.upper() in __SQLITE_INVALID_RESERVED_KEYWORDS_TABLE:
+    name = name.upper()
+
+    if name in __SQLITE_INVALID_RESERVED_KEYWORDS_TABLE:
         raise InvalidReservedNameError("'{:s}' is a reserved keyword by sqlite".format(name))
 
-    if name.upper() in __SQLITE_VALID_RESERVED_KEYWORDS_TABLE:
+    if name in __SQLITE_VALID_RESERVED_KEYWORDS_TABLE:
         raise ValidReservedNameError("'{:s}' is a reserved keyword by sqlite".format(name))
 
 
@@ -199,8 +201,10 @@ def validate_sqlite_attr_name(name):
     if __RE_INVALID_CHARS.search(name):
         raise InvalidCharError("unprintable character found")
 
-    if name.upper() in __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR:
+    name = name.upper()
+
+    if name in __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR:
         raise InvalidReservedNameError("'{}' is a reserved keyword by sqlite".format(name))
 
-    if name.upper() in __SQLITE_VALID_RESERVED_KEYWORDS_ATTR:
+    if name in __SQLITE_VALID_RESERVED_KEYWORDS_ATTR:
         raise ValidReservedNameError("'{}' is a reserved keyword by sqlite".format(name))
