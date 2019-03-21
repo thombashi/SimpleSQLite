@@ -160,6 +160,8 @@ class AttrList(list, QueryItemInterface):
         return [Attr.sanitize(name) for name in names]
 
     def __init__(self, names, operation=""):
+        self.__operation = operation
+
         try:
             super(AttrList, self).__init__([Attr(name, operation) for name in names])
         except AttributeError:
@@ -173,6 +175,15 @@ class AttrList(list, QueryItemInterface):
 
     def to_query(self):
         return ",".join([six.text_type(attr) for attr in self])
+
+    def append(self, item):
+        if not isinstance(item, (six.text_type, Attr)):
+            raise TypeError("item should be a str/Attr instance: actual={}".format(type(item)))
+
+        if isinstance(item, six.text_type):
+            item = Attr(item, operation=self.__operation)
+
+        super(AttrList, self).append(item)
 
 
 class Distinct(QueryItem):

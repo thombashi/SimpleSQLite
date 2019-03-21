@@ -175,6 +175,22 @@ class Test_AttrList(object):
     def test_normal(self, value, operation, expected):
         assert_query_item(AttrList(value, operation), expected)
 
+        attrs = AttrList([], operation)
+        for v in value:
+            attrs.append(v)
+        assert_query_item(attrs, expected)
+
+    @pytest.mark.parametrize(
+        ["value", "expected"], [[["%aaa", "bbb", "ccc-ddd"], "[%aaa],bbb,[ccc-ddd]"]]
+    )
+    def test_normal_append_attr(self, value, expected):
+        assert_query_item(AttrList(value), expected)
+
+        attrs = AttrList([])
+        for v in value:
+            attrs.append(Attr(v))
+        assert_query_item(attrs, expected)
+
     @pytest.mark.parametrize(
         ["value", "expected"], [[None, TypeError], [nan, TypeError], [True, TypeError]]
     )
