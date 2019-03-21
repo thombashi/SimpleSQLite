@@ -182,7 +182,9 @@ class Distinct(QueryItem):
 
     def __init__(self, key):
         if not isinstance(key, (six.text_type, Attr, AttrList)):
-            raise TypeError("key should be a string/Attr/AttrList instance: actual={}".format(key))
+            raise TypeError(
+                "key should be a string/Attr/AttrList instance: actual={}".format(type(key))
+            )
 
         self.__key = key
         if isinstance(key, six.text_type):
@@ -351,7 +353,9 @@ class Or(list, QueryItemInterface):
         for where in where_list:
             if not isinstance(where, (six.text_type, Where, And, Or)):
                 raise TypeError(
-                    "where clause item must be either string or Where/And/Or class instance"
+                    "where_list item must either string or Where/And/Or class instance: actual={}".format(
+                        type(where)
+                    )
                 )
 
         super(Or, self).__init__(where_list)
@@ -387,7 +391,9 @@ class And(list, QueryItemInterface):
         for where in where_list:
             if not isinstance(where, (six.text_type, Where, And, Or)):
                 raise TypeError(
-                    "where clause item must be either string or Where/And/Or class instance"
+                    "where_list item must either string or Where/And/Or class instance: actual={}".format(
+                        type(where)
+                    )
                 )
 
         super(And, self).__init__(where_list)
