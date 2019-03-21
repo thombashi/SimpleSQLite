@@ -15,36 +15,6 @@ nan = float("nan")
 inf = float("inf")
 
 
-class Test_SqlQuery_make_insert(object):
-    @pytest.mark.parametrize(
-        ["table", "insert_tuple", "expected"],
-        [
-            ["A", ["B"], "INSERT INTO A VALUES (?)"],
-            ["A", ["B", "C"], "INSERT INTO A VALUES (?,?)"],
-            ["A", ["AAAA", 2, 0.1], "INSERT INTO A VALUES (?,?,?)"],
-        ],
-    )
-    def test_normal(self, table, insert_tuple, expected):
-        assert SqlQuery.make_insert(table, insert_tuple) == expected
-
-    @pytest.mark.parametrize(
-        ["table", "insert_tuple", "is_isert_many", "expected"],
-        [
-            ["", [], False, ValueError],
-            ["", None, True, ValueError],
-            ["", ["B"], False, ValueError],
-            ["A", [], True, ValueError],
-            ["A", None, False, ValueError],
-            [None, None, True, ValueError],
-            [None, ["B"], False, ValueError],
-            [None, [], True, ValueError],
-        ],
-    )
-    def test_exception(self, table, insert_tuple, is_isert_many, expected):
-        with pytest.raises(expected):
-            SqlQuery.make_insert(table, insert_tuple)
-
-
 class Test_SqlQuery_make_update(object):
     @pytest.mark.parametrize(
         ["table", "set_query", "where", "expected"],
