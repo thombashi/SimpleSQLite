@@ -427,6 +427,36 @@ class And(list, QueryItemInterface):
         return " AND ".join(item_list)
 
 
+class Insert(QueryItem):
+    """
+    INSERT query.
+
+    :param str table: Table name of executing the query.
+    :param AttrList attrs: Attributes that inserting to..
+    :raises simplesqlite.NameValidationError:
+        |raises_validate_table_name|
+    """
+
+    def __init__(self, table, attrs):
+        validate_table_name(table)
+
+        if not isinstance(attrs, AttrList):
+            raise TypeError("attr must be a AttrList class instance: actual={}".format(type(attrs)))
+
+        if typepy.is_empty_sequence(attrs):
+            raise ValueError("empty attributes")
+
+        self.__table = table
+        self.__attrs = attrs
+
+    def to_query(self):
+        return "INSERT INTO {:s}({:s}) VALUES ({:s})".format(
+            Table(self.__table),
+            ",".join([attr.to_query() for attr in self.__attrs]),
+            ",".join(["?" for _ in self.__attrs]),
+        )
+
+
 def make_index_name(table_name, attr_name):
     import hashlib
 

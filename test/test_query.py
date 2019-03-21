@@ -18,6 +18,7 @@ from simplesqlite.query import (
     Attr,
     AttrList,
     Distinct,
+    Insert,
     Or,
     Select,
     Table,
@@ -357,6 +358,38 @@ class Test_And(object):
     )
     def test_normal(self, where_list, expected):
         assert_query_item(And(where_list), expected)
+
+
+class Test_Insert(object):
+    @pytest.mark.parametrize(
+        ["table", "attrs", "expected"],
+        [
+            ["A", ["B B"], "INSERT INTO A([B B]) VALUES (?)"],
+            ["A", ["BB", "CC"], "INSERT INTO A(BB,CC) VALUES (?,?)"],
+        ],
+    )
+    def test_normal(self, table, attrs, expected):
+        assert_query_item(Insert(table, AttrList(attrs)), expected)
+
+    @pytest.mark.parametrize(
+        ["table", "attrs", "expected"],
+        [
+            ["", [], NameValidationError],
+            ["", None, NameValidationError],
+            ["", ["B"], NameValidationError],
+            [None, None, NameValidationError],
+            [None, ["B"], NameValidationError],
+            [None, [], NameValidationError],
+            ["A", None, TypeError],
+            ["A", [], TypeError],
+            ["A", [None], TypeError],
+            ["A", ["B", "C"], TypeError],
+            ["A", Attr("B"), TypeError],
+        ],
+    )
+    def test_exception(self, table, attrs, expected):
+        with pytest.raises(expected):
+            Insert(table, attrs)
 
 
 class Test_make_index_name(object):

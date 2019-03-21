@@ -30,7 +30,7 @@ from .error import (
     OperationalError,
     TableNotFoundError,
 )
-from .query import Attr, AttrList, Select, Table, Value, make_index_name
+from .query import Attr, AttrList, Insert, Select, Table, Value, make_index_name
 from .sqlquery import SqlQuery
 
 
@@ -537,8 +537,9 @@ class SimpleSQLite(object):
         if typepy.is_empty_sequence(records):
             return 0
 
-        records = RecordConvertor.to_records(self.fetch_attr_names(table_name), records)
-        query = SqlQuery.make_insert(table_name, records[0])
+        attr_names = self.fetch_attr_names(table_name)
+        records = RecordConvertor.to_records(attr_names, records)
+        query = Insert(table_name, AttrList(attr_names)).to_query()
 
         if self.debug_query or self.global_debug_query:
             logging_count = 8
