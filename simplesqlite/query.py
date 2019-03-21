@@ -320,7 +320,7 @@ class Select(QueryItem):
         validate_table_name(self.__table)
 
         if self.__where and not isinstance(where, (six.text_type, Where, And, Or)):
-            raise ValueError(
+            raise TypeError(
                 "where should be a str/Where/And/Or instance: actual={}".format(type(self.__where))
             )
 
