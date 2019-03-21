@@ -549,7 +549,9 @@ class SimpleSQLite(object):
                 for i, record in enumerate(records[:logging_count])
             ]
             if num_records - logging_count > 0:
-                logs.append("    and other {} records are inserted".format(num_records))
+                logs.append(
+                    "    and other {} records will be inserted".format(num_records - logging_count)
+                )
 
             logger.debug("\n".join(logs))
 
