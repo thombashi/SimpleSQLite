@@ -68,10 +68,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         new_name = pv.replace_unprintable_char(new_name, replacement_text="")
         new_name = pv.replace_symbol(new_name, replacement_text="_")
-        new_name = re.sub("_+", "_", new_name)
         new_name = new_name.replace(" ", "_")
+        new_name = re.sub("_+", "_", new_name)
+        new_name = new_name.strip("_")
 
-        return new_name.strip("_")
+        return new_name
 
     def _validate_table_name(self, table_name):
         try:
