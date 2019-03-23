@@ -14,9 +14,8 @@ from pathvalidate import (
     NullNameError,
     ValidReservedNameError,
 )
-from sqliteschema import SchemaHeader
-from typepy import Integer, RealNumber, String
 
+from ._common import extract_table_metadata
 from ._logger import logger
 from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .error import NameValidationError
@@ -50,23 +49,6 @@ def validate_attr_name(name):
         raise NameValidationError(e)
     except NullNameError:
         raise NameValidationError("attribute name is empty")
-
-
-def _extract_table_metadata(con, table_name):
-    primary_key = None
-    index_attrs = []
-    type_hints = []
-    sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
-
-    for attr in con.schema_extractor.fetch_table_schema(table_name).as_dict()[table_name]:
-        if attr[SchemaHeader.KEY] == "PRI":
-            primary_key = attr[SchemaHeader.ATTR_NAME]
-        elif attr[SchemaHeader.INDEX]:
-            index_attrs.append(attr[SchemaHeader.ATTR_NAME])
-
-        type_hints.append(sqlitetype_to_typepy.get(attr[SchemaHeader.DATA_TYPE]))
-
-    return (primary_key, index_attrs, type_hints)
 
 
 def append_table(src_con, dst_con, table_name):
@@ -112,7 +94,7 @@ def append_table(src_con, dst_con, table_name):
                 )
             )
 
-    primary_key, index_attrs, type_hints = _extract_table_metadata(src_con, table_name)
+    primary_key, index_attrs, type_hints = extract_table_metadata(src_con, table_name)
 
     dst_con.create_table_from_tabledata(
         src_con.select_as_tabledata(table_name, type_hints=type_hints),
@@ -162,7 +144,7 @@ def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=Tr
             )
             return False
 
-    primary_key, index_attrs, _ = _extract_table_metadata(src_con, src_table_name)
+    primary_key, index_attrs, _ = extract_table_metadata(src_con, src_table_name)
 
     result = src_con.select(select="*", table_name=src_table_name)
     if result is None:
