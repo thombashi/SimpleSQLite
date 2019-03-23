@@ -15,10 +15,12 @@ def extract_table_metadata(con, table_name):
     type_hints = []
 
     for attr in con.schema_extractor.fetch_table_schema(table_name).as_dict()[table_name]:
+        attr_name = attr[SchemaHeader.ATTR_NAME]
+
         if attr[SchemaHeader.KEY] == "PRI":
-            primary_key = attr[SchemaHeader.ATTR_NAME]
+            primary_key = attr_name
         elif attr[SchemaHeader.INDEX]:
-            index_attrs.append(attr[SchemaHeader.ATTR_NAME])
+            index_attrs.append(attr_name)
 
         type_hints.append(_sqlitetype_to_typepy.get(attr[SchemaHeader.DATA_TYPE]))
 
