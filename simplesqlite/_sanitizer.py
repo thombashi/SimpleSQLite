@@ -61,16 +61,17 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _preprocess_table_name(self):
         try:
             new_name = pv.sanitize_filename(self._tabledata.table_name, replacement_text="_")
-            new_name = pv.replace_unprintable_char(new_name, replacement_text="")
-            new_name = pv.replace_symbol(new_name, replacement_text="_")
-            new_name = re.sub("_+", "_", new_name)
-            new_name = new_name.replace(" ", "_")
-
-            return new_name.strip("_")
         except TypeError:
             raise NameValidationError(
                 "table name must be a string: actual='{}'".format(self._tabledata.table_name)
             )
+
+        new_name = pv.replace_unprintable_char(new_name, replacement_text="")
+        new_name = pv.replace_symbol(new_name, replacement_text="_")
+        new_name = re.sub("_+", "_", new_name)
+        new_name = new_name.replace(" ", "_")
+
+        return new_name.strip("_")
 
     def _validate_table_name(self, table_name):
         try:
