@@ -45,7 +45,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if typepy.is_null_string(tabledata.table_name):
             raise NameValidationError("table_name is empty")
 
-        self.__upper_header_list = []
+        self.__upper_headers = []
         for header in self._tabledata.headers:
             if not header:
                 continue
@@ -54,7 +54,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             except AttributeError:
                 header = six.text_type(header).upper()
 
-            self.__upper_header_list.append(header)
+            self.__upper_headers.append(header)
 
         self.__dup_col_handler = dup_col_handler
 
@@ -162,7 +162,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         i = 0
         while True:
             header = convert_idx_to_alphabet(col_idx + i)
-            if header not in self.__upper_header_list:
+            if header not in self.__upper_headers:
                 return header
 
             i += 1
