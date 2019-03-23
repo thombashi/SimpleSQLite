@@ -497,7 +497,7 @@ class SimpleSQLite(object):
 
         return memdb
 
-    def insert(self, table_name, record):
+    def insert(self, table_name, record, attr_names=None):
         """
         Send an INSERT query to the database.
 
@@ -513,9 +513,9 @@ class SimpleSQLite(object):
             :ref:`example-insert-records`
         """
 
-        self.insert_many(table_name, [record])
+        self.insert_many(table_name, records=[record], attr_names=attr_names)
 
-    def insert_many(self, table_name, records):
+    def insert_many(self, table_name, records, attr_names=None):
         """
         Send an INSERT query with multiple records to the database.
 
@@ -538,16 +538,24 @@ class SimpleSQLite(object):
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        logger.debug(
-            "insert {number} records into {table}".format(
-                number=len(records) if records else 0, table=table_name
+        if attr_names:
+            logger.debug(
+                "insert {number} records into {table}({attrs})".format(
+                    number=len(records) if records else 0, table=table_name, attrs=attr_names
+                )
             )
-        )
+        else:
+            logger.debug(
+                "insert {number} records into {table}".format(
+                    number=len(records) if records else 0, table=table_name
+                )
+            )
 
         if typepy.is_empty_sequence(records):
             return 0
 
-        attr_names = self.fetch_attr_names(table_name)
+        if attr_names is None:
+            attr_names = self.fetch_attr_names(table_name)
         records = RecordConvertor.to_records(attr_names, records)
         query = Insert(table_name, AttrList(attr_names)).to_query()
 
