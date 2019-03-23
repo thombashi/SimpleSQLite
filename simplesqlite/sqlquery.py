@@ -21,7 +21,7 @@ class SqlQuery(object):
     @classmethod
     def make_insert(cls, table, insert_tuple):
         """
-        Make INSERT query.
+        [Deprecated] Make INSERT query.
 
         :param str table: Table name of executing the query.
         :param list/tuple insert_tuple: Insertion data.
