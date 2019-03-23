@@ -7,6 +7,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import re
+from collections import Counter
 
 import dataproperty
 import pathvalidate as pv
@@ -130,8 +131,6 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             pass
 
         # duplicated attribute name handling ---
-        from collections import Counter
-
         for key, count in Counter(attr_name_list).most_common():
             if count <= 1:
                 continue
