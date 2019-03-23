@@ -18,6 +18,7 @@ from mbstrdecoder import MultiByteStrDecoder
 from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
 
+from ._common import extract_table_metadata
 from ._func import validate_table_name
 from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
@@ -780,6 +781,11 @@ class SimpleSQLite(object):
         """
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
+
+    def fetch_data_types(self, table_name):
+        _, _, type_hints = extract_table_metadata(self, table_name)
+
+        return type_hints
 
     def get_profile(self, profile_count=50):
         """
