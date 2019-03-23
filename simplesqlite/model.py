@@ -16,7 +16,7 @@ from six.moves import zip
 
 from .core import SimpleSQLite
 from .error import DatabaseError
-from .query import Attr, AttrList
+from .query import Attr, AttrList, Value
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -33,11 +33,14 @@ class Column(object):
     def not_null(self):
         return self.__not_null
 
-    def __init__(self, not_null=False, primary_key=False, unique=False, autoincrement=False):
+    def __init__(
+        self, not_null=False, primary_key=False, unique=False, autoincrement=False, default=None
+    ):
         self.__not_null = not_null
         self.__primary_key = primary_key
         self.__unique = unique
         self.__autoincrement = autoincrement
+        self.__default_value = None if self.__not_null else default
 
     def get_desc(self):
         constraints = [self.sqlite_datatype]
@@ -52,6 +55,9 @@ class Column(object):
 
         if self.__autoincrement and self.sqlite_datatype == "INTEGER":
             constraints.append("AUTOINCREMENT")
+
+        if self.__default_value is not None:
+            constraints.append("DEFAULT {}".format(Value(self.__default_value)))
 
         return " ".join(constraints)
 
@@ -185,19 +191,21 @@ class Model(object):
                 )
             )
 
-        record = []
+        record = {}
+        attr_names = []
+
         for attr_name in cls.get_attr_names():
             value = getattr(model_obj, attr_name)
 
             if value is None:
-                record.append(value)
                 continue
 
             cls.__validate_value(attr_name, value)
 
-            record.append(value)
+            attr_names.append(attr_name)
+            record[attr_name] = value
 
-        cls.__connection.insert(cls.get_table_name(), record)
+        cls.__connection.insert(cls.get_table_name(), record, attr_names=attr_names)
 
     @classmethod
     def commit(cls):
