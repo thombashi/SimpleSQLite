@@ -39,7 +39,20 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     __RENAME_TEMPLATE = "rename_{:s}"
 
-    def __init__(self, tabledata, dup_col_handler="error"):
+    @property
+    def _type_hints(self):
+        if self.__is_type_inference:
+            return self._tabledata.dp_extractor.column_type_hints
+
+        if self._tabledata.dp_extractor.column_type_hints:
+            return [typepy.String for _ in self._tabledata.dp_extractor.column_type_hints]
+
+        if self.__upper_headers:
+            return [typepy.String for _ in self.__upper_headers]
+
+        return None
+
+    def __init__(self, tabledata, dup_col_handler="error", is_type_inference=True):
         super(SQLiteTableDataSanitizer, self).__init__(tabledata)
 
         if typepy.is_null_string(tabledata.table_name):
@@ -57,6 +70,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             self.__upper_headers.append(header)
 
         self.__dup_col_handler = dup_col_handler
+        self.__is_type_inference = is_type_inference
 
     def _preprocess_table_name(self):
         try:

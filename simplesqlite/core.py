@@ -431,7 +431,15 @@ class SimpleSQLite(object):
         if result is None:
             return TableData(None, [], [])
 
-        return TableData(table_name, columns, result.fetchall(), type_hints=type_hints)
+        if type_hints is None:
+            type_hints = self.fetch_data_types(table_name)
+
+        return TableData(
+            table_name,
+            columns,
+            result.fetchall(),
+            type_hints=[type_hints.get(col) for col in columns],
+        )
 
     def select_as_dict(self, table_name, columns=None, where=None, extra=None):
         """

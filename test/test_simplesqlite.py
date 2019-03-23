@@ -781,7 +781,7 @@ class Test_SimpleSQLite_select_as_tabledata(object):
                     ["aa", "ab", "ac"],
                     [[1, 4, "10"], [2, 2.1, "11"], [3, 120.9, "12"]],
                 ),
-                (typepy.String, None, typepy.Integer),
+                {"aa": typepy.String, "cc": typepy.Integer},
                 [["1", 4, 10], ["2", Decimal("2.1"), 11], ["3", Decimal("120.9"), 12]],
             ]
         ],

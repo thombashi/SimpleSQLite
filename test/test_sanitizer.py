@@ -137,6 +137,49 @@ class Test_SQLiteTableDataSanitizer(object):
         assert new_tabledata.equals(expected)
 
     @pytest.mark.parametrize(
+        [
+            "table_name",
+            "headers",
+            "records",
+            "is_type_inference",
+            "expecte_col_types",
+            "expecte_data",
+        ],
+        [
+            [
+                "w/ type inference",
+                ["a", "b_c"],
+                [["1", "2"], ["3", "4"]],
+                True,
+                ["INTEGER", "INTEGER"],
+                TableData("w_type_inference", ["a", "b_c"], [[1, 2], [3, 4]]),
+            ],
+            [
+                "w/o type inference",
+                ["a", "b_c"],
+                [["1", "2"], ["3", "4"]],
+                False,
+                ["STRING", "STRING"],
+                TableData("w_o_type_inference", ["a", "b_c"], [["1", "2"], ["3", "4"]]),
+            ],
+        ],
+    )
+    def test_normal_type_inference(
+        self, table_name, headers, records, is_type_inference, expecte_col_types, expecte_data
+    ):
+        new_tabledata = SQLiteTableDataSanitizer(
+            TableData(table_name, headers, records), is_type_inference=is_type_inference
+        ).normalize()
+
+        actual_col_types = [col_dp.typename for col_dp in new_tabledata.column_dp_list]
+        print(is_type_inference, expecte_col_types, actual_col_types)
+        assert actual_col_types == expecte_col_types
+
+        con = connect_memdb()
+        con.create_table_from_tabledata(new_tabledata)
+        assert con.select_as_tabledata(new_tabledata.table_name) == expecte_data
+
+    @pytest.mark.parametrize(
         ["table_name", "headers", "records", "expected"],
         [
             ["", ["a", "b"], [], NameValidationError],
