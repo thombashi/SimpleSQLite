@@ -20,7 +20,7 @@ from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
 
 from ._common import extract_table_metadata
-from ._func import validate_table_name
+from ._func import copy_table, validate_table_name
 from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
 from .converter import RecordConvertor
@@ -1462,6 +1462,11 @@ class SimpleSQLite(object):
             add_primary_key_column,
             index_attrs,
         )
+
+    def dump(self, db_path, mode="a"):
+        with SimpleSQLite(db_path, mode=mode) as dst_con:
+            for table_name in self.fetch_table_names():
+                copy_table(self, dst_con, src_table_name=table_name, dst_table_name=table_name)
 
     def rollback(self):
         """

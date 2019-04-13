@@ -162,8 +162,8 @@ class Test_SimpleSQLite_select_as_dict(object):
                 ),
                 [
                     OrderedDict([("attr_a", 1), ("attr_b", 4), ("attr_c", "a")]),
-                    OrderedDict([("attr_a", 2), ("attr_b", Decimal("2.1")), ("attr_c", "bb")]),
-                    OrderedDict([("attr_a", 3), ("attr_b", Decimal("120.9")), ("attr_c", "ccc")]),
+                    OrderedDict([("attr_a", 2), ("attr_b", 2.1), ("attr_c", "bb")]),
+                    OrderedDict([("attr_a", 3), ("attr_b", 120.9), ("attr_c", "ccc")]),
                 ],
             ]
         ],
@@ -175,6 +175,18 @@ class Test_SimpleSQLite_select_as_dict(object):
         con.create_table_from_tabledata(value)
 
         assert con.select_as_dict(table_name=value.table_name) == expected
+
+
+class Test_SimpleSQLite_dump(object):
+    def test_normal(self, con, tmpdir):
+        dump_path = str(tmpdir.join("dump.db"))
+        con.dump(dump_path)
+        con_dump = SimpleSQLite(dump_path, "r")
+
+        assert con.fetch_num_records(TEST_TABLE_NAME) == con_dump.fetch_num_records(TEST_TABLE_NAME)
+        assert con.select_as_tabledata(TEST_TABLE_NAME) == con_dump.select_as_tabledata(
+            TEST_TABLE_NAME
+        )
 
 
 class Test_SimpleSQLite_insert(object):
