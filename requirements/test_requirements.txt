@@ -1,4 +1,4 @@
-pytablereader>=0.22
+pytablereader>=0.25.4
 pytablewriter>=0.36
 pytest-cov
 pytest
