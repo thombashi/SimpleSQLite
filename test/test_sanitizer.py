@@ -10,6 +10,7 @@ import pytest
 from pytablewriter import dump_tabledata
 from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 from tabledata import TableData
+from typepy import String
 
 from ._common import print_test_result
 
@@ -135,6 +136,33 @@ class Test_SQLiteTableDataSanitizer(object):
         assert con.select_as_tabledata(new_tabledata.table_name) == expected
 
         assert new_tabledata.equals(expected)
+
+    @pytest.mark.parametrize(
+        ["table_name", "headers", "records", "type_hints", "expecte_col_types", "expecte_data"],
+        [
+            [
+                "w/ type inference",
+                ["a", "b_c"],
+                [[1, 2], [3, 4]],
+                [String],
+                ["STRING", "INTEGER"],
+                TableData("w_type_inference", ["a", "b_c"], [["1", 2], ["3", 4]]),
+            ]
+        ],
+    )
+    def test_normal_type_hints(
+        self, table_name, headers, records, type_hints, expecte_col_types, expecte_data
+    ):
+        new_tabledata = SQLiteTableDataSanitizer(
+            TableData(table_name, headers, records, type_hints=type_hints)
+        ).normalize()
+
+        actual_col_types = [col_dp.typename for col_dp in new_tabledata.column_dp_list]
+        assert actual_col_types == expecte_col_types
+
+        con = connect_memdb()
+        con.create_table_from_tabledata(new_tabledata)
+        assert con.select_as_tabledata(new_tabledata.table_name) == expecte_data
 
     @pytest.mark.parametrize(
         [
