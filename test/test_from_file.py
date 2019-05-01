@@ -10,7 +10,7 @@ import os
 
 import pytablereader as ptr
 import pytest
-from pytablewriter import dump_tabledata
+from pytablewriter import dumps_tabledata
 from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
@@ -29,7 +29,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
             if table_data.is_empty():
                 continue
 
-            print(dump_tabledata(table_data))
+            print(dumps_tabledata(table_data))
 
             try:
                 con.create_table_from_tabledata(SQLiteTableDataSanitizer(table_data).normalize())
