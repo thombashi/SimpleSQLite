@@ -8,15 +8,18 @@ from __future__ import print_function, unicode_literals
 
 import os
 
-import pytablereader as ptr
 import pytest
-from pytablewriter import dumps_tabledata
 from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
 class Test_SimpleSQLite_create_table_from_tabledata(object):
     @pytest.mark.parametrize(["filename"], [["python - Wiktionary.html"]])
     def test_smoke(self, tmpdir, filename):
+        try:
+            import pytablereader as ptr
+        except ImportError:
+            pytest.skip("requires pytablereader")
+
         p = tmpdir.join("tmp.db")
         con = SimpleSQLite(str(p), "w")
 
@@ -29,7 +32,12 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
             if table_data.is_empty():
                 continue
 
-            print(dumps_tabledata(table_data))
+            try:
+                from pytablewriter import dumps_tabledata
+
+                print(dumps_tabledata(table_data))
+            except ImportError:
+                pass
 
             try:
                 con.create_table_from_tabledata(SQLiteTableDataSanitizer(table_data).normalize())

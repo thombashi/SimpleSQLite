@@ -7,7 +7,6 @@
 from __future__ import unicode_literals
 
 import pytest
-from pytablewriter import dumps_tabledata
 from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 from tabledata import TableData
 from typepy import String
@@ -129,7 +128,14 @@ class Test_SQLiteTableDataSanitizer(object):
             TableData(table_name, headers, records)
         ).normalize()
 
-        print_test_result(expected=dumps_tabledata(expected), actual=dumps_tabledata(new_tabledata))
+        try:
+            from pytablewriter import dumps_tabledata
+
+            print_test_result(
+                expected=dumps_tabledata(expected), actual=dumps_tabledata(new_tabledata)
+            )
+        except ImportError:
+            pass
 
         con = connect_memdb()
         con.create_table_from_tabledata(new_tabledata)
@@ -247,7 +253,14 @@ class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
             TableData(table_name, headers, []), dup_col_handler=dup_col_handler
         ).normalize()
 
-        print_test_result(expected=dumps_tabledata(expected), actual=dumps_tabledata(new_tabledata))
+        try:
+            from pytablewriter import dumps_tabledata
+
+            print_test_result(
+                expected=dumps_tabledata(expected), actual=dumps_tabledata(new_tabledata)
+            )
+        except ImportError:
+            pass
 
         assert new_tabledata.equals(expected)
 

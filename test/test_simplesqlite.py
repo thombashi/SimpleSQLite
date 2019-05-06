@@ -863,7 +863,10 @@ class Test_SimpleSQLite_create_table_from_csv(object):
             f.write(csv_text)
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_csv(str(p_csv), table_name, attr_names)
+        try:
+            con.create_table_from_csv(str(p_csv), table_name, attr_names)
+        except ImportError:
+            pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
@@ -906,7 +909,10 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_csv(csv_text, table_name, attr_names)
+        try:
+            con.create_table_from_csv(csv_text, table_name, attr_names)
+        except ImportError:
+            pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
@@ -987,7 +993,10 @@ class Test_SimpleSQLite_create_table_from_json(object):
             f.write(json_text)
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_json(str(p_json), table_name)
+        try:
+            con.create_table_from_json(str(p_json), table_name)
+        except ImportError:
+            pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
@@ -1044,7 +1053,10 @@ class Test_SimpleSQLite_create_table_from_json(object):
         p_db = tmpdir.join("tmp.db")
 
         con = SimpleSQLite(str(p_db), "w")
-        con.create_table_from_json(json_text, table_name)
+        try:
+            con.create_table_from_json(json_text, table_name)
+        except ImportError:
+            pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
         assert expected_attr_names == con.fetch_attr_names(expected_table_name)
