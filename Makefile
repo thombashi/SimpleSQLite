@@ -14,6 +14,13 @@ build:
 	@python setup.py clean --all
 	ls -lh dist/*
 
+.PHONY: check
+check:
+	python setup.py check
+	codespell $(PACKAGE) docs sample test -q2 --check-filenames --ignore-words-list te -x "test/data/python - Wiktionary.html"
+	travis lint
+	pylama
+
 .PHONY: releasebuild
 releasebuild:
 	@rm -rf $(BUILD_WORK_DIR)/
