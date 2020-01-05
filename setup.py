@@ -67,6 +67,7 @@ setuptools.setup(
     keywords=["SQLite", "CSV", "Google Sheets", "JSON"],
     license=pkg_info["__license__"],
     long_description=long_description,
+    long_description_content_type="text/x-rst",
     packages=setuptools.find_packages(exclude=["test*"]),
     project_urls={
         "Documentation": "https://{:s}.rtfd.io/".format(MODULE_NAME),
