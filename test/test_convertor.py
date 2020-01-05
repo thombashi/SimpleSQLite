@@ -22,7 +22,7 @@ NamedTuple3 = namedtuple("NamedTuple3", " ".join(attrs_3))
 
 class Test_RecordConvertor_to_record(object):
     @pytest.mark.parametrize(
-        ["attr_names", "value", "expeted"],
+        ["attr_names", "value", "expected"],
         [
             [attrs_2, [5, 6], [5, 6]],
             [attrs_2, (5, 6), [5, 6]],
@@ -39,21 +39,21 @@ class Test_RecordConvertor_to_record(object):
             [attrs_3, NamedTuple3(5, 6, 7), [5, 6, 7]],
         ],
     )
-    def test_normal(self, attr_names, value, expeted):
-        assert RecordConvertor.to_record(attr_names, value) == expeted
+    def test_normal(self, attr_names, value, expected):
+        assert RecordConvertor.to_record(attr_names, value) == expected
 
     @pytest.mark.parametrize(
-        ["attr_names", "value", "expeted"],
+        ["attr_names", "value", "expected"],
         [[None, [5, 6], TypeError], [attrs_2, None, ValueError], [None, None, TypeError]],
     )
-    def test_exception(self, attr_names, value, expeted):
-        with pytest.raises(expeted):
+    def test_exception(self, attr_names, value, expected):
+        with pytest.raises(expected):
             RecordConvertor.to_record(attr_names, value)
 
 
 class Test_RecordConvertor_to_records(object):
     @pytest.mark.parametrize(
-        ["attr_names", "value", "expeted"],
+        ["attr_names", "value", "expected"],
         [
             [
                 attrs_2,
@@ -71,13 +71,13 @@ class Test_RecordConvertor_to_records(object):
             ]
         ],
     )
-    def test_normal(self, attr_names, value, expeted):
-        assert RecordConvertor.to_records(attr_names, value) == expeted
+    def test_normal(self, attr_names, value, expected):
+        assert RecordConvertor.to_records(attr_names, value) == expected
 
     @pytest.mark.parametrize(
-        ["attr_names", "value", "expeted"],
+        ["attr_names", "value", "expected"],
         [[None, [5, 6], TypeError], [attrs_2, None, TypeError], [None, None, TypeError]],
     )
-    def test_exception(self, attr_names, value, expeted):
-        with pytest.raises(expeted):
+    def test_exception(self, attr_names, value, expected):
+        with pytest.raises(expected):
             RecordConvertor.to_records(attr_names, value)

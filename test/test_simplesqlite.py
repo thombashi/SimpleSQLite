@@ -192,7 +192,7 @@ class Test_SimpleSQLite_dump(object):
 
 class Test_SimpleSQLite_insert(object):
     @pytest.mark.parametrize(
-        ["value", "expeted"],
+        ["value", "expected"],
         [
             [[5, 6], (5, 6)],
             [(5, 6), (5, 6)],
@@ -208,22 +208,22 @@ class Test_SimpleSQLite_insert(object):
             [NamedTupleEx(5, 6, 7), (5, 6)],
         ],
     )
-    def test_normal(self, con, value, expeted):
+    def test_normal(self, con, value, expected):
         assert con.fetch_num_records(TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, record=value)
         assert con.fetch_num_records(TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
-        assert result_tuple == expeted
+        assert result_tuple == expected
 
-    @pytest.mark.parametrize(["value", "expeted"], [[[5, 6.6, "c"], (5, 6.6, "c")]])
-    def test_mix(self, con_mix, value, expeted):
+    @pytest.mark.parametrize(["value", "expected"], [[[5, 6.6, "c"], (5, 6.6, "c")]])
+    def test_mix(self, con_mix, value, expected):
         assert con_mix.fetch_num_records(TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, record=value)
         assert con_mix.fetch_num_records(TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
-        assert result_tuple == expeted
+        assert result_tuple == expected
 
     def test_read_only(self, con_ro):
         with pytest.raises(IOError):
