@@ -12,6 +12,7 @@ import string
 
 import pytest
 import six
+
 from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.query import (
     And,

@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 
 import pytest
+
 from simplesqlite.query import And, Or, Where
 from simplesqlite.sqlquery import SqlQuery
 

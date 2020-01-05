@@ -7,9 +7,10 @@
 from __future__ import unicode_literals
 
 import pytest
-from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 from tabledata import TableData
 from typepy import String
+
+from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
 
 from ._common import print_test_result
 

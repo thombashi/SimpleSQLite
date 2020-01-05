@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 
 import pytest
+
 from simplesqlite import connect_memdb
 
 from ._common import print_test_result

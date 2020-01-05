@@ -14,6 +14,8 @@ from decimal import Decimal
 
 import pytest
 import typepy
+from tabledata import TableData
+
 from simplesqlite import (
     AttributeNotFoundError,
     DatabaseError,
@@ -25,7 +27,6 @@ from simplesqlite import (
     connect_memdb,
 )
 from simplesqlite.query import Attr, AttrList, Where
-from tabledata import TableData
 
 from ._common import print_test_result
 from .fixture import (

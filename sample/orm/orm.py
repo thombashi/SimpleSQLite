@@ -11,6 +11,7 @@ import sys
 
 import logbook
 from logbook.more import ColorizedStderrHandler
+
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
 

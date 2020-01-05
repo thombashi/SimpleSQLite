@@ -12,6 +12,7 @@ from pathvalidate import (
     ValidReservedNameError,
     unprintable_ascii_chars,
 )
+
 from simplesqlite._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 
 

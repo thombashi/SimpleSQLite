@@ -4,8 +4,9 @@
 from __future__ import print_function
 
 import pytablereader
-import simplesqlite
 import xlsxwriter
+
+import simplesqlite
 
 
 file_path = "sample_data.xlsx"
