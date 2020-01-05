@@ -1,6 +1,7 @@
 DataProperty>=0.43.2,<1
 mbstrdecoder>=0.8.3,<1
-pathvalidate>=0.29.1,<2
+pathvalidate<1; python_version < "3.5"
+pathvalidate<2; python_version >="3.5"
 six>=1.10.0,<2.0.0
 sqliteschema>=0.16.2,<1.0.0
 tabledata>=0.9.1,<1.0.0
