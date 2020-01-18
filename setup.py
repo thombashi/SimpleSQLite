@@ -79,7 +79,7 @@ setuptools.setup(
     setup_requires=SETUPTOOLS_REQUIRES + pytest_runner_requires(),
     tests_require=tests_requires,
     extras_require={
-        "dev": ["releasecmd>=0.2.0,<1", "twine", "wheel"] + docs_requires,
+        "dev": ["releasecmd>=0.2.0,<1"] + docs_requires,
         "logging": ["Logbook>=0.12.3,<2.0.0"],
         "test": tests_requires,
     },
