@@ -9,9 +9,8 @@ from __future__ import absolute_import, unicode_literals
 from textwrap import dedent
 
 from pathvalidate import (
-    InvalidCharError,
     InvalidReservedNameError,
-    NullNameError,
+    ValidationError,
     ValidReservedNameError,
 )
 
@@ -29,12 +28,10 @@ def validate_table_name(name):
 
     try:
         validate_sqlite_table_name(name)
-    except (InvalidCharError, InvalidReservedNameError) as e:
-        raise NameValidationError(e)
-    except NullNameError:
-        raise NameValidationError("table name is empty")
     except ValidReservedNameError:
         pass
+    except ValidationError as e:
+        raise NameValidationError(e)
 
 
 def validate_attr_name(name):
@@ -45,10 +42,8 @@ def validate_attr_name(name):
 
     try:
         validate_sqlite_attr_name(name)
-    except (InvalidCharError, InvalidReservedNameError) as e:
+    except ValidationError as e:
         raise NameValidationError(e)
-    except NullNameError:
-        raise NameValidationError("attribute name is empty")
 
 
 def append_table(src_con, dst_con, table_name):

@@ -8,7 +8,7 @@ import pytest
 from pathvalidate import (
     InvalidCharError,
     InvalidReservedNameError,
-    NullNameError,
+    ValidationError,
     ValidReservedNameError,
     unprintable_ascii_chars,
 )
@@ -202,7 +202,7 @@ class Test_validate_sqlite_table_name(object):
 
     @pytest.mark.parametrize(
         ["value", "expected"],
-        [[None, NullNameError], ["", NullNameError], [1, TypeError], [True, TypeError]],
+        [[None, ValidationError], ["", ValidationError], [1, TypeError], [True, TypeError]],
     )
     def test_exception_type(self, value, expected):
         with pytest.raises(expected):
@@ -271,7 +271,7 @@ class Test_validate_sqlite_attr_name(object):
 
     @pytest.mark.parametrize(
         ["value", "expected"],
-        [[None, NullNameError], ["", NullNameError], [1, TypeError], [True, TypeError]],
+        [[None, ValidationError], ["", ValidationError], [1, TypeError], [True, TypeError]],
     )
     def test_exception_type(self, value, expected):
         with pytest.raises(expected):

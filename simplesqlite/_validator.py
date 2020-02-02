@@ -155,7 +155,6 @@ __RE_INVALID_CHARS = re.compile(
 def validate_sqlite_table_name(name):
     """
     :param str name: Name to validate.
-    :raises pathvalidate.NullNameError: If the ``name`` is empty.
     :raises pathvalidate.InvalidCharError:
         If the ``name`` includes unprintable character(s).
     :raises pathvalidate.InvalidReservedNameError:
@@ -184,7 +183,6 @@ def validate_sqlite_table_name(name):
 def validate_sqlite_attr_name(name):
     """
     :param str name: Name to validate.
-    :raises pathvalidate.NullNameError: If the ``name`` is empty.
     :raises pathvalidate.InvalidCharError:
         If the ``name`` includes unprintable character(s).
     :raises pathvalidate.InvalidReservedNameError:
