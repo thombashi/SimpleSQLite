@@ -32,18 +32,7 @@ releasebuild:
 
 .PHONY: clean
 clean:
-	@rm -rf $(PACKAGE)-*.*.*/ \
-		$(BUILD_WORK_DIR) \
-		$(DOCS_BUILD_DIR) \
-		dist/ \
-		pip-wheel-metadata/ \
-		.eggs/ \
-		.pytest_cache/ \
-		.tox/ \
-		**/*/__pycache__/ \
-		*.egg-info/
-	@python setup.py clean --all
-	@find . -not -path '*/\.*' -type f | grep -E .+\.py\.[a-z0-9]{32,}\.py$ | xargs -r rm
+	@tox -e clean
 
 .PHONY: docs
 docs:
