@@ -1,3 +1,5 @@
+mock<4; python_version<"3"
 pytablereader>=0.26
 pytablewriter>=0.46
-pytest
+pytest<5; python_version<"3"
+pytest>=5; python_version>="3"
