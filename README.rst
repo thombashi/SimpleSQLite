@@ -386,8 +386,8 @@ Mandatory Dependencies
 
 Optional Dependencies
 ----------------------------------
-- `logbook <https://logbook.readthedocs.io/en/stable/>`__
-    - Logging using logbook if the package installed
+- `loguru <https://github.com/Delgan/loguru>`__
+    - Used for logging if the package installed
 - `pandas <https://pandas.pydata.org/>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 
