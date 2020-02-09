@@ -13,6 +13,7 @@ from ._null_logger import NullLogger
 
 
 MODULE_NAME = "simplesqlite"
+_is_enable = False
 
 
 try:
@@ -24,6 +25,11 @@ except ImportError:
 
 
 def set_logger(is_enable):
+    global _is_enable
+
+    if is_enable == _is_enable:
+        return
+
     if is_enable:
         logger.enable(MODULE_NAME)
     else:
