@@ -19,11 +19,18 @@ exclude = '''
 [tool.isort]
 dont_skip = "*/**/__init__.py"
 known_third_party = [
+    'dataproperty',
     'logbook',
+    'mbstrdecoder',
     'pandas',
+    'pathvalidate',
     'pytablereader',
     'pytest',
+    'six',
     'sphinx_rtd_theme',
+    'sqliteschema',
+    'tabledata',
+    'typepy',
     'xlsxwriter',
 ]
 include_trailing_comma = true
