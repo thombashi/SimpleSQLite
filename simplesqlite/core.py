@@ -52,6 +52,9 @@ class SimpleSQLite(object):
     :param bool delayed_connection:
         Delaying connection to a database until access to the database the first time,
         if the value is |True|.
+    :param int max_workers:
+        Maximum number of workers to generate a table.
+        In default, the same as the total number of CPUs.
     :param bool profile:
         Recording SQL query execution time profile, if the value is |True|.
 
@@ -121,11 +124,14 @@ class SimpleSQLite(object):
 
         return self.__mode
 
-    def __init__(self, database_src, mode="a", delayed_connection=True, profile=False):
+    def __init__(
+        self, database_src, mode="a", delayed_connection=True, max_workers=None, profile=False
+    ):
         self.debug_query = False
 
         self.__initialize_connection()
         self.__mode = mode
+        self.__max_workers = max_workers
         self.__is_profile = profile
 
         if database_src is None:
@@ -1287,7 +1293,7 @@ class SimpleSQLite(object):
         """
 
         self.__create_table_from_tabledata(
-            TableData(table_name, attr_names, data_matrix),
+            TableData(table_name, attr_names, data_matrix, max_workers=self.__max_workers),
             primary_key,
             add_primary_key_column,
             index_attrs,
@@ -1652,7 +1658,7 @@ class SimpleSQLite(object):
             raise ValueError("input table_data is empty: {}".format(table_data))
 
         table_data = SQLiteTableDataSanitizer(
-            table_data, dup_col_handler=self.dup_col_handler
+            table_data, dup_col_handler=self.dup_col_handler, max_workers=self.__max_workers
         ).normalize()
 
         self.create_table(

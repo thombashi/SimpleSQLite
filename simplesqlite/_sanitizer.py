@@ -52,7 +52,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return None
 
-    def __init__(self, tabledata, dup_col_handler="error", is_type_inference=True):
+    def __init__(
+        self, tabledata, dup_col_handler="error", is_type_inference=True, max_workers=None
+    ):
+        tabledata.max_workers = max_workers
+
         super(SQLiteTableDataSanitizer, self).__init__(tabledata)
 
         if typepy.is_null_string(tabledata.table_name):
