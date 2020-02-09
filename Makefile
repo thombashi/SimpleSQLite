@@ -6,6 +6,17 @@ DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 
 
+.PHONY: build-remote
+build-remote:
+	@rm -rf $(BUILD_WORK_DIR)/
+	@mkdir -p $(BUILD_WORK_DIR)/
+	@cd $(BUILD_WORK_DIR); \
+		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git; \
+		cd $(PACKAGE); \
+		python setup.py sdist bdist_wheel
+	@twine check $(DIST_DIR)/*
+	ls -lh $(DIST_DIR)/*
+
 .PHONY: build
 build:
 	@make clean
@@ -18,17 +29,6 @@ check:
 	codespell $(PACKAGE) docs sample test -q2 --check-filenames --ignore-words-list te -x "test/data/python - Wiktionary.html"
 	travis lint
 	pylama
-
-.PHONY: releasebuild
-releasebuild:
-	@rm -rf $(BUILD_WORK_DIR)/
-	@mkdir -p $(BUILD_WORK_DIR)/
-	@cd $(BUILD_WORK_DIR); \
-		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git; \
-		cd $(PACKAGE); \
-		python setup.py sdist bdist_wheel
-	@twine check $(DIST_DIR)/*
-	ls -lh $(DIST_DIR)/*
 
 .PHONY: clean
 clean:
