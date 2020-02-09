@@ -2,7 +2,6 @@ PACKAGE := SimpleSQLite
 AUTHOR := thombashi
 BUILD_WORK_DIR := _work
 DOCS_DIR := docs
-DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 BUILD_PKG_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
 
 
@@ -36,7 +35,7 @@ clean:
 
 .PHONY: docs
 docs:
-	@python setup.py build_sphinx --source-dir=$(DOCS_DIR)/ --build-dir=$(DOCS_BUILD_DIR) --all-files
+	@tox -e docs
 
 .PHONY: idocs
 idocs:
