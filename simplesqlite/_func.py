@@ -8,11 +8,7 @@ from __future__ import absolute_import, unicode_literals
 
 from textwrap import dedent
 
-from pathvalidate import (
-    InvalidReservedNameError,
-    ValidationError,
-    ValidReservedNameError,
-)
+from pathvalidate import ValidationError, ValidReservedNameError
 
 from ._common import extract_table_metadata
 from ._logger import logger
