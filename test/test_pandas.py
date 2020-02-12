@@ -21,7 +21,7 @@ except ImportError:
     PANDAS_IMPORT = False
 
 
-@pytest.mark.skipif("PANDAS_IMPORT is False")
+@pytest.mark.skipif(not PANDAS_IMPORT, reason="required package not found")
 class Test_fromto_pandas_dataframe(object):
     def test_normal(self):
         con = connect_memdb()
