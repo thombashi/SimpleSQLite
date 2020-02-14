@@ -1,10 +1,10 @@
 class NullLogger(object):
     level_name = None
 
-    def critical(self, *args, **kwargs):  # pragma: no cover
+    def remove(self, handler_id=None):  # pragma: no cover
         pass
 
-    def debug(self, *args, **kwargs):  # pragma: no cover
+    def add(self, **kwargs):  # pragma: no cover
         pass
 
     def disable(self, name):  # pragma: no cover
@@ -13,26 +13,29 @@ class NullLogger(object):
     def enable(self, name):  # pragma: no cover
         pass
 
-    def error(self, *args, **kwargs):  # pragma: no cover
+    def critical(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def exception(self, *args, **kwargs):  # pragma: no cover
+    def debug(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def info(self, *args, **kwargs):  # pragma: no cover
+    def error(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def log(self, level, *args, **kwargs):  # pragma: no cover
+    def exception(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def notice(self, *args, **kwargs):  # pragma: no cover
+    def info(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def success(self, *args, **kwargs):  # pragma: no cover
+    def log(self, __level, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def trace(self, *args, **kwargs):  # pragma: no cover
+    def success(self, __message, *args, **kwargs):  # pragma: no cover
         pass
 
-    def warning(self, *args, **kwargs):  # pragma: no cover
+    def trace(self, __message, *args, **kwargs):  # pragma: no cover
+        pass
+
+    def warning(self, __message, *args, **kwargs):  # pragma: no cover
         pass
