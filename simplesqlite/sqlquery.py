@@ -19,31 +19,6 @@ class SqlQuery(object):
     """
 
     @classmethod
-    def make_insert(cls, table, insert_tuple):
-        """
-        [Deprecated] Make INSERT query.
-
-        :param str table: Table name of executing the query.
-        :param list/tuple insert_tuple: Insertion data.
-        :return: Query of SQLite.
-        :rtype: str
-        :raises ValueError: If ``insert_tuple`` is empty |list|/|tuple|.
-        :raises simplesqlite.NameValidationError:
-            |raises_validate_table_name|
-        """
-
-        validate_table_name(table)
-
-        table = Table(table)
-
-        if typepy.is_empty_sequence(insert_tuple):
-            raise ValueError("empty insert list/tuple")
-
-        return "INSERT INTO {:s} VALUES ({:s})".format(
-            table, ",".join(["?" for _i in insert_tuple])
-        )
-
-    @classmethod
     def make_update(cls, table, set_query, where=None):
         """
         Make UPDATE query.

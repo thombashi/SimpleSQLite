@@ -60,11 +60,3 @@ class RecordConvertor(object):
         """
 
         return [cls.to_record(attr_names, record) for record in value_matrix]
-
-    @classmethod
-    def to_record_list(cls, attr_name_list, value_matrix):
-        import warnings
-
-        warnings.warn("'to_record_list()' has moved to 'to_record_list()'", DeprecationWarning)
-
-        return cls.to_records(attr_name_list, value_matrix)

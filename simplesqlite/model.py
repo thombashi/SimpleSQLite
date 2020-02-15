@@ -144,14 +144,6 @@ class Model(object):
         return cls.__attr_names
 
     @classmethod
-    def get_attr_name_list(cls):
-        import warnings
-
-        warnings.warn("'get_attr_name_list()' has moved to 'get_attr_names()'", DeprecationWarning)
-
-        return cls.get_attr_names()
-
-    @classmethod
     def create(cls):
         cls.__validate_connection()
 

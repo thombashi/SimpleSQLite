@@ -715,13 +715,6 @@ class SimpleSQLite(object):
 
         return self.schema_extractor.fetch_table_names(include_system_table)
 
-    def fetch_table_name_list(self, include_system_table=False):
-        warnings.warn(
-            "'fetch_table_name_list()' has moved to 'fetch_table_names()'", DeprecationWarning
-        )
-
-        return self.fetch_table_names(include_system_table)
-
     def fetch_attr_names(self, table_name):
         """
         :return: List of attribute names in the table.
@@ -760,13 +753,6 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
-
-    def fetch_attr_name_list(self, table_name):
-        warnings.warn(
-            "'fetch_attr_name_list()' has moved to 'fetch_attr_names()'", DeprecationWarning
-        )
-
-        return self.fetch_attr_names(table_name)
 
     def fetch_attr_type(self, table_name):
         """
@@ -1048,11 +1034,6 @@ class SimpleSQLite(object):
             return False
 
         return True
-
-    def has_attr_list(self, table_name, attr_name_list):
-        warnings.warn("'has_attr_list()' has moved to 'has_attrs()'", DeprecationWarning)
-
-        return self.has_attrs(table_name, attr_name_list)
 
     def verify_table_existence(self, table_name):
         """
