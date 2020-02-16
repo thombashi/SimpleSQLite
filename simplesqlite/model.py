@@ -12,11 +12,19 @@ import sys
 
 import six
 import typepy
-from six.moves import zip
 
 from .core import SimpleSQLite
 from .error import DatabaseError
 from .query import Attr, AttrList, Value
+
+
+def dict_factory(cursor, row):
+    record = {}
+
+    for idx, col in enumerate(cursor.description):
+        record[col[0]] = row[idx]
+
+    return record
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -34,13 +42,26 @@ class Column(object):
         return self.__not_null
 
     def __init__(
-        self, not_null=False, primary_key=False, unique=False, autoincrement=False, default=None
+        self,
+        attr_name=None,
+        not_null=False,
+        primary_key=False,
+        unique=False,
+        autoincrement=False,
+        default=None,
     ):
+        self.__header_name = attr_name
         self.__not_null = not_null
         self.__primary_key = primary_key
         self.__unique = unique
         self.__autoincrement = autoincrement
         self.__default_value = None if self.__not_null else default
+
+    def get_header(self, attr_name):
+        if self.__header_name:
+            return self.__header_name
+
+        return attr_name
 
     def get_desc(self):
         constraints = [self.sqlite_datatype]
@@ -147,30 +168,41 @@ class Model(object):
     def create(cls):
         cls.__validate_connection()
 
-        cls.__connection.create_table(
-            cls.get_table_name(),
-            [
+        attr_descs = []
+
+        for attr_name in cls.get_attr_names():
+            col = cls._get_col(attr_name)
+            attr_descs.append(
                 "{attr} {constraints}".format(
-                    attr=Attr(attr_name), constraints=cls.__get_col(attr_name).get_desc()
+                    attr=Attr(col.get_header(attr_name)), constraints=col.get_desc()
                 )
-                for attr_name in cls.get_attr_names()
-            ],
-        )
+            )
+
+        cls.__connection.create_table(cls.get_table_name(), attr_descs)
 
     @classmethod
     def select(cls, where=None, extra=None):
         cls.__validate_connection()
 
-        result = cls.__connection.select(
-            select=AttrList(cls.get_attr_names()),
-            table_name=cls.get_table_name(),
-            where=where,
-            extra=extra,
-        )
-        for record in result.fetchall():
-            yield cls(
-                **{attr_name: value for attr_name, value in zip(cls.get_attr_names(), record)}
+        try:
+            stash_row_factory = cls.__connection.connection.row_factory
+            cls.__connection.set_row_factory(dict_factory)
+
+            result = cls.__connection.select(
+                select=AttrList(
+                    [
+                        cls._get_col(attr_name).get_header(attr_name)
+                        for attr_name in cls.get_attr_names()
+                    ]
+                ),
+                table_name=cls.get_table_name(),
+                where=where,
+                extra=extra,
             )
+            for record in result.fetchall():
+                yield cls(**record)
+        finally:
+            cls.__connection.set_row_factory(stash_row_factory)
 
     @classmethod
     def insert(cls, model_obj):
@@ -194,10 +226,9 @@ class Model(object):
 
             cls.__validate_value(attr_name, value)
 
-            attr_names.append(attr_name)
-            record[attr_name] = value
+            record[cls._get_col(attr_name).get_header(attr_name)] = value
 
-        cls.__connection.insert(cls.get_table_name(), record, attr_names=attr_names)
+        cls.__connection.insert(cls.get_table_name(), record)
 
     @classmethod
     def commit(cls):
@@ -207,9 +238,17 @@ class Model(object):
     def fetch_schema(cls):
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
+    @classmethod
+    def attr_to_header(cls, attr_name):
+        return cls._get_col(attr_name).get_header(attr_name)
+
     def __init__(self, *args, **kwargs):
         for attr_name in self.get_attr_names():
-            setattr(self, attr_name, kwargs.get(attr_name))
+            value = kwargs.get(attr_name)
+            if value is None:
+                value = kwargs.get(self.attr_to_header(attr_name))
+
+            setattr(self, attr_name, value)
 
     def __eq__(self, other):
         if type(self) != type(other):
