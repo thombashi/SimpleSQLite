@@ -9,6 +9,7 @@ from __future__ import absolute_import, unicode_literals
 import abc
 import re
 import sys
+from collections import OrderedDict
 
 import six
 import typepy
@@ -241,6 +242,17 @@ class Model(object):
     @classmethod
     def attr_to_header(cls, attr_name):
         return cls._get_col(attr_name).get_header(attr_name)
+
+    def as_dict(self):
+        record = OrderedDict()
+        for attr_name in self.get_attr_names():
+            value = getattr(self, attr_name)
+            if value is None:
+                continue
+
+            record[self.attr_to_header(attr_name)] = value
+
+        return record
 
     def __init__(self, *args, **kwargs):
         for attr_name in self.get_attr_names():
