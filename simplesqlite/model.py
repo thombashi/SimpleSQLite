@@ -242,7 +242,7 @@ class Model(object):
 
     @classmethod
     def __validate_value(cls, attr_name, value):
-        column = cls.__get_col(attr_name)
+        column = cls._get_col(attr_name)
 
         if value is None and not column.not_null:
             return
@@ -260,7 +260,7 @@ class Model(object):
         )
 
     @classmethod
-    def __get_col(cls, attr_name):
+    def _get_col(cls, attr_name):
         if attr_name not in cls.get_attr_names():
             raise ValueError("invalid attribute: {}".format(attr_name))
 
