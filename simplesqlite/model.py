@@ -224,12 +224,13 @@ class Model(object):
         return self.__dict__ != other.__dict__
 
     def __repr__(self):
-        return "{name:s}: {attributes:s}".format(
+        return "{name:s} ({attributes:s})".format(
             name=type(self).__name__,
             attributes=", ".join(
                 [
-                    "{}={}".format(attr_name, getattr(self, attr_name))
+                    "{}={}".format(self.attr_to_header(attr_name), getattr(self, attr_name))
                     for attr_name in self.get_attr_names()
+                    if getattr(self, attr_name)
                 ]
             ),
         )
