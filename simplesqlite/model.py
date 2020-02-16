@@ -278,11 +278,7 @@ class Model(object):
         return "{name:s} ({attributes:s})".format(
             name=type(self).__name__,
             attributes=", ".join(
-                [
-                    "{}={}".format(self.attr_to_header(attr_name), getattr(self, attr_name))
-                    for attr_name in self.get_attr_names()
-                    if getattr(self, attr_name)
-                ]
+                ["{}={}".format(key, value) for key, value in self.as_dict().items()]
             ),
         )
 
