@@ -285,7 +285,7 @@ class Model(object):
     @classmethod
     def __validate_connection(cls):
         if cls.__connection is None:
-            raise DatabaseError("SimpleSQLite connection required")
+            raise DatabaseError("SimpleSQLite connection required. you need to call attach first")
 
     @classmethod
     def __validate_value(cls, attr_name, value):
