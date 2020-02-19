@@ -240,6 +240,10 @@ class Model(object):
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
     @classmethod
+    def fetch_num_records(cls, where=None):
+        return cls.__connection.fetch_num_records(cls.get_table_name(), where=where)
+
+    @classmethod
     def attr_to_header(cls, attr_name):
         return cls._get_col(attr_name).get_header(attr_name)
 
