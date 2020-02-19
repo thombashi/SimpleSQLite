@@ -1145,3 +1145,8 @@ class Test_SimpleSQLite_create_index(object):
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.create_index(TEST_TABLE_NAME, "dummy")
+
+
+class Test_SimpleSQLite_fetch_num_records(object):
+    def test_null(self, con):
+        assert con.fetch_num_records("not_exist") is None
