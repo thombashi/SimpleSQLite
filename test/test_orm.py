@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
+from simplesqlite.query import Where
 
 
 class Hoge(Model):
@@ -23,6 +24,7 @@ def test_orm():
 
     Hoge.attach(con, is_hidden=True)
     Hoge.create()
+    assert Hoge.fetch_num_records() == 0
     hoge_inputs = [Hoge(hoge_id=10, name="a"), Hoge(hoge_id=20, name="b")]
     for hoge_input in hoge_inputs:
         Hoge.insert(hoge_input)
@@ -33,8 +35,12 @@ def test_orm():
     for foo_input in foo_inputs:
         Foo.insert(foo_input)
 
+    assert Hoge.fetch_num_records() == 2
     for record, hoge_input in zip(Hoge.select(), hoge_inputs):
         assert record == hoge_input
 
     for record, foo_input in zip(Foo.select(), foo_inputs):
         assert record == foo_input
+
+    result = Hoge.select(where=Where("hoge_id", 999))
+    assert len(list(result)) == 0
