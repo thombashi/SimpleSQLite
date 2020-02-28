@@ -258,7 +258,7 @@ class Where(QueryItem):
         'value > 1'
     """
 
-    __VALID_CMP_OPERATOR_LIST = ("=", "==", "!=", "<>", ">", ">=", "<", "<=")
+    __VALID_CMP_OPERATORS = ("=", "==", "!=", "<>", ">", ">=", "<", "<=")
 
     @property
     def key(self):
@@ -277,7 +277,7 @@ class Where(QueryItem):
         if not self.__cmp_operator:
             raise SqlSyntaxError("cmp_operator required")
 
-        if self.__cmp_operator not in self.__VALID_CMP_OPERATOR_LIST:
+        if self.__cmp_operator not in self.__VALID_CMP_OPERATORS:
             raise SqlSyntaxError("operator not supported: {}".format(self.__cmp_operator))
 
     def to_query(self):
