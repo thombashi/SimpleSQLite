@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import absolute_import, print_function, unicode_literals
 
 import pytest
 
@@ -27,7 +23,7 @@ from .fixture import (  # noqa: W0611
 )
 
 
-class Test_validate_table_name(object):
+class Test_validate_table_name:
     @pytest.mark.parametrize(["value"], [["valid_table_name"], ["table_"], ["%CPU"]])
     def test_normal(self, value):
         validate_table_name(value)
@@ -47,7 +43,7 @@ class Test_validate_table_name(object):
             validate_table_name(value)
 
 
-class Test_validate_attr_name(object):
+class Test_validate_attr_name:
     @pytest.mark.parametrize(["value"], [["valid_attr_name"], ["attr_"], ["%CPU"]])
     def test_normal(self, value):
         validate_attr_name(value)
@@ -67,7 +63,7 @@ class Test_validate_attr_name(object):
             validate_attr_name(value)
 
 
-class Test_append_table(object):
+class Test_append_table:
     def test_normal(self, con_mix, con_empty):
         assert append_table(src_con=con_mix, dst_con=con_empty, table_name=TEST_TABLE_NAME)
 
@@ -99,7 +95,7 @@ class Test_append_table(object):
             append_table(src_con=con_mix, dst_con=con_ro, table_name=TEST_TABLE_NAME)
 
 
-class Test_copy_table(object):
+class Test_copy_table:
     def test_normal(self, con_mix, con_empty):
         assert copy_table(
             src_con=con_mix, dst_con=con_empty, src_table_name=TEST_TABLE_NAME, dst_table_name="dst"
@@ -128,7 +124,7 @@ class Test_copy_table(object):
         )
 
 
-class Test_connect_sqlite_db_mem(object):
+class Test_connect_sqlite_db_mem:
     def test_normal(self):
         con_mem = connect_memdb()
         assert con_mem is not None

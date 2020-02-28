@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import unicode_literals
 
 import pytest
 from tabledata import TableData
@@ -15,7 +11,7 @@ from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_
 from ._common import print_test_result
 
 
-class Test_SQLiteTableDataSanitizer(object):
+class Test_SQLiteTableDataSanitizer:
     @pytest.mark.parametrize(
         ["table_name", "headers", "records", "expected"],
         [
@@ -227,7 +223,7 @@ class Test_SQLiteTableDataSanitizer(object):
             SQLiteTableDataSanitizer(TableData(table_name, headers, records)).normalize()
 
 
-class Test_SQLiteTableDataSanitizer_dup_col_handler(object):
+class Test_SQLiteTableDataSanitizer_dup_col_handler:
     @pytest.mark.parametrize(
         ["table_name", "headers", "dup_col_handler", "expected"],
         [

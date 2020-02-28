@@ -1,17 +1,11 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
-
 import abc
 import re
-import sys
 from collections import OrderedDict
 
-import six
 import typepy
 
 from .core import SimpleSQLite
@@ -28,8 +22,7 @@ def dict_factory(cursor, row):
     return record
 
 
-@six.add_metaclass(abc.ABCMeta)
-class Column(object):
+class Column(metaclass=abc.ABCMeta):
     @abc.abstractproperty
     def sqlite_datatype(self):
         return ""
@@ -124,7 +117,7 @@ class Blob(Column):
         return typepy.Binary
 
 
-class Model(object):
+class Model:
     __connection = None
     __is_hidden = False
     __table_name = None
@@ -156,12 +149,7 @@ class Model(object):
         if cls.__attr_names:
             return cls.__attr_names
 
-        attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
-
-        if sys.version_info[:2] >= (3, 5):
-            cls.__attr_names = attr_names
-        else:
-            cls.__attr_names = sorted(attr_names)
+        cls.__attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
 
         return cls.__attr_names
 

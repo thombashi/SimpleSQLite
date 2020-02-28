@@ -26,7 +26,6 @@ known_third_party = [
     'pathvalidate',
     'pytablereader',
     'pytest',
-    'six',
     'sphinx_rtd_theme',
     'sqliteschema',
     'tabledata',

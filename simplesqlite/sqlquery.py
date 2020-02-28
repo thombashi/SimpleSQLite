@@ -1,19 +1,14 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
-
-import six
 import typepy
 
 from ._func import validate_table_name
 from .query import And, Attr, Or, Table, Value, Where
 
 
-class SqlQuery(object):
+class SqlQuery:
     """
     Support class for making SQLite query.
     """
@@ -40,7 +35,7 @@ class SqlQuery(object):
             raise ValueError("SET query is null")
 
         query_list = ["UPDATE {:s}".format(Table(table)), "SET {:s}".format(set_query)]
-        if where and isinstance(where, (six.text_type, Where, And, Or)):
+        if where and isinstance(where, (str, Where, And, Or)):
             query_list.append("WHERE {:s}".format(where))
 
         return " ".join(query_list)

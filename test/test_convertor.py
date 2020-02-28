@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import unicode_literals
 
 from collections import namedtuple
 
@@ -20,7 +16,7 @@ NamedTuple2 = namedtuple("NamedTuple2", " ".join(attrs_2))
 NamedTuple3 = namedtuple("NamedTuple3", " ".join(attrs_3))
 
 
-class Test_RecordConvertor_to_record(object):
+class Test_RecordConvertor_to_record:
     @pytest.mark.parametrize(
         ["attr_names", "value", "expected"],
         [
@@ -51,7 +47,7 @@ class Test_RecordConvertor_to_record(object):
             RecordConvertor.to_record(attr_names, value)
 
 
-class Test_RecordConvertor_to_records(object):
+class Test_RecordConvertor_to_records:
     @pytest.mark.parametrize(
         ["attr_names", "value", "expected"],
         [

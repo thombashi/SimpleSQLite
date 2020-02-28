@@ -1,17 +1,12 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import unicode_literals
 
 import os
 import re
 import string
 
 import pytest
-import six
 
 from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.query import (
@@ -35,11 +30,11 @@ inf = float("inf")
 
 def assert_query_item(item, expected):
     assert item.to_query() == expected
-    assert six.text_type(item) == expected
+    assert str(item) == expected
     assert "{}".format(item) == expected
 
 
-class Test_Table(object):
+class Test_Table:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -65,7 +60,7 @@ class Test_Table(object):
             assert "{}".format(Table(value))
 
 
-class Test_Attr(object):
+class Test_Attr:
 
     RESERVED_KEYWORDS = [
         "ADD",
@@ -165,7 +160,7 @@ class Test_Attr(object):
             "{}".format(Attr(value))
 
 
-class Test_AttrList(object):
+class Test_AttrList:
     @pytest.mark.parametrize(
         ["value", "operation", "expected"],
         [
@@ -201,7 +196,7 @@ class Test_AttrList(object):
             AttrList(value)
 
 
-class Test_Distinct(object):
+class Test_Distinct:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -221,7 +216,7 @@ class Test_Distinct(object):
             Distinct(value)
 
 
-class Test_Value(object):
+class Test_Value:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -243,7 +238,7 @@ class Test_Value(object):
         assert_query_item(Value(value), expected)
 
 
-class Test_Where(object):
+class Test_Where:
     @pytest.mark.parametrize(
         ["key", "value", "operation", "expected"],
         [
@@ -270,7 +265,7 @@ class Test_Where(object):
             "{}".format(Where(key, value, operation))
 
 
-class Test_Select(object):
+class Test_Select:
     @pytest.mark.parametrize(
         ["select", "table", "where", "extra", "expected"],
         [
@@ -321,7 +316,7 @@ class Test_Select(object):
             "{}".format(Select(select, table, where, extra))
 
 
-class Test_Or(object):
+class Test_Or:
     @pytest.mark.parametrize(
         ["where_list", "expected"],
         [
@@ -341,7 +336,7 @@ class Test_Or(object):
         assert_query_item(Or(where_list), expected)
 
 
-class Test_And(object):
+class Test_And:
     @pytest.mark.parametrize(
         ["where_list", "expected"],
         [
@@ -361,7 +356,7 @@ class Test_And(object):
         assert_query_item(And(where_list), expected)
 
 
-class Test_Insert(object):
+class Test_Insert:
     @pytest.mark.parametrize(
         ["table", "attrs", "expected"],
         [
@@ -393,7 +388,7 @@ class Test_Insert(object):
             Insert(table, attrs)
 
 
-class Test_make_index_name(object):
+class Test_make_index_name:
     SANITIZE_CHAR_LIST = [
         ":",
         "*",
@@ -439,8 +434,7 @@ class Test_make_index_name(object):
     )
     def test_normal(self, value, expected):
         flags = 0
-        if six.PY3:
-            flags = re.ASCII
+        flags = re.ASCII
 
         assert re.search(r"\w+_index_\w{4}", make_index_name(value, value), flags)
 

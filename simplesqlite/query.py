@@ -1,15 +1,10 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import abc
 import re
 
-import six
 import typepy
 from pathvalidate import (
     InvalidCharError,
@@ -25,8 +20,7 @@ from ._validator import validate_sqlite_attr_name
 from .error import SqlSyntaxError
 
 
-@six.add_metaclass(abc.ABCMeta)
-class QueryItemInterface(object):
+class QueryItemInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def to_query(self):  # pragma: no cover
         pass
@@ -105,10 +99,10 @@ class Attr(QueryItem):
         try:
             return cls.__RE_SANITIZE.sub("_", name)
         except TypeError:
-            return six.text_type(name)
+            return str(name)
 
     def __init__(self, name, operation=""):
-        super(Attr, self).__init__(name)
+        super().__init__(name)
 
         self.__operation = operation
 
@@ -163,7 +157,7 @@ class AttrList(list, QueryItemInterface):
         self.__operation = operation
 
         try:
-            super(AttrList, self).__init__([Attr(name, operation) for name in names])
+            super().__init__([Attr(name, operation) for name in names])
         except AttributeError:
             raise TypeError("name must be a string")
 
@@ -174,16 +168,16 @@ class AttrList(list, QueryItemInterface):
         return self.to_query()
 
     def to_query(self):
-        return ",".join([six.text_type(attr) for attr in self])
+        return ",".join([str(attr) for attr in self])
 
     def append(self, item):
-        if not isinstance(item, (six.text_type, Attr)):
+        if not isinstance(item, (str, Attr)):
             raise TypeError("item should be a str/Attr instance: actual={}".format(type(item)))
 
-        if isinstance(item, six.text_type):
+        if isinstance(item, str):
             item = Attr(item, operation=self.__operation)
 
-        super(AttrList, self).append(item)
+        super().append(item)
 
 
 class Distinct(QueryItem):
@@ -192,13 +186,13 @@ class Distinct(QueryItem):
         return self.__key
 
     def __init__(self, key):
-        if not isinstance(key, (six.text_type, Attr, AttrList)):
+        if not isinstance(key, (str, Attr, AttrList)):
             raise TypeError(
                 "key should be a string/Attr/AttrList instance: actual={}".format(type(key))
             )
 
         self.__key = key
-        if isinstance(key, six.text_type):
+        if isinstance(key, str):
             self.__key = Attr(key)
 
     def to_query(self):
@@ -233,7 +227,7 @@ class Value(QueryItem):
             return "NULL"
 
         if typepy.Integer(value).is_type() or typepy.RealNumber(value).is_type():
-            return six.text_type(value)
+            return str(value)
 
         try:
             if value.find("'") != -1:
@@ -275,7 +269,7 @@ class Where(QueryItem):
         return self.__rhs
 
     def __init__(self, key, value, cmp_operator="="):
-        super(Where, self).__init__(key)
+        super().__init__(key)
 
         self.__rhs = value
         self.__cmp_operator = cmp_operator
@@ -332,7 +326,7 @@ class Select(QueryItem):
 
         validate_table_name(self.__table)
 
-        if self.__where and not isinstance(where, (six.text_type, Where, And, Or)):
+        if self.__where and not isinstance(where, (str, Where, And, Or)):
             raise TypeError(
                 "where should be a str/Where/And/Or instance: actual={}".format(type(self.__where))
             )
@@ -362,14 +356,14 @@ class Or(list, QueryItemInterface):
 
     def __init__(self, where_list):
         for where in where_list:
-            if not isinstance(where, (six.text_type, Where, And, Or)):
+            if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
                     "where_list item must either string or Where/And/Or class instance: actual={}".format(
                         type(where)
                     )
                 )
 
-        super(Or, self).__init__(where_list)
+        super().__init__(where_list)
 
     def __repr__(self):
         return self.to_query()
@@ -400,14 +394,14 @@ class And(list, QueryItemInterface):
 
     def __init__(self, where_list):
         for where in where_list:
-            if not isinstance(where, (six.text_type, Where, And, Or)):
+            if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
                     "where_list item must either string or Where/And/Or class instance: actual={}".format(
                         type(where)
                     )
                 )
 
-        super(And, self).__init__(where_list)
+        super().__init__(where_list)
 
     def __repr__(self):
         return self.to_query()

@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import unicode_literals
 
 import pytest
 
@@ -22,7 +18,7 @@ except ImportError:
 
 
 @pytest.mark.skipif(not PANDAS_IMPORT, reason="required package not found")
-class Test_fromto_pandas_dataframe(object):
+class Test_fromto_pandas_dataframe:
     def test_normal(self):
         con = connect_memdb()
         dataframe = pandas.DataFrame(

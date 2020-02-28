@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-from __future__ import absolute_import, unicode_literals
-
 import re
 
 from pathvalidate import unprintable_ascii_chars

@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import print_function, unicode_literals
 
 import os
 
@@ -13,7 +9,7 @@ import pytest
 from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
-class Test_SimpleSQLite_create_table_from_tabledata(object):
+class Test_SimpleSQLite_create_table_from_tabledata:
     @pytest.mark.parametrize(["filename"], [["python - Wiktionary.html"]])
     def test_smoke(self, tmpdir, filename):
         try:

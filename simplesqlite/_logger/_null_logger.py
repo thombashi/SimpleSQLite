@@ -1,4 +1,4 @@
-class NullLogger(object):
+class NullLogger:
     level_name = None
 
     def remove(self, handler_id=None):  # pragma: no cover

@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import absolute_import, unicode_literals
 
 import logging
 import os
@@ -12,7 +8,6 @@ import re
 import sqlite3
 
 import pathvalidate
-import six
 import typepy
 from mbstrdecoder import MultiByteStrDecoder
 from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
@@ -38,7 +33,7 @@ from .sqlquery import SqlQuery
 MEMORY_DB_NAME = ":memory:"
 
 
-class SimpleSQLite(object):
+class SimpleSQLite:
     """
     Wrapper class for |sqlite3| module.
 
@@ -304,7 +299,7 @@ class SimpleSQLite(object):
             exec_start_time = time.time()
 
         try:
-            result = self.connection.execute(six.text_type(query))
+            result = self.connection.execute(str(query))
         except (sqlite3.OperationalError, sqlite3.IntegrityError) as e:
             if caller is None:
                 caller = logging.getLogger().findCaller()
@@ -363,8 +358,7 @@ class SimpleSQLite(object):
         self.verify_table_existence(table_name)
 
         return self.execute_query(
-            six.text_type(Select(select, table_name, where, extra)),
-            logging.getLogger().findCaller(),
+            str(Select(select, table_name, where, extra)), logging.getLogger().findCaller(),
         )
 
     def select_as_dataframe(self, table_name, columns=None, where=None, extra=None):
@@ -828,7 +822,7 @@ class SimpleSQLite(object):
 
         value_matrix = [
             [query, execute_time, self.__dict_query_count.get(query, 0)]
-            for query, execute_time in six.iteritems(self.__dict_query_totalexectime)
+            for query, execute_time in self.__dict_query_totalexectime.items()
         ]
         attr_names = ("sql_query", "cumulative_time", "count")
         con_tmp = connect_memdb()
@@ -1142,7 +1136,7 @@ class SimpleSQLite(object):
             raise ValueError("mode is not set")
 
         if self.mode not in valid_permissions:
-            raise IOError(
+            raise OSError(
                 "invalid access: expected-mode='{}', current-mode='{}'".format(
                     "' or '".join(valid_permissions), self.mode
                 )
@@ -1358,7 +1352,7 @@ class SimpleSQLite(object):
                     table_data, primary_key, add_primary_key_column, index_attrs
                 )
             return
-        except (ptr.InvalidFilePathError, IOError):
+        except (ptr.InvalidFilePathError, OSError):
             pass
 
         loader = ptr.CsvTableTextLoader(csv_source)
@@ -1411,7 +1405,7 @@ class SimpleSQLite(object):
                     table_data, primary_key, add_primary_key_column, index_attrs
                 )
             return
-        except (ptr.InvalidFilePathError, IOError):
+        except (ptr.InvalidFilePathError, OSError):
             pass
 
         loader = ptr.JsonTableTextLoader(json_source)
@@ -1536,7 +1530,7 @@ class SimpleSQLite(object):
 
         self.__validate_db_path(database_path)
         if not os.path.isfile(os.path.realpath(database_path)):
-            raise IOError("file not found: " + database_path)
+            raise OSError("file not found: " + database_path)
 
         try:
             connection = sqlite3.connect(database_path)
@@ -1585,9 +1579,7 @@ class SimpleSQLite(object):
 
             attr_description_list.append("{} INTEGER PRIMARY KEY AUTOINCREMENT".format(primary_key))
 
-        for col, value_type in sorted(
-            six.iteritems(self.__extract_col_type_from_tabledata(table_data))
-        ):
+        for col, value_type in sorted(self.__extract_col_type_from_tabledata(table_data).items()):
             attr_name = table_data.headers[col]
             attr_description = "{} {:s}".format(Attr(attr_name), value_type)
             if attr_name == primary_key:
@@ -1613,12 +1605,10 @@ class SimpleSQLite(object):
             typepy.Typecode.STRING: "TEXT",
         }
 
-        return dict(
-            [
-                [col_idx, typename_table.get(col_dp.typecode, "TEXT")]
-                for col_idx, col_dp in enumerate(table_data.column_dp_list)
-            ]
-        )
+        return {
+            col_idx: typename_table.get(col_dp.typecode, "TEXT")
+            for col_idx, col_dp in enumerate(table_data.column_dp_list)
+        }
 
     def __create_table_from_tabledata(
         self, table_data, primary_key, add_primary_key_column, index_attrs

@@ -1,15 +1,11 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
-
 from decimal import Decimal
 
 
-class RecordConvertor(object):
+class RecordConvertor:
     @staticmethod
     def __to_sqlite_element(value):
         if isinstance(value, Decimal):

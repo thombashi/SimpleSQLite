@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import print_function, unicode_literals
 
 import datetime
 import itertools
@@ -50,7 +46,7 @@ NamedTuple = namedtuple("NamedTuple", "attr_a attr_b")
 NamedTupleEx = namedtuple("NamedTupleEx", "attr_a attr_b attr_c")
 
 
-class Test_SimpleSQLite_init(object):
+class Test_SimpleSQLite_init:
     @pytest.mark.parametrize(["mode"], [["w"], ["a"]])
     def test_normal_path(self, tmpdir, mode):
         p = tmpdir.join("test.sqlite3")
@@ -101,7 +97,7 @@ class Test_SimpleSQLite_init(object):
             SimpleSQLite(str(p), mode).connection
 
 
-class Test_SimpleSQLite_is_connected(object):
+class Test_SimpleSQLite_is_connected:
     def test_normal(self, con):
         assert con.is_connected()
 
@@ -109,7 +105,7 @@ class Test_SimpleSQLite_is_connected(object):
         assert not con_null.is_connected()
 
 
-class Test_SimpleSQLite_check_connection(object):
+class Test_SimpleSQLite_check_connection:
     def test_normal(self, con):
         con.check_connection()
 
@@ -118,7 +114,7 @@ class Test_SimpleSQLite_check_connection(object):
             con_null.check_connection()
 
 
-class Test_SimpleSQLite_select(object):
+class Test_SimpleSQLite_select:
     def test_smoke(self, con):
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         assert result is not None
@@ -147,7 +143,7 @@ class Test_SimpleSQLite_select(object):
             con_null.select(select="*", table_name=TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_select_as_dict(object):
+class Test_SimpleSQLite_select_as_dict:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -178,7 +174,7 @@ class Test_SimpleSQLite_select_as_dict(object):
         assert con.select_as_dict(table_name=value.table_name) == expected
 
 
-class Test_SimpleSQLite_dump(object):
+class Test_SimpleSQLite_dump:
     def test_normal(self, con, tmpdir):
         dump_path = str(tmpdir.join("dump.db"))
         con.dump(dump_path)
@@ -190,7 +186,7 @@ class Test_SimpleSQLite_dump(object):
         )
 
 
-class Test_SimpleSQLite_insert(object):
+class Test_SimpleSQLite_insert:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -234,7 +230,7 @@ class Test_SimpleSQLite_insert(object):
             con_null.insert(TEST_TABLE_NAME, record=[5, 6])
 
 
-class Test_SimpleSQLite_insert_many(object):
+class Test_SimpleSQLite_insert_many:
     @pytest.mark.parametrize(
         ["table_name", "records"],
         [
@@ -284,7 +280,7 @@ class Test_SimpleSQLite_insert_many(object):
             con_null.insert_many(TEST_TABLE_NAME, [])
 
 
-class Test_SimpleSQLite_update(object):
+class Test_SimpleSQLite_update:
     def test_normal(self, con):
         table_name = TEST_TABLE_NAME
         where = Where("attr_b", 2)
@@ -321,7 +317,7 @@ class Test_SimpleSQLite_update(object):
             con_null.update(table_name=TEST_TABLE_NAME, set_query="hoge")
 
 
-class Test_SimpleSQLite_total_changes(object):
+class Test_SimpleSQLite_total_changes:
     def test_smoke(self, con):
         assert con.total_changes > 0
 
@@ -330,9 +326,9 @@ class Test_SimpleSQLite_total_changes(object):
             con_null.total_changes
 
 
-class Test_SimpleSQLite_fetch_table_names(object):
+class Test_SimpleSQLite_fetch_table_names:
     def test_normal(self, con):
-        expected = set([TEST_TABLE_NAME])
+        expected = {TEST_TABLE_NAME}
 
         assert set(con.fetch_table_names()) == expected
 
@@ -341,7 +337,7 @@ class Test_SimpleSQLite_fetch_table_names(object):
             con_null.fetch_table_names()
 
 
-class Test_SimpleSQLite_fetch_attr_names(object):
+class Test_SimpleSQLite_fetch_attr_names:
     @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
     def test_normal(self, con, value, expected):
         assert con.fetch_attr_names(value) == expected
@@ -359,7 +355,7 @@ class Test_SimpleSQLite_fetch_attr_names(object):
             con_null.fetch_attr_names("not_exist_table")
 
 
-class Test_SimpleSQLite_has_table(object):
+class Test_SimpleSQLite_has_table:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [[TEST_TABLE_NAME, True], ["not_exist_table", False], ["", False], [None, False]],
@@ -372,7 +368,7 @@ class Test_SimpleSQLite_has_table(object):
             con_null.has_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_has_attr(object):
+class Test_SimpleSQLite_has_attr:
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],
         [
@@ -402,7 +398,7 @@ class Test_SimpleSQLite_has_attr(object):
             con_null.has_attr(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_has_attrs(object):
+class Test_SimpleSQLite_has_attrs:
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],
         [
@@ -434,7 +430,7 @@ class Test_SimpleSQLite_has_attrs(object):
             con_null.has_attrs(TEST_TABLE_NAME, "attr")
 
 
-class Test_SimpleSQLite_get_profile(object):
+class Test_SimpleSQLite_get_profile:
     def test_normal(self, con):
         profile_list = con.get_profile()
         assert typepy.is_empty_sequence(profile_list)
@@ -444,7 +440,7 @@ class Test_SimpleSQLite_get_profile(object):
         assert typepy.is_not_empty_sequence(profile_list)
 
 
-class Test_SimpleSQLite_fetch_sqlite_master(object):
+class Test_SimpleSQLite_fetch_sqlite_master:
     def test_normal(self, con_index):
         expected = [
             {
@@ -474,7 +470,7 @@ class Test_SimpleSQLite_fetch_sqlite_master(object):
             con_null.fetch_sqlite_master()
 
 
-class Test_SimpleSQLite_verify_table_existence(object):
+class Test_SimpleSQLite_verify_table_existence:
     def test_normal(self, con):
         con.verify_table_existence(TEST_TABLE_NAME)
 
@@ -487,7 +483,7 @@ class Test_SimpleSQLite_verify_table_existence(object):
             con_null.verify_table_existence(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_verify_attr_existence(object):
+class Test_SimpleSQLite_verify_attr_existence:
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],
         [
@@ -502,7 +498,7 @@ class Test_SimpleSQLite_verify_attr_existence(object):
             con.verify_attr_existence(table, attr)
 
 
-class Test_SimpleSQLite_drop_table(object):
+class Test_SimpleSQLite_drop_table:
     def test_normal(self, con):
         attr_descriptions = ["'{:s}' {:s}".format("attr_name", "TEXT")]
         table_name = "new_table"
@@ -520,7 +516,7 @@ class Test_SimpleSQLite_drop_table(object):
             con_null.drop_table(TEST_TABLE_NAME)
 
 
-class Test_SimpleSQLite_create_table_from_data_matrix(object):
+class Test_SimpleSQLite_create_table_from_data_matrix:
     DATATIME_DATA = datetime.datetime(2017, 1, 1, 0, 0, 0)
 
     @pytest.mark.parametrize(
@@ -735,7 +731,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix(object):
             con_null.create_table_from_data_matrix(TEST_TABLE_NAME, [], [])
 
 
-class Test_SimpleSQLite_create_table_from_tabledata(object):
+class Test_SimpleSQLite_create_table_from_tabledata:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -784,7 +780,7 @@ class Test_SimpleSQLite_create_table_from_tabledata(object):
         assert actual.equals(value)
 
 
-class Test_SimpleSQLite_select_as_tabledata(object):
+class Test_SimpleSQLite_select_as_tabledata:
     @pytest.mark.parametrize(
         ["value", "type_hints", "expected"],
         [
@@ -814,7 +810,7 @@ class Test_SimpleSQLite_select_as_tabledata(object):
         assert actual.value_matrix == expected
 
 
-class Test_SimpleSQLite_create_table_from_csv(object):
+class Test_SimpleSQLite_create_table_from_csv:
     @pytest.mark.parametrize(
         [
             "csv_text",
@@ -924,7 +920,7 @@ class Test_SimpleSQLite_create_table_from_csv(object):
         assert result_matrix == expected_data_matrix
 
 
-class Test_SimpleSQLite_create_table_from_json(object):
+class Test_SimpleSQLite_create_table_from_json:
     @pytest.mark.parametrize(
         [
             "json_text",
@@ -1068,7 +1064,7 @@ class Test_SimpleSQLite_create_table_from_json(object):
         assert result_matrix == expected_data_matrix
 
 
-class Test_SimpleSQLite_rollback(object):
+class Test_SimpleSQLite_rollback:
     def test_normal(self, con):
         con.rollback()
 
@@ -1076,7 +1072,7 @@ class Test_SimpleSQLite_rollback(object):
         con_null.rollback()
 
 
-class Test_SimpleSQLite_commit(object):
+class Test_SimpleSQLite_commit:
     def test_normal(self, con):
         con.commit()
 
@@ -1084,7 +1080,7 @@ class Test_SimpleSQLite_commit(object):
         con_null.commit()
 
 
-class Test_SimpleSQLite_close(object):
+class Test_SimpleSQLite_close:
     def test_close(self, con):
         con.close()
 
@@ -1092,7 +1088,7 @@ class Test_SimpleSQLite_close(object):
         con_null.close()
 
 
-class Test_SimpleSQLite_create_index(object):
+class Test_SimpleSQLite_create_index:
 
     CHARS = [
         "/",
@@ -1147,6 +1143,6 @@ class Test_SimpleSQLite_create_index(object):
             con_null.create_index(TEST_TABLE_NAME, "dummy")
 
 
-class Test_SimpleSQLite_fetch_num_records(object):
+class Test_SimpleSQLite_fetch_num_records:
     def test_null(self, con):
         assert con.fetch_num_records("not_exist") is None

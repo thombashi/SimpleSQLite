@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 
@@ -222,7 +220,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SimpleSQLite.tex', u'SimpleSQLite Documentation',
+    (master_doc, 'SimpleSQLite.tex', 'SimpleSQLite Documentation',
      __author__, 'manual'),
 ]
 
@@ -252,7 +250,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'simplesqlite', u'SimpleSQLite Documentation',
+    (master_doc, 'simplesqlite', 'SimpleSQLite Documentation',
      [author], 1)
 ]
 
@@ -266,7 +264,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'SimpleSQLite', u'SimpleSQLite Documentation',
+    (master_doc, 'SimpleSQLite', 'SimpleSQLite Documentation',
      author, 'SimpleSQLite', 'One line description of project.',
      'Miscellaneous'),
 ]
@@ -286,11 +284,11 @@ texinfo_documents = [
 
 # ------------------------------------------------
 
-rp_common = u"""
+rp_common = """
 .. |TM| replace:: :superscript:`TM`
 """
 
-rp_builtin = u"""
+rp_builtin = """
 .. |False| replace:: :py:obj:`False`
 .. |True| replace:: :py:obj:`True`
 .. |None| replace:: :py:obj:`None`
@@ -306,11 +304,11 @@ rp_builtin = u"""
 .. |OrderedDict| replace:: :py:class:`collections.OrderedDict`
 """
 
-rp_func = u"""
+rp_func = """
 .. |namedtuple| replace:: :py:func:`~collections.namedtuple`
 """
 
-rp_class = u"""
+rp_class = """
 .. |Connection| replace:: :py:class:`sqlite3.Connection`
 .. |datetime| replace:: :py:class:`datetime.datetime`
 .. |timedelta| replace:: :py:class:`datetime.timedelta`
@@ -323,11 +321,11 @@ rp_class = u"""
 .. |Where| replace:: :py:class:`~simplesqlite.query.Where`
 """
 
-rp_module = u"""
+rp_module = """
 .. |sqlite3| replace:: :py:mod:`sqlite3`
 """
 
-rp_attr = u"""
+rp_attr = """
 .. |attr_mode| replace:: :py:attr:`.mode`
 
 .. |attr_table_name_description| replace::
@@ -337,13 +335,13 @@ rp_attr = u"""
 .. |attr_table_name_header| replace:: format specifier
 """
 
-rp_method = u"""
+rp_method = """
 .. |make_table_name| replace::
     Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
     Following format specifiers are replaced with specific string.
 """
 
-rp_param = u"""
+rp_param = """
 .. |primary_key| replace::
     Primary key of the creating table.
 
@@ -361,7 +359,7 @@ rp_param = u"""
     get data from all of the columns in the table.
 """
 
-rp_raises = u"""
+rp_raises = """
 .. |raises_check_connection| replace::
     If not connected to a SQLite database file.
 
@@ -381,7 +379,7 @@ rp_raises = u"""
     If the open |attr_mode| is neither ``"w"`` nor ``"a"``.
 """
 
-rp_template = u"""
+rp_template = """
 .. |tnt_filename| replace:: %(filename)s
 .. |tnt_format_name| replace:: %(format_name)s
 .. |tnt_format_id| replace:: %(format_id)s

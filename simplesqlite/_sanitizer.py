@@ -1,17 +1,12 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import absolute_import, unicode_literals
 
 import re
 from collections import Counter
 
 import dataproperty
 import pathvalidate as pv
-import six
 import typepy
 from pathvalidate import (
     InvalidCharError,
@@ -20,7 +15,6 @@ from pathvalidate import (
     ReservedNameError,
     ValidReservedNameError,
 )
-from six.moves import range
 from tabledata import (
     DataError,
     InvalidHeaderNameError,
@@ -57,7 +51,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     ):
         tabledata.max_workers = max_workers
 
-        super(SQLiteTableDataSanitizer, self).__init__(tabledata)
+        super().__init__(tabledata)
 
         if typepy.is_null_string(tabledata.table_name):
             raise NameValidationError("table_name is empty")
@@ -69,7 +63,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             try:
                 header = header.upper()
             except AttributeError:
-                header = six.text_type(header).upper()
+                header = str(header).upper()
 
             self.__upper_headers.append(header)
 
@@ -140,9 +134,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             except IndexError:
                 raise DataError("header list and data body are empty")
 
-        attr_name_list = AttrList.sanitize(
-            super(SQLiteTableDataSanitizer, self)._normalize_headers()
-        )
+        attr_name_list = AttrList.sanitize(super()._normalize_headers())
 
         try:
             for attr_name in attr_name_list:

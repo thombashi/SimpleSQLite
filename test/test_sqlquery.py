@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
-
-from __future__ import unicode_literals
 
 import pytest
 
@@ -16,7 +12,7 @@ nan = float("nan")
 inf = float("inf")
 
 
-class Test_SqlQuery_make_update(object):
+class Test_SqlQuery_make_update:
     @pytest.mark.parametrize(
         ["table", "set_query", "where", "expected"],
         [
@@ -54,7 +50,7 @@ class Test_SqlQuery_make_update(object):
             SqlQuery.make_update(table, set_query, where)
 
 
-class Test_SqlQuery_make_where_in(object):
+class Test_SqlQuery_make_where_in:
     @pytest.mark.parametrize(
         ["key", "value", "expected"], [["key", ["attr_a", "attr_b"], "key IN ('attr_a', 'attr_b')"]]
     )
@@ -75,7 +71,7 @@ class Test_SqlQuery_make_where_in(object):
             SqlQuery.make_where_in(key, value)
 
 
-class Test_SqlQuery_make_where_not_in(object):
+class Test_SqlQuery_make_where_not_in:
     @pytest.mark.parametrize(
         ["key", "value", "expected"],
         [["key", ["attr_a", "attr_b"], "key NOT IN ('attr_a', 'attr_b')"]],

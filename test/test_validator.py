@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-from __future__ import absolute_import, unicode_literals
-
 import string
 
 import pytest
@@ -165,7 +161,7 @@ INVALID_RESERVED_KEYWORDS_ATTR_LOWER = [
 UTF8_WORDS = [["あいうえお"], ["属性"]]
 
 
-class Test_validate_sqlite_table_name(object):
+class Test_validate_sqlite_table_name:
     @pytest.mark.parametrize(
         ["value"],
         [
@@ -233,7 +229,7 @@ class Test_validate_sqlite_table_name(object):
             validate_sqlite_table_name(value)
 
 
-class Test_validate_sqlite_attr_name(object):
+class Test_validate_sqlite_attr_name:
     @pytest.mark.parametrize(
         ["value"],
         [
