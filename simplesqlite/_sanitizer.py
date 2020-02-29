@@ -4,6 +4,7 @@
 
 import re
 from collections import Counter
+from typing import Any, List, Optional, Sequence, cast
 
 import dataproperty
 import pathvalidate as pv
@@ -19,9 +20,11 @@ from tabledata import (
     DataError,
     InvalidHeaderNameError,
     InvalidTableNameError,
+    TableData,
     convert_idx_to_alphabet,
 )
 from tabledata.normalizer import AbstractTableDataNormalizer
+from typepy.type import AbstractType
 
 from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .converter import RecordConvertor
@@ -34,7 +37,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     __RENAME_TEMPLATE = "rename_{:s}"
 
     @property
-    def _type_hints(self):
+    def _type_hints(self) -> Optional[List[AbstractType]]:
         if self.__is_type_inference:
             return self._tabledata.dp_extractor.column_type_hints
 
@@ -47,8 +50,12 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         return None
 
     def __init__(
-        self, tabledata, dup_col_handler="error", is_type_inference=True, max_workers=None
-    ):
+        self,
+        tabledata: TableData,
+        dup_col_handler: str = "error",
+        is_type_inference: bool = True,
+        max_workers: Optional[int] = None,
+    ) -> None:
         tabledata.max_workers = max_workers
 
         super().__init__(tabledata)
@@ -70,9 +77,9 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         self.__dup_col_handler = dup_col_handler
         self.__is_type_inference = is_type_inference
 
-    def _preprocess_table_name(self):
+    def _preprocess_table_name(self) -> str:
         try:
-            new_name = pv.sanitize_filename(self._tabledata.table_name, replacement_text="_")
+            new_name = str(pv.sanitize_filename(self._tabledata.table_name, replacement_text="_"))
         except TypeError:
             raise NameValidationError(
                 "table name must be a string: actual='{}'".format(self._tabledata.table_name)
@@ -86,7 +93,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return new_name
 
-    def _validate_table_name(self, table_name):
+    def _validate_table_name(self, table_name: str) -> None:
         try:
             validate_sqlite_table_name(table_name)
         except ValidReservedNameError:
@@ -94,17 +101,17 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         except (InvalidReservedNameError, InvalidCharError) as e:
             raise InvalidTableNameError(e)
 
-    def _normalize_table_name(self, table_name):
+    def _normalize_table_name(self, table_name: str) -> str:
         return self.__RENAME_TEMPLATE.format(table_name)
 
-    def _preprocess_header(self, col_idx, header):
+    def _preprocess_header(self, col_idx: int, header: Optional[str]) -> str:
         if typepy.is_null_string(header):
             return self.__get_default_header(col_idx)
 
         if dataproperty.is_multibyte_str(header):
-            return header
+            return cast(str, header)
 
-        return Attr.sanitize(header)
+        return Attr.sanitize(cast(str, header))
 
     def _validate_headers(self):
         if typepy.is_empty_sequence(self._tabledata.headers):
@@ -113,7 +120,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         for header in self._tabledata.headers:
             self._validate_header(header)
 
-    def _validate_header(self, header):
+    def _validate_header(self, header: str) -> None:
         try:
             validate_sqlite_attr_name(header)
         except (NullNameError, ReservedNameError):
@@ -124,7 +131,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _normalize_header(self, header):
         return self.__RENAME_TEMPLATE.format(header)
 
-    def _normalize_headers(self):
+    def _normalize_headers(self) -> List[str]:
         if typepy.is_empty_sequence(self._tabledata.headers):
             try:
                 return [
@@ -134,7 +141,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             except IndexError:
                 raise DataError("header list and data body are empty")
 
-        attr_name_list = AttrList.sanitize(super()._normalize_headers())
+        attr_name_list = AttrList.sanitize(super()._normalize_headers())  # type: ignore
 
         try:
             for attr_name in attr_name_list:
@@ -165,7 +172,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return attr_name_list
 
-    def _normalize_rows(self, normalize_headers):
+    def _normalize_rows(self, normalize_headers: Sequence[str]) -> Any:
         return RecordConvertor.to_records(normalize_headers, self._tabledata.rows)
 
     def __get_default_header(self, col_idx):

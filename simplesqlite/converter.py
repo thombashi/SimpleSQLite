@@ -3,18 +3,19 @@
 """
 
 from decimal import Decimal
+from typing import Any, List, Sequence
 
 
 class RecordConvertor:
     @staticmethod
-    def __to_sqlite_element(value):
+    def __to_sqlite_element(value: Any) -> Any:
         if isinstance(value, Decimal):
             return float(value)
 
         return value
 
     @classmethod
-    def to_record(cls, attr_names, values):
+    def to_record(cls, attr_names: Sequence[str], values) -> List:
         """
         Convert values to a record to be inserted into a database.
 
@@ -43,7 +44,7 @@ class RecordConvertor:
         raise ValueError("cannot convert from {} to list".format(type(values)))
 
     @classmethod
-    def to_records(cls, attr_names, value_matrix):
+    def to_records(cls, attr_names: Sequence[str], value_matrix: Sequence) -> List:
         """
         Convert a value matrix to records to be inserted into a database.
 

@@ -148,7 +148,7 @@ __RE_INVALID_CHARS = re.compile(
 )
 
 
-def validate_sqlite_table_name(name):
+def validate_sqlite_table_name(name: str) -> None:
     """
     :param str name: Name to validate.
     :raises pathvalidate.InvalidCharError:
@@ -176,7 +176,7 @@ def validate_sqlite_table_name(name):
         raise ValidReservedNameError("'{:s}' is a reserved keyword by sqlite".format(name))
 
 
-def validate_sqlite_attr_name(name):
+def validate_sqlite_attr_name(name: str) -> None:
     """
     :param str name: Name to validate.
     :raises pathvalidate.InvalidCharError:

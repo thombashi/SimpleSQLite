@@ -3,6 +3,7 @@
 """
 
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
 from pathvalidate import ValidationError, ValidReservedNameError
 
@@ -12,7 +13,11 @@ from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .error import NameValidationError
 
 
-def validate_table_name(name):
+if TYPE_CHECKING:
+    from simplesqlite import SimpleSQLite  # noqa
+
+
+def validate_table_name(name: str) -> None:
     """
     :param str name: Table name to validate.
     :raises NameValidationError: |raises_validate_table_name|
@@ -26,7 +31,7 @@ def validate_table_name(name):
         raise NameValidationError(e)
 
 
-def validate_attr_name(name):
+def validate_attr_name(name: str) -> None:
     """
     :param str name: Name to validate.
     :raises NameValidationError: |raises_validate_attr_name|
@@ -38,7 +43,7 @@ def validate_attr_name(name):
         raise NameValidationError(e)
 
 
-def append_table(src_con, dst_con, table_name):
+def append_table(src_con: "SimpleSQLite", dst_con: "SimpleSQLite", table_name: str) -> bool:
     """
     Append a table from source database to destination database.
 
@@ -92,7 +97,13 @@ def append_table(src_con, dst_con, table_name):
     return True
 
 
-def copy_table(src_con, dst_con, src_table_name, dst_table_name, is_overwrite=True):
+def copy_table(
+    src_con: "SimpleSQLite",
+    dst_con: "SimpleSQLite",
+    src_table_name: str,
+    dst_table_name: str,
+    is_overwrite: bool = True,
+) -> bool:
     """
     Copy a table from source to destination.
 

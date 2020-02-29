@@ -6,12 +6,16 @@ import logging
 import os
 import re
 import sqlite3
+from collections import OrderedDict, defaultdict
+from sqlite3 import Connection, Cursor
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import pathvalidate
 import typepy
 from mbstrdecoder import MultiByteStrDecoder
 from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
+from typepy.type import AbstractType
 
 from ._common import extract_table_metadata
 from ._func import copy_table, validate_table_name
@@ -26,7 +30,17 @@ from .error import (
     OperationalError,
     TableNotFoundError,
 )
-from .query import Attr, AttrList, Insert, Select, Table, Value, make_index_name
+from .query import (
+    Attr,
+    AttrList,
+    Insert,
+    QueryItem,
+    Select,
+    Table,
+    Value,
+    WhereQuery,
+    make_index_name,
+)
 from .sqlquery import SqlQuery
 
 
@@ -61,7 +75,7 @@ class SimpleSQLite:
     global_debug_query = False
 
     @property
-    def database_path(self):
+    def database_path(self) -> Optional[str]:
         """
         :return: File path of the connected database.
         :rtype: str
@@ -82,7 +96,7 @@ class SimpleSQLite:
         return self.__database_path
 
     @property
-    def connection(self):
+    def connection(self) -> Optional[Connection]:
         """
         :return: |Connection| instance of the connected database.
         :rtype: sqlite3.Connection
@@ -93,11 +107,11 @@ class SimpleSQLite:
         return self.__connection
 
     @property
-    def schema_extractor(self):
+    def schema_extractor(self) -> SQLiteSchemaExtractor:
         return SQLiteSchemaExtractor(self)
 
     @property
-    def total_changes(self):
+    def total_changes(self) -> int:
         """
         .. seealso::
             :py:attr:`sqlite3.Connection.total_changes`
@@ -105,10 +119,10 @@ class SimpleSQLite:
 
         self.check_connection()
 
-        return self.connection.total_changes
+        return self.connection.total_changes  # type: ignore
 
     @property
-    def mode(self):
+    def mode(self) -> Optional[str]:
         """
         :return: Connection mode: ``"r"``/``"w"``/``"a"``.
         :rtype: str
@@ -118,9 +132,23 @@ class SimpleSQLite:
 
         return self.__mode
 
+    def __initialize_connection(self) -> None:
+        self.__database_path = None  # type: Optional[str]
+        self.__connection = None  # type: Optional[Connection]
+        self.__mode = None  # type: Optional[str]
+        self.__delayed_connection_path = None  # type: Optional[str]
+
+        self.__dict_query_count = defaultdict(int)  # type: Dict[str, int]
+        self.__dict_query_totalexectime = defaultdict(float)  # type: Dict[str, float]
+
     def __init__(
-        self, database_src, mode="a", delayed_connection=True, max_workers=None, profile=False
-    ):
+        self,
+        database_src: Union[Connection, "SimpleSQLite", str],
+        mode: str = "a",
+        delayed_connection: bool = True,
+        max_workers: Optional[int] = None,
+        profile: bool = False,
+    ) -> None:
         self.debug_query = False
 
         self.__initialize_connection()
@@ -148,16 +176,16 @@ class SimpleSQLite:
 
         self.connect(database_src, mode)
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
 
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
         self.close()
 
-    def is_connected(self):
+    def is_connected(self) -> bool:
         """
         :return: |True| if the connection to a database is valid.
         :rtype: bool
@@ -179,7 +207,7 @@ class SimpleSQLite:
 
         return True
 
-    def check_connection(self):
+    def check_connection(self) -> None:
         """
         :raises simplesqlite.NullDatabaseConnectionError:
             |raises_check_connection|
@@ -213,7 +241,7 @@ class SimpleSQLite:
             if not self.__delayed_connect():
                 raise NullDatabaseConnectionError("null database connection")
 
-    def connect(self, database_path, mode="a"):
+    def connect(self, database_path: str, mode: str = "a") -> None:
         """
         Connect to a SQLite database.
 
@@ -267,11 +295,13 @@ class SimpleSQLite:
         for table in self.fetch_table_names():
             self.drop_table(table)
 
-    def execute_query(self, query, caller=None):
+    def execute_query(
+        self, query: Union[str, QueryItem], caller: Optional[Tuple] = None
+    ) -> Optional[Cursor]:
         """
         Send arbitrary SQLite query to the database.
 
-        :param str query: Query to executed.
+        :param query: Query to executed.
         :param tuple caller:
             Caller information.
             Expects the return value of :py:meth:`logging.Logger.findCaller`.
@@ -298,6 +328,8 @@ class SimpleSQLite:
         if self.__is_profile:
             exec_start_time = time.time()
 
+        assert self.connection  # to avoid type check error
+
         try:
             result = self.connection.execute(str(query))
         except (sqlite3.OperationalError, sqlite3.IntegrityError) as e:
@@ -319,29 +351,32 @@ class SimpleSQLite:
             )
 
         if self.__is_profile:
-            self.__dict_query_count[query] = self.__dict_query_count.get(query, 0) + 1
+            self.__dict_query_count[str(query)] += 1
 
             elapse_time = time.time() - exec_start_time
-            self.__dict_query_totalexectime[query] = (
-                self.__dict_query_totalexectime.get(query, 0) + elapse_time
-            )
+            self.__dict_query_totalexectime[str(query)] += elapse_time
 
         return result
 
-    def set_row_factory(self, row_factory):
+    def set_row_factory(self, row_factory: Optional[Callable]) -> None:
         """
         Set row_factory to the database connection.
         """
 
         self.check_connection()
+        self.__connection.row_factory = row_factory  # type: ignore
 
-        self.__connection.row_factory = row_factory
-
-    def select(self, select, table_name, where=None, extra=None):
+    def select(
+        self,
+        select: Union[str, AttrList],
+        table_name: str,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ) -> Optional[Cursor]:
         """
         Send a SELECT query to the database.
 
-        :param str select: Attribute for the ``SELECT`` query.
+        :param select: Attribute for the ``SELECT`` query.
         :param str table_name: |arg_select_table_name|
         :param where: |arg_select_where|
         :type where: |arg_where_type|
@@ -361,15 +396,21 @@ class SimpleSQLite:
             str(Select(select, table_name, where, extra)), logging.getLogger().findCaller(),
         )
 
-    def select_as_dataframe(self, table_name, columns=None, where=None, extra=None):
+    def select_as_dataframe(
+        self,
+        table_name: str,
+        columns: Optional[Sequence[str]] = None,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ):
         """
         Get data in the database and return fetched data as a
         :py:class:`pandas.Dataframe` instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_columns|
-        :param str where: |arg_select_where|
-        :param str extra: |arg_select_extra|
+        :param columns: |arg_select_as_xx_columns|
+        :param where: |arg_select_where|
+        :param extra: |arg_select_extra|
         :return: Table data as a :py:class:`pandas.Dataframe` instance.
         :rtype: pandas.DataFrame
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -400,14 +441,19 @@ class SimpleSQLite:
         return pandas.DataFrame(result.fetchall(), columns=columns)
 
     def select_as_tabledata(
-        self, table_name, columns=None, where=None, extra=None, type_hints=None
-    ):
+        self,
+        table_name: str,
+        columns: Optional[Sequence[str]] = None,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+        type_hints: Optional[AbstractType] = None,
+    ) -> TableData:
         """
         Get data in the database and return fetched data as a
         :py:class:`tabledata.TableData` instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_columns|
+        :param columns: |arg_select_as_xx_columns|
         :param where: |arg_select_where|
         :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
@@ -443,7 +489,13 @@ class SimpleSQLite:
             type_hints=[type_hints.get(col) for col in columns],
         )
 
-    def select_as_dict(self, table_name, columns=None, where=None, extra=None):
+    def select_as_dict(
+        self,
+        table_name: str,
+        columns: Optional[Sequence[str]] = None,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ) -> List[OrderedDict]:
         """
         Get data in the database and return fetched data as a
         |OrderedDict| list.
@@ -467,13 +519,19 @@ class SimpleSQLite:
 
         return self.select_as_tabledata(table_name, columns, where, extra).as_dict().get(table_name)
 
-    def select_as_memdb(self, table_name, columns=None, where=None, extra=None):
+    def select_as_memdb(
+        self,
+        table_name: str,
+        columns: Optional[Sequence[str]] = None,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ):
         """
         Get data in the database and return fetched data as a
         in-memory |SimpleSQLite| instance.
 
         :param str table_name: |arg_select_table_name|
-        :param list columns: |arg_select_as_xx_columns|
+        :param columns: |arg_select_as_xx_columns|
         :param where: |arg_select_where|
         :type where: |arg_where_type|
         :param str extra: |arg_select_extra|
@@ -499,7 +557,9 @@ class SimpleSQLite:
 
         return memdb
 
-    def insert(self, table_name, record, attr_names=None):
+    def insert(
+        self, table_name: str, record: Any, attr_names: Optional[Sequence[str]] = None
+    ) -> None:
         """
         Send an INSERT query to the database.
 
@@ -517,7 +577,12 @@ class SimpleSQLite:
 
         self.insert_many(table_name, records=[record], attr_names=attr_names)
 
-    def insert_many(self, table_name, records, attr_names=None):
+    def insert_many(
+        self,
+        table_name: str,
+        records: Sequence[Union[Dict, Sequence]],
+        attr_names: Optional[Sequence[str]] = None,
+    ) -> int:
         """
         Send an INSERT query with multiple records to the database.
 
@@ -576,6 +641,8 @@ class SimpleSQLite:
 
             logger.debug("\n".join(logs))
 
+        assert self.connection  # to avoid type check error
+
         try:
             self.connection.executemany(query, records)
         except (sqlite3.OperationalError, sqlite3.IntegrityError) as e:
@@ -591,7 +658,9 @@ class SimpleSQLite:
 
         return len(records)
 
-    def update(self, table_name, set_query, where=None):
+    def update(
+        self, table_name: str, set_query: Optional[str], where: Optional[WhereQuery] = None
+    ) -> Optional[Cursor]:
         """Execute an UPDATE query.
 
         Args:
@@ -621,7 +690,7 @@ class SimpleSQLite:
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
-    def delete(self, table_name, where=None):
+    def delete(self, table_name: str, where: Optional[WhereQuery] = None) -> Optional[Cursor]:
         """
         Send a DELETE query to the database.
 
@@ -639,7 +708,13 @@ class SimpleSQLite:
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
-    def fetch_value(self, select, table_name, where=None, extra=None):
+    def fetch_value(
+        self,
+        select: str,
+        table_name: str,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ) -> Optional[int]:
         """
         Fetch a value from the table. Return |None| if no value matches
         the conditions, or the table not found in the database.
@@ -672,14 +747,14 @@ class SimpleSQLite:
 
         return fetch[0]
 
-    def fetch_values(self, select, table_name, where=None, extra=None):
+    def fetch_values(self, select, table_name, where=None, extra=None) -> List:
         result = self.select(select=select, table_name=table_name, where=where, extra=extra)
         if result is None:
-            return None
+            return []
 
         return [record[0] for record in result.fetchall()]
 
-    def fetch_table_names(self, include_system_table=False):
+    def fetch_table_names(self, include_system_table: bool = False) -> List[str]:
         """
         :return: List of table names in the database.
         :rtype: list
@@ -708,7 +783,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_table_names(include_system_table)
 
-    def fetch_attr_names(self, table_name):
+    def fetch_attr_names(self, table_name: str) -> List[str]:
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -747,7 +822,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
-    def fetch_attr_type(self, table_name):
+    def fetch_attr_type(self, table_name: str) -> Dict[str, str]:
         """
         :return:
             Dictionary of attribute names and attribute types in the table.
@@ -766,8 +841,10 @@ class SimpleSQLite:
                 Value(table_name)
             )
         )
+        assert result  # to avoid type check error
         query = result.fetchone()[0]
         match = re.search("[(].*[)]", query)
+        assert match  # to avoid type check error
 
         def get_entry(items):
             key = " ".join(items[:-1])
@@ -777,7 +854,9 @@ class SimpleSQLite:
 
         return dict([get_entry(item.split(" ")) for item in match.group().strip("()").split(", ")])
 
-    def fetch_num_records(self, table_name, where=None):
+    def fetch_num_records(
+        self, table_name: str, where: Optional[WhereQuery] = None
+    ) -> Optional[int]:
         """
         Fetch the number of records in a table.
 
@@ -793,12 +872,12 @@ class SimpleSQLite:
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
-    def fetch_data_types(self, table_name):
+    def fetch_data_types(self, table_name: str) -> Dict:
         _, _, type_hints = extract_table_metadata(self, table_name)
 
         return type_hints
 
-    def get_profile(self, profile_count=50):
+    def get_profile(self, profile_count: int = 50) -> List[Any]:
         """
         Get profile of query execution time.
 
@@ -846,11 +925,11 @@ class SimpleSQLite:
         if result is None:
             return []
 
-        SqliteProfile = namedtuple("SqliteProfile", " ".join(attr_names))
+        SqliteProfile = namedtuple("SqliteProfile", " ".join(attr_names))  # type: ignore
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
-    def fetch_sqlite_master(self):
+    def fetch_sqlite_master(self) -> List[Dict]:
         """
         Get sqlite_master table information as a list of dictionaries.
 
@@ -904,7 +983,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_sqlite_master()
 
-    def has_table(self, table_name):
+    def has_table(self, table_name: str) -> bool:
         """
         :param str table_name: Table name to be tested.
         :return: |True| if the database has the table.
@@ -937,7 +1016,7 @@ class SimpleSQLite:
 
         return table_name in self.fetch_table_names()
 
-    def has_attr(self, table_name, attr_name):
+    def has_attr(self, table_name: str, attr_name: Optional[str]) -> bool:
         """
         :param str table_name: Table name that the attribute exists.
         :param str attr_name: Attribute name to be tested.
@@ -979,10 +1058,10 @@ class SimpleSQLite:
 
         return attr_name in self.fetch_attr_names(table_name)
 
-    def has_attrs(self, table_name, attr_names):
+    def has_attrs(self, table_name: str, attr_names: Sequence[str]) -> bool:
         """
         :param str table_name: Table name that attributes exists.
-        :param str attr_names: Attribute names to tested.
+        :param attr_names: Attribute names to tested.
         :return: |True| if the table has all of the attribute.
         :rtype: bool
         :raises simplesqlite.TableNotFoundError:
@@ -1028,7 +1107,7 @@ class SimpleSQLite:
 
         return True
 
-    def verify_table_existence(self, table_name):
+    def verify_table_existence(self, table_name: str) -> None:
         """
         :param str table_name: Table name to be tested.
         :raises simplesqlite.TableNotFoundError:
@@ -1068,7 +1147,7 @@ class SimpleSQLite:
             "'{}' table not found in '{}' database".format(table_name, self.database_path)
         )
 
-    def verify_attr_existence(self, table_name, attr_name):
+    def verify_attr_existence(self, table_name: str, attr_name: str) -> None:
         """
         :param str table_name: Table name that the attribute exists.
         :param str attr_name: Attribute name to tested.
@@ -1118,7 +1197,7 @@ class SimpleSQLite:
             "'{}' attribute not found in '{}' table".format(attr_name, table_name)
         )
 
-    def validate_access_permission(self, valid_permissions):
+    def validate_access_permission(self, valid_permissions: List[str]) -> None:
         """
         :param valid_permissions:
             List of permissions that access is allowed.
@@ -1142,7 +1221,7 @@ class SimpleSQLite:
                 )
             )
 
-    def drop_table(self, table_name):
+    def drop_table(self, table_name: str) -> None:
         """
         :param str table_name: Table name to drop.
         :raises simplesqlite.NullDatabaseConnectionError:
@@ -1161,7 +1240,7 @@ class SimpleSQLite:
             self.execute_query(query, logging.getLogger().findCaller())
             self.commit()
 
-    def create_table(self, table_name, attr_descriptions):
+    def create_table(self, table_name: str, attr_descriptions: List[str]) -> bool:
         """
         :param str table_name: Table name to create.
         :param list attr_descriptions: List of table description.
@@ -1186,7 +1265,7 @@ class SimpleSQLite:
 
         return True
 
-    def create_index(self, table_name, attr_name):
+    def create_index(self, table_name: str, attr_name: str) -> None:
         """
         :param str table_name:
             Table name that contains the attribute to be indexed.
@@ -1211,7 +1290,7 @@ class SimpleSQLite:
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
-    def create_index_list(self, table_name, attr_names):
+    def create_index_list(self, table_name: str, attr_names: List[str]) -> None:
         """
         :param str table_name: Table name that exists attribute.
         :param list attr_names:
@@ -1227,20 +1306,20 @@ class SimpleSQLite:
             return
 
         table_attr_set = set(self.fetch_attr_names(table_name))
-        index_attr_set = set(AttrList.sanitize(attr_names))
+        index_attr_set = set(AttrList.sanitize(attr_names))  # type: ignore
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
         self,
-        table_name,
-        attr_names,
-        data_matrix,
-        primary_key=None,
-        add_primary_key_column=False,
-        index_attrs=None,
-    ):
+        table_name: str,
+        attr_names: Union[List[int], List[str], List[Union[str, None]], Tuple[str, str, str]],
+        data_matrix: Any,
+        primary_key: Optional[str] = None,
+        add_primary_key_column: bool = False,
+        index_attrs: Optional[List[str]] = None,
+    ) -> None:
         """
         Create a table if not exists. Moreover, insert data into the created
         table.
@@ -1274,8 +1353,12 @@ class SimpleSQLite:
         )
 
     def create_table_from_tabledata(
-        self, table_data, primary_key=None, add_primary_key_column=False, index_attrs=None
-    ):
+        self,
+        table_data: TableData,
+        primary_key: Optional[str] = None,
+        add_primary_key_column: bool = False,
+        index_attrs: Optional[Sequence[str]] = None,
+    ) -> None:
         """
         Create a table from :py:class:`tabledata.TableData`.
 
@@ -1293,16 +1376,16 @@ class SimpleSQLite:
 
     def create_table_from_csv(
         self,
-        csv_source,
-        table_name="",
-        attr_names=(),
-        delimiter=",",
-        quotechar='"',
-        encoding="utf-8",
-        primary_key=None,
-        add_primary_key_column=False,
-        index_attrs=None,
-    ):
+        csv_source: str,
+        table_name: str = "",
+        attr_names: Sequence[str] = (),
+        delimiter: str = ",",
+        quotechar: str = '"',
+        encoding: str = "utf-8",
+        primary_key: Optional[str] = None,
+        add_primary_key_column: bool = False,
+        index_attrs: Optional[Sequence[str]] = None,
+    ) -> None:
         """
         Create a table from a CSV file/text.
 
@@ -1369,12 +1452,12 @@ class SimpleSQLite:
 
     def create_table_from_json(
         self,
-        json_source,
-        table_name="",
-        primary_key=None,
-        add_primary_key_column=False,
-        index_attrs=None,
-    ):
+        json_source: str,
+        table_name: str = "",
+        primary_key: Optional[str] = None,
+        add_primary_key_column: bool = False,
+        index_attrs: Optional[Sequence[str]] = None,
+    ) -> None:
         """
         Create a table from a JSON file/text.
 
@@ -1419,11 +1502,11 @@ class SimpleSQLite:
     def create_table_from_dataframe(
         self,
         dataframe,
-        table_name="",
-        primary_key=None,
-        add_primary_key_column=False,
-        index_attrs=None,
-    ):
+        table_name: str = "",
+        primary_key: Optional[str] = None,
+        add_primary_key_column: bool = False,
+        index_attrs: Optional[Sequence[str]] = None,
+    ) -> None:
         """
         Create a table from a pandas.DataFrame instance.
 
@@ -1443,12 +1526,12 @@ class SimpleSQLite:
             index_attrs,
         )
 
-    def dump(self, db_path, mode="a"):
+    def dump(self, db_path: str, mode: str = "a") -> None:
         with SimpleSQLite(db_path, mode=mode) as dst_con:
             for table_name in self.fetch_table_names():
                 copy_table(self, dst_con, src_table_name=table_name, dst_table_name=table_name)
 
-    def rollback(self):
+    def rollback(self) -> None:
         """
         .. seealso:: :py:meth:`sqlite3.Connection.rollback`
         """
@@ -1460,9 +1543,10 @@ class SimpleSQLite:
 
         logger.debug("rollback: path='{}'".format(self.database_path))
 
+        assert self.connection  # to avoid type check error
         self.connection.rollback()
 
-    def commit(self):
+    def commit(self) -> None:
         """
         .. seealso:: :py:meth:`sqlite3.Connection.commit`
         """
@@ -1473,13 +1557,14 @@ class SimpleSQLite:
             return
 
         logger.debug("commit: path='{}'".format(self.database_path))
+        assert self.connection  # to avoid type check error
 
         try:
             self.connection.commit()
         except sqlite3.ProgrammingError:
             pass
 
-    def close(self):
+    def close(self) -> None:
         """
         Commit and close the connection.
 
@@ -1498,20 +1583,12 @@ class SimpleSQLite:
         logger.debug("close connection to a SQLite database: path='{}'".format(self.database_path))
 
         self.commit()
+        assert self.connection  # to avoid type check error
         self.connection.close()
         self.__initialize_connection()
 
-    def __initialize_connection(self):
-        self.__database_path = None
-        self.__connection = None
-        self.__mode = None
-        self.__delayed_connection_path = None
-
-        self.__dict_query_count = {}
-        self.__dict_query_totalexectime = {}
-
     @staticmethod
-    def __validate_db_path(database_path):
+    def __validate_db_path(database_path: str) -> None:
         if typepy.is_null_string(database_path):
             raise ValueError("null path")
 
@@ -1523,7 +1600,7 @@ class SimpleSQLite:
         except AttributeError:
             raise TypeError("database path must be a string: actual={}".format(type(database_path)))
 
-    def __verify_db_file_existence(self, database_path):
+    def __verify_db_file_existence(self, database_path: str) -> None:
         """
         :raises SimpleSQLite.OperationalError: If unable to open database file.
         """
@@ -1590,7 +1667,7 @@ class SimpleSQLite:
         return attr_description_list
 
     @staticmethod
-    def __extract_col_type_from_tabledata(table_data):
+    def __extract_col_type_from_tabledata(table_data: TableData) -> Dict:
         """
         Extract data type name for each column as SQLite names.
 
@@ -1646,11 +1723,11 @@ class SimpleSQLite:
             self.insert_many(table_data.table_name, table_data.value_matrix)
 
         if typepy.is_not_empty_sequence(index_attrs):
-            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attrs))
+            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attrs))  # type: ignore
         self.commit()
 
 
-def connect_memdb():
+def connect_memdb() -> SimpleSQLite:
     """
     :return: Instance of an in memory database.
     :rtype: SimpleSQLite

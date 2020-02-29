@@ -4,6 +4,7 @@
 
 import abc
 import re
+from typing import Any, List, Optional, Sequence, Union
 
 import typepy
 from pathvalidate import (
@@ -22,21 +23,21 @@ from .error import SqlSyntaxError
 
 class QueryItemInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def to_query(self):  # pragma: no cover
+    def to_query(self) -> str:  # pragma: no cover
         pass
 
 
 class QueryItem(QueryItemInterface):
-    def __init__(self, value):
+    def __init__(self, value: str) -> None:
         try:
             self._value = value.strip()
         except AttributeError:
             raise TypeError("name must be a string")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.to_query()
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec: str) -> str:
         return self.to_query()
 
 
@@ -58,7 +59,7 @@ class Table(QueryItem):
     __RE_NEED_BRACKET = re.compile("[{:s}]".format(re.escape("%()-+/.,")))
     __RE_NEED_QUOTE = re.compile(r"[\s]+")
 
-    def to_query(self):
+    def to_query(self) -> str:
         name = self._value
 
         if self.__RE_NEED_BRACKET.search(name):
@@ -95,18 +96,18 @@ class Attr(QueryItem):
     __RE_SANITIZE = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
 
     @classmethod
-    def sanitize(cls, name):
+    def sanitize(cls, name: str) -> str:
         try:
             return cls.__RE_SANITIZE.sub("_", name)
         except TypeError:
             return str(name)
 
-    def __init__(self, name, operation=""):
+    def __init__(self, name: str, operation: str = "") -> None:
         super().__init__(name)
 
         self.__operation = operation
 
-    def to_query(self):
+    def to_query(self) -> str:
         name = self.sanitize(self._value)
         need_quote = self.__RE_NEED_QUOTE.search(name) is not None
 
@@ -150,10 +151,10 @@ class AttrList(list, QueryItemInterface):
     """
 
     @classmethod
-    def sanitize(self, names):
+    def sanitize(self, names: Sequence[str]) -> List[str]:
         return [Attr.sanitize(name) for name in names]
 
-    def __init__(self, names, operation=""):
+    def __init__(self, names: Sequence[str], operation: str = "") -> None:
         self.__operation = operation
 
         try:
@@ -161,16 +162,16 @@ class AttrList(list, QueryItemInterface):
         except AttributeError:
             raise TypeError("name must be a string")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.to_query()
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec: str) -> str:
         return self.to_query()
 
-    def to_query(self):
+    def to_query(self) -> str:
         return ",".join([str(attr) for attr in self])
 
-    def append(self, item):
+    def append(self, item: Union[str, Attr]) -> None:
         if not isinstance(item, (str, Attr)):
             raise TypeError("item should be a str/Attr instance: actual={}".format(type(item)))
 
@@ -182,20 +183,21 @@ class AttrList(list, QueryItemInterface):
 
 class Distinct(QueryItem):
     @property
-    def key(self):
+    def key(self) -> Union[Attr, AttrList]:
         return self.__key
 
-    def __init__(self, key):
+    def __init__(self, key: Union[str, Attr, AttrList]) -> None:
         if not isinstance(key, (str, Attr, AttrList)):
             raise TypeError(
                 "key should be a string/Attr/AttrList instance: actual={}".format(type(key))
             )
 
-        self.__key = key
         if isinstance(key, str):
-            self.__key = Attr(key)
+            self.__key = Attr(key)  # type: Union[Attr, AttrList]
+        else:
+            self.__key = key
 
-    def to_query(self):
+    def to_query(self) -> str:
         return "DISTINCT {}".format(self.key)
 
 
@@ -217,10 +219,10 @@ class Value(QueryItem):
         'NULL'
     """
 
-    def __init__(self, value):
+    def __init__(self, value: Any) -> None:
         self._value = value
 
-    def to_query(self):
+    def to_query(self) -> str:
         value = self._value
 
         if value is None:
@@ -243,7 +245,7 @@ class Where(QueryItem):
     ``WHERE`` query clause.
 
     :param str key: Attribute name of the key.
-    :param str value: Value of the right hand side associated with the key.
+    :param value: Value of the right hand side associated with the key.
     :param str cmp_operator: Comparison  operator of WHERE query.
     :raises simplesqlite.SqlSyntaxError:
         If **a)** ``cmp_operator`` is invalid operator. Valid operators are as follows:
@@ -261,14 +263,14 @@ class Where(QueryItem):
     __VALID_CMP_OPERATORS = ("=", "==", "!=", "<>", ">", ">=", "<", "<=")
 
     @property
-    def key(self):
+    def key(self) -> str:
         return self._value
 
     @property
-    def value(self):
+    def value(self) -> str:
         return self.__rhs
 
-    def __init__(self, key, value, cmp_operator="="):
+    def __init__(self, key: str, value: Any, cmp_operator: str = "=") -> None:
         super().__init__(key)
 
         self.__rhs = value
@@ -280,7 +282,7 @@ class Where(QueryItem):
         if self.__cmp_operator not in self.__VALID_CMP_OPERATORS:
             raise SqlSyntaxError("operator not supported: {}".format(self.__cmp_operator))
 
-    def to_query(self):
+    def to_query(self) -> str:
         if self.value is None:
             if self.__cmp_operator == "=":
                 return "{} IS NULL".format(Attr(self.key))
@@ -294,57 +296,6 @@ class Where(QueryItem):
         return "{} {:s} {}".format(Attr(self.key), self.__cmp_operator, Value(self.value))
 
 
-class Select(QueryItem):
-    """
-    ``SELECT`` query clause.
-
-    :param str select: Attribute for SELECT query.
-    :param str table: Table name of executing the query.
-    :param str where:
-        Add a WHERE clause to execute query, if the value is not |None|.
-    :param extra extra:
-        Add additional clause to execute query, if the value is not |None|.
-    :raises ValueError: ``select`` is empty string.
-    :raises simplesqlite.NameValidationError:
-        |raises_validate_table_name|
-
-    :Examples:
-        >>> from simplesqlite.query import Select, Where
-        >>> Select(select="value", table="example")
-        'SELECT value FROM example'
-        >>> Select(select="value", table="example", where=Where("key", 1))
-        'SELECT value FROM example WHERE key = 1'
-        >>> Select(select="value", table="example", where=Where("key", 1), extra="ORDER BY value")
-        'SELECT value FROM example WHERE key = 1 ORDER BY value'
-    """
-
-    def __init__(self, select, table, where=None, extra=None):
-        self.__select = select
-        self.__table = table
-        self.__where = where
-        self.__extra = extra
-
-        validate_table_name(self.__table)
-
-        if self.__where and not isinstance(where, (str, Where, And, Or)):
-            raise TypeError(
-                "where should be a str/Where/And/Or instance: actual={}".format(type(self.__where))
-            )
-
-        if not self.__select:
-            raise ValueError("SELECT query required")
-
-    def to_query(self):
-        query_list = ["SELECT {}".format(self.__select), "FROM {}".format(Table(self.__table))]
-
-        if self.__where:
-            query_list.append("WHERE {}".format(self.__where))
-        if self.__extra:
-            query_list.append(self.__extra)
-
-        return " ".join(query_list)
-
-
 class Or(list, QueryItemInterface):
     """
     ``OR`` query clause.
@@ -354,7 +305,7 @@ class Or(list, QueryItemInterface):
             Query items that concatenating with ``OR``.
     """
 
-    def __init__(self, where_list):
+    def __init__(self, where_list: List) -> None:
         for where in where_list:
             if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
@@ -365,13 +316,13 @@ class Or(list, QueryItemInterface):
 
         super().__init__(where_list)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.to_query()
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec: str) -> str:
         return self.to_query()
 
-    def to_query(self):
+    def to_query(self) -> str:
         item_list = []
 
         for where in self:
@@ -392,7 +343,7 @@ class And(list, QueryItemInterface):
             Query items that concatenating with ``AND``.
     """
 
-    def __init__(self, where_list):
+    def __init__(self, where_list: List) -> None:
         for where in where_list:
             if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
@@ -403,13 +354,13 @@ class And(list, QueryItemInterface):
 
         super().__init__(where_list)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.to_query()
 
-    def __format__(self, format_spec):
+    def __format__(self, format_spec: str) -> str:
         return self.to_query()
 
-    def to_query(self):
+    def to_query(self) -> str:
         item_list = []
 
         for where in self:
@@ -419,6 +370,66 @@ class And(list, QueryItemInterface):
                 item_list.append("{}".format(where))
 
         return " AND ".join(item_list)
+
+
+WhereQuery = Union[str, Where, And, Or]
+
+
+class Select(QueryItem):
+    """
+    ``SELECT`` query clause.
+
+    :param select: Attribute for SELECT query.
+    :param str table: Table name of executing the query.
+    :param str where:
+        Add a WHERE clause to execute query, if the value is not |None|.
+    :param extra extra:
+        Add additional clause to execute query, if the value is not |None|.
+    :raises ValueError: ``select`` is empty string.
+    :raises simplesqlite.NameValidationError:
+        |raises_validate_table_name|
+
+    :Examples:
+        >>> from simplesqlite.query import Select, Where
+        >>> Select(select="value", table="example")
+        'SELECT value FROM example'
+        >>> Select(select="value", table="example", where=Where("key", 1))
+        'SELECT value FROM example WHERE key = 1'
+        >>> Select(select="value", table="example", where=Where("key", 1), extra="ORDER BY value")
+        'SELECT value FROM example WHERE key = 1 ORDER BY value'
+    """
+
+    def __init__(
+        self,
+        select: Union[str, AttrList],
+        table: str,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ) -> None:
+        self.__select = select
+        self.__table = table
+        self.__where = where
+        self.__extra = extra
+
+        validate_table_name(self.__table)
+
+        if self.__where and not isinstance(where, (str, Where, And, Or)):
+            raise TypeError(
+                "where should be a str/Where/And/Or instance: actual={}".format(type(self.__where))
+            )
+
+        if not self.__select:
+            raise ValueError("SELECT query required")
+
+    def to_query(self) -> str:
+        query_list = ["SELECT {}".format(self.__select), "FROM {}".format(Table(self.__table))]
+
+        if self.__where:
+            query_list.append("WHERE {}".format(self.__where))
+        if self.__extra:
+            query_list.append(self.__extra)
+
+        return " ".join(query_list)
 
 
 class Insert(QueryItem):
@@ -431,7 +442,7 @@ class Insert(QueryItem):
         |raises_validate_table_name|
     """
 
-    def __init__(self, table, attrs):
+    def __init__(self, table: str, attrs: AttrList) -> None:
         validate_table_name(table)
 
         if not isinstance(attrs, AttrList):
@@ -443,7 +454,7 @@ class Insert(QueryItem):
         self.__table = table
         self.__attrs = attrs
 
-    def to_query(self):
+    def to_query(self) -> str:
         return "INSERT INTO {:s}({:s}) VALUES ({:s})".format(
             Table(self.__table),
             ",".join([attr.to_query() for attr in self.__attrs]),
@@ -451,7 +462,7 @@ class Insert(QueryItem):
         )
 
 
-def make_index_name(table_name, attr_name):
+def make_index_name(table_name: str, attr_name: str) -> str:
     import hashlib
 
     re_invalid_chars = re.compile(

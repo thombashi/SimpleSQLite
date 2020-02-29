@@ -1,13 +1,19 @@
 from collections import OrderedDict
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from sqliteschema import SchemaHeader
 from typepy import Integer, RealNumber, String
 
 
+if TYPE_CHECKING:
+    from simplesqlite import SimpleSQLite  # noqa
+
 _sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
 
 
-def extract_table_metadata(con, table_name):
+def extract_table_metadata(
+    con: "SimpleSQLite", table_name: str
+) -> Tuple[Optional[str], List[str], OrderedDict]:
     primary_key = None
     index_attrs = []
     type_hints = OrderedDict()

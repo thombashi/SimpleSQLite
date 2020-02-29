@@ -5,15 +5,18 @@
 import abc
 import re
 from collections import OrderedDict
+from sqlite3 import Cursor
+from typing import Any, Dict, Generator, List, Optional, Sequence, cast
 
 import typepy
+from typepy.type import AbstractType
 
 from .core import SimpleSQLite
 from .error import DatabaseError
-from .query import Attr, AttrList, Value
+from .query import Attr, AttrList, Value, WhereQuery
 
 
-def dict_factory(cursor, row):
+def dict_factory(cursor: Cursor, row: Sequence) -> Dict:
     record = {}
 
     for idx, col in enumerate(cursor.description):
@@ -51,13 +54,13 @@ class Column(metaclass=abc.ABCMeta):
         self.__autoincrement = autoincrement
         self.__default_value = None if self.__not_null else default
 
-    def get_header(self, attr_name):
+    def get_header(self, attr_name: str) -> str:
         if self.__header_name:
             return self.__header_name
 
         return attr_name
 
-    def get_desc(self):
+    def get_desc(self) -> str:
         constraints = [self.sqlite_datatype]
 
         if self.__primary_key:
@@ -79,41 +82,41 @@ class Column(metaclass=abc.ABCMeta):
 
 class Integer(Column):
     @property
-    def sqlite_datatype(self):
+    def sqlite_datatype(self) -> str:
         return "INTEGER"
 
     @property
-    def typepy_class(self):
+    def typepy_class(self) -> AbstractType:
         return typepy.Integer
 
 
 class Real(Column):
     @property
-    def sqlite_datatype(self):
+    def sqlite_datatype(self) -> str:
         return "REAL"
 
     @property
-    def typepy_class(self):
+    def typepy_class(self) -> AbstractType:
         return typepy.RealNumber
 
 
 class Text(Column):
     @property
-    def sqlite_datatype(self):
+    def sqlite_datatype(self) -> str:
         return "TEXT"
 
     @property
-    def typepy_class(self):
+    def typepy_class(self) -> AbstractType:
         return typepy.String
 
 
 class Blob(Column):
     @property
-    def sqlite_datatype(self):
+    def sqlite_datatype(self) -> str:
         return "BLOB"
 
     @property
-    def typepy_class(self):
+    def typepy_class(self) -> AbstractType:
         return typepy.Binary
 
 
@@ -124,12 +127,12 @@ class Model:
     __attr_names = None
 
     @classmethod
-    def attach(cls, database_src, is_hidden=False):
+    def attach(cls, database_src: SimpleSQLite, is_hidden: bool = False) -> None:
         cls.__connection = SimpleSQLite(database_src)
         cls.__is_hidden = is_hidden
 
     @classmethod
-    def get_table_name(cls):
+    def get_table_name(cls) -> str:
         if cls.__table_name:
             return cls.__table_name
 
@@ -145,7 +148,7 @@ class Model:
         return cls.__table_name
 
     @classmethod
-    def get_attr_names(cls):
+    def get_attr_names(cls) -> List[str]:
         if cls.__attr_names:
             return cls.__attr_names
 
@@ -154,8 +157,9 @@ class Model:
         return cls.__attr_names
 
     @classmethod
-    def create(cls):
+    def create(cls) -> None:
         cls.__validate_connection()
+        assert cls.__connection  # to avoid type check error
 
         attr_descs = []
 
@@ -170,11 +174,12 @@ class Model:
         cls.__connection.create_table(cls.get_table_name(), attr_descs)
 
     @classmethod
-    def select(cls, where=None, extra=None):
+    def select(cls, where: Optional[WhereQuery] = None, extra: None = None) -> Generator:
         cls.__validate_connection()
+        assert cls.__connection  # to avoid type check error
 
         try:
-            stash_row_factory = cls.__connection.connection.row_factory
+            stash_row_factory = cls.__connection.connection.row_factory  # type: ignore
             cls.__connection.set_row_factory(dict_factory)
 
             result = cls.__connection.select(
@@ -188,14 +193,16 @@ class Model:
                 where=where,
                 extra=extra,
             )
+            assert result  # to avoid type check error
             for record in result.fetchall():
                 yield cls(**record)
         finally:
             cls.__connection.set_row_factory(stash_row_factory)
 
     @classmethod
-    def insert(cls, model_obj):
+    def insert(cls, model_obj: "Model") -> None:
         cls.__validate_connection()
+        assert cls.__connection  # to avoid type check error
 
         if type(model_obj).__name__ != cls.__name__:
             raise TypeError(
@@ -205,7 +212,6 @@ class Model:
             )
 
         record = {}
-        attr_names = []
 
         for attr_name in cls.get_attr_names():
             value = getattr(model_obj, attr_name)
@@ -220,7 +226,9 @@ class Model:
         cls.__connection.insert(cls.get_table_name(), record)
 
     @classmethod
-    def commit(cls):
+    def commit(cls) -> None:
+        cls.__validate_connection()
+        assert cls.__connection  # to avoid type check error
         cls.__connection.commit()
 
     @classmethod
@@ -228,14 +236,15 @@ class Model:
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
     @classmethod
-    def fetch_num_records(cls, where=None):
-        return cls.__connection.fetch_num_records(cls.get_table_name(), where=where)
+    def fetch_num_records(cls, where: None = None) -> int:
+        assert cls.__connection  # to avoid type check error
+        return cast(int, cls.__connection.fetch_num_records(cls.get_table_name(), where=where))
 
     @classmethod
-    def attr_to_header(cls, attr_name):
+    def attr_to_header(cls, attr_name: str) -> str:
         return cls._get_col(attr_name).get_header(attr_name)
 
-    def as_dict(self):
+    def as_dict(self) -> Dict:
         record = OrderedDict()
         for attr_name in self.get_attr_names():
             value = getattr(self, attr_name)
@@ -246,7 +255,7 @@ class Model:
 
         return record
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         for attr_name in self.get_attr_names():
             value = kwargs.get(attr_name)
             if value is None:
@@ -254,19 +263,19 @@ class Model:
 
             setattr(self, attr_name, value)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if type(self) != type(other):
             return False
 
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         if type(self) != type(other):
             return True
 
         return self.__dict__ != other.__dict__
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{name:s} ({attributes:s})".format(
             name=type(self).__name__,
             attributes=", ".join(
@@ -275,12 +284,12 @@ class Model:
         )
 
     @classmethod
-    def __validate_connection(cls):
+    def __validate_connection(cls) -> None:
         if cls.__connection is None:
             raise DatabaseError("SimpleSQLite connection required. you need to call attach first")
 
     @classmethod
-    def __validate_value(cls, attr_name, value):
+    def __validate_value(cls, attr_name: str, value: Any) -> None:
         column = cls._get_col(attr_name)
 
         if value is None and not column.not_null:
@@ -289,7 +298,7 @@ class Model:
         column.typepy_class(value).validate()
 
     @classmethod
-    def __is_attr(cls, attr_name):
+    def __is_attr(cls, attr_name: str) -> bool:
         private_var_regexp = re.compile("^_{}__[a-zA-Z]+".format(Model.__name__))
 
         return (
@@ -299,8 +308,8 @@ class Model:
         )
 
     @classmethod
-    def _get_col(cls, attr_name):
+    def _get_col(cls, attr_name: str) -> Column:
         if attr_name not in cls.get_attr_names():
             raise ValueError("invalid attribute: {}".format(attr_name))
 
-        return cls.__dict__.get(attr_name)
+        return cls.__dict__[attr_name]

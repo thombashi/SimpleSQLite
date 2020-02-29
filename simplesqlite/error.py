@@ -3,6 +3,7 @@
 """
 
 import sqlite3
+from typing import Optional
 
 from tabledata import NameValidationError  # noqa: W0611
 
@@ -48,10 +49,10 @@ class OperationalError(sqlite3.OperationalError):
     """
 
     @property
-    def message(self):
+    def message(self) -> Optional[str]:
         return self.__message
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.__message = kwargs.pop("message", None)
 
-        super().__init__(*args, **kwargs)
+        super().__init__()
