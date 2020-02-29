@@ -280,6 +280,13 @@ class Test_Select:
                 "SELECT A FROM [B-B] WHERE C > 1 ORDER BY D",
             ],
             [
+                AttrList(["A", "a-b"]),
+                "attrlist",
+                Where("C", 1, cmp_operator=">"),
+                None,
+                "SELECT A,[a-b] FROM attrlist WHERE C > 1",
+            ],
+            [
                 "A",
                 "B-B",
                 And([Where("C", 1, cmp_operator=">"), Where("D", "hoge", cmp_operator="!=")]),
