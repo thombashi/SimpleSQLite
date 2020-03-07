@@ -4,7 +4,7 @@
 
 import re
 from collections import Counter
-from typing import Any, List, Optional, Sequence, cast
+from typing import List, Optional, Sequence, cast
 
 import dataproperty
 import pathvalidate as pv
@@ -113,7 +113,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return Attr.sanitize(cast(str, header))
 
-    def _validate_headers(self):
+    def _validate_headers(self) -> None:
         if typepy.is_empty_sequence(self._tabledata.headers):
             raise ValueError("attribute name list is empty")
 
@@ -128,7 +128,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         except InvalidCharError as e:
             raise InvalidHeaderNameError(e)
 
-    def _normalize_header(self, header):
+    def _normalize_header(self, header: str) -> str:
         return self.__RENAME_TEMPLATE.format(header)
 
     def _normalize_headers(self) -> List[str]:
@@ -172,10 +172,10 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return attr_name_list
 
-    def _normalize_rows(self, normalize_headers: Sequence[str]) -> Any:
+    def _normalize_rows(self, normalize_headers: Sequence[str]) -> List:
         return RecordConvertor.to_records(normalize_headers, self._tabledata.rows)
 
-    def __get_default_header(self, col_idx):
+    def __get_default_header(self, col_idx: int) -> str:
         i = 0
         while True:
             header = convert_idx_to_alphabet(col_idx + i)
