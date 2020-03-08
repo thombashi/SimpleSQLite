@@ -337,7 +337,7 @@ rp_attr = """
 
 rp_method = """
 .. |make_table_name| replace::
-    Make table name string from :py:attr:`~simplesqlite.loader.interface.TableLoader.table_name`.
+    Make table name string from :py:attr:`~simplesqlite.loader.interface.AbstractTableReader.table_name`.
     Following format specifiers are replaced with specific string.
 """
 
