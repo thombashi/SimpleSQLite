@@ -77,3 +77,14 @@ class Test_RecordConvertor_to_records:
     def test_exception(self, attr_names, value, expected):
         with pytest.raises(expected):
             RecordConvertor.to_records(attr_names, value)
+
+    @pytest.mark.parametrize(
+        ["attr_names", "value"],
+        [
+            [["a", "b"], [[5, 9223372036854775808]]],
+            [["a", "b"], [{"a": -9223372036854775809, "b": 0}]],
+        ],
+    )
+    def test_exception_value(self, attr_names, value):
+        with pytest.raises(OverflowError):
+            RecordConvertor.to_records(attr_names, value)
