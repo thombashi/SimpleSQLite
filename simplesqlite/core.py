@@ -1197,7 +1197,7 @@ class SimpleSQLite:
             "'{}' attribute not found in '{}' table".format(attr_name, table_name)
         )
 
-    def validate_access_permission(self, valid_permissions: List[str]) -> None:
+    def validate_access_permission(self, valid_permissions: Sequence[str]) -> None:
         """
         :param valid_permissions:
             List of permissions that access is allowed.
@@ -1240,7 +1240,7 @@ class SimpleSQLite:
             self.execute_query(query, logging.getLogger().findCaller())
             self.commit()
 
-    def create_table(self, table_name: str, attr_descriptions: List[str]) -> bool:
+    def create_table(self, table_name: str, attr_descriptions: Sequence[str]) -> bool:
         """
         :param str table_name: Table name to create.
         :param list attr_descriptions: List of table description.
@@ -1290,7 +1290,7 @@ class SimpleSQLite:
         logger.debug(query)
         self.execute_query(query, logging.getLogger().findCaller())
 
-    def create_index_list(self, table_name: str, attr_names: List[str]) -> None:
+    def create_index_list(self, table_name: str, attr_names: Sequence[str]) -> None:
         """
         :param str table_name: Table name that exists attribute.
         :param list attr_names:
@@ -1314,11 +1314,11 @@ class SimpleSQLite:
     def create_table_from_data_matrix(
         self,
         table_name: str,
-        attr_names: Union[List[int], List[str], List[Union[str, None]], Tuple[str, str, str]],
+        attr_names: Sequence[str],
         data_matrix: Any,
         primary_key: Optional[str] = None,
         add_primary_key_column: bool = False,
-        index_attrs: Optional[List[str]] = None,
+        index_attrs: Optional[Sequence[str]] = None,
     ) -> None:
         """
         Create a table if not exists. Moreover, insert data into the created
