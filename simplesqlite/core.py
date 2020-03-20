@@ -446,7 +446,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-        type_hints: Optional[AbstractType] = None,
+        type_hints: Optional[Dict[str, AbstractType]] = None,
     ) -> TableData:
         """
         Get data in the database and return fetched data as a
@@ -872,7 +872,7 @@ class SimpleSQLite:
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
-    def fetch_data_types(self, table_name: str) -> Dict:
+    def fetch_data_types(self, table_name: str) -> Dict[str, AbstractType]:
         _, _, type_hints = extract_table_metadata(self, table_name)
 
         return type_hints
