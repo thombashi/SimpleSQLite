@@ -495,7 +495,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-    ) -> List[OrderedDict]:
+    ) -> "Optional[List[OrderedDict[str, Any]]]":
         """
         Get data in the database and return fetched data as a
         |OrderedDict| list.
