@@ -1,13 +1,8 @@
 import string
 
 import pytest
-from pathvalidate import (
-    InvalidCharError,
-    InvalidReservedNameError,
-    ValidationError,
-    ValidReservedNameError,
-    unprintable_ascii_chars,
-)
+from pathvalidate import unprintable_ascii_chars
+from pathvalidate.error import ErrorReason, ValidationError
 
 from simplesqlite._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 
@@ -193,8 +188,10 @@ class Test_validate_sqlite_table_name:
         + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
-        with pytest.raises(InvalidCharError):
+        try:
             validate_sqlite_table_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.INVALID_CHARACTER
 
     @pytest.mark.parametrize(
         ["value", "expected"],
@@ -205,28 +202,34 @@ class Test_validate_sqlite_table_name:
             validate_sqlite_table_name(value)
 
     @pytest.mark.parametrize(
-        ["value", "expected"],
+        ["value"],
         [
-            [reserved_keyword, ValidReservedNameError]
+            [reserved_keyword]
             for reserved_keyword in VALID_RESERVED_KEYWORDS_TABLE_UPPER
             + VALID_RESERVED_KEYWORDS_TABLE_LOWER
         ],
     )
-    def test_exception_reserved_valid(self, value, expected):
-        with pytest.raises(expected):
+    def test_exception_reserved_valid(self, value):
+        try:
             validate_sqlite_table_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.RESERVED_NAME
+            assert e.reusable_name
 
     @pytest.mark.parametrize(
-        ["value", "expected"],
+        ["value"],
         [
-            [reserved_keyword, InvalidReservedNameError]
+            [reserved_keyword]
             for reserved_keyword in INVALID_RESERVED_KEYWORDS_TABLE_UPPER
             + INVALID_RESERVED_KEYWORDS_TABLE_LOWER
         ],
     )
-    def test_exception_reserved_invalid_name(self, value, expected):
-        with pytest.raises(expected):
+    def test_exception_reserved_invalid_name(self, value):
+        try:
             validate_sqlite_table_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.RESERVED_NAME
+            assert not e.reusable_name
 
 
 class Test_validate_sqlite_attr_name:
@@ -262,8 +265,10 @@ class Test_validate_sqlite_attr_name:
         + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
-        with pytest.raises(InvalidCharError):
-            validate_sqlite_attr_name(value)
+        try:
+            validate_sqlite_table_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.INVALID_CHARACTER
 
     @pytest.mark.parametrize(
         ["value", "expected"],
@@ -274,25 +279,31 @@ class Test_validate_sqlite_attr_name:
             validate_sqlite_attr_name(value)
 
     @pytest.mark.parametrize(
-        ["value", "expected"],
+        ["value"],
         [
-            [reserved_keyword, ValidReservedNameError]
+            [reserved_keyword]
             for reserved_keyword in VALID_RESERVED_KEYWORDS_ATTR_UPPER
             + VALID_RESERVED_KEYWORDS_ATTR_LOWER
         ],
     )
-    def test_exception_reserved_valid(self, value, expected):
-        with pytest.raises(expected):
+    def test_exception_reserved_valid(self, value):
+        try:
             validate_sqlite_attr_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.RESERVED_NAME
+            assert e.reusable_name
 
     @pytest.mark.parametrize(
-        ["value", "expected"],
+        ["value"],
         [
-            [reserved_keyword, InvalidReservedNameError]
+            [reserved_keyword]
             for reserved_keyword in INVALID_RESERVED_KEYWORDS_ATTR_UPPER
             + INVALID_RESERVED_KEYWORDS_ATTR_LOWER
         ],
     )
-    def test_exception_reserved_invalid_name(self, value, expected):
-        with pytest.raises(expected):
+    def test_exception_reserved_invalid_name(self, value):
+        try:
             validate_sqlite_attr_name(value)
+        except ValidationError as e:
+            assert e.reason == ErrorReason.RESERVED_NAME
+            assert not e.reusable_name

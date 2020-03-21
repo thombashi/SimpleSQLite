@@ -9,13 +9,7 @@ from typing import List, Optional, Sequence, cast
 import dataproperty
 import pathvalidate as pv
 import typepy
-from pathvalidate import (
-    InvalidCharError,
-    InvalidReservedNameError,
-    NullNameError,
-    ReservedNameError,
-    ValidReservedNameError,
-)
+from pathvalidate.error import ErrorReason, ValidationError
 from tabledata import (
     DataError,
     InvalidHeaderNameError,
@@ -96,10 +90,15 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _validate_table_name(self, table_name: str) -> None:
         try:
             validate_sqlite_table_name(table_name)
-        except ValidReservedNameError:
-            pass
-        except (InvalidReservedNameError, InvalidCharError) as e:
-            raise InvalidTableNameError(e)
+        except ValidationError as e:
+            if (
+                e.reason == ErrorReason.RESERVED_NAME and not e.reusable_name
+            ) or e.reason == ErrorReason.INVALID_CHARACTER:
+                raise InvalidTableNameError(e)
+            elif e.reason == ErrorReason.RESERVED_NAME:
+                pass
+            else:
+                raise
 
     def _normalize_table_name(self, table_name: str) -> str:
         return self.__RENAME_TEMPLATE.format(table_name)
@@ -123,10 +122,13 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _validate_header(self, header: str) -> None:
         try:
             validate_sqlite_attr_name(header)
-        except (NullNameError, ReservedNameError):
-            pass
-        except InvalidCharError as e:
-            raise InvalidHeaderNameError(e)
+        except ValidationError as e:
+            if e.reason in (ErrorReason.NULL_NAME, ErrorReason.RESERVED_NAME):
+                pass
+            elif e.reason == ErrorReason.INVALID_CHARACTER:
+                raise InvalidHeaderNameError(e)
+            else:
+                raise
 
     def _normalize_header(self, header: str) -> str:
         return self.__RENAME_TEMPLATE.format(header)
@@ -146,8 +148,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         try:
             for attr_name in attr_name_list:
                 validate_sqlite_attr_name(attr_name)
-        except ReservedNameError:
-            pass
+        except ValidationError as e:
+            if e.reason == ErrorReason.RESERVED_NAME:
+                pass
+            else:
+                raise
 
         # duplicated attribute name handling ---
         for key, count in Counter(attr_name_list).most_common():

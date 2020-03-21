@@ -7,14 +7,8 @@ import re
 from typing import Any, List, Optional, Sequence, Union
 
 import typepy
-from pathvalidate import (
-    InvalidCharError,
-    InvalidReservedNameError,
-    NullNameError,
-    ValidReservedNameError,
-    ascii_symbols,
-    unprintable_ascii_chars,
-)
+from pathvalidate import ascii_symbols, unprintable_ascii_chars
+from pathvalidate.error import ErrorReason, ValidationError
 
 from ._func import validate_table_name
 from ._validator import validate_sqlite_attr_name
@@ -113,10 +107,17 @@ class Attr(QueryItem):
 
         try:
             validate_sqlite_attr_name(name)
-        except InvalidReservedNameError:
-            need_quote = True
-        except (ValidReservedNameError, NullNameError, InvalidCharError):
-            pass
+        except ValidationError as e:
+            if e.reason == ErrorReason.RESERVED_NAME and not e.reusable_name:
+                need_quote = True
+            elif e.reason in (
+                ErrorReason.RESERVED_NAME,
+                ErrorReason.NULL_NAME,
+                ErrorReason.INVALID_CHARACTER,
+            ):
+                pass
+            else:
+                raise
 
         if need_quote:
             sql_name = '"{:s}"'.format(name)

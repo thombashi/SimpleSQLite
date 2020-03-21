@@ -5,7 +5,7 @@
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
-from pathvalidate import ValidationError, ValidReservedNameError
+from pathvalidate.error import ErrorReason, ValidationError
 
 from ._common import extract_table_metadata
 from ._logger import logger
@@ -25,10 +25,11 @@ def validate_table_name(name: str) -> None:
 
     try:
         validate_sqlite_table_name(name)
-    except ValidReservedNameError:
-        pass
     except ValidationError as e:
-        raise NameValidationError(e)
+        if e.reason == ErrorReason.RESERVED_NAME and e.reusable_name:
+            pass
+        else:
+            raise NameValidationError(e)
 
 
 def validate_attr_name(name: str) -> None:
