@@ -108,7 +108,7 @@ class Attr(QueryItem):
         try:
             validate_sqlite_attr_name(name)
         except ValidationError as e:
-            if e.reason == ErrorReason.RESERVED_NAME and not e.reusable_name:
+            if e.reason == ErrorReason.RESERVED_NAME and e.reusable_name is False:
                 need_quote = True
             elif e.reason in (
                 ErrorReason.RESERVED_NAME,

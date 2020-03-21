@@ -229,7 +229,7 @@ class Test_validate_sqlite_table_name:
             validate_sqlite_table_name(value)
         except ValidationError as e:
             assert e.reason == ErrorReason.RESERVED_NAME
-            assert not e.reusable_name
+            assert e.reusable_name is False
 
 
 class Test_validate_sqlite_attr_name:
@@ -306,4 +306,4 @@ class Test_validate_sqlite_attr_name:
             validate_sqlite_attr_name(value)
         except ValidationError as e:
             assert e.reason == ErrorReason.RESERVED_NAME
-            assert not e.reusable_name
+            assert e.reusable_name is False

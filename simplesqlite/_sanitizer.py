@@ -92,7 +92,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             validate_sqlite_table_name(table_name)
         except ValidationError as e:
             if (
-                e.reason == ErrorReason.RESERVED_NAME and not e.reusable_name
+                e.reason == ErrorReason.RESERVED_NAME and e.reusable_name is False
             ) or e.reason == ErrorReason.INVALID_CHARACTER:
                 raise InvalidTableNameError(e)
             elif e.reason == ErrorReason.RESERVED_NAME:
