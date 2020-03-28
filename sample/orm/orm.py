@@ -4,18 +4,8 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import sys
-
-import logbook
-from logbook.more import ColorizedStderrHandler
-
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
-
-
-ColorizedStderrHandler(
-    level=logbook.DEBUG, format_string="[{record.level_name}] {record.channel}: {record.message}"
-).push_application()
 
 
 class Hoge(Model):
@@ -31,7 +21,6 @@ class Foo(Model):
 
 
 def main():
-    # simplesqlite.set_log_level(logbook.DEBUG)
     con = connect_memdb()
 
     Hoge.attach(con, is_hidden=True)
@@ -52,8 +41,6 @@ def main():
     for foo in Foo.select():
         print(foo)
 
-    return 0
-
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

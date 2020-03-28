@@ -8,10 +8,10 @@ def main():
     con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_data_matrix(table_name, ["attr_a", "attr_b"], [[1, "a"], [2, "b"]])
 
-    print(con.has_attr(table_name, "attr_a"))
-    print(con.has_attr(table_name, "not_existing"))
+    print(con.fetch_attr_names(table_name))
+
     try:
-        print(con.has_attr("not_existing", "attr_a"))
+        print(con.fetch_attr_names("not_existing"))
     except simplesqlite.DatabaseError as e:
         print(e)
 
