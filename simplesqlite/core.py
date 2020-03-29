@@ -15,6 +15,7 @@ import typepy
 from mbstrdecoder import MultiByteStrDecoder
 from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
+from typepy import extract_typepy_from_dtype
 from typepy.type import AbstractType
 
 from ._common import extract_table_metadata
@@ -1520,7 +1521,11 @@ class SimpleSQLite:
         """
 
         self.__create_table_from_tabledata(
-            TableData.from_dataframe(dataframe=dataframe, table_name=table_name),
+            TableData.from_dataframe(
+                dataframe=dataframe,
+                table_name=table_name,
+                type_hints=[extract_typepy_from_dtype(dtype) for dtype in dataframe.dtypes],
+            ),
             primary_key,
             add_primary_key_column,
             index_attrs,
