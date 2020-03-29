@@ -8,7 +8,7 @@ import re
 import sqlite3
 from collections import OrderedDict, defaultdict
 from sqlite3 import Connection, Cursor
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union, cast
 
 import pathvalidate
 import typepy
@@ -1616,7 +1616,7 @@ class SimpleSQLite:
 
         connection.close()
 
-    def __delayed_connect(self):
+    def __delayed_connect(self) -> bool:
         if self.__delayed_connection_path is None:
             return False
 
@@ -1625,12 +1625,12 @@ class SimpleSQLite:
         connection_path = self.__delayed_connection_path
         self.__delayed_connection_path = None
 
-        self.connect(connection_path, self.__mode)
+        self.connect(connection_path, cast(str, self.__mode))
 
         return True
 
     @staticmethod
-    def __extract_list_from_fetch_result(result):
+    def __extract_list_from_fetch_result(result) -> List[Any]:
         """
         :params tuple result: Return value from a Cursor.fetchall()
         :rtype: list
@@ -1688,7 +1688,11 @@ class SimpleSQLite:
         }
 
     def __create_table_from_tabledata(
-        self, table_data, primary_key, add_primary_key_column, index_attrs
+        self,
+        table_data: TableData,
+        primary_key: Optional[str],
+        add_primary_key_column: bool,
+        index_attrs: Optional[Sequence[str]],
     ):
         self.validate_access_permission(["w", "a"])
 
@@ -1707,23 +1711,23 @@ class SimpleSQLite:
         table_data = SQLiteTableDataSanitizer(
             table_data, dup_col_handler=self.dup_col_handler, max_workers=self.__max_workers
         ).normalize()
+        table_name = table_data.table_name
+        assert table_name
 
         self.create_table(
-            table_data.table_name,
+            table_name,
             self.__extract_attr_descs_from_tabledata(
                 table_data, primary_key, add_primary_key_column
             ),
         )
 
         if add_primary_key_column:
-            self.insert_many(
-                table_data.table_name, [[None] + row for row in table_data.value_matrix]
-            )
+            self.insert_many(table_name, [[None] + row for row in table_data.value_matrix])
         else:
-            self.insert_many(table_data.table_name, table_data.value_matrix)
+            self.insert_many(table_name, table_data.value_matrix)
 
         if typepy.is_not_empty_sequence(index_attrs):
-            self.create_index_list(table_data.table_name, AttrList.sanitize(index_attrs))  # type: ignore
+            self.create_index_list(table_name, AttrList.sanitize(index_attrs))  # type: ignore
         self.commit()
 
 

@@ -9,6 +9,7 @@ from typing import List, Optional, Sequence, cast
 import dataproperty
 import pathvalidate as pv
 import typepy
+from dataproperty.typing import TypeHint
 from pathvalidate.error import ErrorReason, ValidationError
 from tabledata import (
     DataError,
@@ -18,7 +19,6 @@ from tabledata import (
     convert_idx_to_alphabet,
 )
 from tabledata.normalizer import AbstractTableDataNormalizer
-from typepy.type import AbstractType
 
 from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
 from .converter import RecordConvertor
@@ -31,7 +31,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     __RENAME_TEMPLATE = "rename_{:s}"
 
     @property
-    def _type_hints(self) -> Optional[List[AbstractType]]:
+    def _type_hints(self) -> Optional[List[TypeHint]]:
         if self.__is_type_inference:
             return self._tabledata.dp_extractor.column_type_hints
 

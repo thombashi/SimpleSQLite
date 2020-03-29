@@ -6,7 +6,7 @@ import abc
 import re
 from collections import OrderedDict
 from sqlite3 import Cursor
-from typing import Any, Dict, Generator, List, Optional, Sequence, cast
+from typing import Any, Dict, Generator, List, Optional, Sequence, Type, cast
 
 import typepy
 from typepy.type import AbstractType
@@ -86,7 +86,7 @@ class Integer(Column):
         return "INTEGER"
 
     @property
-    def typepy_class(self) -> AbstractType:
+    def typepy_class(self) -> Type[AbstractType]:
         return typepy.Integer
 
 
@@ -96,7 +96,7 @@ class Real(Column):
         return "REAL"
 
     @property
-    def typepy_class(self) -> AbstractType:
+    def typepy_class(self) -> Type[AbstractType]:
         return typepy.RealNumber
 
 
@@ -106,7 +106,7 @@ class Text(Column):
         return "TEXT"
 
     @property
-    def typepy_class(self) -> AbstractType:
+    def typepy_class(self) -> Type[AbstractType]:
         return typepy.String
 
 
@@ -116,7 +116,7 @@ class Blob(Column):
         return "BLOB"
 
     @property
-    def typepy_class(self) -> AbstractType:
+    def typepy_class(self) -> Type[AbstractType]:
         return typepy.Binary
 
 

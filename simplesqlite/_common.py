@@ -1,9 +1,9 @@
 from collections import OrderedDict
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
+from dataproperty.typing import TypeHint
 from sqliteschema import SchemaHeader
 from typepy import Integer, RealNumber, String
-from typepy.type import AbstractType
 
 
 if TYPE_CHECKING:
@@ -14,7 +14,7 @@ _sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
 
 def extract_table_metadata(
     con: "SimpleSQLite", table_name: str
-) -> Tuple[Optional[str], List[str], Dict[str, AbstractType]]:
+) -> Tuple[Optional[str], List[str], Dict[str, TypeHint]]:
     primary_key = None
     index_attrs = []
     type_hints = OrderedDict()
