@@ -2,15 +2,22 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from datetime import datetime
 from decimal import Decimal
-from typing import Any, List, Sequence, Union
+from typing import Any, Callable, List, Sequence, Union
 
 from ._logger import logger
 
 
+def default_datetime_converter(value: datetime) -> str:
+    return value.strftime("%Y-%m-%d %H:%M:%S%z")
+
+
 class RecordConvertor:
     @staticmethod
-    def __to_sqlite_element(value: Any, attr: Union[int, str]) -> Any:
+    def __to_sqlite_element(
+        value: Any, attr: Union[int, str], datetime_converter: Callable[[datetime], str]
+    ) -> Any:
         if isinstance(value, Decimal):
             return float(value)
 
@@ -20,6 +27,10 @@ class RecordConvertor:
             # https://www.sqlite.org/datatype3.html
             if not (-9223372036854775808 < value < 9223372036854775807):
                 raise OverflowError(attr)
+
+        if isinstance(value, datetime):
+            # TODO: add an interface to specify datetime_converter
+            return datetime_converter(value)
 
         return value
 
@@ -41,17 +52,22 @@ class RecordConvertor:
         except AttributeError:
             pass
 
+        datetime_converter = default_datetime_converter
+
         try:
             # from a dictionary to a list
             return [
-                cls.__to_sqlite_element(values.get(attr_name), attr_name)
+                cls.__to_sqlite_element(values.get(attr_name), attr_name, datetime_converter)
                 for attr_name in attr_names
             ]
         except AttributeError:
             pass
 
         if isinstance(values, (tuple, list)):
-            return [cls.__to_sqlite_element(value, col) for col, value in enumerate(values)]
+            return [
+                cls.__to_sqlite_element(value, col, datetime_converter)
+                for col, value in enumerate(values)
+            ]
 
         raise ValueError("cannot convert from {} to list".format(type(values)))
 
