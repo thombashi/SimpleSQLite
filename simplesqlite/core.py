@@ -731,7 +731,7 @@ class SimpleSQLite:
 
         try:
             self.verify_table_existence(table_name)
-        except TableNotFoundError as e:
+        except DatabaseError as e:
             logger.debug(e)
             return None
 
@@ -1041,7 +1041,7 @@ class SimpleSQLite:
                 print(con.has_attr(table_name, "not_existing"))
                 try:
                     print(con.has_attr("not_existing", "attr_a"))
-                except simplesqlite.TableNotFoundError as e:
+                except simplesqlite.DatabaseError as e:
                     print(e)
         :Output:
             .. parsed-literal::
@@ -1084,7 +1084,7 @@ class SimpleSQLite:
                 print(con.has_attrs(table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
                     print(con.has_attr("not_existing", ["attr_a"]))
-                except simplesqlite.TableNotFoundError as e:
+                except simplesqlite.DatabaseError as e:
                     print(e)
         :Output:
             .. parsed-literal::
@@ -1130,7 +1130,7 @@ class SimpleSQLite:
                 con.verify_table_existence(table_name)
                 try:
                     con.verify_table_existence("not_existing")
-                except simplesqlite.TableNotFoundError as e:
+                except simplesqlite.DatabaseError as e:
                     print(e)
         :Output:
             .. parsed-literal::
@@ -1161,7 +1161,7 @@ class SimpleSQLite:
 
                 from simplesqlite import (
                     SimpleSQLite,
-                    TableNotFoundError,
+                    DatabaseError,
                     AttributeNotFoundError
                 )
 
@@ -1179,7 +1179,7 @@ class SimpleSQLite:
                     print(e)
                 try:
                     con.verify_attr_existence("not_existing", "attr_a")
-                except TableNotFoundError as e:
+                except DatabaseError as e:
                     print(e)
         :Output:
             .. parsed-literal::
