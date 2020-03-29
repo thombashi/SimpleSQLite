@@ -55,4 +55,4 @@ class OperationalError(sqlite3.OperationalError):
     def __init__(self, *args, **kwargs) -> None:
         self.__message = kwargs.pop("message", None)
 
-        super().__init__()
+        super().__init__(*args)
