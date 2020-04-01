@@ -26,6 +26,7 @@ check:
 	@rm -rf $(BUILD_WORK_DIR)
 	@-tox -e lint
 	travis lint
+	pip check
 
 .PHONY: clean
 clean:
@@ -57,3 +58,4 @@ release:
 .PHONY: setup
 setup:
 	@pip install --upgrade -e .[test] tox
+	pip check
