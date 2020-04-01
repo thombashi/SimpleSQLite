@@ -47,6 +47,8 @@ class Test_Table:
             ["te.st", "[te.st]"],
             ["te,st", "[te,st]"],
             ["te st", "'te st'"],
+            ["123test", "[123test]"],
+            ["te123st", "te123st"],
         ],
     )
     def test_normal(self, value, expected):

@@ -162,7 +162,15 @@ class Test_SimpleSQLite_select_as_dict:
                     OrderedDict([("attr_a", 2), ("attr_b", Decimal("2.1")), ("attr_c", "bb")]),
                     OrderedDict([("attr_a", 3), ("attr_b", Decimal("120.9")), ("attr_c", "ccc")]),
                 ],
-            ]
+            ],
+            [
+                TableData("123num", ["123abc", "999"], [{"123abc": 1, "999": 4},],),
+                [OrderedDict([("123abc", 1), ("999", 4)]),],
+            ],
+            [
+                TableData("num123num", ["abc123abc", "999"], [{"abc123abc": 1, "999": 4},],),
+                [OrderedDict([("abc123abc", 1), ("999", 4)]),],
+            ],
         ],
     )
     def test_normal(self, tmpdir, value, expected):

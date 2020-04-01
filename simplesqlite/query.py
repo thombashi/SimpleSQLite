@@ -50,7 +50,7 @@ class Table(QueryItem):
         "'string length'"
     """
 
-    __RE_NEED_BRACKET = re.compile("[{:s}]".format(re.escape("%()-+/.,")))
+    __RE_NEED_BRACKET = re.compile("[{:s}]|^[0-9]+".format(re.escape("%()-+/.,")))
     __RE_NEED_QUOTE = re.compile(r"[\s]+")
 
     def to_query(self) -> str:
