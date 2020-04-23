@@ -9,5 +9,5 @@ def main():
     print(con.fetch_table_names())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

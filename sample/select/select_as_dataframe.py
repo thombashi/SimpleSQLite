@@ -15,5 +15,5 @@ def main():
     print(con.select_as_dataframe(table_name="sample_table"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

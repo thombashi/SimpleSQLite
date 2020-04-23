@@ -22,5 +22,6 @@ def main():
     for record in con.select(select="*", table_name=table_name).fetchall():
         print(record)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

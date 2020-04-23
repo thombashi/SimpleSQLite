@@ -15,5 +15,5 @@ def main():
     print(json.dumps(con.fetch_sqlite_master(), indent=4))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

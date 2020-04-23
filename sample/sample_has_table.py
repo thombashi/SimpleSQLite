@@ -11,5 +11,5 @@ def main():
     print(con.has_table("not_existing"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
