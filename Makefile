@@ -26,7 +26,6 @@ check:
 	@rm -rf $(BUILD_WORK_DIR)
 	@-tox -e lint
 	travis lint
-	pip check
 
 .PHONY: clean
 clean:
