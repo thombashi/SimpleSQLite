@@ -117,7 +117,7 @@ class Blob(Column):
 
     @property
     def typepy_class(self) -> Type[AbstractType]:
-        return typepy.Binary
+        return typepy.Bytes
 
 
 class Model:
