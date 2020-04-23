@@ -12,11 +12,11 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union, 
 
 import pathvalidate
 import typepy
+from dataproperty.typing import TypeHint
 from mbstrdecoder import MultiByteStrDecoder
 from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
 from typepy import extract_typepy_from_dtype
-from typepy.type import AbstractType
 
 from ._common import extract_table_metadata
 from ._func import copy_table, validate_table_name
@@ -447,7 +447,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-        type_hints: Optional[Dict[str, AbstractType]] = None,
+        type_hints: Optional[Dict[str, TypeHint]] = None,
     ) -> TableData:
         """
         Get data in the database and return fetched data as a
@@ -483,6 +483,20 @@ class SimpleSQLite:
         if type_hints is None:
             type_hints = self.fetch_data_types(table_name)
 
+        """
+        v = result.fetchall()
+
+        for row, r in enumerate(v):
+            print("{} ----".format(row))
+            for i in r:
+                print(f"{type(i)}: {i}")
+
+        print("!! hints", [type_hints.get(col) for col in columns])
+
+        return TableData(
+            table_name, columns, v, type_hints=[type_hints.get(col) for col in columns],
+        )
+        """
         return TableData(
             table_name,
             columns,
@@ -873,7 +887,7 @@ class SimpleSQLite:
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
-    def fetch_data_types(self, table_name: str) -> Dict[str, AbstractType]:
+    def fetch_data_types(self, table_name: str) -> Dict[str, TypeHint]:
         _, _, type_hints = extract_table_metadata(self, table_name)
 
         return type_hints
