@@ -16,7 +16,6 @@ Welcome to SimpleSQLite's documentation!
    pages/introduction/index
    pages/examples/index
    pages/reference/index
-   pages/genindex
    pages/links
 
 
