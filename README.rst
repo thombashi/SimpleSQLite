@@ -372,16 +372,8 @@ Install from PPA (for Ubuntu)
 
 Dependencies
 ============
-Python 3.5+
-
-Mandatory Dependencies
-----------------------------------
-- `DataProperty <https://github.com/thombashi/DataProperty>`__ (Used to extract data types)
-- `mbstrdecoder <https://github.com/thombashi/mbstrdecoder>`__
-- `pathvalidate <https://github.com/thombashi/pathvalidate>`__
-- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
-- `tabledata <https://github.com/thombashi/tabledata>`__
-- `typepy <https://github.com/thombashi/typepy>`__
+- Python 3.5+
+- `Python package dependencies (automatically installed) <https://github.com/thombashi/SimpleSQLite/network/dependencies>`__
 
 Optional Dependencies
 ----------------------------------
@@ -390,11 +382,6 @@ Optional Dependencies
 - `pandas <https://pandas.pydata.org/>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 
-Test Dependencies
-----------------------------------
-- `pytest <https://docs.pytest.org/en/latest/>`__
-- `tox <https://testrun.org/tox/latest/>`__
-
 Documentation
 ===============
 https://simplesqlite.rtfd.io/
@@ -402,4 +389,12 @@ https://simplesqlite.rtfd.io/
 Related Project
 =================
 - `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__: CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets SQLite database by using SimpleSQLite
+
+Sponsors
+====================================
+.. image:: https://avatars0.githubusercontent.com/u/44389260?s=48&u=6da7176e51ae2654bcfd22564772ef8a3bb22318&v=4
+   :target: https://github.com/chasbecker
+   :alt: Charles Becker (chasbecker)
+
+`Become a sponsor <https://github.com/sponsors/thombashi>`__
 
