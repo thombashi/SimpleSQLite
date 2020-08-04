@@ -109,7 +109,7 @@ class SimpleSQLite:
 
     @property
     def schema_extractor(self) -> SQLiteSchemaExtractor:
-        return SQLiteSchemaExtractor(self)
+        return SQLiteSchemaExtractor(self, max_workers=self.__max_workers)
 
     @property
     def total_changes(self) -> int:
@@ -502,6 +502,7 @@ class SimpleSQLite:
             columns,
             result.fetchall(),
             type_hints=[type_hints.get(col) for col in columns],
+            max_workers=self.__max_workers,
         )
 
     def select_as_dict(
@@ -563,7 +564,7 @@ class SimpleSQLite:
 
         table_schema = self.schema_extractor.fetch_table_schema(table_name)
 
-        memdb = connect_memdb()
+        memdb = connect_memdb(max_workers=self.__max_workers)
         memdb.create_table_from_tabledata(
             self.select_as_tabledata(table_name, columns, where, extra),
             primary_key=table_schema.primary_key,
@@ -919,7 +920,7 @@ class SimpleSQLite:
             for query, execute_time in self.__dict_query_totalexectime.items()
         ]
         attr_names = ("sql_query", "cumulative_time", "count")
-        con_tmp = connect_memdb()
+        con_tmp = connect_memdb(max_workers=self.__max_workers)
         try:
             con_tmp.create_table_from_data_matrix(
                 profile_table_name, attr_names, data_matrix=value_matrix
@@ -1546,7 +1547,7 @@ class SimpleSQLite:
         )
 
     def dump(self, db_path: str, mode: str = "a") -> None:
-        with SimpleSQLite(db_path, mode=mode) as dst_con:
+        with SimpleSQLite(db_path, mode=mode, max_workers=self.__max_workers) as dst_con:
             for table_name in self.fetch_table_names():
                 copy_table(self, dst_con, src_table_name=table_name, dst_table_name=table_name)
 
@@ -1750,7 +1751,7 @@ class SimpleSQLite:
         self.commit()
 
 
-def connect_memdb() -> SimpleSQLite:
+def connect_memdb(max_workers: Optional[int] = None) -> SimpleSQLite:
     """
     :return: Instance of an in memory database.
     :rtype: SimpleSQLite
@@ -1759,4 +1760,4 @@ def connect_memdb() -> SimpleSQLite:
         :ref:`example-connect-sqlite-db-mem`
     """
 
-    return SimpleSQLite(MEMORY_DB_NAME, "w")
+    return SimpleSQLite(MEMORY_DB_NAME, "w", max_workers=max_workers)
