@@ -45,16 +45,16 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def __init__(
         self,
-        tabledata: TableData,
+        table_data: TableData,
         dup_col_handler: str = "error",
         is_type_inference: bool = True,
         max_workers: Optional[int] = None,
     ) -> None:
-        tabledata.max_workers = max_workers  # type: ignore
+        table_data.max_workers = max_workers  # type: ignore
 
-        super().__init__(tabledata)
+        super().__init__(table_data)
 
-        if typepy.is_null_string(tabledata.table_name):
+        if typepy.is_null_string(table_data.table_name):
             raise NameValidationError("table_name is empty")
 
         self.__upper_headers = []
