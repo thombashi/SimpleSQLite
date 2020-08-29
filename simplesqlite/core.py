@@ -394,7 +394,8 @@ class SimpleSQLite:
         self.verify_table_existence(table_name)
 
         return self.execute_query(
-            str(Select(select, table_name, where, extra)), logging.getLogger().findCaller(),
+            str(Select(select, table_name, where, extra)),
+            logging.getLogger().findCaller(),
         )
 
     def select_as_dataframe(

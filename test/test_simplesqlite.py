@@ -25,16 +25,7 @@ from simplesqlite import (
 from simplesqlite.query import Attr, AttrList, Where
 
 from ._common import print_test_result
-from .fixture import (
-    TEST_TABLE_NAME,
-    con,
-    con_empty,
-    con_index,
-    con_mix,
-    con_null,
-    con_profile,
-    con_ro,
-)
+from .fixture import TEST_TABLE_NAME
 
 
 nan = float("nan")
@@ -164,12 +155,28 @@ class Test_SimpleSQLite_select_as_dict:
                 ],
             ],
             [
-                TableData("123num", ["123abc", "999"], [{"123abc": 1, "999": 4},],),
-                [OrderedDict([("123abc", 1), ("999", 4)]),],
+                TableData(
+                    "123num",
+                    ["123abc", "999"],
+                    [
+                        {"123abc": 1, "999": 4},
+                    ],
+                ),
+                [
+                    OrderedDict([("123abc", 1), ("999", 4)]),
+                ],
             ],
             [
-                TableData("num123num", ["abc123abc", "999"], [{"abc123abc": 1, "999": 4},],),
-                [OrderedDict([("abc123abc", 1), ("999", 4)]),],
+                TableData(
+                    "num123num",
+                    ["abc123abc", "999"],
+                    [
+                        {"abc123abc": 1, "999": 4},
+                    ],
+                ),
+                [
+                    OrderedDict([("abc123abc", 1), ("999", 4)]),
+                ],
             ],
         ],
     )
