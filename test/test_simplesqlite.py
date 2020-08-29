@@ -25,8 +25,19 @@ from simplesqlite import (
 from simplesqlite.query import Attr, AttrList, Where
 
 from ._common import print_test_result
-from .fixture import TEST_TABLE_NAME
+from .fixture import (  # fmt: off
+    TEST_TABLE_NAME,
+    con,
+    con_empty,
+    con_index,
+    con_mix,
+    con_null,
+    con_profile,
+    con_ro,
+)
 
+
+# fmt: on
 
 nan = float("nan")
 inf = float("inf")
