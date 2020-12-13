@@ -121,3 +121,4 @@ _sandbox/
 Untitled.ipynb
 
 .pytype/
+*.sqlite3
