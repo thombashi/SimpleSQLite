@@ -5,6 +5,8 @@
 import datetime
 import itertools
 import json
+import os
+import sqlite3
 from collections import OrderedDict, namedtuple
 from decimal import Decimal
 
@@ -367,6 +369,39 @@ class Test_SimpleSQLite_fetch_attr_names:
     @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
     def test_normal(self, con, value, expected):
         assert con.fetch_attr_names(value) == expected
+
+    def test_normal_w_mysql_style_schema(self):
+        database_path = "mysql_style_schema.sqlite3"
+
+        if os.path.exists(database_path):
+            os.remove(database_path)
+
+        con = sqlite3.connect(database_path)
+        cur = con.cursor()
+        cur.execute(
+            """
+            CREATE TABLE post (
+                    id INTEGER NOT NULL,
+                    body VARCHAR(140),
+                    timestamp DATETIME,
+                    user_id INTEGER, language VARCHAR(5), dummy VARCHAR(10), dummy2 TEXT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY(user_id) REFERENCES user (id)
+            );
+            """
+        )
+        con.commit()
+        con.close()
+        assert SimpleSQLite(database_path).fetch_attr_names("post") == [
+            "id",
+            "body",
+            "timestamp",
+            "user_id",
+            "language",
+            "dummy",
+            "dummy2",
+            "PRIMARY",
+        ]
 
     @pytest.mark.parametrize(
         ["value", "expected"],

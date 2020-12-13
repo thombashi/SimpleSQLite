@@ -1,6 +1,6 @@
 DataProperty>=0.50.0,<2
 mbstrdecoder>=1.0.0,<2
 pathvalidate<3
-sqliteschema>=1.0.1,<2
+sqliteschema>=1.0.5,<2
 tabledata>=1.1.3,<2
 typepy>=1.1.1,<2
