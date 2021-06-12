@@ -1650,15 +1650,6 @@ class SimpleSQLite:
 
         return True
 
-    @staticmethod
-    def __extract_list_from_fetch_result(result) -> List[Any]:
-        """
-        :params tuple result: Return value from a Cursor.fetchall()
-        :rtype: list
-        """
-
-        return [record[0] for record in result]
-
     def __extract_attr_descs_from_tabledata(self, table_data, primary_key, add_primary_key_column):
         if primary_key and not add_primary_key_column and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
