@@ -484,20 +484,6 @@ class SimpleSQLite:
         if type_hints is None:
             type_hints = self.fetch_data_types(table_name)
 
-        """
-        v = result.fetchall()
-
-        for row, r in enumerate(v):
-            print("{} ----".format(row))
-            for i in r:
-                print(f"{type(i)}: {i}")
-
-        print("!! hints", [type_hints.get(col) for col in columns])
-
-        return TableData(
-            table_name, columns, v, type_hints=[type_hints.get(col) for col in columns],
-        )
-        """
         return TableData(
             table_name,
             columns,
