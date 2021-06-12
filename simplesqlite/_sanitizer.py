@@ -2,7 +2,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import re
 from collections import Counter
 from typing import List, Optional, Sequence, cast
 
@@ -80,10 +79,12 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             )
 
         new_name = pv.replace_unprintable_char(new_name, replacement_text="")
-        new_name = pv.replace_symbol(new_name, replacement_text="_")
-        new_name = new_name.replace(" ", "_")
-        new_name = re.sub("_+", "_", new_name)
-        new_name = new_name.strip("_")
+        new_name = pv.replace_symbol(
+            new_name,
+            replacement_text="_",
+            is_replace_consecutive_chars=True,
+            is_strip=True,
+        )
 
         return new_name
 
