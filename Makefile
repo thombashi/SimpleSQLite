@@ -23,8 +23,7 @@ build: clean
 
 .PHONY: check
 check:
-	@rm -rf $(BUILD_WORK_DIR)
-	@-tox -e lint
+	@tox -e lint
 	travis lint
 
 .PHONY: clean
