@@ -89,7 +89,7 @@ jobs:
 
       - name: Run tests
         run: |
-          tox -e cov -- --discord-verbose=0
+          tox -e cov
 
       - name: Upload coverage report
         run: |
