@@ -18,13 +18,9 @@ Summary
     :target: https://pypi.org/project/SimpleSQLite
     :alt: Supported Python implementations
 
-.. image:: https://img.shields.io/travis/thombashi/SimpleSQLite/master.svg?label=Linux/macOS%20CI
-    :target: https://travis-ci.org/thombashi/SimpleSQLite
-    :alt: Linux/macOS CI status
-
-.. image:: https://img.shields.io/appveyor/ci/thombashi/simplesqlite/master.svg?label=Windows%20CI
-    :target: https://ci.appveyor.com/project/thombashi/simplesqlite/branch/master
-    :alt: Windows CI status
+.. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml/badge.svg
+    :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml
+    :alt: CI status of Linux/macOS/Windows
 
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
@@ -372,7 +368,7 @@ Install from PPA (for Ubuntu)
 
 Dependencies
 ============
-- Python 3.5+
+- Python 3.6+
 - `Python package dependencies (automatically installed) <https://github.com/thombashi/SimpleSQLite/network/dependencies>`__
 
 Optional Dependencies
