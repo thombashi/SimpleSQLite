@@ -696,7 +696,14 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
 
     @pytest.mark.parametrize(
         ["table_name", "attr_names", "data_matrix", "expected"],
-        [[TEST_TABLE_NAME, ["", None], [["a", 1], ["bb", 2]], ["A", "B"]]],
+        [
+            [
+                TEST_TABLE_NAME,
+                ["", None],
+                [["a", 1], ["bb", 2]],
+                ["A", "B"],
+            ],
+        ],
     )
     def test_normal_empty_header(self, tmpdir, table_name, attr_names, data_matrix, expected):
         p = tmpdir.join("tmp.db")
@@ -708,7 +715,14 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
 
     @pytest.mark.parametrize(
         ["table_name", "attr_names", "data_matrix", "expected"],
-        [[TEST_TABLE_NAME, ["AA", "BB"], [["a", 1], ["bb", 2]], ["AA", "BB"]]],
+        [
+            [
+                TEST_TABLE_NAME,
+                ["AA", "BB"],
+                [["a", 1], ["bb", 2]],
+                ["AA", "BB"],
+            ],
+        ],
     )
     def test_normal_primary_key(self, tmpdir, table_name, attr_names, data_matrix, expected):
         p = tmpdir.join("tmp.db")
