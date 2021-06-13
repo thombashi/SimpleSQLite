@@ -1322,6 +1322,7 @@ class SimpleSQLite:
         primary_key: Optional[str] = None,
         add_primary_key_column: bool = False,
         index_attrs: Optional[Sequence[str]] = None,
+        type_hints: Optional[Sequence[TypeHint]] = None,
     ) -> None:
         """
         Create a table if not exists. Moreover, insert data into the created
@@ -1349,7 +1350,13 @@ class SimpleSQLite:
         """
 
         self.__create_table_from_tabledata(
-            TableData(table_name, attr_names, data_matrix, max_workers=self.__max_workers),
+            TableData(
+                table_name,
+                headers=attr_names,
+                rows=data_matrix,
+                type_hints=type_hints,
+                max_workers=self.__max_workers,
+            ),
             primary_key,
             add_primary_key_column,
             index_attrs,

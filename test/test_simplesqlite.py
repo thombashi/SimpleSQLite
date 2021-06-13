@@ -695,6 +695,36 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         assert con.fetch_attr_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
+        ["table_name", "attr_names", "data_matrix", "type_hints", "expected"],
+        [
+            [
+                TEST_TABLE_NAME,
+                ["int", "text"],
+                [
+                    [1, "001"],
+                    [2, "010"],
+                ],
+                [typepy.Integer, typepy.String],
+                [],
+            ]
+        ],
+    )
+    def test_normal_type_hints(
+        self, tmpdir, table_name, attr_names, data_matrix, type_hints, expected
+    ):
+        p = tmpdir.join("tmp_type_hints.db")
+        con = SimpleSQLite(str(p), "w")
+
+        con.create_table_from_data_matrix(
+            table_name, attr_names, data_matrix, type_hints=type_hints
+        )
+
+        assert con.select_as_dict(table_name) == [
+            OrderedDict([("int", 1), ("text", "001")]),
+            OrderedDict([("int", 2), ("text", "010")]),
+        ]
+
+    @pytest.mark.parametrize(
         ["table_name", "attr_names", "data_matrix", "expected"],
         [
             [
