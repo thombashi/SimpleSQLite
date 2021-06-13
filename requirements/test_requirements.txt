@@ -1,4 +1,5 @@
 pytablereader>=0.28
 pytablewriter>=0.50
 pytest>=6.0.1
+pytest-discord>=0.0.7
 pytest-md-report>=0.1
