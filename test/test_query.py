@@ -31,7 +31,7 @@ inf = float("inf")
 def assert_query_item(item, expected):
     assert item.to_query() == expected
     assert str(item) == expected
-    assert "{}".format(item) == expected
+    assert f"{item}" == expected
 
 
 class Test_Table:
@@ -59,7 +59,7 @@ class Test_Table:
     )
     def test_exception(self, value, expected):
         with pytest.raises(expected):
-            assert "{}".format(Table(value))
+            assert f"{Table(value)}"
 
 
 class Test_Attr:
@@ -141,7 +141,7 @@ class Test_Attr:
             ["k@l[m]n{o}p;q:r,s.t/u", None, '"k@l[m]n{o}p;q:r_s.t/u"'],
         ]
         + [
-            ["te{:s}st".format(re.escape(c)), None, "[te{:s}st]".format(re.escape(c))]
+            [f"te{re.escape(c):s}st", None, f"[te{re.escape(c):s}st]"]
             for c in string.digits + "%(). -+#"
         ],
     )
@@ -149,7 +149,7 @@ class Test_Attr:
         assert_query_item(Attr(value, operation), expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[word, '"{}"'.format(word)] for word in RESERVED_KEYWORDS]
+        ["value", "expected"], [[word, f'"{word}"'] for word in RESERVED_KEYWORDS]
     )
     def test_normal_reserved(self, value, expected):
         assert_query_item(Attr(value), expected)
@@ -159,7 +159,7 @@ class Test_Attr:
     )
     def test_exception_1(self, value, expected):
         with pytest.raises(expected):
-            "{}".format(Attr(value))
+            f"{Attr(value)}"
 
 
 class Test_AttrList:
@@ -264,7 +264,7 @@ class Test_Where:
     )
     def test_exception(self, key, value, operation, expected):
         with pytest.raises(expected):
-            "{}".format(Where(key, value, operation))
+            f"{Where(key, value, operation)}"
 
 
 class Test_Select:
@@ -322,7 +322,7 @@ class Test_Select:
     )
     def test_exception(self, select, table, where, extra, expected):
         with pytest.raises(expected):
-            "{}".format(Select(select, table, where, extra))
+            f"{Select(select, table, where, extra)}"
 
 
 class Test_Or:
@@ -432,8 +432,8 @@ class Test_make_index_name:
 
     @pytest.mark.parametrize(
         ["value", "expected"],
-        [["AAA{:s}".format(re.escape(c)), "AAA"] for c in SANITIZE_CHAR_LIST]
-        + [["{:s}BBB".format(re.escape(c)), "BBB"] for c in SANITIZE_CHAR_LIST]
+        [[f"AAA{re.escape(c):s}", "AAA"] for c in SANITIZE_CHAR_LIST]
+        + [[f"{re.escape(c):s}BBB", "BBB"] for c in SANITIZE_CHAR_LIST]
         + [
             [
                 "%a/b(c)d[e]f<g>h.i;j'k!l\\m#n _o-p+q=r\nstrvwxyz" + os.linesep,

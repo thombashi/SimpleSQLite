@@ -134,13 +134,13 @@ class SimpleSQLite:
         return self.__mode
 
     def __initialize_connection(self) -> None:
-        self.__database_path = None  # type: Optional[str]
-        self.__connection = None  # type: Optional[Connection]
-        self.__mode = None  # type: Optional[str]
-        self.__delayed_connection_path = None  # type: Optional[str]
+        self.__database_path: Optional[str] = None
+        self.__connection: Optional[Connection] = None
+        self.__mode: Optional[str] = None
+        self.__delayed_connection_path: Optional[str] = None
 
-        self.__dict_query_count = defaultdict(int)  # type: Dict[str, int]
-        self.__dict_query_totalexectime = defaultdict(float)  # type: Dict[str, float]
+        self.__dict_query_count: Dict[str, int] = defaultdict(int)
+        self.__dict_query_totalexectime: Dict[str, float] = defaultdict(float)
 
     def __init__(
         self,
@@ -263,7 +263,7 @@ class SimpleSQLite:
 
         self.close()
 
-        logger.debug("connect to a SQLite database: path='{}', mode={}".format(database_path, mode))
+        logger.debug(f"connect to a SQLite database: path='{database_path}', mode={mode}")
 
         if mode == "r":
             self.__verify_db_file_existence(database_path)
@@ -344,9 +344,9 @@ class SimpleSQLite:
                         "failed to execute query at {:s}({:d}) {:s}".format(
                             file_path, line_no, func_name
                         ),
-                        "  - query: {}".format(MultiByteStrDecoder(query).unicode_str),
-                        "  - msg:   {}".format(e),
-                        "  - db:    {}".format(self.database_path),
+                        f"  - query: {MultiByteStrDecoder(query).unicode_str}",
+                        f"  - msg:   {e}",
+                        f"  - db:    {self.database_path}",
                     ]
                 )
             )
@@ -634,13 +634,10 @@ class SimpleSQLite:
             num_records = len(records)
 
             logs = [query] + [
-                "    record {:4d}: {}".format(i, record)
-                for i, record in enumerate(records[:logging_count])
+                f"    record {i:4d}: {record}" for i, record in enumerate(records[:logging_count])
             ]
             if num_records - logging_count > 0:
-                logs.append(
-                    "    and other {} records will be inserted".format(num_records - logging_count)
-                )
+                logs.append(f"    and other {num_records - logging_count} records will be inserted")
 
             logger.debug("\n".join(logs))
 
@@ -652,11 +649,11 @@ class SimpleSQLite:
             caller = logging.getLogger().findCaller()
             file_path, line_no, func_name = caller[:3]
             raise OperationalError(
-                "{:s}({:d}) {:s}: failed to execute query:\n".format(file_path, line_no, func_name)
-                + "  query={}\n".format(query)
-                + "  msg='{}'\n".format(e)
-                + "  db={}\n".format(self.database_path)
-                + "  records={}\n".format(records[:2])
+                f"{file_path:s}({line_no:d}) {func_name:s}: failed to execute query:\n"
+                + f"  query={query}\n"
+                + f"  msg='{e}'\n"
+                + f"  db={self.database_path}\n"
+                + f"  records={records[:2]}\n"
             )
 
         return len(records)
@@ -705,9 +702,9 @@ class SimpleSQLite:
         self.validate_access_permission(["w", "a"])
         self.verify_table_existence(table_name)
 
-        query = "DELETE FROM {:s}".format(table_name)
+        query = f"DELETE FROM {table_name:s}"
         if where:
-            query += " WHERE {:s}".format(where)
+            query += f" WHERE {where:s}"
 
         return self.execute_query(query, logging.getLogger().findCaller())
 
@@ -1147,7 +1144,7 @@ class SimpleSQLite:
             return
 
         raise TableNotFoundError(
-            "'{}' table not found in '{}' database".format(table_name, self.database_path)
+            f"'{table_name}' table not found in '{self.database_path}' database"
         )
 
     def verify_attr_existence(self, table_name: str, attr_name: str) -> None:
@@ -1196,9 +1193,7 @@ class SimpleSQLite:
         if self.has_attr(table_name, attr_name):
             return
 
-        raise AttributeNotFoundError(
-            "'{}' attribute not found in '{}' table".format(attr_name, table_name)
-        )
+        raise AttributeNotFoundError(f"'{attr_name}' attribute not found in '{table_name}' table")
 
     def validate_access_permission(self, valid_permissions: Sequence[str]) -> None:
         """
@@ -1239,7 +1234,7 @@ class SimpleSQLite:
             return
 
         if self.has_table(table_name):
-            query = "DROP TABLE IF EXISTS '{:s}'".format(table_name)
+            query = f"DROP TABLE IF EXISTS '{table_name:s}'"
             self.execute_query(query, logging.getLogger().findCaller())
             self.commit()
 
@@ -1555,7 +1550,7 @@ class SimpleSQLite:
         except NullDatabaseConnectionError:
             return
 
-        logger.debug("rollback: path='{}'".format(self.database_path))
+        logger.debug(f"rollback: path='{self.database_path}'")
 
         assert self.connection  # to avoid type check error
         self.connection.rollback()
@@ -1570,7 +1565,7 @@ class SimpleSQLite:
         except NullDatabaseConnectionError:
             return
 
-        logger.debug("commit: path='{}'".format(self.database_path))
+        logger.debug(f"commit: path='{self.database_path}'")
         assert self.connection  # to avoid type check error
 
         try:
@@ -1594,7 +1589,7 @@ class SimpleSQLite:
         except (SystemError, NullDatabaseConnectionError):
             return
 
-        logger.debug("close connection to a SQLite database: path='{}'".format(self.database_path))
+        logger.debug(f"close connection to a SQLite database: path='{self.database_path}'")
 
         self.commit()
         assert self.connection  # to avoid type check error
@@ -1612,7 +1607,7 @@ class SimpleSQLite:
         try:
             pathvalidate.validate_filename(os.path.basename(database_path))
         except AttributeError:
-            raise TypeError("database path must be a string: actual={}".format(type(database_path)))
+            raise TypeError(f"database path must be a string: actual={type(database_path)}")
 
     def __verify_db_file_existence(self, database_path: str) -> None:
         """
@@ -1659,11 +1654,11 @@ class SimpleSQLite:
                     "with existing fields."
                 )
 
-            attr_description_list.append("{} INTEGER PRIMARY KEY AUTOINCREMENT".format(primary_key))
+            attr_description_list.append(f"{primary_key} INTEGER PRIMARY KEY AUTOINCREMENT")
 
         for col, value_type in sorted(self.__extract_col_type_from_tabledata(table_data).items()):
             attr_name = table_data.headers[col]
-            attr_description = "{} {:s}".format(Attr(attr_name), value_type)
+            attr_description = f"{Attr(attr_name)} {value_type:s}"
             if attr_name == primary_key:
                 attr_description += " PRIMARY KEY"
 
@@ -1701,17 +1696,17 @@ class SimpleSQLite:
     ):
         self.validate_access_permission(["w", "a"])
 
-        debug_msg_list = ["__create_table_from_tabledata:", "    tbldata={}".format(table_data)]
+        debug_msg_list = ["__create_table_from_tabledata:", f"    tbldata={table_data}"]
         if primary_key:
-            debug_msg_list.append("    primary_key={}".format(primary_key))
+            debug_msg_list.append(f"    primary_key={primary_key}")
         if add_primary_key_column:
-            debug_msg_list.append("    add_primary_key_column={}".format(add_primary_key_column))
+            debug_msg_list.append(f"    add_primary_key_column={add_primary_key_column}")
         if index_attrs:
-            debug_msg_list.append("    index_attrs={}".format(index_attrs))
+            debug_msg_list.append(f"    index_attrs={index_attrs}")
         logger.debug("\n".join(debug_msg_list))
 
         if table_data.is_empty():
-            raise ValueError("input table_data is empty: {}".format(table_data))
+            raise ValueError(f"input table_data is empty: {table_data}")
 
         table_data = SQLiteTableDataSanitizer(
             table_data, dup_col_handler=self.dup_col_handler, max_workers=self.__max_workers

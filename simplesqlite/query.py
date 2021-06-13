@@ -57,10 +57,10 @@ class Table(QueryItem):
         name = self._value
 
         if self.__RE_NEED_BRACKET.search(name):
-            return "[{:s}]".format(name)
+            return f"[{name:s}]"
 
         if self.__RE_NEED_QUOTE.search(name):
-            return "'{:s}'".format(name)
+            return f"'{name:s}'"
 
         return name
 
@@ -120,16 +120,16 @@ class Attr(QueryItem):
                 raise
 
         if need_quote:
-            sql_name = '"{:s}"'.format(name)
+            sql_name = f'"{name:s}"'
         elif self.__RE_NEED_BRACKET.search(name):
-            sql_name = "[{:s}]".format(name)
+            sql_name = f"[{name:s}]"
         elif name == "join":
-            sql_name = "[{:s}]".format(name)
+            sql_name = f"[{name:s}]"
         else:
             sql_name = name
 
         if typepy.is_not_null_string(self.__operation):
-            sql_name = "{:s}({:s})".format(self.__operation, sql_name)
+            sql_name = f"{self.__operation:s}({sql_name:s})"
 
         return sql_name
 
@@ -174,7 +174,7 @@ class AttrList(list, QueryItemInterface):
 
     def append(self, item: Union[str, Attr]) -> None:
         if not isinstance(item, (str, Attr)):
-            raise TypeError("item should be a str/Attr instance: actual={}".format(type(item)))
+            raise TypeError(f"item should be a str/Attr instance: actual={type(item)}")
 
         if isinstance(item, str):
             item = Attr(item, operation=self.__operation)
@@ -189,9 +189,7 @@ class Distinct(QueryItem):
 
     def __init__(self, key: Union[str, Attr, AttrList]) -> None:
         if not isinstance(key, (str, Attr, AttrList)):
-            raise TypeError(
-                "key should be a string/Attr/AttrList instance: actual={}".format(type(key))
-            )
+            raise TypeError(f"key should be a string/Attr/AttrList instance: actual={type(key)}")
 
         if isinstance(key, str):
             self.__key = Attr(key)  # type: Union[Attr, AttrList]
@@ -199,7 +197,7 @@ class Distinct(QueryItem):
             self.__key = key
 
     def to_query(self) -> str:
-        return "DISTINCT {}".format(self.key)
+        return f"DISTINCT {self.key}"
 
 
 class Value(QueryItem):
@@ -234,11 +232,11 @@ class Value(QueryItem):
 
         try:
             if value.find("'") != -1:
-                return '"{}"'.format(value)
+                return f'"{value}"'
         except (TypeError, AttributeError):
             pass
 
-        return "'{}'".format(value)
+        return f"'{value}'"
 
 
 class Where(QueryItem):
@@ -281,20 +279,20 @@ class Where(QueryItem):
             raise SqlSyntaxError("cmp_operator required")
 
         if self.__cmp_operator not in self.__VALID_CMP_OPERATORS:
-            raise SqlSyntaxError("operator not supported: {}".format(self.__cmp_operator))
+            raise SqlSyntaxError(f"operator not supported: {self.__cmp_operator}")
 
     def to_query(self) -> str:
         if self.value is None:
             if self.__cmp_operator == "=":
-                return "{} IS NULL".format(Attr(self.key))
+                return f"{Attr(self.key)} IS NULL"
             elif self.__cmp_operator == "!=":
-                return "{} IS NOT NULL".format(Attr(self.key))
+                return f"{Attr(self.key)} IS NOT NULL"
 
             raise SqlSyntaxError(
-                "Invalid operator ({:s}) with None right-hand side".format(self.__cmp_operator)
+                f"Invalid operator ({self.__cmp_operator:s}) with None right-hand side"
             )
 
-        return "{} {:s} {}".format(Attr(self.key), self.__cmp_operator, Value(self.value))
+        return f"{Attr(self.key)} {self.__cmp_operator:s} {Value(self.value)}"
 
 
 class Or(list, QueryItemInterface):
@@ -328,9 +326,9 @@ class Or(list, QueryItemInterface):
 
         for where in self:
             if isinstance(where, And):
-                item_list.append("({})".format(where))
+                item_list.append(f"({where})")
             else:
-                item_list.append("{}".format(where))
+                item_list.append(f"{where}")
 
         return " OR ".join(item_list)
 
@@ -366,9 +364,9 @@ class And(list, QueryItemInterface):
 
         for where in self:
             if isinstance(where, Or):
-                item_list.append("({})".format(where))
+                item_list.append(f"({where})")
             else:
-                item_list.append("{}".format(where))
+                item_list.append(f"{where}")
 
         return " AND ".join(item_list)
 
@@ -416,17 +414,17 @@ class Select(QueryItem):
 
         if self.__where and not isinstance(where, (str, Where, And, Or)):
             raise TypeError(
-                "where should be a str/Where/And/Or instance: actual={}".format(type(self.__where))
+                f"where should be a str/Where/And/Or instance: actual={type(self.__where)}"
             )
 
         if not self.__select:
             raise ValueError("SELECT query required")
 
     def to_query(self) -> str:
-        query_list = ["SELECT {}".format(self.__select), "FROM {}".format(Table(self.__table))]
+        query_list = [f"SELECT {self.__select}", f"FROM {Table(self.__table)}"]
 
         if self.__where:
-            query_list.append("WHERE {}".format(self.__where))
+            query_list.append(f"WHERE {self.__where}")
         if self.__extra:
             query_list.append(self.__extra)
 
@@ -447,7 +445,7 @@ class Insert(QueryItem):
         validate_table_name(table)
 
         if not isinstance(attrs, AttrList):
-            raise TypeError("attr must be a AttrList class instance: actual={}".format(type(attrs)))
+            raise TypeError(f"attr must be a AttrList class instance: actual={type(attrs)}")
 
         if typepy.is_empty_sequence(attrs):
             raise ValueError("empty attributes")

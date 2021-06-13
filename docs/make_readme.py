@@ -47,7 +47,7 @@ def write_examples(maker):
     maker.write_lines(
         [
             "More examples are available at ",
-            "https://{:s}.rtfd.io/en/latest/pages/examples/index.html".format(PROJECT_NAME.lower()),
+            f"https://{PROJECT_NAME.lower():s}.rtfd.io/en/latest/pages/examples/index.html",
         ]
     )
 
@@ -57,7 +57,7 @@ def main():
         PROJECT_NAME,
         OUTPUT_DIR,
         is_make_toc=True,
-        project_url="https://github.com/thombashi/{}".format(PROJECT_NAME),
+        project_url=f"https://github.com/thombashi/{PROJECT_NAME}",
     )
 
     maker.write_chapter("Summary")
@@ -71,7 +71,7 @@ def main():
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")
-    maker.write_lines(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
+    maker.write_lines([f"https://{PROJECT_NAME.lower():s}.rtfd.io/"])
 
     maker.write_chapter("Related Project")
     maker.write_lines(

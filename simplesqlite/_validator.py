@@ -161,14 +161,14 @@ def validate_sqlite_table_name(name: str) -> None:
 
     if name in __SQLITE_INVALID_RESERVED_KEYWORDS_TABLE:
         raise ValidationError(
-            ["'{}' is a reserved keyword by sqlite".format(name)],
+            [f"'{name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=False,
         )
 
     if name in __SQLITE_VALID_RESERVED_KEYWORDS_TABLE:
         raise ValidationError(
-            ["'{}' is a reserved keyword by sqlite".format(name)],
+            [f"'{name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=True,
         )
@@ -192,14 +192,14 @@ def validate_sqlite_attr_name(name: str) -> None:
 
     if name in __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR:
         raise ValidationError(
-            ["'{}' is a reserved keyword by sqlite".format(name)],
+            [f"'{name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=False,
         )
 
     if name in __SQLITE_VALID_RESERVED_KEYWORDS_ATTR:
         raise ValidationError(
-            ["'{}' is a reserved keyword by sqlite".format(name)],
+            [f"'{name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=True,
         )

@@ -75,7 +75,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             new_name = str(pv.sanitize_filename(self._tabledata.table_name, replacement_text="_"))
         except TypeError:
             raise NameValidationError(
-                "table name must be a string: actual='{}'".format(self._tabledata.table_name)
+                f"table name must be a string: actual='{self._tabledata.table_name}'"
             )
 
         new_name = pv.replace_unprintable_char(new_name, replacement_text="")
@@ -161,7 +161,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
                 continue
 
             if self.__dup_col_handler == "error":
-                raise ValueError("duplicate column name: {}".format(key))
+                raise ValueError(f"duplicate column name: {key}")
 
             # rename duplicate headers
             rename_target_idx_list = [i for i, attr in enumerate(attr_name_list) if attr == key][1:]
@@ -169,7 +169,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             for rename_target_idx in rename_target_idx_list:
                 while True:
                     suffix_count += 1
-                    attr_name_candidate = "{:s}_{:d}".format(key, suffix_count)
+                    attr_name_candidate = f"{key:s}_{suffix_count:d}"
                     if attr_name_candidate in attr_name_list:
                         continue
 

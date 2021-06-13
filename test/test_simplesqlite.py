@@ -1236,7 +1236,7 @@ class Test_SimpleSQLite_create_index:
 
     @pytest.mark.parametrize(["symbol"], [[c] for c in CHARS])
     def test_normal(self, con, symbol):
-        attr = "a{}b".format(symbol)
+        attr = f"a{symbol}b"
         attr_descriptions = ["{:s} {:s}".format(Attr(attr), "TEXT")]
 
         table_name = "new_table"

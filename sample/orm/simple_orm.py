@@ -28,7 +28,7 @@ def main():
     print(Sample.fetch_schema().dumps())
     print("records:")
     for record in Sample.select():
-        print("    {}".format(record))
+        print(f"    {record}")
 
     return 0
 

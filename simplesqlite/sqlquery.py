@@ -34,9 +34,9 @@ class SqlQuery:
         if typepy.is_null_string(set_query):
             raise ValueError("SET query is null")
 
-        query_list = ["UPDATE {:s}".format(Table(table)), "SET {:s}".format(set_query)]
+        query_list = [f"UPDATE {Table(table):s}", f"SET {set_query:s}"]
         if where and isinstance(where, (str, Where, And, Or)):
-            query_list.append("WHERE {:s}".format(where))
+            query_list.append(f"WHERE {where:s}")
 
         return " ".join(query_list)
 

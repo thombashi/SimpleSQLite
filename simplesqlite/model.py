@@ -75,7 +75,7 @@ class Column(metaclass=abc.ABCMeta):
             constraints.append("AUTOINCREMENT")
 
         if self.__default_value is not None:
-            constraints.append("DEFAULT {}".format(Value(self.__default_value)))
+            constraints.append(f"DEFAULT {Value(self.__default_value)}")
 
         return " ".join(constraints)
 
@@ -141,7 +141,7 @@ class Model:
         table_name = table_name.replace("-", "_").lower()
 
         if cls.__is_hidden:
-            table_name = "_{:s}_".format(table_name)
+            table_name = f"_{table_name:s}_"
 
         cls.__table_name = table_name
 
@@ -278,9 +278,7 @@ class Model:
     def __repr__(self) -> str:
         return "{name:s} ({attributes:s})".format(
             name=type(self).__name__,
-            attributes=", ".join(
-                ["{}={}".format(key, value) for key, value in self.as_dict().items()]
-            ),
+            attributes=", ".join([f"{key}={value}" for key, value in self.as_dict().items()]),
         )
 
     @classmethod
@@ -299,7 +297,7 @@ class Model:
 
     @classmethod
     def __is_attr(cls, attr_name: str) -> bool:
-        private_var_regexp = re.compile("^_{}__[a-zA-Z]+".format(Model.__name__))
+        private_var_regexp = re.compile(f"^_{Model.__name__}__[a-zA-Z]+")
 
         return (
             not attr_name.startswith("__")
@@ -310,6 +308,6 @@ class Model:
     @classmethod
     def _get_col(cls, attr_name: str) -> Column:
         if attr_name not in cls.get_attr_names():
-            raise ValueError("invalid attribute: {}".format(attr_name))
+            raise ValueError(f"invalid attribute: {attr_name}")
 
         return cls.__dict__[attr_name]

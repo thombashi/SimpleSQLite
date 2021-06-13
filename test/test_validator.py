@@ -160,7 +160,7 @@ class Test_validate_sqlite_table_name:
     @pytest.mark.parametrize(
         ["value"],
         [
-            ["{}a".format(keyword)]
+            [f"{keyword}a"]
             for keyword in (
                 VALID_RESERVED_KEYWORDS_TABLE_UPPER
                 + INVALID_RESERVED_KEYWORDS_TABLE_UPPER
@@ -184,8 +184,8 @@ class Test_validate_sqlite_table_name:
 
     @pytest.mark.parametrize(
         ["value"],
-        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_chars]
-        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
+        [[f"a{invalid_c}b"] for invalid_c in unprintable_ascii_chars]
+        + [[f"テ{invalid_c}！!スト"] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
         try:
@@ -236,7 +236,7 @@ class Test_validate_sqlite_attr_name:
     @pytest.mark.parametrize(
         ["value"],
         [
-            ["{}a".format(keyword)]
+            [f"{keyword}a"]
             for keyword in (
                 VALID_RESERVED_KEYWORDS_TABLE_UPPER
                 + INVALID_RESERVED_KEYWORDS_TABLE_UPPER
@@ -261,8 +261,8 @@ class Test_validate_sqlite_attr_name:
 
     @pytest.mark.parametrize(
         ["value"],
-        [["a{}b".format(invalid_c)] for invalid_c in unprintable_ascii_chars]
-        + [["テ{}！!スト".format(invalid_c)] for invalid_c in unprintable_ascii_chars],
+        [[f"a{invalid_c}b"] for invalid_c in unprintable_ascii_chars]
+        + [[f"テ{invalid_c}！!スト"] for invalid_c in unprintable_ascii_chars],
     )
     def test_exception_invalid_win_char(self, value):
         try:

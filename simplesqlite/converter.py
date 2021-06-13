@@ -69,7 +69,7 @@ class RecordConvertor:
                 for col, value in enumerate(values)
             ]
 
-        raise ValueError("cannot convert from {} to list".format(type(values)))
+        raise ValueError(f"cannot convert from {type(values)} to list")
 
     @classmethod
     def to_records(cls, attr_names: Sequence[str], value_matrix: Sequence) -> List:
@@ -94,14 +94,14 @@ class RecordConvertor:
                 try:
                     if isinstance(e.args[0], int):
                         col_idx = e.args[0]
-                        col = "{} ({})".format(attr_names[col_idx], col_idx)
+                        col = f"{attr_names[col_idx]} ({col_idx})"
                     else:
                         col = e.args[0]
                 except IndexError as e:
                     logger.error(e)
                     continue
 
-                error_msgs.append("  overflow int found: row={}, col={}".format(row_idx, col))
+                error_msgs.append(f"  overflow int found: row={row_idx}, col={col}")
 
         if error_msgs:
             raise OverflowError("failed to convert:\n" + "\n".join(error_msgs))
