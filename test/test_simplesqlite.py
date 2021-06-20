@@ -123,13 +123,17 @@ class Test_SimpleSQLite_select:
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         assert result is not None
 
+    def test_smoke_view(self, con):
+        result = con.select(select="*", table_name="view1")
+        assert result is not None
+
     @pytest.mark.parametrize(
         ["attr", "table_name", "expected"],
         [
             ["not_exist_attr", TEST_TABLE_NAME, OperationalError],
             ["", TEST_TABLE_NAME, ValueError],
             [None, TEST_TABLE_NAME, ValueError],
-            ["attr_a", "not_exist_table", TableNotFoundError],
+            ["attr_a", "not_exist_table", DatabaseError],
             ["attr_a", "", ValueError],
             ["attr_a", None, ValueError],
             ["", "", ValueError],
@@ -257,6 +261,10 @@ class Test_SimpleSQLite_insert:
         with pytest.raises(NullDatabaseConnectionError):
             con_null.insert(TEST_TABLE_NAME, record=[5, 6])
 
+    def test_exception_view(self, con):
+        with pytest.raises(DatabaseError):
+            con.insert("view1", record=[5, 6])
+
 
 class Test_SimpleSQLite_insert_many:
     @pytest.mark.parametrize(
@@ -293,7 +301,11 @@ class Test_SimpleSQLite_insert_many:
 
     @pytest.mark.parametrize(
         ["table_name", "value", "expected"],
-        [[None, None, ValueError], [None, [], ValueError], [TEST_TABLE_NAME, [None], ValueError]],
+        [
+            [None, None, ValueError],
+            [None, [], ValueError],
+            [TEST_TABLE_NAME, [None], ValueError],
+        ],
     )
     def test_exception(self, con, table_name, value, expected):
         with pytest.raises(expected):
@@ -306,6 +318,10 @@ class Test_SimpleSQLite_insert_many:
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
             con_null.insert_many(TEST_TABLE_NAME, [])
+
+    def test_exception_view(self, con):
+        with pytest.raises(DatabaseError):
+            con.insert_many("view1", [])
 
 
 class Test_SimpleSQLite_update:
@@ -323,7 +339,7 @@ class Test_SimpleSQLite_update:
         [
             [TEST_TABLE_NAME, "", ValueError],
             [TEST_TABLE_NAME, None, ValueError],
-            ["not_exist_table", "attr_a = 1", TableNotFoundError],
+            ["not_exist_table", "attr_a = 1", DatabaseError],
             ["", "attr_a = 1", ValueError],
             [None, "attr_a = 1", ValueError],
             ["", "", ValueError],
@@ -356,9 +372,8 @@ class Test_SimpleSQLite_total_changes:
 
 class Test_SimpleSQLite_fetch_table_names:
     def test_normal(self, con):
-        expected = {TEST_TABLE_NAME}
-
-        assert set(con.fetch_table_names()) == expected
+        assert set(con.fetch_table_names(include_view=True)) == {TEST_TABLE_NAME, "view1"}
+        assert set(con.fetch_table_names(include_view=False)) == {TEST_TABLE_NAME}
 
     def test_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
@@ -410,7 +425,10 @@ class Test_SimpleSQLite_fetch_attr_names:
 
     @pytest.mark.parametrize(
         ["value", "expected"],
-        [["not_exist_table", TableNotFoundError], [None, NameValidationError]],
+        [
+            ["not_exist_table", DatabaseError],
+            [None, NameValidationError],
+        ],
     )
     def test_null_table(self, con, value, expected):
         with pytest.raises(expected):
@@ -424,7 +442,12 @@ class Test_SimpleSQLite_fetch_attr_names:
 class Test_SimpleSQLite_has_table:
     @pytest.mark.parametrize(
         ["value", "expected"],
-        [[TEST_TABLE_NAME, True], ["not_exist_table", False], ["", False], [None, False]],
+        [
+            [TEST_TABLE_NAME, True],
+            ["not_exist_table", False],
+            ["", False],
+            [None, False],
+        ],
     )
     def test_normal(self, con, value, expected):
         assert con.has_table(value) == expected
@@ -468,7 +491,7 @@ class Test_SimpleSQLite_has_attr:
     @pytest.mark.parametrize(
         ["value", "attr", "expected"],
         [
-            ["not_exist_table", "attr_a", TableNotFoundError],
+            ["not_exist_table", "attr_a", DatabaseError],
             [None, "attr_a", ValueError],
             ["", "attr_a", ValueError],
         ],
@@ -500,7 +523,7 @@ class Test_SimpleSQLite_has_attrs:
     @pytest.mark.parametrize(
         ["value", "attr", "expected"],
         [
-            ["not_exist_table", ["attr_a"], TableNotFoundError],
+            ["not_exist_table", ["attr_a"], DatabaseError],
             [None, ["attr_a"], ValueError],
             ["", ["attr_a"], ValueError],
         ],
@@ -572,7 +595,7 @@ class Test_SimpleSQLite_verify_attr_existence:
         ["table", "attr", "expected"],
         [
             [TEST_TABLE_NAME, "not_exist_attr", AttributeNotFoundError],
-            ["not_exist_table", "attr_a", TableNotFoundError],
+            ["not_exist_table", "attr_a", DatabaseError],
             [None, "attr_a", ValueError],
             ["", "attr_a", ValueError],
         ],

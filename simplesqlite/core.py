@@ -606,7 +606,7 @@ class SimpleSQLite:
         """
 
         self.validate_access_permission(["w", "a"])
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         if attr_names:
             logger.debug(
@@ -684,7 +684,7 @@ class SimpleSQLite:
         """
 
         self.validate_access_permission(["w", "a"])
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         query = SqlQuery.make_update(table_name, set_query, where)
 
@@ -700,7 +700,7 @@ class SimpleSQLite:
         """
 
         self.validate_access_permission(["w", "a"])
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         query = f"DELETE FROM {table_name:s}"
         if where:
@@ -754,7 +754,9 @@ class SimpleSQLite:
 
         return [record[0] for record in result.fetchall()]
 
-    def fetch_table_names(self, include_system_table: bool = False) -> List[str]:
+    def fetch_table_names(
+        self, include_system_table: bool = False, include_view: bool = True
+    ) -> List[str]:
         """
         :return: List of table names in the database.
         :rtype: list
@@ -780,6 +782,10 @@ class SimpleSQLite:
         """
 
         self.check_connection()
+
+        return self.schema_extractor.fetch_table_names(
+            include_system_table=include_system_table, include_view=include_view
+        )
 
     def fetch_view_names(self) -> List[str]:
         """
@@ -842,7 +848,7 @@ class SimpleSQLite:
         :raises simplesqlite.OperationalError: |raises_operational_error|
         """
 
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         result = self.execute_query(
             "SELECT sql FROM sqlite_master WHERE type='table' and name={:s}".format(
@@ -991,7 +997,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_sqlite_master()
 
-    def has_table(self, table_name: str) -> bool:
+    def has_table(self, table_name: str, include_view: bool = True) -> bool:
         """
         :param str table_name: Table name to be tested.
         :return: |True| if the database has the table.
@@ -1021,6 +1027,8 @@ class SimpleSQLite:
             validate_table_name(table_name)
         except NameValidationError:
             return False
+
+        return table_name in self.fetch_table_names(include_view=include_view)
 
     def has_view(self, view_name: str) -> bool:
         """
@@ -1071,7 +1079,7 @@ class SimpleSQLite:
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         if typepy.is_null_string(attr_name):
             return False
@@ -1127,7 +1135,7 @@ class SimpleSQLite:
 
         return True
 
-    def verify_table_existence(self, table_name: str) -> None:
+    def verify_table_existence(self, table_name: str, allow_view: bool = True) -> None:
         """
         :param str table_name: Table name to be tested.
         :raises simplesqlite.TableNotFoundError:
@@ -1160,12 +1168,10 @@ class SimpleSQLite:
 
         validate_table_name(table_name)
 
-        if self.has_table(table_name):
+        if self.has_table(table_name, include_view=allow_view):
             return
 
-        raise TableNotFoundError(
-            f"'{table_name}' table not found in '{self.database_path}' database"
-        )
+        raise TableNotFoundError(f"'{table_name}' not found in '{self.database_path}' database")
 
     def verify_attr_existence(self, table_name: str, attr_name: str) -> None:
         """
@@ -1208,7 +1214,7 @@ class SimpleSQLite:
                 'not_existing' table not found in /tmp/sample.sqlite
         """
 
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
 
         if self.has_attr(table_name, attr_name):
             return
@@ -1253,10 +1259,13 @@ class SimpleSQLite:
             # warning message
             return
 
-        if self.has_table(table_name):
+        if self.has_table(table_name, include_view=False):
             query = f"DROP TABLE IF EXISTS '{table_name:s}'"
             self.execute_query(query, logging.getLogger().findCaller())
-            self.commit()
+        elif self.has_view(table_name):
+            self.execute_query(f"DROP VIEW IF EXISTS {table_name}")
+
+        self.commit()
 
     def create_table(self, table_name: str, attr_descriptions: Sequence[str]) -> bool:
         """
@@ -1295,7 +1304,7 @@ class SimpleSQLite:
             |raises_verify_table_existence|
         """
 
-        self.verify_table_existence(table_name)
+        self.verify_table_existence(table_name, allow_view=False)
         self.validate_access_permission(["w", "a"])
 
         query_format = "CREATE INDEX IF NOT EXISTS {index:s} ON {table}({attr})"
@@ -1557,7 +1566,7 @@ class SimpleSQLite:
 
     def dump(self, db_path: str, mode: str = "a") -> None:
         with SimpleSQLite(db_path, mode=mode, max_workers=self.__max_workers) as dst_con:
-            for table_name in self.fetch_table_names():
+            for table_name in self.fetch_table_names(include_view=False):
                 copy_table(self, dst_con, src_table_name=table_name, dst_table_name=table_name)
 
     def rollback(self) -> None:
