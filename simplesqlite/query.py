@@ -192,7 +192,7 @@ class Distinct(QueryItem):
             raise TypeError(f"key should be a string/Attr/AttrList instance: actual={type(key)}")
 
         if isinstance(key, str):
-            self.__key = Attr(key)  # type: Union[Attr, AttrList]
+            self.__key: Union[Attr, AttrList] = Attr(key)
         else:
             self.__key = key
 
