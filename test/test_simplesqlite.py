@@ -365,6 +365,11 @@ class Test_SimpleSQLite_fetch_table_names:
             con_null.fetch_table_names()
 
 
+class Test_SimpleSQLite_fetch_view_names:
+    def test_normal(self, con):
+        assert con.fetch_view_names() == ["view1"]
+
+
 class Test_SimpleSQLite_fetch_attr_names:
     @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
     def test_normal(self, con, value, expected):

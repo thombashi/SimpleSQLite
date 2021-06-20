@@ -781,7 +781,15 @@ class SimpleSQLite:
 
         self.check_connection()
 
-        return self.schema_extractor.fetch_table_names(include_system_table)
+    def fetch_view_names(self) -> List[str]:
+        """
+        :return: List of table names in the database.
+        :rtype: list
+        """
+
+        self.check_connection()
+
+        return self.schema_extractor.fetch_view_names()
 
     def fetch_attr_names(self, table_name: str) -> List[str]:
         """

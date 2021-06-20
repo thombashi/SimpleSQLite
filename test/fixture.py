@@ -16,6 +16,8 @@ def con(tmpdir):
     con = SimpleSQLite(str(p), "w")
 
     con.create_table_from_data_matrix(TEST_TABLE_NAME, ["attr_a", "attr_b"], [[1, 2], [3, 4]])
+    con.execute_query(f"CREATE VIEW view1 AS SELECT attr_a, attr_b FROM {TEST_TABLE_NAME}")
+    con.commit()
 
     return con
 
@@ -28,6 +30,8 @@ def con_mix(tmpdir):
     con.create_table_from_data_matrix(
         TEST_TABLE_NAME, ["attr_i", "attr_f", "attr_s"], [[1, 2.2, "aa"], [3, 4.4, "bb"]]
     )
+    con.execute_query(f"CREATE VIEW view1 AS SELECT attr_a, attr_b FROM {TEST_TABLE_NAME}")
+    con.commit()
 
     return con
 
