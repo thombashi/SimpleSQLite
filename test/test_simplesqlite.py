@@ -434,6 +434,24 @@ class Test_SimpleSQLite_has_table:
             con_null.has_table(TEST_TABLE_NAME)
 
 
+class Test_SimpleSQLite_has_view:
+    @pytest.mark.parametrize(
+        ["value", "expected"],
+        [
+            [TEST_TABLE_NAME, False],
+            ["view1", True],
+            ["", False],
+            [None, False],
+        ],
+    )
+    def test_normal(self, con, value, expected):
+        assert con.has_view(value) == expected
+
+    def test_null(self, con_null):
+        with pytest.raises(NullDatabaseConnectionError):
+            con_null.has_view(TEST_TABLE_NAME)
+
+
 class Test_SimpleSQLite_has_attr:
     @pytest.mark.parametrize(
         ["table", "attr", "expected"],

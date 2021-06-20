@@ -1022,7 +1022,19 @@ class SimpleSQLite:
         except NameValidationError:
             return False
 
-        return table_name in self.fetch_table_names()
+    def has_view(self, view_name: str) -> bool:
+        """
+        :param str table_name: Table name to be tested.
+        :return: |True| if the database has the table.
+        :rtype: bool
+        """
+
+        try:
+            validate_table_name(view_name)
+        except NameValidationError:
+            return False
+
+        return view_name in self.fetch_view_names()
 
     def has_attr(self, table_name: str, attr_name: Optional[str]) -> bool:
         """
