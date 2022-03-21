@@ -22,17 +22,16 @@ def write_examples(maker):
 
     maker.inc_indent_level()
     maker.write_chapter("Create a table")
-    maker.inc_indent_level()
-    maker.write_chapter("Create a table from data matrix")
-    maker.write_file(examples_root.joinpath("create_table/create_table_from_data_matrix.txt"))
 
-    maker.write_chapter("Create a table from CSV")
-    maker.write_file(examples_root.joinpath("create_table/create_table_from_csv.txt"))
+    with maker.indent():
+        maker.write_chapter("Create a table from data matrix")
+        maker.write_file(examples_root.joinpath("create_table/create_table_from_data_matrix.txt"))
 
-    maker.write_chapter("Create a table from pandas.DataFrame")
-    maker.write_file(examples_root.joinpath("create_table/create_table_from_df.txt"))
+        maker.write_chapter("Create a table from CSV")
+        maker.write_file(examples_root.joinpath("create_table/create_table_from_csv.txt"))
 
-    maker.dec_indent_level()
+        maker.write_chapter("Create a table from pandas.DataFrame")
+        maker.write_file(examples_root.joinpath("create_table/create_table_from_df.txt"))
 
     maker.write_chapter("Insert records into a table")
     maker.write_file(examples_root.joinpath("insert_record_example.txt"))
