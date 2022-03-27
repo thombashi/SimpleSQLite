@@ -10,7 +10,12 @@ from simplesqlite import SimpleSQLite, SQLiteTableDataSanitizer
 
 
 class Test_SimpleSQLite_create_table_from_tabledata:
-    @pytest.mark.parametrize(["filename"], [["python - Wiktionary.html"]])
+    @pytest.mark.parametrize(
+        ["filename"],
+        [
+            ["python - Wiktionary.html"],
+        ],
+    )
     def test_smoke(self, tmpdir, filename):
         try:
             import pytablereader as ptr

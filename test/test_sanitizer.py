@@ -146,10 +146,20 @@ class Test_SQLiteTableDataSanitizer:
             [
                 "w/ type inference",
                 ["a", "b_c"],
-                [[1, 2], [3, 4]],
+                [
+                    [1, 2],
+                    [3, 4],
+                ],
                 [String],
                 ["STRING", "INTEGER"],
-                TableData("w_type_inference", ["a", "b_c"], [["1", 2], ["3", 4]]),
+                TableData(
+                    "w_type_inference",
+                    ["a", "b_c"],
+                    [
+                        ["1", 2],
+                        ["3", 4],
+                    ],
+                ),
             ]
         ],
     )
@@ -180,18 +190,38 @@ class Test_SQLiteTableDataSanitizer:
             [
                 "w/ type inference",
                 ["a", "b_c"],
-                [["1", "2"], ["3", "4"]],
+                [
+                    ["1", "2"],
+                    ["3", "4"],
+                ],
                 True,
                 ["INTEGER", "INTEGER"],
-                TableData("w_type_inference", ["a", "b_c"], [[1, 2], [3, 4]]),
+                TableData(
+                    "w_type_inference",
+                    ["a", "b_c"],
+                    [
+                        [1, 2],
+                        [3, 4],
+                    ],
+                ),
             ],
             [
                 "w/o type inference",
                 ["a", "b_c"],
-                [["1", "2"], ["3", "4"]],
+                [
+                    ["1", "2"],
+                    ["3", "4"],
+                ],
                 False,
                 ["STRING", "STRING"],
-                TableData("w_o_type_inference", ["a", "b_c"], [["1", "2"], ["3", "4"]]),
+                TableData(
+                    "w_o_type_inference",
+                    ["a", "b_c"],
+                    [
+                        ["1", "2"],
+                        ["3", "4"],
+                    ],
+                ),
             ],
         ],
     )
