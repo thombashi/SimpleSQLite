@@ -4,6 +4,7 @@
 
 import abc
 import re
+from abc import ABC
 from typing import Any, List, Optional, Sequence, Union
 
 import typepy
@@ -11,7 +12,7 @@ from pathvalidate import ascii_symbols, unprintable_ascii_chars
 from pathvalidate.error import ErrorReason, ValidationError
 
 from ._func import validate_table_name
-from ._validator import validate_sqlite_attr_name
+from ._validator import validate_sqlite_attribute_name
 from .error import SqlSyntaxError
 
 
@@ -21,7 +22,7 @@ class QueryItemInterface(metaclass=abc.ABCMeta):
         pass
 
 
-class QueryItem(QueryItemInterface):
+class QueryItem(QueryItemInterface, ABC):
     def __init__(self, value: str) -> None:
         try:
             self._value = value.strip()
@@ -65,7 +66,7 @@ class Table(QueryItem):
         return name
 
 
-class Attr(QueryItem):
+class Attribute(QueryItem):
     """
     :param str name: Attribute name.
     :param str operation:
@@ -74,12 +75,12 @@ class Attr(QueryItem):
     :rtype: str
 
     :Examples:
-        >>> from simplesqlite.query import Attr
-        >>> Attr("key")
+        >>> from simplesqlite.query import Attribute
+        >>> Attribute("key")
         'key'
-        >>> Attr("a+b")
+        >>> Attribute("a+b")
         '[a+b]'
-        >>> Attr("key", operation="SUM")
+        >>> Attribute("key", operation="SUM")
         'SUM(key)'
     """
 
@@ -106,7 +107,7 @@ class Attr(QueryItem):
         need_quote = self.__RE_NEED_QUOTE.search(name) is not None
 
         try:
-            validate_sqlite_attr_name(name)
+            validate_sqlite_attribute_name(name)
         except ValidationError as e:
             if e.reason == ErrorReason.RESERVED_NAME and e.reusable_name is False:
                 need_quote = True
@@ -134,17 +135,17 @@ class Attr(QueryItem):
         return sql_name
 
 
-class AttrList(list, QueryItemInterface):
+class AttributeList(list, QueryItemInterface):
     """
     :param list/tuple names: Attribute names.
     :param str operation:
         Used as a SQLite function if the value is not empty.
 
     :Examples:
-        >>> from simplesqlite.query import AttrList
-        >>> AttrList(["key", "a+b"]))
+        >>> from simplesqlite.query import AttributeList
+        >>> AttributeList(["key", "a+b"]))
         ['key', '[a+b]']
-        >>> AttrList(["key", "a+b"], operation="AVG")
+        >>> AttributeList(["key", "a+b"], operation="AVG")
         ['AVG(key)', 'AVG([a+b])']
 
     .. seealso::
@@ -153,13 +154,13 @@ class AttrList(list, QueryItemInterface):
 
     @classmethod
     def sanitize(self, names: Sequence[str]) -> List[str]:
-        return [Attr.sanitize(name) for name in names]
+        return [Attribute.sanitize(name) for name in names]
 
     def __init__(self, names: Sequence[str], operation: str = "") -> None:
         self.__operation = operation
 
         try:
-            super().__init__([Attr(name, operation) for name in names])
+            super().__init__([Attribute(name, operation) for name in names])
         except AttributeError:
             raise TypeError("name must be a string")
 
@@ -172,27 +173,27 @@ class AttrList(list, QueryItemInterface):
     def to_query(self) -> str:
         return ",".join([str(attr) for attr in self])
 
-    def append(self, item: Union[str, Attr]) -> None:
-        if not isinstance(item, (str, Attr)):
+    def append(self, item: Union[str, Attribute]) -> None:
+        if not isinstance(item, (str, Attribute)):
             raise TypeError(f"item should be a str/Attr instance: actual={type(item)}")
 
         if isinstance(item, str):
-            item = Attr(item, operation=self.__operation)
+            item = Attribute(item, operation=self.__operation)
 
         super().append(item)
 
 
 class Distinct(QueryItem):
     @property
-    def key(self) -> Union[Attr, AttrList]:
+    def key(self) -> Union[Attribute, AttributeList]:
         return self.__key
 
-    def __init__(self, key: Union[str, Attr, AttrList]) -> None:
-        if not isinstance(key, (str, Attr, AttrList)):
+    def __init__(self, key: Union[str, Attribute, AttributeList]) -> None:
+        if not isinstance(key, (str, Attribute, AttributeList)):
             raise TypeError(f"key should be a string/Attr/AttrList instance: actual={type(key)}")
 
         if isinstance(key, str):
-            self.__key: Union[Attr, AttrList] = Attr(key)
+            self.__key: Union[Attribute, AttributeList] = Attribute(key)
         else:
             self.__key = key
 
@@ -284,15 +285,15 @@ class Where(QueryItem):
     def to_query(self) -> str:
         if self.value is None:
             if self.__cmp_operator == "=":
-                return f"{Attr(self.key)} IS NULL"
+                return f"{Attribute(self.key)} IS NULL"
             elif self.__cmp_operator == "!=":
-                return f"{Attr(self.key)} IS NOT NULL"
+                return f"{Attribute(self.key)} IS NOT NULL"
 
             raise SqlSyntaxError(
                 f"Invalid operator ({self.__cmp_operator:s}) with None right-hand side"
             )
 
-        return f"{Attr(self.key)} {self.__cmp_operator:s} {Value(self.value)}"
+        return f"{Attribute(self.key)} {self.__cmp_operator:s} {Value(self.value)}"
 
 
 class Or(list, QueryItemInterface):
@@ -400,7 +401,7 @@ class Select(QueryItem):
 
     def __init__(
         self,
-        select: Union[str, AttrList],
+        select: Union[str, AttributeList],
         table: str,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
@@ -436,15 +437,15 @@ class Insert(QueryItem):
     INSERT query.
 
     :param str table: Table name of executing the query.
-    :param AttrList attrs: Attributes that inserting to..
+    :param AttributeList attrs: Attributes that inserting to..
     :raises simplesqlite.NameValidationError:
         |raises_validate_table_name|
     """
 
-    def __init__(self, table: str, attrs: AttrList) -> None:
+    def __init__(self, table: str, attrs: AttributeList) -> None:
         validate_table_name(table)
 
-        if not isinstance(attrs, AttrList):
+        if not isinstance(attrs, AttributeList):
             raise TypeError(f"attr must be a AttrList class instance: actual={type(attrs)}")
 
         if typepy.is_empty_sequence(attrs):

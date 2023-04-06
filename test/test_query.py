@@ -11,8 +11,8 @@ import pytest
 from simplesqlite import NameValidationError, SqlSyntaxError
 from simplesqlite.query import (
     And,
-    Attr,
-    AttrList,
+    Attribute,
+    AttributeList,
     Distinct,
     Insert,
     Or,
@@ -146,20 +146,20 @@ class Test_Attr:
         ],
     )
     def test_normal(self, value, operation, expected):
-        assert_query_item(Attr(value, operation), expected)
+        assert_query_item(Attribute(value, operation), expected)
 
     @pytest.mark.parametrize(
         ["value", "expected"], [[word, f'"{word}"'] for word in RESERVED_KEYWORDS]
     )
     def test_normal_reserved(self, value, expected):
-        assert_query_item(Attr(value), expected)
+        assert_query_item(Attribute(value), expected)
 
     @pytest.mark.parametrize(
         ["value", "expected"], [[None, TypeError], [1, TypeError], [False, TypeError]]
     )
     def test_exception_1(self, value, expected):
         with pytest.raises(expected):
-            f"{Attr(value)}"
+            f"{Attribute(value)}"
 
 
 class Test_AttrList:
@@ -172,9 +172,9 @@ class Test_AttrList:
         ],
     )
     def test_normal(self, value, operation, expected):
-        assert_query_item(AttrList(value, operation), expected)
+        assert_query_item(AttributeList(value, operation), expected)
 
-        attrs = AttrList([], operation)
+        attrs = AttributeList([], operation)
         for v in value:
             attrs.append(v)
         assert_query_item(attrs, expected)
@@ -183,11 +183,11 @@ class Test_AttrList:
         ["value", "expected"], [[["%aaa", "bbb", "ccc-ddd"], "[%aaa],bbb,[ccc-ddd]"]]
     )
     def test_normal_append_attr(self, value, expected):
-        assert_query_item(AttrList(value), expected)
+        assert_query_item(AttributeList(value), expected)
 
-        attrs = AttrList([])
+        attrs = AttributeList([])
         for v in value:
-            attrs.append(Attr(v))
+            attrs.append(Attribute(v))
         assert_query_item(attrs, expected)
 
     @pytest.mark.parametrize(
@@ -195,16 +195,16 @@ class Test_AttrList:
     )
     def test_exception(self, value, expected):
         with pytest.raises(expected):
-            AttrList(value)
+            AttributeList(value)
 
 
 class Test_Distinct:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
-            [Attr("hoge"), "DISTINCT hoge"],
-            [Attr("%user"), "DISTINCT [%user]"],
-            [AttrList(["%aaa", "bbb"]), "DISTINCT [%aaa],bbb"],
+            [Attribute("hoge"), "DISTINCT hoge"],
+            [Attribute("%user"), "DISTINCT [%user]"],
+            [AttributeList(["%aaa", "bbb"]), "DISTINCT [%aaa],bbb"],
         ],
     )
     def test_normal(self, value, expected):
@@ -282,7 +282,7 @@ class Test_Select:
                 "SELECT A FROM [B-B] WHERE C > 1 ORDER BY D",
             ],
             [
-                AttrList(["A", "a-b"]),
+                AttributeList(["A", "a-b"]),
                 "attrlist",
                 Where("C", 1, cmp_operator=">"),
                 None,
@@ -374,7 +374,7 @@ class Test_Insert:
         ],
     )
     def test_normal(self, table, attrs, expected):
-        assert_query_item(Insert(table, AttrList(attrs)), expected)
+        assert_query_item(Insert(table, AttributeList(attrs)), expected)
 
     @pytest.mark.parametrize(
         ["table", "attrs", "expected"],
@@ -389,7 +389,7 @@ class Test_Insert:
             ["A", [], TypeError],
             ["A", [None], TypeError],
             ["A", ["B", "C"], TypeError],
-            ["A", Attr("B"), TypeError],
+            ["A", Attribute("B"), TypeError],
         ],
     )
     def test_exception(self, table, attrs, expected):

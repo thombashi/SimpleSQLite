@@ -20,7 +20,7 @@ def test_orm():
 
     Hoge.attach(con, is_hidden=True)
     Hoge.create()
-    assert Hoge.fetch_num_records() == 0
+    assert Hoge.fetch_nummber_of_records() == 0
     hoge_inputs = [Hoge(hoge_id=10, name="a"), Hoge(hoge_id=20, name="b")]
     for hoge_input in hoge_inputs:
         Hoge.insert(hoge_input)
@@ -31,7 +31,7 @@ def test_orm():
     for foo_input in foo_inputs:
         Foo.insert(foo_input)
 
-    assert Hoge.fetch_num_records() == 2
+    assert Hoge.fetch_nummber_of_records() == 2
     for record, hoge_input in zip(Hoge.select(), hoge_inputs):
         assert record == hoge_input
 

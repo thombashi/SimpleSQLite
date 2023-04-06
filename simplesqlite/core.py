@@ -32,8 +32,8 @@ from .error import (
     TableNotFoundError,
 )
 from .query import (
-    Attr,
-    AttrList,
+    Attribute,
+    AttributeList,
     Insert,
     QueryItem,
     Select,
@@ -369,7 +369,7 @@ class SimpleSQLite:
 
     def select(
         self,
-        select: Union[str, AttrList],
+        select: Union[str, AttributeList],
         table_name: str,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
@@ -431,10 +431,10 @@ class SimpleSQLite:
         import pandas
 
         if columns is None:
-            columns = self.fetch_attr_names(table_name)
+            columns = self.fetch_attribute_names(table_name)
 
         result = self.select(
-            select=AttrList(columns), table_name=table_name, where=where, extra=extra
+            select=AttributeList(columns), table_name=table_name, where=where, extra=extra
         )
 
         if result is None:
@@ -472,10 +472,10 @@ class SimpleSQLite:
         """
 
         if columns is None:
-            columns = self.fetch_attr_names(table_name)
+            columns = self.fetch_attribute_names(table_name)
 
         result = self.select(
-            select=AttrList(columns), table_name=table_name, where=where, extra=extra
+            select=AttributeList(columns), table_name=table_name, where=where, extra=extra
         )
 
         if result is None:
@@ -625,9 +625,9 @@ class SimpleSQLite:
             return 0
 
         if attr_names is None:
-            attr_names = self.fetch_attr_names(table_name)
+            attr_names = self.fetch_attribute_names(table_name)
         records = RecordConvertor.to_records(attr_names, records)
-        query = Insert(table_name, AttrList(attr_names)).to_query()
+        query = Insert(table_name, AttributeList(attr_names)).to_query()
 
         if self.debug_query or self.global_debug_query:
             logging_count = 8
@@ -797,7 +797,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_view_names()
 
-    def fetch_attr_names(self, table_name: str) -> List[str]:
+    def fetch_attribute_names(self, table_name: str) -> List[str]:
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -836,7 +836,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
-    def fetch_attr_type(self, table_name: str) -> Dict[str, str]:
+    def fetch_attribute_type(self, table_name: str) -> Dict[str, str]:
         """
         :return:
             Dictionary of attribute names and attribute types in the table.
@@ -868,8 +868,9 @@ class SimpleSQLite:
 
         return dict([get_entry(item.split(" ")) for item in match.group().strip("()").split(", ")])
 
-    def fetch_num_records(
-        self, table_name: str, where: Optional[WhereQuery] = None
+    def fetch_number_of_records(
+        self, table_name: str, where
+            : Optional[WhereQuery] = None
     ) -> Optional[int]:
         """
         Fetch the number of records in a table.
@@ -1084,7 +1085,7 @@ class SimpleSQLite:
         if typepy.is_null_string(attr_name):
             return False
 
-        return attr_name in self.fetch_attr_names(table_name)
+        return attr_name in self.fetch_attribute_names(table_name)
 
     def has_attrs(self, table_name: str, attr_names: Sequence[str]) -> bool:
         """
@@ -1311,7 +1312,7 @@ class SimpleSQLite:
         query = query_format.format(
             index=make_index_name(table_name, attr_name),
             table=Table(table_name),
-            attr=Attr(attr_name),
+            attr=Attribute(attr_name),
         )
 
         logger.debug(query)
@@ -1332,8 +1333,8 @@ class SimpleSQLite:
         if typepy.is_empty_sequence(attr_names):
             return
 
-        table_attr_set = set(self.fetch_attr_names(table_name))
-        index_attr_set = set(AttrList.sanitize(attr_names))  # type: ignore
+        table_attr_set = set(self.fetch_attribute_names(table_name))
+        index_attr_set = set(AttributeList.sanitize(attr_names))  # type: ignore
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
@@ -1687,7 +1688,7 @@ class SimpleSQLite:
 
         for col, value_type in sorted(self.__extract_col_type_from_tabledata(table_data).items()):
             attr_name = table_data.headers[col]
-            attr_description = f"{Attr(attr_name)} {value_type:s}"
+            attr_description = f"{Attribute(attr_name)} {value_type:s}"
             if attr_name == primary_key:
                 attr_description += " PRIMARY KEY"
 
@@ -1756,7 +1757,7 @@ class SimpleSQLite:
             self.insert_many(table_name, table_data.value_matrix)
 
         if typepy.is_not_empty_sequence(index_attrs):
-            self.create_index_list(table_name, AttrList.sanitize(index_attrs))  # type: ignore
+            self.create_index_list(table_name, AttributeList.sanitize(index_attrs))  # type: ignore
         self.commit()
 
 

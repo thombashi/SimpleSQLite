@@ -19,10 +19,10 @@ from tabledata import (
 )
 from tabledata.normalizer import AbstractTableDataNormalizer
 
-from ._validator import validate_sqlite_attr_name, validate_sqlite_table_name
+from ._validator import validate_sqlite_attribute_name, validate_sqlite_table_name
 from .converter import RecordConvertor
 from .error import NameValidationError
-from .query import Attr, AttrList
+from .query import Attribute, AttributeList
 
 
 class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
@@ -111,7 +111,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if dataproperty.is_multibyte_str(header):
             return cast(str, header)
 
-        return Attr.sanitize(cast(str, header))
+        return Attribute.sanitize(cast(str, header))
 
     def _validate_headers(self) -> None:
         if typepy.is_empty_sequence(self._tabledata.headers):
@@ -122,7 +122,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def _validate_header(self, header: str) -> None:
         try:
-            validate_sqlite_attr_name(header)
+            validate_sqlite_attribute_name(header)
         except ValidationError as e:
             if e.reason in (ErrorReason.NULL_NAME, ErrorReason.RESERVED_NAME):
                 pass
@@ -144,11 +144,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             except IndexError:
                 raise DataError("header list and data body are empty")
 
-        attr_name_list = AttrList.sanitize(super()._normalize_headers())  # type: ignore
+        attr_name_list = AttributeList.sanitize(super()._normalize_headers())  # type: ignore
 
         try:
             for attr_name in attr_name_list:
-                validate_sqlite_attr_name(attr_name)
+                validate_sqlite_attribute_name(attr_name)
         except ValidationError as e:
             if e.reason == ErrorReason.RESERVED_NAME:
                 pass

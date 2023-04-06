@@ -24,7 +24,7 @@ from simplesqlite import (
     TableNotFoundError,
     connect_memdb,
 )
-from simplesqlite.query import Attr, AttrList, Where
+from simplesqlite.query import Attribute, AttributeList, Where
 
 from ._common import print_test_result
 from .fixture import (  # fmt: off
@@ -212,7 +212,7 @@ class Test_SimpleSQLite_dump:
         con.dump(dump_path)
         con_dump = SimpleSQLite(dump_path, "r")
 
-        assert con.fetch_num_records(TEST_TABLE_NAME) == con_dump.fetch_num_records(TEST_TABLE_NAME)
+        assert con.fetch_number_of_records(TEST_TABLE_NAME) == con_dump.fetch_number_of_records(TEST_TABLE_NAME)
         assert con.select_as_tabledata(TEST_TABLE_NAME) == con_dump.select_as_tabledata(
             TEST_TABLE_NAME
         )
@@ -237,18 +237,18 @@ class Test_SimpleSQLite_insert:
         ],
     )
     def test_normal(self, con, value, expected):
-        assert con.fetch_num_records(TEST_TABLE_NAME) == 2
+        assert con.fetch_number_of_records(TEST_TABLE_NAME) == 2
         con.insert(TEST_TABLE_NAME, record=value)
-        assert con.fetch_num_records(TEST_TABLE_NAME) == 3
+        assert con.fetch_number_of_records(TEST_TABLE_NAME) == 3
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expected
 
     @pytest.mark.parametrize(["value", "expected"], [[[5, 6.6, "c"], (5, 6.6, "c")]])
     def test_mix(self, con_mix, value, expected):
-        assert con_mix.fetch_num_records(TEST_TABLE_NAME) == 2
+        assert con_mix.fetch_number_of_records(TEST_TABLE_NAME) == 2
         con_mix.insert(TEST_TABLE_NAME, record=value)
-        assert con_mix.fetch_num_records(TEST_TABLE_NAME) == 3
+        assert con_mix.fetch_number_of_records(TEST_TABLE_NAME) == 3
         result = con_mix.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2]
         assert result_tuple == expected
@@ -286,9 +286,9 @@ class Test_SimpleSQLite_insert_many:
     def test_normal(self, con, table_name, records):
         expected = [(7, 8), (9, 10), (11, 12)]
 
-        assert con.fetch_num_records(TEST_TABLE_NAME) == 2
+        assert con.fetch_number_of_records(TEST_TABLE_NAME) == 2
         assert con.insert_many(TEST_TABLE_NAME, records) == len(records)
-        assert con.fetch_num_records(TEST_TABLE_NAME) == 5
+        assert con.fetch_number_of_records(TEST_TABLE_NAME) == 5
         result = con.select(select="*", table_name=TEST_TABLE_NAME)
         result_tuple = result.fetchall()[2:]
         assert result_tuple == expected
@@ -388,7 +388,7 @@ class Test_SimpleSQLite_fetch_view_names:
 class Test_SimpleSQLite_fetch_attr_names:
     @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
     def test_normal(self, con, value, expected):
-        assert con.fetch_attr_names(value) == expected
+        assert con.fetch_attribute_names(value) == expected
 
     def test_normal_w_mysql_style_schema(self):
         database_path = "mysql_style_schema.sqlite3"
@@ -412,7 +412,7 @@ class Test_SimpleSQLite_fetch_attr_names:
         )
         con.commit()
         con.close()
-        assert SimpleSQLite(database_path).fetch_attr_names("post") == [
+        assert SimpleSQLite(database_path).fetch_attribute_names("post") == [
             "id",
             "body",
             "timestamp",
@@ -432,11 +432,11 @@ class Test_SimpleSQLite_fetch_attr_names:
     )
     def test_null_table(self, con, value, expected):
         with pytest.raises(expected):
-            con.fetch_attr_names(value)
+            con.fetch_attribute_names(value)
 
     def test_null_con(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
-            con_null.fetch_attr_names("not_exist_table")
+            con_null.fetch_attribute_names("not_exist_table")
 
 
 class Test_SimpleSQLite_has_table:
@@ -733,12 +733,12 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         )
 
         # check data ---
-        result = con.select(select=AttrList(attr_names), table_name=table_name)
+        result = con.select(select=AttributeList(attr_names), table_name=table_name)
         result_matrix = result.fetchall()
         assert len(result_matrix) == 3
 
-        print_test_result(expected=expected_attr, actual=con.fetch_attr_type(table_name))
-        assert con.fetch_attr_type(table_name) == expected_attr
+        print_test_result(expected=expected_attr, actual=con.fetch_attribute_type(table_name))
+        assert con.fetch_attribute_type(table_name) == expected_attr
 
     @pytest.mark.parametrize(
         ["table_name", "attr_names", "data_matrix", "type_hints", "expected"],
@@ -787,7 +787,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
 
         con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
-        assert con.fetch_attr_names(table_name) == expected
+        assert con.fetch_attribute_names(table_name) == expected
 
     @pytest.mark.parametrize(
         ["table_name", "attr_names", "data_matrix", "expected"],
@@ -863,7 +863,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
 
         con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
-        assert con.fetch_attr_names(table_name) == expected
+        assert con.fetch_attribute_names(table_name) == expected
 
     def test_normal_number_header(self, tmpdir):
         p = tmpdir.join("tmp.db")
@@ -875,7 +875,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
 
         con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
 
-        assert con.fetch_attr_names(table_name) == expected
+        assert con.fetch_attribute_names(table_name) == expected
 
     def test_exception_null(self, con_null):
         with pytest.raises(NullDatabaseConnectionError):
@@ -921,7 +921,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         con.create_table_from_tabledata(value)
 
         assert con.fetch_table_names() == [value.table_name]
-        assert con.fetch_attr_names(value.table_name) == value.headers
+        assert con.fetch_attribute_names(value.table_name) == value.headers
 
         result = con.select(select="*", table_name=value.table_name)
         result_matrix = result.fetchall()
@@ -953,7 +953,7 @@ class Test_SimpleSQLite_select_as_tabledata:
         con.create_table_from_tabledata(value)
 
         assert con.fetch_table_names() == [value.table_name]
-        assert con.fetch_attr_names(value.table_name) == value.headers
+        assert con.fetch_attribute_names(value.table_name) == value.headers
 
         actual = con.select_as_tabledata(
             columns=value.headers, table_name=value.table_name, type_hints=type_hints
@@ -1017,7 +1017,7 @@ class Test_SimpleSQLite_create_table_from_csv:
             pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attribute_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -1063,7 +1063,7 @@ class Test_SimpleSQLite_create_table_from_csv:
             pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attribute_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -1147,7 +1147,7 @@ class Test_SimpleSQLite_create_table_from_json:
             pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attribute_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -1207,7 +1207,7 @@ class Test_SimpleSQLite_create_table_from_json:
             pytest.skip("requires pytablereader")
 
         assert con.fetch_table_names() == [expected_table_name]
-        assert expected_attr_names == con.fetch_attr_names(expected_table_name)
+        assert expected_attr_names == con.fetch_attribute_names(expected_table_name)
 
         result = con.select(select="*", table_name=expected_table_name)
         result_matrix = result.fetchall()
@@ -1283,7 +1283,7 @@ class Test_SimpleSQLite_create_index:
     @pytest.mark.parametrize(["symbol"], [[c] for c in CHARS])
     def test_normal(self, con, symbol):
         attr = f"a{symbol}b"
-        attr_descriptions = ["{:s} {:s}".format(Attr(attr), "TEXT")]
+        attr_descriptions = ["{:s} {:s}".format(Attribute(attr), "TEXT")]
 
         table_name = "new_table"
         con.create_table(table_name, attr_descriptions)
@@ -1296,4 +1296,4 @@ class Test_SimpleSQLite_create_index:
 
 class Test_SimpleSQLite_fetch_num_records:
     def test_null(self, con):
-        assert con.fetch_num_records("not_exist") is None
+        assert con.fetch_number_of_records("not_exist") is None

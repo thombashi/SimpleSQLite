@@ -143,63 +143,63 @@ __RE_INVALID_CHARS = re.compile(
 )
 
 
-def validate_sqlite_table_name(name: str) -> None:
+def validate_sqlite_table_name(table_name: str) -> None:
     """
-    :param str name: Name to validate.
+    :param str table_name: Name to validate.
     :raises pathvalidate.ValidationError:
         - If the ``name`` includes unprintable character(s).
         - |raises_sqlite_keywords|
     """
 
-    if not name:
+    if not table_name:
         raise ValidationError(["null name"], reason=ErrorReason.NULL_NAME)
 
-    if __RE_INVALID_CHARS.search(name):
+    if __RE_INVALID_CHARS.search(table_name):
         raise ValidationError(["unprintable character found"], reason=ErrorReason.INVALID_CHARACTER)
 
-    name = name.upper()
+    table_name = table_name.upper()
 
-    if name in __SQLITE_INVALID_RESERVED_KEYWORDS_TABLE:
+    if table_name in __SQLITE_INVALID_RESERVED_KEYWORDS_TABLE:
         raise ValidationError(
-            [f"'{name}' is a reserved keyword by sqlite"],
+            [f"'{table_name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=False,
         )
 
-    if name in __SQLITE_VALID_RESERVED_KEYWORDS_TABLE:
+    if table_name in __SQLITE_VALID_RESERVED_KEYWORDS_TABLE:
         raise ValidationError(
-            [f"'{name}' is a reserved keyword by sqlite"],
+            [f"'{table_name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=True,
         )
 
 
-def validate_sqlite_attr_name(name: str) -> None:
+def validate_sqlite_attribute_name(attribute_name: str) -> None:
     """
-    :param str name: Name to validate.
+    :param str attribute_name: Name to validate.
     :raises pathvalidate.ValidationError:
         - If the ``name`` includes unprintable character(s).
         - |raises_sqlite_keywords|
     """
 
-    if not name:
+    if not attribute_name:
         raise ValidationError(["null name"], reason=ErrorReason.NULL_NAME)
 
-    if __RE_INVALID_CHARS.search(name):
+    if __RE_INVALID_CHARS.search(attribute_name):
         raise ValidationError(["unprintable character found"], reason=ErrorReason.INVALID_CHARACTER)
 
-    name = name.upper()
+    attribute_name = attribute_name.upper()
 
-    if name in __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR:
+    if attribute_name in __SQLITE_INVALID_RESERVED_KEYWORDS_ATTR:
         raise ValidationError(
-            [f"'{name}' is a reserved keyword by sqlite"],
+            [f"'{attribute_name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=False,
         )
 
-    if name in __SQLITE_VALID_RESERVED_KEYWORDS_ATTR:
+    if attribute_name in __SQLITE_VALID_RESERVED_KEYWORDS_ATTR:
         raise ValidationError(
-            [f"'{name}' is a reserved keyword by sqlite"],
+            [f"'{attribute_name}' is a reserved keyword by sqlite"],
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=True,
         )
