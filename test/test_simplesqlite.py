@@ -40,6 +40,7 @@ from .fixture import (  # fmt: off
 
 
 # fmt: on
+temp_db_name = "tmp.db"
 
 nan = float("nan")
 inf = float("inf")
@@ -198,7 +199,7 @@ class Test_SimpleSQLite_select_as_dict:
         ],
     )
     def test_normal(self, tmpdir, value, expected):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_tabledata(value)
@@ -724,7 +725,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         ],
     )
     def test_normal(self, tmpdir, attr_names, data_matrix, index_attrs, expected_attr):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
@@ -782,7 +783,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         ],
     )
     def test_normal_empty_header(self, tmpdir, table_name, attr_names, data_matrix, expected):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
 
         con.create_table_from_data_matrix(table_name, attr_names, data_matrix)
@@ -801,7 +802,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         ],
     )
     def test_normal_primary_key(self, tmpdir, table_name, attr_names, data_matrix, expected):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
         table_name = TEST_TABLE_NAME
 
@@ -812,7 +813,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "AA"
 
     def test_normal_add_primary_key_column(self, tmpdir):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
 
         table_name = "table1"
@@ -841,7 +842,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         assert con.schema_extractor.fetch_table_schema(table_name).primary_key == "pkey"
 
     def test_except_add_primary_key_column(self, tmpdir):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
 
         with pytest.raises(ValueError):
@@ -854,7 +855,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
             )
 
     def test_normal_symbol_header(self, tmpdir):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
         table_name = "symbols"
         attr_names = ["a!bc#d$e%f&gh(i)j", "k@l[m]n{o}p;q:r_s.t/u"]
@@ -866,7 +867,7 @@ class Test_SimpleSQLite_create_table_from_data_matrix:
         assert con.fetch_attribute_names(table_name) == expected
 
     def test_normal_number_header(self, tmpdir):
-        p = tmpdir.join("tmp.db")
+        p = tmpdir.join(temp_db_name)
         con = SimpleSQLite(str(p), "w")
         table_name = "numbers"
         attr_names = [1, 123456789]
@@ -915,7 +916,7 @@ class Test_SimpleSQLite_create_table_from_tabledata:
         ],
     )
     def test_normal(self, tmpdir, value, expected):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_tabledata(value)
@@ -947,7 +948,7 @@ class Test_SimpleSQLite_select_as_tabledata:
         ],
     )
     def test_normal(self, tmpdir, value, type_hints, expected):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
 
         con = SimpleSQLite(str(p_db), "w")
         con.create_table_from_tabledata(value)
@@ -1004,7 +1005,7 @@ class Test_SimpleSQLite_create_table_from_csv:
         expected_attr_names,
         expected_data_matrix,
     ):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
         p_csv = tmpdir.join(csv_filename)
 
         with open(str(p_csv), "w") as f:
@@ -1054,7 +1055,7 @@ class Test_SimpleSQLite_create_table_from_csv:
         expected_attr_names,
         expected_data_matrix,
     ):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
 
         con = SimpleSQLite(str(p_db), "w")
         try:
@@ -1134,7 +1135,7 @@ class Test_SimpleSQLite_create_table_from_json:
         expected_attr_names,
         expected_data_matrix,
     ):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
         p_json = tmpdir.join(filename)
 
         with open(str(p_json), "w") as f:
@@ -1198,7 +1199,7 @@ class Test_SimpleSQLite_create_table_from_json:
         expected_attr_names,
         expected_data_matrix,
     ):
-        p_db = tmpdir.join("tmp.db")
+        p_db = tmpdir.join(temp_db_name)
 
         con = SimpleSQLite(str(p_db), "w")
         try:
