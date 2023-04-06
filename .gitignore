@@ -122,3 +122,16 @@ Untitled.ipynb
 
 .pytype/
 *.sqlite3
+.idea/misc.xml
+.idea/modules.xml
+.idea/SimpleSQLite.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.vscode/settings.json
+simplesqlite/_queryAction/__init__.py
+simplesqlite/_queryAction/create.py
+simplesqlite/_queryAction/fetch.py
+simplesqlite/_queryAction/select.py
+simplesqlite/_queryAction/validation.py
+.idea/.gitignore

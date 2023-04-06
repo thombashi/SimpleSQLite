@@ -151,11 +151,7 @@ def validate_sqlite_table_name(table_name: str) -> None:
         - |raises_sqlite_keywords|
     """
 
-    if not table_name:
-        raise ValidationError(["null name"], reason=ErrorReason.NULL_NAME)
-
-    if __RE_INVALID_CHARS.search(table_name):
-        raise ValidationError(["unprintable character found"], reason=ErrorReason.INVALID_CHARACTER)
+    null_and_invalid_check(table_name)
 
     table_name = table_name.upper()
 
@@ -182,11 +178,7 @@ def validate_sqlite_attribute_name(attribute_name: str) -> None:
         - |raises_sqlite_keywords|
     """
 
-    if not attribute_name:
-        raise ValidationError(["null name"], reason=ErrorReason.NULL_NAME)
-
-    if __RE_INVALID_CHARS.search(attribute_name):
-        raise ValidationError(["unprintable character found"], reason=ErrorReason.INVALID_CHARACTER)
+    null_and_invalid_check(attribute_name)
 
     attribute_name = attribute_name.upper()
 
@@ -203,3 +195,9 @@ def validate_sqlite_attribute_name(attribute_name: str) -> None:
             reason=ErrorReason.RESERVED_NAME,
             reusable_name=True,
         )
+def null_and_invalid_check(keyword:str):
+    if not keyword:
+        raise ValidationError(["null name"], reason=ErrorReason.NULL_NAME)
+
+    if __RE_INVALID_CHARS.search(keyword):
+        raise ValidationError(["unprintable character found"], reason=ErrorReason.INVALID_CHARACTER)

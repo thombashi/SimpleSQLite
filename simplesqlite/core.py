@@ -238,9 +238,8 @@ class SimpleSQLite:
                 null database connection
         """
 
-        if self.connection is None:
-            if not self.__delayed_connect():
-                raise NullDatabaseConnectionError("null database connection")
+        if self.connection is None and not self.__delayed_connect():
+            raise NullDatabaseConnectionError("null database connection")
 
     def connect(self, database_path: str, mode: str = "a") -> None:
         """
@@ -869,8 +868,7 @@ class SimpleSQLite:
         return dict([get_entry(item.split(" ")) for item in match.group().strip("()").split(", ")])
 
     def fetch_number_of_records(
-        self, table_name: str, where
-            : Optional[WhereQuery] = None
+        self, table_name: str, where: Optional[WhereQuery] = None
     ) -> Optional[int]:
         """
         Fetch the number of records in a table.
