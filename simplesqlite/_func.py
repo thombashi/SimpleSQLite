@@ -7,11 +7,9 @@ from typing import TYPE_CHECKING
 
 from pathvalidate.error import ErrorReason, ValidationError
 
-from ._common import extract_table_metadata
 from ._logger import logger
 from ._validator import validate_sqlite_attribute_name, validate_sqlite_table_name
 from .error import NameValidationError
-
 
 if TYPE_CHECKING:
     from simplesqlite import SimpleSQLite  # noqa
@@ -87,7 +85,7 @@ def append_table(src_db_con: "SimpleSQLite", dst_db_con: "SimpleSQLite", table_n
                 )
             )
 
-    primary_key, index_attrs, type_hints = extract_table_metadata(src_db_con, table_name)
+    primary_key, index_attrs, type_hints = src_db_con.extract_table_metadata(table_name)
 
     dst_db_con.create_table_from_tabledata(
         src_db_con.select_as_tabledata(table_name, type_hints=type_hints),
@@ -99,11 +97,11 @@ def append_table(src_db_con: "SimpleSQLite", dst_db_con: "SimpleSQLite", table_n
 
 
 def copy_table(
-    src_db_con: "SimpleSQLite",
-    dst_db_con: "SimpleSQLite",
-    src_table_name: str,
-    dst_table_name: str,
-    is_overwrite: bool = True,
+        src_db_con: "SimpleSQLite",
+        dst_db_con: "SimpleSQLite",
+        src_table_name: str,
+        dst_table_name: str,
+        is_overwrite: bool = True,
 ) -> bool:
     """
     Copy a table from source to destination.
@@ -143,7 +141,7 @@ def copy_table(
             )
             return False
 
-    primary_key, index_attrs, _ = extract_table_metadata(src_db_con, src_table_name)
+    primary_key, index_attrs, _ = src_db_con.extract_table_metadata(src_table_name)
 
     result = src_db_con.select(select="*", table_name=src_table_name)
     if result is None:

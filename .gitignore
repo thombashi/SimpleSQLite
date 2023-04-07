@@ -135,3 +135,5 @@ simplesqlite/_queryAction/fetch.py
 simplesqlite/_queryAction/select.py
 simplesqlite/_queryAction/validation.py
 .idea/.gitignore
+.scannerwork/.sonar_lock
+.scannerwork/report-task.txt
