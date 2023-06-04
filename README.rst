@@ -22,13 +22,13 @@ Summary
     :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml
     :alt: CI status of Linux/macOS/Windows
 
+.. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/github-code-scanning/codeql/badge.svg
+    :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/github-code-scanning/codeql
+    :alt: CodeQL
+
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
     :alt: Test coverage
-
-.. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
-    :target: https://github.com/thombashi/SimpleSQLite
-    :alt: GitHub stars
 
 Features
 --------
@@ -52,8 +52,8 @@ Examples
 ==========
 Create a table
 ----------------
-Create a table from data matrix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a table from a data matrix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :Sample Code:
     .. code-block:: python
 
@@ -135,9 +135,9 @@ Create a table from CSV
     .. code-block::
 
         ['attr_a', 'attr_b', 'attr_c']
-        (1, 4.0, u'a')
-        (2, 2.1, u'bb')
-        (3, 120.9, u'ccc')
+        (1, 4.0, 'a')
+        (2, 2.1, 'bb')
+        (3, 120.9, 'ccc')
 
 Create a table from pandas.DataFrame
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
