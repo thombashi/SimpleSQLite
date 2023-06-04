@@ -10,6 +10,7 @@ import pathvalidate as pv
 import typepy
 from dataproperty.typing import TypeHint
 from pathvalidate.error import ErrorReason, ValidationError
+from pathvalidate.handler import raise_error
 from tabledata import (
     DataError,
     InvalidHeaderNameError,
@@ -71,7 +72,9 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
     def _preprocess_table_name(self) -> str:
         try:
-            new_name = str(pv.sanitize_filename(self._tabledata.table_name, replacement_text="_"))
+            new_name = pv.sanitize_filename(
+                self._tabledata.table_name, replacement_text="_", null_value_handler=raise_error
+            )
         except TypeError:
             raise NameValidationError(
                 f"table name must be a string: actual='{self._tabledata.table_name}'"
