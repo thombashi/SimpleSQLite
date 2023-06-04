@@ -26,7 +26,6 @@ from .query import Attr, AttrList
 
 
 class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
-
     __RENAME_TEMPLATE = "rename_{:s}"
 
     @property

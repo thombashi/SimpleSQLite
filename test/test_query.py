@@ -63,7 +63,6 @@ class Test_Table:
 
 
 class Test_Attr:
-
     RESERVED_KEYWORDS = [
         "ADD",
         "ALL",

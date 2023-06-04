@@ -1240,7 +1240,6 @@ class Test_SimpleSQLite_close:
 
 
 class Test_SimpleSQLite_create_index:
-
     CHARS = [
         "/",
         ":",
