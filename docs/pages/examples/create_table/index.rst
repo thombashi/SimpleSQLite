@@ -3,7 +3,7 @@ Create table
 
 .. _example-create-table-from-data-matrix:
 
-Create a table from data matrix
+Create a table from a data matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 :py:meth:`~simplesqlite.SimpleSQLite.create_table_from_data_matrix`
 method create a table in a SQLite database from data matrix.

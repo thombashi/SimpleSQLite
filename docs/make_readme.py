@@ -24,7 +24,7 @@ def write_examples(maker):
     maker.write_chapter("Create a table")
 
     with maker.indent():
-        maker.write_chapter("Create a table from data matrix")
+        maker.write_chapter("Create a table from a data matrix")
         maker.write_file(examples_root.joinpath("create_table/create_table_from_data_matrix.txt"))
 
         maker.write_chapter("Create a table from CSV")
