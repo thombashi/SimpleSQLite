@@ -14,10 +14,10 @@
     :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml
     :alt: CI status of Linux/macOS/Windows
 
+.. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/github-code-scanning/codeql/badge.svg
+    :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/github-code-scanning/codeql
+    :alt: CodeQL
+
 .. image:: https://coveralls.io/repos/github/thombashi/SimpleSQLite/badge.svg?branch=master
     :target: https://coveralls.io/github/thombashi/SimpleSQLite?branch=master
     :alt: Test coverage
-
-.. image:: https://img.shields.io/github/stars/thombashi/SimpleSQLite.svg?style=social&label=Star
-    :target: https://github.com/thombashi/SimpleSQLite
-    :alt: GitHub stars
