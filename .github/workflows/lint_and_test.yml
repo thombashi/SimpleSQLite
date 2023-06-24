@@ -1,6 +1,16 @@
 name: Lint and Test
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - 'sample/**'
+      - '.gitignore'
+      - 'README.rst'
+  pull_request:
+    paths-ignore:
+      - 'sample/**'
+      - '.gitignore'
+      - 'README.rst'
 
 jobs:
   lint:
