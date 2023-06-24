@@ -7,8 +7,36 @@ from tabledata import TableData
 from typepy import String
 
 from simplesqlite import NameValidationError, SQLiteTableDataSanitizer, connect_memdb
+from simplesqlite._sanitizer import is_multibyte_str
 
 from ._common import print_test_result
+
+
+nan = float("nan")
+inf = float("inf")
+
+
+class Test_is_multibyte_str:
+    @pytest.mark.parametrize(
+        ["value", "expected"],
+        [
+            ["吾輩は猫である", True],
+            ["abcdef", False],
+            [
+                "RKBTqn1G9HIZ9onY9mCklj3+8ye7WBmu0xKMqp3ORT3pMgR5m73VXAR/5YrTZTGer"
+                "nMYLCPYdwIMewFY+6xOZmWwCrXjfw3sO2dYLubh9EIMrc/XEvAhMFd969G2yQkyFT"
+                "Nf9M8Ag94QCuBk51yQLSbxgmxJTqEw6bdC4gNTI44=",
+                False,
+            ],
+            [None, False],
+            ["", False],
+            [True, False],
+            [[], False],
+            [1, False],
+        ],
+    )
+    def test_normal(self, value, expected):
+        assert is_multibyte_str(value) == expected
 
 
 class Test_SQLiteTableDataSanitizer:

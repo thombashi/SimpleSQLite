@@ -110,7 +110,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if typepy.is_null_string(header):
             return self.__get_default_header(col_idx)
 
-        if dataproperty.is_multibyte_str(header):
+        if is_multibyte_str(header):
             return cast(str, header)
 
         return Attr.sanitize(cast(str, header))
@@ -191,3 +191,23 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
                 return header
 
             i += 1
+
+
+def is_multibyte_str(text) -> bool:
+    from mbstrdecoder import MultiByteStrDecoder
+    from typepy import StrictLevel, String
+
+    if not String(text, strict_level=StrictLevel.MIN).is_type():
+        return False
+
+    try:
+        unicode_text = MultiByteStrDecoder(text).unicode_str
+    except ValueError:
+        return False
+
+    try:
+        unicode_text.encode("ascii")
+    except UnicodeEncodeError:
+        return True
+
+    return False
