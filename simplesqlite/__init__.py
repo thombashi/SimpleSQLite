@@ -18,3 +18,22 @@ from .error import (
     SqlSyntaxError,
     TableNotFoundError,
 )
+
+__all__ = (
+    "AttributeNotFoundError",
+    "DatabaseError",
+    "NameValidationError",
+    "NullDatabaseConnectionError",
+    "OperationalError",
+    "SqlSyntaxError",
+    "TableNotFoundError",
+    "SimpleSQLite",
+    "SQLITE_SYSTEM_TABLES",
+    "SQLiteTableDataSanitizer",
+    "append_table",
+    "connect_memdb",
+    "copy_table",
+    "query",
+    "set_log_level",
+    "set_logger",
+)
