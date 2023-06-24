@@ -5,7 +5,6 @@
 from collections import Counter
 from typing import List, Optional, Sequence, cast
 
-import dataproperty
 import pathvalidate as pv
 import typepy
 from dataproperty.typing import TypeHint

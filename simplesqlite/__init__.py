@@ -19,6 +19,7 @@ from .error import (
     TableNotFoundError,
 )
 
+
 __all__ = (
     "AttributeNotFoundError",
     "DatabaseError",
