@@ -13,7 +13,7 @@ from typepy.type import AbstractType
 
 from .core import SimpleSQLite
 from .error import DatabaseError
-from .query import Attr, AttrList, Value, WhereQuery
+from .query import Attribute, AttributeList, Value, WhereQuery
 
 
 def dict_factory(cursor: Cursor, row: Sequence) -> Dict:
@@ -148,11 +148,11 @@ class Model:
         return cls.__table_name
 
     @classmethod
-    def get_attr_names(cls) -> List[str]:
+    def get_attribute_names(cls) -> List[str]:
         if cls.__attr_names:
             return cls.__attr_names
 
-        cls.__attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
+        cls.__attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attribute(attr_name)]
 
         return cls.__attr_names
 
@@ -163,11 +163,11 @@ class Model:
 
         attr_descs = []
 
-        for attr_name in cls.get_attr_names():
+        for attr_name in cls.get_attribute_names():
             col = cls._get_col(attr_name)
             attr_descs.append(
                 "{attr} {constraints}".format(
-                    attr=Attr(col.get_header(attr_name)), constraints=col.get_desc()
+                    attr=Attribute(col.get_header(attr_name)), constraints=col.get_desc()
                 )
             )
 
@@ -183,10 +183,10 @@ class Model:
             cls.__connection.set_row_factory(dict_factory)
 
             result = cls.__connection.select(
-                select=AttrList(
+                select=AttributeList(
                     [
                         cls._get_col(attr_name).get_header(attr_name)
-                        for attr_name in cls.get_attr_names()
+                        for attr_name in cls.get_attribute_names()
                     ]
                 ),
                 table_name=cls.get_table_name(),
@@ -213,7 +213,7 @@ class Model:
 
         record = {}
 
-        for attr_name in cls.get_attr_names():
+        for attr_name in cls.get_attribute_names():
             value = getattr(model_obj, attr_name)
 
             if value is None:
@@ -236,9 +236,9 @@ class Model:
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
     @classmethod
-    def fetch_num_records(cls, where: None = None) -> int:
+    def fetch_nummber_of_records(cls, where: None = None) -> int:
         assert cls.__connection  # to avoid type check error
-        return cast(int, cls.__connection.fetch_num_records(cls.get_table_name(), where=where))
+        return cast(int, cls.__connection.fetch_number_of_records(cls.get_table_name(), where=where))
 
     @classmethod
     def attr_to_header(cls, attr_name: str) -> str:
@@ -246,7 +246,7 @@ class Model:
 
     def as_dict(self) -> Dict:
         record = OrderedDict()
-        for attr_name in self.get_attr_names():
+        for attr_name in self.get_attribute_names():
             value = getattr(self, attr_name)
             if value is None:
                 continue
@@ -256,7 +256,7 @@ class Model:
         return record
 
     def __init__(self, *args, **kwargs) -> None:
-        for attr_name in self.get_attr_names():
+        for attr_name in self.get_attribute_names():
             value = kwargs.get(attr_name)
             if value is None:
                 value = kwargs.get(self.attr_to_header(attr_name))
@@ -296,7 +296,7 @@ class Model:
         column.typepy_class(value).validate()
 
     @classmethod
-    def __is_attr(cls, attr_name: str) -> bool:
+    def __is_attribute(cls, attr_name: str) -> bool:
         private_var_regexp = re.compile(f"^_{Model.__name__}__[a-zA-Z]+")
 
         return (
@@ -307,7 +307,7 @@ class Model:
 
     @classmethod
     def _get_col(cls, attr_name: str) -> Column:
-        if attr_name not in cls.get_attr_names():
+        if attr_name not in cls.get_attribute_names():
             raise ValueError(f"invalid attribute: {attr_name}")
 
         return cls.__dict__[attr_name]

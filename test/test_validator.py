@@ -4,7 +4,7 @@ import pytest
 from pathvalidate import unprintable_ascii_chars
 from pathvalidate.error import ErrorReason, ValidationError
 
-from simplesqlite._validator import validate_sqlite_attr_name, validate_sqlite_table_name
+from simplesqlite._validator import validate_sqlite_attribute_name, validate_sqlite_table_name
 
 
 __SQLITE_VALID_RESERVED_KEYWORDS = [
@@ -247,17 +247,17 @@ class Test_validate_sqlite_attr_name:
         ],
     )
     def test_normal_ascii(self, value):
-        validate_sqlite_attr_name(value)
+        validate_sqlite_attribute_name(value)
 
     @pytest.mark.parametrize(["value"], UTF8_WORDS)
     def test_normal_utf8(self, value):
-        validate_sqlite_attr_name(value)
+        validate_sqlite_attribute_name(value)
 
     @pytest.mark.parametrize(
         ["value"], [[first_char + "hoge123"] for first_char in string.digits + "%#!-*"]
     )
     def test_normal_non_alphabet_first_char(self, value):
-        validate_sqlite_attr_name(value)
+        validate_sqlite_attribute_name(value)
 
     @pytest.mark.parametrize(
         ["value"],
@@ -276,7 +276,7 @@ class Test_validate_sqlite_attr_name:
     )
     def test_exception_type(self, value, expected):
         with pytest.raises(expected):
-            validate_sqlite_attr_name(value)
+            validate_sqlite_attribute_name(value)
 
     @pytest.mark.parametrize(
         ["value"],
@@ -288,7 +288,7 @@ class Test_validate_sqlite_attr_name:
     )
     def test_exception_reserved_valid(self, value):
         try:
-            validate_sqlite_attr_name(value)
+            validate_sqlite_attribute_name(value)
         except ValidationError as e:
             assert e.reason == ErrorReason.RESERVED_NAME
             assert e.reusable_name
@@ -303,7 +303,7 @@ class Test_validate_sqlite_attr_name:
     )
     def test_exception_reserved_invalid_name(self, value):
         try:
-            validate_sqlite_attr_name(value)
+            validate_sqlite_attribute_name(value)
         except ValidationError as e:
             assert e.reason == ErrorReason.RESERVED_NAME
             assert e.reusable_name is False

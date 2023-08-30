@@ -5,7 +5,7 @@
 import typepy
 
 from ._func import validate_table_name
-from .query import And, Attr, Or, Table, Value, Where
+from .query import And, Attribute, Or, Table, Value, Where
 
 
 class SqlQuery:
@@ -58,7 +58,7 @@ class SqlQuery:
         """
 
         return "{:s} IN ({:s})".format(
-            Attr(key), ", ".join([Value(value).to_query() for value in value_list])
+            Attribute(key), ", ".join([Value(value).to_query() for value in value_list])
         )
 
     @classmethod
@@ -79,5 +79,5 @@ class SqlQuery:
         """
 
         return "{:s} NOT IN ({:s})".format(
-            Attr(key), ", ".join([Value(value).to_query() for value in value_list])
+            Attribute(key), ", ".join([Value(value).to_query() for value in value_list])
         )

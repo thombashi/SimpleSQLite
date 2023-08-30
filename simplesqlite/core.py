@@ -2,6 +2,13 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from collections import OrderedDict
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+
+from dataproperty.typing import TypeHint
+from sqliteschema import SchemaHeader
+from typepy import Integer, RealNumber, String
+
 import logging
 import os
 import re
@@ -18,7 +25,7 @@ from sqliteschema import SQLITE_SYSTEM_TABLES, SQLiteSchemaExtractor
 from tabledata import TableData
 from typepy import extract_typepy_from_dtype
 
-from ._common import extract_table_metadata
+# from ._common import extract_table_metadata
 from ._func import copy_table, validate_table_name
 from ._logger import logger
 from ._sanitizer import SQLiteTableDataSanitizer
@@ -32,8 +39,8 @@ from .error import (
     TableNotFoundError,
 )
 from .query import (
-    Attr,
-    AttrList,
+    Attribute,
+    AttributeList,
     Insert,
     QueryItem,
     Select,
@@ -44,8 +51,8 @@ from .query import (
 )
 from .sqlquery import SqlQuery
 
-
 MEMORY_DB_NAME = ":memory:"
+_sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
 
 
 class SimpleSQLite:
@@ -143,12 +150,12 @@ class SimpleSQLite:
         self.__dict_query_totalexectime: Dict[str, float] = defaultdict(float)
 
     def __init__(
-        self,
-        database_src: Union[Connection, "SimpleSQLite", str],
-        mode: str = "a",
-        delayed_connection: bool = True,
-        max_workers: Optional[int] = None,
-        profile: bool = False,
+            self,
+            database_src: Union[Connection, "SimpleSQLite", str],
+            mode: str = "a",
+            delayed_connection: bool = True,
+            max_workers: Optional[int] = None,
+            profile: bool = False,
     ) -> None:
         self.debug_query = False
 
@@ -238,9 +245,8 @@ class SimpleSQLite:
                 null database connection
         """
 
-        if self.connection is None:
-            if not self.__delayed_connect():
-                raise NullDatabaseConnectionError("null database connection")
+        if self.connection is None and not self.__delayed_connect():
+            raise NullDatabaseConnectionError("null database connection")
 
     def connect(self, database_path: str, mode: str = "a") -> None:
         """
@@ -297,7 +303,7 @@ class SimpleSQLite:
             self.drop_table(table)
 
     def execute_query(
-        self, query: Union[str, QueryItem], caller: Optional[Tuple] = None
+            self, query: Union[str, QueryItem], caller: Optional[Tuple] = None
     ) -> Optional[Cursor]:
         """
         Send arbitrary SQLite query to the database.
@@ -368,11 +374,11 @@ class SimpleSQLite:
         self.__connection.row_factory = row_factory  # type: ignore
 
     def select(
-        self,
-        select: Union[str, AttrList],
-        table_name: str,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
+            self,
+            select: Union[str, AttributeList],
+            table_name: str,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
     ) -> Optional[Cursor]:
         """
         Send a SELECT query to the database.
@@ -399,11 +405,11 @@ class SimpleSQLite:
         )
 
     def select_as_dataframe(
-        self,
-        table_name: str,
-        columns: Optional[Sequence[str]] = None,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
+            self,
+            table_name: str,
+            columns: Optional[Sequence[str]] = None,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
     ):
         """
         Get data in the database and return fetched data as a
@@ -431,10 +437,10 @@ class SimpleSQLite:
         import pandas
 
         if columns is None:
-            columns = self.fetch_attr_names(table_name)
+            columns = self.fetch_attribute_names(table_name)
 
         result = self.select(
-            select=AttrList(columns), table_name=table_name, where=where, extra=extra
+            select=AttributeList(columns), table_name=table_name, where=where, extra=extra
         )
 
         if result is None:
@@ -443,12 +449,12 @@ class SimpleSQLite:
         return pandas.DataFrame(result.fetchall(), columns=columns)
 
     def select_as_tabledata(
-        self,
-        table_name: str,
-        columns: Optional[Sequence[str]] = None,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
-        type_hints: Optional[Dict[str, TypeHint]] = None,
+            self,
+            table_name: str,
+            columns: Optional[Sequence[str]] = None,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
+            type_hints: Optional[Dict[str, TypeHint]] = None,
     ) -> TableData:
         """
         Get data in the database and return fetched data as a
@@ -472,10 +478,10 @@ class SimpleSQLite:
         """
 
         if columns is None:
-            columns = self.fetch_attr_names(table_name)
+            columns = self.fetch_attribute_names(table_name)
 
         result = self.select(
-            select=AttrList(columns), table_name=table_name, where=where, extra=extra
+            select=AttributeList(columns), table_name=table_name, where=where, extra=extra
         )
 
         if result is None:
@@ -493,11 +499,11 @@ class SimpleSQLite:
         )
 
     def select_as_dict(
-        self,
-        table_name: str,
-        columns: Optional[Sequence[str]] = None,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
+            self,
+            table_name: str,
+            columns: Optional[Sequence[str]] = None,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
     ) -> "Optional[List[OrderedDict[str, Any]]]":
         """
         Get data in the database and return fetched data as a
@@ -523,11 +529,11 @@ class SimpleSQLite:
         return self.select_as_tabledata(table_name, columns, where, extra).as_dict().get(table_name)
 
     def select_as_memdb(
-        self,
-        table_name: str,
-        columns: Optional[Sequence[str]] = None,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
+            self,
+            table_name: str,
+            columns: Optional[Sequence[str]] = None,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
     ):
         """
         Get data in the database and return fetched data as a
@@ -561,7 +567,7 @@ class SimpleSQLite:
         return memdb
 
     def insert(
-        self, table_name: str, record: Any, attr_names: Optional[Sequence[str]] = None
+            self, table_name: str, record: Any, attr_names: Optional[Sequence[str]] = None
     ) -> None:
         """
         Send an INSERT query to the database.
@@ -581,10 +587,10 @@ class SimpleSQLite:
         self.insert_many(table_name, records=[record], attr_names=attr_names)
 
     def insert_many(
-        self,
-        table_name: str,
-        records: Sequence[Union[Dict, Sequence]],
-        attr_names: Optional[Sequence[str]] = None,
+            self,
+            table_name: str,
+            records: Sequence[Union[Dict, Sequence]],
+            attr_names: Optional[Sequence[str]] = None,
     ) -> int:
         """
         Send an INSERT query with multiple records to the database.
@@ -625,9 +631,9 @@ class SimpleSQLite:
             return 0
 
         if attr_names is None:
-            attr_names = self.fetch_attr_names(table_name)
+            attr_names = self.fetch_attribute_names(table_name)
         records = RecordConvertor.to_records(attr_names, records)
-        query = Insert(table_name, AttrList(attr_names)).to_query()
+        query = Insert(table_name, AttributeList(attr_names)).to_query()
 
         if self.debug_query or self.global_debug_query:
             logging_count = 8
@@ -659,7 +665,7 @@ class SimpleSQLite:
         return len(records)
 
     def update(
-        self, table_name: str, set_query: Optional[str], where: Optional[WhereQuery] = None
+            self, table_name: str, set_query: Optional[str], where: Optional[WhereQuery] = None
     ) -> Optional[Cursor]:
         """Execute an UPDATE query.
 
@@ -709,11 +715,11 @@ class SimpleSQLite:
         return self.execute_query(query, logging.getLogger().findCaller())
 
     def fetch_value(
-        self,
-        select: str,
-        table_name: str,
-        where: Optional[WhereQuery] = None,
-        extra: Optional[str] = None,
+            self,
+            select: str,
+            table_name: str,
+            where: Optional[WhereQuery] = None,
+            extra: Optional[str] = None,
     ) -> Optional[int]:
         """
         Fetch a value from the table. Return |None| if no value matches
@@ -755,7 +761,7 @@ class SimpleSQLite:
         return [record[0] for record in result.fetchall()]
 
     def fetch_table_names(
-        self, include_system_table: bool = False, include_view: bool = True
+            self, include_system_table: bool = False, include_view: bool = True
     ) -> List[str]:
         """
         :return: List of table names in the database.
@@ -797,7 +803,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_view_names()
 
-    def fetch_attr_names(self, table_name: str) -> List[str]:
+    def fetch_attribute_names(self, table_name: str) -> List[str]:
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -836,7 +842,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
-    def fetch_attr_type(self, table_name: str) -> Dict[str, str]:
+    def fetch_attribute_type(self, table_name: str) -> Dict[str, str]:
         """
         :return:
             Dictionary of attribute names and attribute types in the table.
@@ -868,8 +874,8 @@ class SimpleSQLite:
 
         return dict([get_entry(item.split(" ")) for item in match.group().strip("()").split(", ")])
 
-    def fetch_num_records(
-        self, table_name: str, where: Optional[WhereQuery] = None
+    def fetch_number_of_records(
+            self, table_name: str, where: Optional[WhereQuery] = None
     ) -> Optional[int]:
         """
         Fetch the number of records in a table.
@@ -887,7 +893,7 @@ class SimpleSQLite:
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
     def fetch_data_types(self, table_name: str) -> Dict[str, TypeHint]:
-        _, _, type_hints = extract_table_metadata(self, table_name)
+        _, _, type_hints = self.extract_table_metadata(table_name)
 
         return type_hints
 
@@ -1084,7 +1090,7 @@ class SimpleSQLite:
         if typepy.is_null_string(attr_name):
             return False
 
-        return attr_name in self.fetch_attr_names(table_name)
+        return attr_name in self.fetch_attribute_names(table_name)
 
     def has_attrs(self, table_name: str, attr_names: Sequence[str]) -> bool:
         """
@@ -1311,7 +1317,7 @@ class SimpleSQLite:
         query = query_format.format(
             index=make_index_name(table_name, attr_name),
             table=Table(table_name),
-            attr=Attr(attr_name),
+            attr=Attribute(attr_name),
         )
 
         logger.debug(query)
@@ -1332,21 +1338,21 @@ class SimpleSQLite:
         if typepy.is_empty_sequence(attr_names):
             return
 
-        table_attr_set = set(self.fetch_attr_names(table_name))
-        index_attr_set = set(AttrList.sanitize(attr_names))  # type: ignore
+        table_attr_set = set(self.fetch_attribute_names(table_name))
+        index_attr_set = set(AttributeList.sanitize(attr_names))  # type: ignore
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
 
     def create_table_from_data_matrix(
-        self,
-        table_name: str,
-        attr_names: Sequence[str],
-        data_matrix: Any,
-        primary_key: Optional[str] = None,
-        add_primary_key_column: bool = False,
-        index_attrs: Optional[Sequence[str]] = None,
-        type_hints: Optional[Sequence[TypeHint]] = None,
+            self,
+            table_name: str,
+            attr_names: Sequence[str],
+            data_matrix: Any,
+            primary_key: Optional[str] = None,
+            add_primary_key_column: bool = False,
+            index_attrs: Optional[Sequence[str]] = None,
+            type_hints: Optional[Sequence[TypeHint]] = None,
     ) -> None:
         """
         Create a table if not exists. Moreover, insert data into the created
@@ -1387,11 +1393,11 @@ class SimpleSQLite:
         )
 
     def create_table_from_tabledata(
-        self,
-        table_data: TableData,
-        primary_key: Optional[str] = None,
-        add_primary_key_column: bool = False,
-        index_attrs: Optional[Sequence[str]] = None,
+            self,
+            table_data: TableData,
+            primary_key: Optional[str] = None,
+            add_primary_key_column: bool = False,
+            index_attrs: Optional[Sequence[str]] = None,
     ) -> None:
         """
         Create a table from :py:class:`tabledata.TableData`.
@@ -1409,16 +1415,16 @@ class SimpleSQLite:
         )
 
     def create_table_from_csv(
-        self,
-        csv_source: str,
-        table_name: str = "",
-        attr_names: Sequence[str] = (),
-        delimiter: str = ",",
-        quotechar: str = '"',
-        encoding: str = "utf-8",
-        primary_key: Optional[str] = None,
-        add_primary_key_column: bool = False,
-        index_attrs: Optional[Sequence[str]] = None,
+            self,
+            csv_source: str,
+            table_name: str = "",
+            attr_names: Sequence[str] = (),
+            delimiter: str = ",",
+            quotechar: str = '"',
+            encoding: str = "utf-8",
+            primary_key: Optional[str] = None,
+            add_primary_key_column: bool = False,
+            index_attrs: Optional[Sequence[str]] = None,
     ) -> None:
         """
         Create a table from a CSV file/text.
@@ -1485,12 +1491,12 @@ class SimpleSQLite:
             )
 
     def create_table_from_json(
-        self,
-        json_source: str,
-        table_name: str = "",
-        primary_key: Optional[str] = None,
-        add_primary_key_column: bool = False,
-        index_attrs: Optional[Sequence[str]] = None,
+            self,
+            json_source: str,
+            table_name: str = "",
+            primary_key: Optional[str] = None,
+            add_primary_key_column: bool = False,
+            index_attrs: Optional[Sequence[str]] = None,
     ) -> None:
         """
         Create a table from a JSON file/text.
@@ -1534,12 +1540,12 @@ class SimpleSQLite:
             )
 
     def create_table_from_dataframe(
-        self,
-        dataframe,
-        table_name: str = "",
-        primary_key: Optional[str] = None,
-        add_primary_key_column: bool = False,
-        index_attrs: Optional[Sequence[str]] = None,
+            self,
+            dataframe,
+            table_name: str = "",
+            primary_key: Optional[str] = None,
+            add_primary_key_column: bool = False,
+            index_attrs: Optional[Sequence[str]] = None,
     ) -> None:
         """
         Create a table from a pandas.DataFrame instance.
@@ -1687,7 +1693,7 @@ class SimpleSQLite:
 
         for col, value_type in sorted(self.__extract_col_type_from_tabledata(table_data).items()):
             attr_name = table_data.headers[col]
-            attr_description = f"{Attr(attr_name)} {value_type:s}"
+            attr_description = f"{Attribute(attr_name)} {value_type:s}"
             if attr_name == primary_key:
                 attr_description += " PRIMARY KEY"
 
@@ -1717,11 +1723,11 @@ class SimpleSQLite:
         }
 
     def __create_table_from_tabledata(
-        self,
-        table_data: TableData,
-        primary_key: Optional[str],
-        add_primary_key_column: bool,
-        index_attrs: Optional[Sequence[str]],
+            self,
+            table_data: TableData,
+            primary_key: Optional[str],
+            add_primary_key_column: bool,
+            index_attrs: Optional[Sequence[str]],
     ):
         self.validate_access_permission(["w", "a"])
 
@@ -1756,8 +1762,27 @@ class SimpleSQLite:
             self.insert_many(table_name, table_data.value_matrix)
 
         if typepy.is_not_empty_sequence(index_attrs):
-            self.create_index_list(table_name, AttrList.sanitize(index_attrs))  # type: ignore
+            self.create_index_list(table_name, AttributeList.sanitize(index_attrs))  # type: ignore
         self.commit()
+
+    def extract_table_metadata(
+            self, table_name: str
+    ) -> Tuple[Optional[str], List[str], Dict[str, TypeHint]]:
+        primary_key = None
+        index_attrs = []
+        type_hints = OrderedDict()
+
+        for attr in self.schema_extractor.fetch_table_schema(table_name).as_dict()[table_name]:
+            attr_name = attr[SchemaHeader.ATTR_NAME]
+
+            if attr[SchemaHeader.KEY] == "PRI":
+                primary_key = attr_name
+            elif attr[SchemaHeader.INDEX]:
+                index_attrs.append(attr_name)
+
+            type_hints[attr_name] = _sqlitetype_to_typepy.get(attr[SchemaHeader.DATA_TYPE])
+
+        return primary_key, index_attrs, type_hints
 
 
 def connect_memdb(max_workers: Optional[int] = None) -> SimpleSQLite:
