@@ -149,6 +149,7 @@ class SimpleSQLite:
         delayed_connection: bool = True,
         max_workers: Optional[int] = None,
         profile: bool = False,
+        **connect_kwargs: dict
     ) -> None:
         self.debug_query = False
 
@@ -156,6 +157,7 @@ class SimpleSQLite:
         self.__mode = mode
         self.__max_workers = max_workers
         self.__is_profile = profile
+        self.__connect_kwargs = connect_kwargs
 
         if database_src is None:
             raise TypeError("database_src must be not None")
@@ -278,7 +280,7 @@ class SimpleSQLite:
             self.__database_path = os.path.realpath(database_path)
 
         try:
-            self.__connection = sqlite3.connect(database_path)
+            self.__connection = sqlite3.connect(database_path, **self.__connect_kwargs)
         except sqlite3.OperationalError as e:
             raise OperationalError(e)
 
