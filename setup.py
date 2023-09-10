@@ -40,6 +40,9 @@ with open(os.path.join(REQUIREMENT_DIR, "requirements.txt")) as f:
 with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
     tests_requires = [line.strip() for line in f if line.strip()]
 
+with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
+    docs_requires = [line.strip() for line in f if line.strip()]
+
 setuptools.setup(
     name=MODULE_NAME,
     version=pkg_info["__version__"],
@@ -63,7 +66,11 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=install_requires,
     tests_require=tests_requires,
-    extras_require={"logging": ["loguru>=0.4.1,<1"], "test": tests_requires},
+    extras_require={
+        "docs": docs_requires,
+        "logging": ["loguru>=0.4.1,<1"],
+        "test": tests_requires,
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
