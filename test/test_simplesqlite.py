@@ -51,7 +51,13 @@ NamedTupleEx = namedtuple("NamedTupleEx", "attr_a attr_b attr_c")
 
 
 class Test_SimpleSQLite_init:
-    @pytest.mark.parametrize(["mode"], [["w"], ["a"]])
+    @pytest.mark.parametrize(
+        ["mode"],
+        [
+            ["w"],
+            ["a"],
+        ],
+    )
     def test_normal_path(self, tmpdir, mode):
         p = tmpdir.join("test.sqlite3")
         db_path = str(p)
@@ -60,7 +66,13 @@ class Test_SimpleSQLite_init:
         assert con.database_path == db_path
         assert con.connection is not None
 
-    @pytest.mark.parametrize(["mode"], [["w"], ["a"]])
+    @pytest.mark.parametrize(
+        ["mode"],
+        [
+            ["w"],
+            ["a"],
+        ],
+    )
     def test_normal_con(self, mode):
         con = SimpleSQLite(connect_memdb().connection, mode)
         assert con.database_path is None
@@ -96,7 +108,12 @@ class Test_SimpleSQLite_init:
             SimpleSQLite(value, mode).connection
 
     @pytest.mark.parametrize(
-        ["mode", "expected"], [["r", DatabaseError], ["w", DatabaseError], ["a", DatabaseError]]
+        ["mode", "expected"],
+        [
+            ["r", DatabaseError],
+            ["w", DatabaseError],
+            ["a", DatabaseError],
+        ],
     )
     def test_exception_invalid_file(self, tmpdir, mode, expected):
         p = tmpdir.join("testdata.txt")
@@ -393,7 +410,12 @@ class Test_SimpleSQLite_fetch_view_names:
 
 
 class Test_SimpleSQLite_fetch_attr_names:
-    @pytest.mark.parametrize(["value", "expected"], [[TEST_TABLE_NAME, ["attr_a", "attr_b"]]])
+    @pytest.mark.parametrize(
+        ["value", "expected"],
+        [
+            [TEST_TABLE_NAME, ["attr_a", "attr_b"]],
+        ],
+    )
     def test_normal(self, con, value, expected):
         assert con.fetch_attr_names(value) == expected
 

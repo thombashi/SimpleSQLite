@@ -149,7 +149,7 @@ class SimpleSQLite:
         delayed_connection: bool = True,
         max_workers: Optional[int] = None,
         profile: bool = False,
-        **connect_kwargs: Any
+        **connect_kwargs: Any,
     ) -> None:
         self.debug_query = False
 
