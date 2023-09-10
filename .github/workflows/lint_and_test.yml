@@ -1,4 +1,4 @@
-name: CI
+name: Lint and Test
 
 on:
   push:
@@ -13,10 +13,10 @@ on:
       - 'README.rst'
 
 jobs:
-  lint:
+  build-package:
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-lint
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-build
       cancel-in-progress: true
     timeout-minutes: 20
     container:
@@ -25,8 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Lint
-        run: make check
+      - run: make build
 
   build-docs:
     runs-on: ubuntu-latest
@@ -40,8 +39,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Lint
-        run: make docs
+      - run: make docs
+
+  lint:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-lint
+      cancel-in-progress: true
+    timeout-minutes: 20
+    container:
+      image: ghcr.io/thombashi/python-ci:3.11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: make check
 
   unit-test:
     runs-on: ${{ matrix.os }}
