@@ -66,6 +66,9 @@ class SimpleSQLite:
         In default, the same as the total number of CPUs.
     :param bool profile:
         Recording SQL query execution time profile, if the value is |True|.
+    :param Any **connect_kwargs:
+        Keyword arguments passing to
+        `sqlite3.connect <https://docs.python.org/3/library/sqlite3.html#sqlite3.connect>`__.
 
     .. seealso::
         :py:meth:`.connect`
@@ -247,6 +250,9 @@ class SimpleSQLite:
     def connect(self, database_path: str, mode: str = "a") -> None:
         """
         Connect to a SQLite database.
+
+        Parameters to open a connection to an SQLite database are passed via
+        ``connect_kwargs`` argument of the constructor.
 
         :param str database_path:
             Path to the SQLite database file to be connected.
