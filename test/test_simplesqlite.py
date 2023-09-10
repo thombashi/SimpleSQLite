@@ -70,6 +70,13 @@ class Test_SimpleSQLite_init:
         assert con.database_path
         assert con.connection
 
+    def test_normal_connect_kwargs(self, tmpdir):
+        p = tmpdir.join("test.sqlite3")
+        db_path = str(p)
+        con = SimpleSQLite(db_path, timeout=10)
+        assert con.database_path is None
+        assert con.connection
+
     @pytest.mark.parametrize(
         ["value", "mode", "expected"],
         [
