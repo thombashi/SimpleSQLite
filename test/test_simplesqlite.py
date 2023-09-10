@@ -86,7 +86,7 @@ class Test_SimpleSQLite_init:
         p = tmpdir.join("test.sqlite3")
         db_path = str(p)
         con = SimpleSQLite(db_path, timeout=10)
-        assert con.database_path is None
+        assert con.database_path == db_path
         assert con.connection
 
     @pytest.mark.parametrize(
