@@ -264,13 +264,13 @@ class Model:
             setattr(self, attr_name, value)
 
     def __eq__(self, other) -> bool:
-        if type(self) != type(other):
+        if not isinstance(other, type(self)):
             return False
 
         return self.__dict__ == other.__dict__
 
     def __ne__(self, other) -> bool:
-        if type(self) != type(other):
+        if not isinstance(other, type(self)):
             return True
 
         return self.__dict__ != other.__dict__
