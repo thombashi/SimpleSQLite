@@ -18,8 +18,8 @@ Summary
     :target: https://pypi.org/project/SimpleSQLite
     :alt: Supported Python implementations
 
-.. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml/badge.svg
-    :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/lint_and_test.yml
+.. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/thombashi/SimpleSQLite/actions/workflows/ci.yml
     :alt: CI status of Linux/macOS/Windows
 
 .. image:: https://github.com/thombashi/SimpleSQLite/actions/workflows/github-code-scanning/codeql/badge.svg
