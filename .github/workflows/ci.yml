@@ -3,14 +3,14 @@ name: CI
 on:
   push:
     paths-ignore:
-      - 'sample/**'
-      - '.gitignore'
-      - 'README.rst'
+      - "sample/**"
+      - ".gitignore"
+      - "README.rst"
   pull_request:
     paths-ignore:
-      - 'sample/**'
-      - '.gitignore'
-      - 'README.rst'
+      - "sample/**"
+      - ".gitignore"
+      - "README.rst"
 
 jobs:
   build-package:
@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11','pypy-3.8']
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "pypy-3.8"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 30
 
@@ -94,7 +94,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10']
+        python-version: ["3.10"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 20
     defaults:
