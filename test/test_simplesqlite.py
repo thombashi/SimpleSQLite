@@ -328,7 +328,7 @@ class Test_SimpleSQLite_insert_many:
         [
             [None, None, ValueError],
             [None, [], ValueError],
-            [TEST_TABLE_NAME, [None], ValueError],
+            [TEST_TABLE_NAME, [None], TypeError],
         ],
     )
     def test_exception(self, con, table_name, value, expected):

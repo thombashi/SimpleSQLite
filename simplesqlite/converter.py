@@ -66,7 +66,7 @@ class RecordConvertor:
                 for col, value in enumerate(values)
             ]
 
-        raise ValueError(f"cannot convert from {type(values)} to list")
+        raise TypeError(f"cannot convert from {type(values)} to list")
 
     @classmethod
     def to_records(cls, attr_names: Sequence[str], value_matrix: Sequence) -> List:

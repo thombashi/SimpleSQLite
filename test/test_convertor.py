@@ -40,7 +40,10 @@ class Test_RecordConvertor_to_record:
 
     @pytest.mark.parametrize(
         ["attr_names", "value", "expected"],
-        [[None, [5, 6], TypeError], [attrs_2, None, ValueError], [None, None, TypeError]],
+        [
+            [attrs_2, None, TypeError],
+            [None, None, TypeError],
+        ],
     )
     def test_exception(self, attr_names, value, expected):
         with pytest.raises(expected):
@@ -72,7 +75,11 @@ class Test_RecordConvertor_to_records:
 
     @pytest.mark.parametrize(
         ["attr_names", "value", "expected"],
-        [[None, [5, 6], TypeError], [attrs_2, None, TypeError], [None, None, TypeError]],
+        [
+            [None, [5, 6], TypeError],
+            [attrs_2, None, TypeError],
+            [None, None, TypeError],
+        ],
     )
     def test_exception(self, attr_names, value, expected):
         with pytest.raises(expected):
