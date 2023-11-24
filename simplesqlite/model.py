@@ -2,7 +2,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import abc
 import re
 from collections import OrderedDict
 from sqlite3 import Cursor
@@ -11,9 +10,10 @@ from typing import Any, Dict, Generator, List, Optional, Sequence, Type, cast
 import typepy
 from typepy.type import AbstractType
 
+from ._column import Column
 from .core import SimpleSQLite
 from .error import DatabaseError
-from .query import Attr, AttrList, Value, WhereQuery
+from .query import Attr, AttrList, WhereQuery
 
 
 def dict_factory(cursor: Cursor, row: Sequence) -> Dict:
@@ -23,61 +23,6 @@ def dict_factory(cursor: Cursor, row: Sequence) -> Dict:
         record[col[0]] = row[idx]
 
     return record
-
-
-class Column(metaclass=abc.ABCMeta):
-    @abc.abstractproperty
-    def sqlite_datatype(self):
-        return ""
-
-    @abc.abstractproperty
-    def typepy_class(self):
-        return None
-
-    @property
-    def not_null(self):
-        return self.__not_null
-
-    def __init__(
-        self,
-        attr_name=None,
-        not_null=False,
-        primary_key=False,
-        unique=False,
-        autoincrement=False,
-        default=None,
-    ):
-        self.__header_name = attr_name
-        self.__not_null = not_null
-        self.__primary_key = primary_key
-        self.__unique = unique
-        self.__autoincrement = autoincrement
-        self.__default_value = None if self.__not_null else default
-
-    def get_header(self, attr_name: str) -> str:
-        if self.__header_name:
-            return self.__header_name
-
-        return attr_name
-
-    def get_desc(self) -> str:
-        constraints = [self.sqlite_datatype]
-
-        if self.__primary_key:
-            constraints.append("PRIMARY KEY")
-        else:
-            if self.__not_null:
-                constraints.append("NOT NULL")
-            if self.__unique:
-                constraints.append("UNIQUE")
-
-        if self.__autoincrement and self.sqlite_datatype == "INTEGER":
-            constraints.append("AUTOINCREMENT")
-
-        if self.__default_value is not None:
-            constraints.append(f"DEFAULT {Value(self.__default_value)}")
-
-        return " ".join(constraints)
 
 
 class Integer(Column):
