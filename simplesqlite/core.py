@@ -1086,7 +1086,7 @@ class SimpleSQLite:
                 print(con.has_attr(table_name, "attr_a"))
                 print(con.has_attr(table_name, "not_existing"))
                 try:
-                    print(con.has_attr("not_existing", "attr_a"))
+                    print(con.has_attr("not_existing_table", "attr_a"))
                 except simplesqlite.DatabaseError as e:
                     print(e)
         :Output:
@@ -1129,7 +1129,7 @@ class SimpleSQLite:
                 print(con.has_attrs(table_name, ["attr_a", "attr_b"]))
                 print(con.has_attrs(table_name, ["attr_a", "attr_b", "not_existing"]))
                 try:
-                    print(con.has_attr("not_existing", ["attr_a"]))
+                    print(con.has_attrs("not_existing_table", ["attr_a"]))
                 except simplesqlite.DatabaseError as e:
                     print(e)
         :Output:
