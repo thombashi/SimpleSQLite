@@ -48,7 +48,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         is_type_inference: bool = True,
         max_workers: Optional[int] = None,
     ) -> None:
-        table_data.max_workers = max_workers  # type: ignore
+        table_data.max_workers = max_workers
 
         super().__init__(table_data)
 
