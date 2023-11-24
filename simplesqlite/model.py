@@ -8,6 +8,7 @@ from sqlite3 import Cursor
 from typing import Any, Dict, Generator, List, Optional, Sequence, Type, cast
 
 import typepy
+from sqliteschema import SQLiteTableSchema
 from typepy.type import AbstractType
 
 from ._column import Column
@@ -66,10 +67,10 @@ class Blob(Column):
 
 
 class Model:
-    __connection = None
+    __connection: SimpleSQLite
     __is_hidden = False
-    __table_name = None
-    __attr_names = None
+    __table_name: Optional[str] = None
+    __attr_names: List[str] = []
 
     @classmethod
     def attach(cls, database_src: SimpleSQLite, is_hidden: bool = False) -> None:
@@ -119,7 +120,7 @@ class Model:
         cls.__connection.create_table(cls.get_table_name(), attr_descs)
 
     @classmethod
-    def select(cls, where: Optional[WhereQuery] = None, extra: None = None) -> Generator:
+    def select(cls, where: Optional[WhereQuery] = None, extra: Optional[str] = None) -> Generator:
         cls.__validate_connection()
         assert cls.__connection  # to avoid type check error
 
@@ -177,7 +178,9 @@ class Model:
         cls.__connection.commit()
 
     @classmethod
-    def fetch_schema(cls):
+    def fetch_schema(cls) -> SQLiteTableSchema:
+        cls.__validate_connection()
+        assert cls.__connection  # to avoid type check error
         return cls.__connection.schema_extractor.fetch_table_schema(cls.get_table_name())
 
     @classmethod
@@ -200,7 +203,7 @@ class Model:
 
         return record
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         for attr_name in self.get_attr_names():
             value = kwargs.get(attr_name)
             if value is None:
@@ -208,13 +211,13 @@ class Model:
 
             setattr(self, attr_name, value)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, type(self)):
             return False
 
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other) -> bool:
+    def __ne__(self, other: Any) -> bool:
         if not isinstance(other, type(self)):
             return True
 

@@ -4,7 +4,7 @@
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Any, Callable, List, Sequence, Union
+from typing import Any, Callable, Dict, List, Sequence, Union
 
 from ._logger import logger
 
@@ -35,7 +35,7 @@ class RecordConvertor:
         return value
 
     @classmethod
-    def to_record(cls, attr_names: Sequence[str], values) -> List:
+    def to_record(cls, attr_names: Sequence[str], values: Union[Sequence, Dict]) -> List:
         """
         Convert values to a record to be inserted into a database.
 
@@ -48,20 +48,17 @@ class RecordConvertor:
 
         try:
             # from a namedtuple to a dict
-            values = values._asdict()
+            values = values._asdict()  # type: ignore
         except AttributeError:
             pass
 
         datetime_converter = default_datetime_converter
 
-        try:
-            # from a dictionary to a list
+        if isinstance(values, Dict):
             return [
                 cls.__to_sqlite_element(values.get(attr_name), attr_name, datetime_converter)
                 for attr_name in attr_names
             ]
-        except AttributeError:
-            pass
 
         if isinstance(values, (tuple, list)):
             return [

@@ -222,7 +222,7 @@ class Value(QueryItem):
         self._value = value
 
     def to_query(self) -> str:
-        value = self._value
+        value: Any = self._value
 
         if value is None:
             return "NULL"
@@ -266,7 +266,7 @@ class Where(QueryItem):
         return self._value
 
     @property
-    def value(self) -> str:
+    def value(self) -> Any:
         return self.__rhs
 
     def __init__(self, key: str, value: Any, cmp_operator: str = "=") -> None:

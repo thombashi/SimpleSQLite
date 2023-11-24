@@ -2,10 +2,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from typing import Optional, Sequence
+
 import typepy
 
 from ._func import validate_table_name
-from .query import And, Attr, Or, Table, Value, Where
+from .query import And, Attr, Or, Table, Value, Where, WhereQuery
 
 
 class SqlQuery:
@@ -14,7 +16,7 @@ class SqlQuery:
     """
 
     @classmethod
-    def make_update(cls, table, set_query, where=None):
+    def make_update(cls, table: str, set_query: str, where: Optional[WhereQuery] = None) -> str:
         """
         Make UPDATE query.
 
@@ -41,12 +43,12 @@ class SqlQuery:
         return " ".join(query_list)
 
     @classmethod
-    def make_where_in(cls, key, value_list):
+    def make_where_in(cls, key: str, value_list: Sequence[str]) -> str:
         """
         Make part of WHERE IN query.
 
         :param str key: Attribute name of the key.
-        :param str value_list:
+        :param Sequence[str] value_list:
             List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str
@@ -62,12 +64,12 @@ class SqlQuery:
         )
 
     @classmethod
-    def make_where_not_in(cls, key, value_list):
+    def make_where_not_in(cls, key: str, value_list: Sequence[str]) -> str:
         """
         Make part of WHERE NOT IN query.
 
         :param str key: Attribute name of the key.
-        :param str value_list:
+        :param Sequence[str] value_list:
             List of values that the right hand side associated with the key.
         :return: Part of WHERE query of SQLite.
         :rtype: str

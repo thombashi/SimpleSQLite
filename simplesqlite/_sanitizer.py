@@ -3,7 +3,7 @@
 """
 
 from collections import Counter
-from typing import List, Optional, Sequence, cast
+from typing import List, Optional, Sequence
 
 import pathvalidate as pv
 import typepy
@@ -109,10 +109,11 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if typepy.is_null_string(header):
             return self.__get_default_header(col_idx)
 
+        assert header
         if is_multibyte_str(header):
-            return cast(str, header)
+            return header
 
-        return Attr.sanitize(cast(str, header))
+        return Attr.sanitize(header)
 
     def _validate_headers(self) -> None:
         if typepy.is_empty_sequence(self._tabledata.headers):
@@ -145,7 +146,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             except IndexError:
                 raise DataError("header list and data body are empty")
 
-        attr_name_list = AttrList.sanitize(super()._normalize_headers())  # type: ignore
+        attr_name_list = AttrList.sanitize(super()._normalize_headers())
 
         try:
             for attr_name in attr_name_list:
@@ -192,7 +193,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
             i += 1
 
 
-def is_multibyte_str(text) -> bool:
+def is_multibyte_str(text: str) -> bool:
     from mbstrdecoder import MultiByteStrDecoder
     from typepy import StrictLevel, String
 

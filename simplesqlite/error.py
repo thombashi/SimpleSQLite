@@ -3,7 +3,7 @@
 """
 
 import sqlite3
-from typing import Optional
+from typing import Any, Optional
 
 from tabledata import NameValidationError  # noqa: W0611
 
@@ -52,7 +52,7 @@ class OperationalError(sqlite3.OperationalError):
     def message(self) -> Optional[str]:
         return self.__message
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.__message = kwargs.pop("message", None)
 
         super().__init__(*args)

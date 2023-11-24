@@ -8,7 +8,7 @@ import re
 import sqlite3
 from collections import OrderedDict, defaultdict
 from sqlite3 import Connection, Cursor
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union, cast
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Sequence, Tuple, Union, cast
 
 import pathvalidate
 import typepy
@@ -43,6 +43,10 @@ from .query import (
     make_index_name,
 )
 from .sqlquery import SqlQuery
+
+
+if TYPE_CHECKING:
+    import pandas
 
 
 MEMORY_DB_NAME = ":memory:"
@@ -185,10 +189,10 @@ class SimpleSQLite:
     def __del__(self) -> None:
         self.close()
 
-    def __enter__(self):
+    def __enter__(self):  # type: ignore
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(self, exc_type, exc_value, traceback) -> None:  # type: ignore
         self.close()
 
     def is_connected(self) -> bool:
@@ -412,7 +416,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-    ):
+    ) -> "pandas.DataFrame":
         """
         Get data in the database and return fetched data as a
         :py:class:`pandas.Dataframe` instance.
@@ -536,7 +540,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-    ):
+    ) -> "SimpleSQLite":
         """
         Get data in the database and return fetched data as a
         in-memory |SimpleSQLite| instance.
@@ -667,7 +671,7 @@ class SimpleSQLite:
         return len(records)
 
     def update(
-        self, table_name: str, set_query: Optional[str], where: Optional[WhereQuery] = None
+        self, table_name: str, set_query: str, where: Optional[WhereQuery] = None
     ) -> Optional[Cursor]:
         """Execute an UPDATE query.
 
@@ -755,7 +759,13 @@ class SimpleSQLite:
 
         return fetch[0]
 
-    def fetch_values(self, select, table_name, where=None, extra=None) -> List:
+    def fetch_values(
+        self,
+        select: Union[str, AttrList],
+        table_name: str,
+        where: Optional[WhereQuery] = None,
+        extra: Optional[str] = None,
+    ) -> List:
         result = self.select(select=select, table_name=table_name, where=where, extra=extra)
         if result is None:
             return []
@@ -868,7 +878,7 @@ class SimpleSQLite:
         match = re.search("[(].*[)]", query)
         assert match  # to avoid type check error
 
-        def get_entry(items):
+        def get_entry(items: List[str]) -> List[str]:
             key = " ".join(items[:-1])
             value = items[-1]
 
@@ -1341,7 +1351,7 @@ class SimpleSQLite:
             return
 
         table_attr_set = set(self.fetch_attr_names(table_name))
-        index_attr_set = set(AttrList.sanitize(attr_names))  # type: ignore
+        index_attr_set = set(AttrList.sanitize(attr_names))
 
         for attribute in list(table_attr_set.intersection(index_attr_set)):
             self.create_index(table_name, attribute)
@@ -1543,7 +1553,7 @@ class SimpleSQLite:
 
     def create_table_from_dataframe(
         self,
-        dataframe,
+        dataframe: "pandas.DataFrame",
         table_name: str = "",
         primary_key: Optional[str] = None,
         add_primary_key_column: bool = False,
@@ -1675,11 +1685,13 @@ class SimpleSQLite:
 
         return True
 
-    def __extract_attr_descs_from_tabledata(self, table_data, primary_key, add_primary_key_column):
+    def __extract_attr_descs_from_tabledata(
+        self, table_data: TableData, primary_key: Optional[str], add_primary_key_column: bool
+    ) -> List[str]:
         if primary_key and not add_primary_key_column and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
 
-        attr_description_list = []
+        attr_description_list: List[str] = []
 
         if add_primary_key_column:
             if not primary_key:
@@ -1730,7 +1742,7 @@ class SimpleSQLite:
         primary_key: Optional[str],
         add_primary_key_column: bool,
         index_attrs: Optional[Sequence[str]],
-    ):
+    ) -> None:
         self.validate_access_permission(["w", "a"])
 
         debug_msg_list = ["__create_table_from_tabledata:", f"    tbldata={table_data}"]
