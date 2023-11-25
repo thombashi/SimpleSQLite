@@ -99,6 +99,9 @@ class Model:
             return cls.__attr_names
 
         cls.__attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
+        for attr_name in cls.__attr_names:
+            col = cls._get_col(attr_name)
+            col._set_column_name_if_uninitialized(attr_name)
 
         return cls.__attr_names
 
@@ -113,7 +116,7 @@ class Model:
             col = cls._get_col(attr_name)
             attr_descs.append(
                 "{attr} {constraints}".format(
-                    attr=Attr(col.get_header(attr_name)), constraints=col.get_desc()
+                    attr=Attr(col.get_header()), constraints=col.get_desc()
                 )
             )
 
@@ -130,10 +133,7 @@ class Model:
 
             result = cls.__connection.select(
                 select=AttrList(
-                    [
-                        cls._get_col(attr_name).get_header(attr_name)
-                        for attr_name in cls.get_attr_names()
-                    ]
+                    [cls._get_col(attr_name).get_header() for attr_name in cls.get_attr_names()]
                 ),
                 table_name=cls.get_table_name(),
                 where=where,
@@ -190,7 +190,7 @@ class Model:
 
     @classmethod
     def attr_to_header(cls, attr_name: str) -> str:
-        return cls._get_col(attr_name).get_header(attr_name)
+        return cls._get_col(attr_name).get_header()
 
     def as_dict(self) -> Dict:
         record = OrderedDict()

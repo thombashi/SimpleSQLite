@@ -33,11 +33,12 @@ class Column(metaclass=abc.ABCMeta):
         self.__autoincrement = autoincrement
         self.__default_value = None if self.__not_null else default
 
-    def get_header(self, attr_name: str) -> str:
-        if self.__header_name:
-            return self.__header_name
+    def get_header(self) -> str:
+        assert self.__header_name
+        return self.__header_name
 
-        return attr_name
+    def _set_column_name_if_uninitialized(self, header_name: str) -> None:
+        self.__header_name = header_name
 
     def get_desc(self) -> str:
         from .query import Value
