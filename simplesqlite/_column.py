@@ -27,7 +27,7 @@ class Column(metaclass=abc.ABCMeta):
         autoincrement: bool = False,
         default: Any = None,
     ) -> None:
-        self.__header_name = attr_name
+        self.__column_name = attr_name
         self.__not_null = not_null
         self.__primary_key = primary_key
         self.__unique = unique
@@ -38,15 +38,15 @@ class Column(metaclass=abc.ABCMeta):
         warnings.warn(
             "get_header() is deprecated. Use get_column_name() instead.", DeprecationWarning
         )
-        assert self.__header_name
-        return self.__header_name
+        assert self.__column_name
+        return self.__column_name
 
     def get_column_name(self) -> str:
-        assert self.__header_name
-        return self.__header_name
+        assert self.__column_name
+        return self.__column_name
 
     def _set_column_name_if_uninitialized(self, header_name: str) -> None:
-        self.__header_name = header_name
+        self.__column_name = header_name
 
     def get_desc(self) -> str:
         from .query import Value
