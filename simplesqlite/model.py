@@ -13,7 +13,7 @@ from typepy.type import AbstractType
 
 from ._column import Column
 from .core import SimpleSQLite
-from .error import DatabaseError
+from .error import DatabaseError, TableNotFoundError
 from .query import Attr, AttrList, WhereQuery
 
 
@@ -172,7 +172,10 @@ class Model:
 
             record[cls._get_col(attr_name, validate_name=False).get_column_name()] = value
 
-        cls.__connection.insert(cls.get_table_name(), record)
+        try:
+            cls.__connection.insert(cls.get_table_name(), record)
+        except TableNotFoundError as e:
+            raise RuntimeError(f"{e}: execute 'create' method before insert")
 
     @classmethod
     def commit(cls) -> None:

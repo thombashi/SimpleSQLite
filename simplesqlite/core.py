@@ -1189,7 +1189,9 @@ class SimpleSQLite:
         if self.has_table(table_name, include_view=allow_view):
             return
 
-        raise TableNotFoundError(f"'{table_name}' not found in '{self.database_path}' database")
+        raise TableNotFoundError(
+            f"'{table_name}' table not found in '{self.database_path}' database"
+        )
 
     def verify_attr_existence(self, table_name: str, attr_name: str) -> None:
         """
