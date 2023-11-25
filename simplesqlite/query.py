@@ -223,7 +223,10 @@ class Value(QueryItem):
     """
 
     def __init__(self, value: Any) -> None:
-        self._value = value
+        if isinstance(value, Value):
+            self._value = value._value
+        else:
+            self._value = value
 
     def to_query(self) -> str:
         value: Any = self._value

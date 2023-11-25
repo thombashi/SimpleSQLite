@@ -223,9 +223,11 @@ class Test_Value:
         ["value", "expected"],
         [
             [0, "0"],
+            [Value(0), "0"],
             ["0", "0"],
             [1.1, "1.1"],
             ["test", "'test'"],
+            [Value("test"), "'test'"],
             ["te st", "'te st'"],
             ["I'm", '"I\'m"'],
             [None, "NULL"],
@@ -370,11 +372,11 @@ class Test_Insert:
     @pytest.mark.parametrize(
         ["table", "attrs", "values", "expected"],
         [
-            ["A", ["B C"], [Value(1)], "INSERT INTO A([B C]) VALUES (1)"],
+            ["A", ["B C"], [1], "INSERT INTO A([B C]) VALUES (1)"],
             [
                 "A",
                 ["BB", "CC"],
-                [Value(1), Value("a b c")],
+                [1, "a b c"],
                 "INSERT INTO A(BB,CC) VALUES (1,'a b c')",
             ],
         ],
