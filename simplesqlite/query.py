@@ -16,6 +16,9 @@ from ._validator import validate_sqlite_attr_name
 from .error import SqlSyntaxError
 
 
+WhereQuery = Union[str, "Where", "And", "Or"]
+
+
 class QueryItemInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def to_query(self) -> str:  # pragma: no cover
@@ -309,7 +312,7 @@ class Or(list, QueryItemInterface):
             Query items that concatenating with ``OR``.
     """
 
-    def __init__(self, where_list: List) -> None:
+    def __init__(self, where_list: Sequence[WhereQuery]) -> None:
         for where in where_list:
             if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
@@ -347,7 +350,7 @@ class And(list, QueryItemInterface):
             Query items that concatenating with ``AND``.
     """
 
-    def __init__(self, where_list: List) -> None:
+    def __init__(self, where_list: Sequence[WhereQuery]) -> None:
         for where in where_list:
             if not isinstance(where, (str, Where, And, Or)):
                 raise TypeError(
@@ -374,9 +377,6 @@ class And(list, QueryItemInterface):
                 item_list.append(f"{where}")
 
         return " AND ".join(item_list)
-
-
-WhereQuery = Union[str, Where, And, Or]
 
 
 class Select(QueryItem):
