@@ -6,7 +6,7 @@ import re
 import warnings
 from collections import OrderedDict
 from sqlite3 import Cursor
-from typing import Any, Dict, Generator, List, Optional, Sequence, Type, cast
+from typing import Any, Dict, Generator, List, Optional, Sequence, Set, Type, cast
 
 import typepy
 from sqliteschema import SQLiteTableSchema
@@ -167,17 +167,16 @@ class Model:
         record = {}
 
         for attr_name in cls.get_attr_names():
-            value = getattr(model_obj, attr_name)
-
-            if value is None:
+            if attr_name in model_obj.__no_value_columns:
                 continue
 
+            value = getattr(model_obj, attr_name)
             cls.__validate_value(attr_name, value)
 
             record[cls._get_col(attr_name, validate_name=False).get_column_name()] = value
 
         try:
-            cls.__connection.insert(cls.get_table_name(), record)
+            cls.__connection.insert(cls.get_table_name(), record, record.keys())
         except TableNotFoundError as e:
             raise RuntimeError(f"{e}: execute 'create' method before insert")
 
@@ -221,10 +220,14 @@ class Model:
         return record
 
     def __init__(self, **kwargs: Any) -> None:
+        self.__no_value_columns: Set[str] = set()
+
         for attr_name in self.get_attr_names():
             value = kwargs.get(attr_name)
             if value is None:
                 value = kwargs.get(self.attr_to_column(attr_name))
+                if value is None:
+                    self.__no_value_columns.add(attr_name)
 
             setattr(self, attr_name, value)
 

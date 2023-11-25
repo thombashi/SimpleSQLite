@@ -35,6 +35,7 @@ from .query import (
     Attr,
     AttrList,
     Insert,
+    InsertMany,
     QueryItem,
     Select,
     Table,
@@ -574,7 +575,7 @@ class SimpleSQLite:
 
     def insert(
         self, table_name: str, record: Any, attr_names: Optional[Sequence[str]] = None
-    ) -> None:
+    ) -> bool:
         """
         Send an INSERT query to the database.
 
@@ -590,7 +591,18 @@ class SimpleSQLite:
             :ref:`example-insert-records`
         """
 
-        self.insert_many(table_name, records=[record], attr_names=attr_names)
+        self.validate_access_permission(["w", "a"])
+        self.verify_table_existence(table_name, allow_view=False)
+
+        if attr_names is None:
+            attr_names = self.fetch_attr_names(table_name)
+        values = RecordConvertor.to_record(attr_names, record)
+        query = Insert(table_name, AttrList(attr_names), values).to_query()
+
+        if self.execute_query(query, logging.getLogger().findCaller()) is None:
+            return False
+
+        return True
 
     def insert_many(
         self,
@@ -639,7 +651,7 @@ class SimpleSQLite:
         if attr_names is None:
             attr_names = self.fetch_attr_names(table_name)
         records = RecordConvertor.to_records(attr_names, records)
-        query = Insert(table_name, AttrList(attr_names)).to_query()
+        query = InsertMany(table_name, AttrList(attr_names)).to_query()
 
         if self.debug_query or self.global_debug_query:
             logging_count = 8

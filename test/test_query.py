@@ -15,6 +15,7 @@ from simplesqlite.query import (
     AttrList,
     Distinct,
     Insert,
+    InsertMany,
     Or,
     Select,
     Table,
@@ -229,6 +230,7 @@ class Test_Value:
             ["I'm", '"I\'m"'],
             [None, "NULL"],
             [False, "'False'"],
+            ["CURRENT_TIMESTAMP", "CURRENT_TIMESTAMP"],
         ],
     )
     def test_normal(self, value, expected):
@@ -366,6 +368,23 @@ class Test_And:
 
 class Test_Insert:
     @pytest.mark.parametrize(
+        ["table", "attrs", "values", "expected"],
+        [
+            ["A", ["B C"], [Value(1)], "INSERT INTO A([B C]) VALUES (1)"],
+            [
+                "A",
+                ["BB", "CC"],
+                [Value(1), Value("a b c")],
+                "INSERT INTO A(BB,CC) VALUES (1,'a b c')",
+            ],
+        ],
+    )
+    def test_normal(self, table, attrs, values, expected):
+        assert_query_item(Insert(table, AttrList(attrs), values), expected)
+
+
+class Test_InsertMany:
+    @pytest.mark.parametrize(
         ["table", "attrs", "expected"],
         [
             ["A", ["B B"], "INSERT INTO A([B B]) VALUES (?)"],
@@ -373,7 +392,7 @@ class Test_Insert:
         ],
     )
     def test_normal(self, table, attrs, expected):
-        assert_query_item(Insert(table, AttrList(attrs)), expected)
+        assert_query_item(InsertMany(table, AttrList(attrs)), expected)
 
     @pytest.mark.parametrize(
         ["table", "attrs", "expected"],
@@ -393,7 +412,7 @@ class Test_Insert:
     )
     def test_exception(self, table, attrs, expected):
         with pytest.raises(expected):
-            Insert(table, attrs)
+            InsertMany(table, attrs)
 
 
 class Test_make_index_name:

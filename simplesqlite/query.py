@@ -240,6 +240,9 @@ class Value(QueryItem):
         except (TypeError, AttributeError):
             pass
 
+        if value == "CURRENT_TIMESTAMP":
+            return value
+
         return f"'{value}'"
 
 
@@ -438,7 +441,35 @@ class Select(QueryItem):
 
 class Insert(QueryItem):
     """
-    INSERT query.
+    INSERT query for multiple records.
+
+    :param str table: Table name of executing the query.
+    :param AttrList attrs: Attributes that inserting to..
+    :raises simplesqlite.NameValidationError:
+        |raises_validate_table_name|
+    """
+
+    def __init__(self, table: str, attrs: AttrList, values: Sequence[Any]) -> None:
+        validate_table_name(table)
+
+        if typepy.is_empty_sequence(attrs):
+            raise ValueError("empty attributes")
+
+        self.__table = table
+        self.__attrs = attrs
+        self.__values = [Value(value) for value in values]
+
+    def to_query(self) -> str:
+        return "INSERT INTO {:s}({:s}) VALUES ({:s})".format(
+            Table(self.__table),
+            ",".join([attr.to_query() for attr in self.__attrs]),
+            ",".join([value.to_query() for value in self.__values]),
+        )
+
+
+class InsertMany(QueryItem):
+    """
+    INSERT query for multiple records.
 
     :param str table: Table name of executing the query.
     :param AttrList attrs: Attributes that inserting to..
