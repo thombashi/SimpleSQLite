@@ -100,7 +100,7 @@ class Model:
 
         cls.__attr_names = [attr_name for attr_name in cls.__dict__ if cls.__is_attr(attr_name)]
         for attr_name in cls.__attr_names:
-            col = cls._get_col(attr_name)
+            col = cls._get_col(attr_name, validate_name=False)
             col._set_column_name_if_uninitialized(attr_name)
 
         return cls.__attr_names
@@ -113,7 +113,7 @@ class Model:
         attr_descs = []
 
         for attr_name in cls.get_attr_names():
-            col = cls._get_col(attr_name)
+            col = cls._get_col(attr_name, validate_name=False)
             attr_descs.append(
                 "{attr} {constraints}".format(
                     attr=Attr(col.get_column_name()), constraints=col.get_desc()
@@ -134,7 +134,7 @@ class Model:
             result = cls.__connection.select(
                 select=AttrList(
                     [
-                        cls._get_col(attr_name).get_column_name()
+                        cls._get_col(attr_name, validate_name=False).get_column_name()
                         for attr_name in cls.get_attr_names()
                     ]
                 ),
@@ -170,7 +170,7 @@ class Model:
 
             cls.__validate_value(attr_name, value)
 
-            record[cls._get_col(attr_name).get_column_name()] = value
+            record[cls._get_col(attr_name, validate_name=False).get_column_name()] = value
 
         cls.__connection.insert(cls.get_table_name(), record)
 
@@ -257,8 +257,8 @@ class Model:
         )
 
     @classmethod
-    def _get_col(cls, attr_name: str) -> Column:
-        if attr_name not in cls.get_attr_names():
+    def _get_col(cls, attr_name: str, validate_name: bool = True) -> Column:
+        if validate_name and attr_name not in cls.get_attr_names():
             raise ValueError(f"invalid attribute: {attr_name}")
 
         return cls.__dict__[attr_name]
