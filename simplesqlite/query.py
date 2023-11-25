@@ -10,6 +10,7 @@ import typepy
 from pathvalidate import ascii_symbols, unprintable_ascii_chars
 from pathvalidate.error import ErrorReason, ValidationError
 
+from ._column import Column
 from ._func import validate_table_name
 from ._validator import validate_sqlite_attr_name
 from .error import SqlSyntaxError
@@ -243,8 +244,8 @@ class Where(QueryItem):
     """
     ``WHERE`` query clause.
 
-    :param str key: Attribute name of the key.
-    :param value: Value of the right hand side associated with the key.
+    :param Union[str, Column] key: Attribute name of the key.
+    :param Any value: Value of the right hand side associated with the key.
     :param str cmp_operator: Comparison  operator of WHERE query.
     :raises simplesqlite.SqlSyntaxError:
         If **a)** ``cmp_operator`` is invalid operator. Valid operators are as follows:
@@ -269,8 +270,12 @@ class Where(QueryItem):
     def value(self) -> Any:
         return self.__rhs
 
-    def __init__(self, key: str, value: Any, cmp_operator: str = "=") -> None:
-        super().__init__(key)
+    def __init__(self, key: Union[str, Column], value: Any, cmp_operator: str = "=") -> None:
+        if isinstance(key, Column):
+            norm_key = key.get_column_name()
+        else:
+            norm_key = key
+        super().__init__(norm_key)
 
         self.__rhs = value
         self.__cmp_operator = cmp_operator
