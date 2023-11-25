@@ -1,4 +1,5 @@
 import abc
+import warnings
 from typing import Any, Optional
 
 from typepy.type import AbstractType
@@ -34,6 +35,13 @@ class Column(metaclass=abc.ABCMeta):
         self.__default_value = None if self.__not_null else default
 
     def get_header(self) -> str:
+        warnings.warn(
+            "get_header() is deprecated. Use get_column_name() instead.", DeprecationWarning
+        )
+        assert self.__header_name
+        return self.__header_name
+
+    def get_column_name(self) -> str:
         assert self.__header_name
         return self.__header_name
 

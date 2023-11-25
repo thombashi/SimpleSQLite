@@ -116,7 +116,7 @@ class Model:
             col = cls._get_col(attr_name)
             attr_descs.append(
                 "{attr} {constraints}".format(
-                    attr=Attr(col.get_header()), constraints=col.get_desc()
+                    attr=Attr(col.get_column_name()), constraints=col.get_desc()
                 )
             )
 
@@ -133,7 +133,10 @@ class Model:
 
             result = cls.__connection.select(
                 select=AttrList(
-                    [cls._get_col(attr_name).get_header() for attr_name in cls.get_attr_names()]
+                    [
+                        cls._get_col(attr_name).get_column_name()
+                        for attr_name in cls.get_attr_names()
+                    ]
                 ),
                 table_name=cls.get_table_name(),
                 where=where,
@@ -167,7 +170,7 @@ class Model:
 
             cls.__validate_value(attr_name, value)
 
-            record[cls._get_col(attr_name).get_header(attr_name)] = value
+            record[cls._get_col(attr_name).get_column_name()] = value
 
         cls.__connection.insert(cls.get_table_name(), record)
 
@@ -190,7 +193,7 @@ class Model:
 
     @classmethod
     def attr_to_header(cls, attr_name: str) -> str:
-        return cls._get_col(attr_name).get_header()
+        return cls._get_col(attr_name).get_column_name()
 
     def as_dict(self) -> Dict:
         record = OrderedDict()
