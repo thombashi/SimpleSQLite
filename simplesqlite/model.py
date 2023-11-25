@@ -3,6 +3,7 @@
 """
 
 import re
+import warnings
 from collections import OrderedDict
 from sqlite3 import Cursor
 from typing import Any, Dict, Generator, List, Optional, Sequence, Type, cast
@@ -199,6 +200,13 @@ class Model:
 
     @classmethod
     def attr_to_header(cls, attr_name: str) -> str:
+        warnings.warn(
+            "attr_to_header() is deprecated. Use attr_to_column() instead.", DeprecationWarning
+        )
+        return cls._get_col(attr_name).get_column_name()
+
+    @classmethod
+    def attr_to_column(cls, attr_name: str) -> str:
         return cls._get_col(attr_name).get_column_name()
 
     def as_dict(self) -> Dict:
@@ -208,7 +216,7 @@ class Model:
             if value is None:
                 continue
 
-            record[self.attr_to_header(attr_name)] = value
+            record[self.attr_to_column(attr_name)] = value
 
         return record
 
@@ -216,7 +224,7 @@ class Model:
         for attr_name in self.get_attr_names():
             value = kwargs.get(attr_name)
             if value is None:
-                value = kwargs.get(self.attr_to_header(attr_name))
+                value = kwargs.get(self.attr_to_column(attr_name))
 
             setattr(self, attr_name, value)
 
