@@ -193,6 +193,11 @@ class Model:
         cls.__connection.commit()
 
     @classmethod
+    def delete(cls, where: Optional[WhereQuery]) -> Optional[Cursor]:
+        cls.__validate_connection()
+        return cls.__connection.delete(cls.get_table_name(), where=where)
+
+    @classmethod
     def fetch_schema(cls) -> SQLiteTableSchema:
         cls.__validate_connection()
         assert cls.__connection  # to avoid type check error
