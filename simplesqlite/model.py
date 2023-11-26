@@ -176,7 +176,7 @@ class Model:
             record[cls._get_col(attr_name, validate_name=False).get_column_name()] = value
 
         try:
-            cls.__connection.insert(cls.get_table_name(), record, record.keys())
+            cls.__connection.insert(cls.get_table_name(), record, list(record.keys()))
         except TableNotFoundError as e:
             raise RuntimeError(f"{e}: execute 'create' method before insert")
 
