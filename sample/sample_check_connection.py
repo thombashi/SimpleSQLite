@@ -3,7 +3,7 @@
 import simplesqlite
 
 
-def main():
+def main() -> None:
     con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
     print("---- connected to a database ----")

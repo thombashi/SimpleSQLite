@@ -3,7 +3,7 @@
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     con = SimpleSQLite("sample.sqlite", "w", profile=True)
 
     con.create_table_from_data_matrix(

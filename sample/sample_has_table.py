@@ -3,7 +3,7 @@
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_data_matrix("hoge", ["attr_a", "attr_b"], [[1, "a"], [2, "b"]])
 

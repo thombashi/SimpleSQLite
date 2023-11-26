@@ -4,8 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import sys
-
 from simplesqlite import connect_memdb
 from simplesqlite.model import Integer, Model, Real, Text
 
@@ -16,7 +14,7 @@ class Sample(Model):
     value = Real(default=0)
 
 
-def main():
+def main() -> None:
     con = connect_memdb()
 
     Sample.attach(con)
@@ -30,8 +28,6 @@ def main():
     for record in Sample.select():
         print(f"    {record}")
 
-    return 0
-
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

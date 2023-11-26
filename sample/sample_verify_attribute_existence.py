@@ -3,7 +3,7 @@
 from simplesqlite import AttributeNotFoundError, DatabaseError, SimpleSQLite
 
 
-def main():
+def main() -> None:
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_data_matrix(table_name, ["attr_a", "attr_b"], [[1, "a"], [2, "b"]])

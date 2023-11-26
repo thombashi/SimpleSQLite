@@ -3,7 +3,7 @@
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     file_path = "sample_data_single.json"
 
     # create sample data file ---
@@ -25,6 +25,7 @@ def main():
         print("table: " + table_name)
         print(con.fetch_attr_names(table_name))
         result = con.select(select="*", table_name=table_name)
+        assert result
         for record in result.fetchall():
             print(record)
         print()

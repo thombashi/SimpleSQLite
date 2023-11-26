@@ -5,7 +5,7 @@ import pytablereader as ptr
 import simplesqlite
 
 
-def main():
+def main() -> None:
     credentials_file = "sample-xxxxxxxxxxxx.json"
 
     # create table ---
@@ -22,6 +22,7 @@ def main():
         print("table: " + table_name)
         print(con.fetch_attr_names(table_name))
         result = con.select(select="*", table_name=table_name)
+        assert result
         for record in result.fetchall():
             print(record)
         print()

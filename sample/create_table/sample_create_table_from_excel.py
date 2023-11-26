@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
+from typing import Any, List
+
 import pytablereader
 import xlsxwriter
 
 import simplesqlite
 
 
-def main():
+def main() -> None:
     file_path = "sample_data.xlsx"
 
     # create sample data file ---
     workbook = xlsxwriter.Workbook(file_path)
 
     worksheet = workbook.add_worksheet("samplesheet1")
-    table = [
+    table: List[List[Any]] = [
         ["", "", "", ""],
         ["", "a", "b", "c"],
         ["", 1, 1.1, "a"],
@@ -53,6 +55,7 @@ def main():
         print("table: " + table_name)
         print(con.fetch_attr_names(table_name))
         result = con.select(select="*", table_name=table_name)
+        assert result
         for record in result.fetchall():
             print(record)
         print()

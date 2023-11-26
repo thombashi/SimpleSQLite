@@ -3,7 +3,7 @@
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
 
@@ -19,6 +19,7 @@ def main():
     # display values in the table -----
     print("records:")
     result = con.select(select="*", table_name=table_name)
+    assert result
     for record in result.fetchall():
         print(record)
 

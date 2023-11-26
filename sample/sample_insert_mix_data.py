@@ -5,7 +5,7 @@ from collections import namedtuple
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_data_matrix(
@@ -21,8 +21,9 @@ def main():
         records=[(8, 8.8, "ggg", 8.88, "foobar"), SampleTuple(9, 9.9, "ggg", 9.99, "hogehoge")],
     )
 
-    # print
+    # run select clause
     result = con.select(select="*", table_name=table_name)
+    assert result
     for record in result.fetchall():
         print(record)
 

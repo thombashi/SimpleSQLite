@@ -3,7 +3,7 @@
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     table_name = "sample_table"
     con = SimpleSQLite("sample.sqlite", "w")
     con.create_table_from_data_matrix(
@@ -23,6 +23,7 @@ def main():
     )
 
     result = con.select(select="*", table_name=table_name)
+    assert result
     for record in result.fetchall():
         print(record)
 

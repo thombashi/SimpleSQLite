@@ -5,7 +5,7 @@ import pandas
 from simplesqlite import SimpleSQLite
 
 
-def main():
+def main() -> None:
     con = SimpleSQLite("pandas_df.sqlite")
 
     con.create_table_from_dataframe(

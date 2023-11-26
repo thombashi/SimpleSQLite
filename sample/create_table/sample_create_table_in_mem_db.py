@@ -3,7 +3,7 @@
 import simplesqlite
 
 
-def main():
+def main() -> None:
     table_name = "sample_table"
     con = simplesqlite.connect_memdb()
 
@@ -19,6 +19,7 @@ def main():
     # display values in the table -----
     print("records:")
     result = con.select(select="*", table_name=table_name)
+    assert result
     for record in result.fetchall():
         print(record)
 
