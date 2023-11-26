@@ -4,12 +4,14 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from typing import Type
+
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
 from simplesqlite.query import Set, Where
 
 
-def print_all_records(model: Model) -> None:
+def print_all_records(model: Type[Model]) -> None:
     for record in model.select():
         print(record)
 
@@ -45,11 +47,11 @@ def main() -> None:
 
     print(Hoge.fetch_schema().dumps())
     table_name = Hoge.get_table_name()
-    print(f"\nSELECT all the records: {table_name=}")
+    print(f"\nSELECT all the records: table={table_name}")
     for hoge in Hoge.select():
         print(hoge.hoge_id, hoge.name)
 
-    print(f"\nSELECT with WHERE: {table_name=}")
+    print(f"\nSELECT with WHERE: table={table_name}")
     for hoge in Hoge.select(where=Where(Hoge.hoge_id, 10)):
         print(hoge.hoge_id, hoge.name)
 
@@ -57,14 +59,14 @@ def main() -> None:
     print(Foo.fetch_schema().dumps())
     table_name = Foo.get_table_name()
 
-    print(f"\nSELECT all the records: {table_name=}")
+    print(f"\nSELECT all the records: table={table_name}")
     print_all_records(Foo)
 
-    print(f"\nDELETE: {table_name=}")
+    print(f"\nDELETE: table={table_name}")
     Foo.delete(where=Where(Foo.foo_id, 22))
     print_all_records(Foo)
 
-    print(f"\nUPDATE: {table_name=}")
+    print(f"\nUPDATE: table={table_name}")
     Foo.update(set_query=[Set(Foo.value, 1000)], where=Where(Foo.foo_id, 33))
     print_all_records(Foo)
 

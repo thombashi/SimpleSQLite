@@ -15,7 +15,9 @@ from typepy.type import AbstractType
 from ._column import Column
 from .core import SimpleSQLite
 from .error import DatabaseError, TableNotFoundError
-from .query import Attr, AttrList, WhereQuery
+from .query import Attr, AttrList
+from .query import Set as SetQuery
+from .query import WhereQuery
 
 
 __all__ = ("Integer", "Real", "Text", "Blob", "Model", "Column")
@@ -182,7 +184,7 @@ class Model:
 
     @classmethod
     def update(
-        cls, set_query: Union[str, Sequence[Set]], where: Optional[WhereQuery] = None
+        cls, set_query: Union[str, Sequence[SetQuery]], where: Optional[WhereQuery] = None
     ) -> None:
         cls.__connection.update(cls.get_table_name(), set_query=set_query, where=where)
 
