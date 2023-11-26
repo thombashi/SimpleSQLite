@@ -151,13 +151,19 @@ class Test_Attr:
         assert_query_item(Attr(value, operation), expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[word, f'"{word}"'] for word in RESERVED_KEYWORDS]
+        ["value", "expected"],
+        [[word, f'"{word}"'] for word in RESERVED_KEYWORDS],
     )
     def test_normal_reserved(self, value, expected):
         assert_query_item(Attr(value), expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[None, TypeError], [1, TypeError], [False, TypeError]]
+        ["value", "expected"],
+        [
+            [None, TypeError],
+            [1, TypeError],
+            [False, TypeError],
+        ],
     )
     def test_exception_1(self, value, expected):
         with pytest.raises(expected):
@@ -182,7 +188,10 @@ class Test_AttrList:
         assert_query_item(attrs, expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[["%aaa", "bbb", "ccc-ddd"], "[%aaa],bbb,[ccc-ddd]"]]
+        ["value", "expected"],
+        [
+            [["%aaa", "bbb", "ccc-ddd"], "[%aaa],bbb,[ccc-ddd]"],
+        ],
     )
     def test_normal_append_attr(self, value, expected):
         assert_query_item(AttrList(value), expected)
@@ -193,7 +202,12 @@ class Test_AttrList:
         assert_query_item(attrs, expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[None, TypeError], [nan, TypeError], [True, TypeError]]
+        ["value", "expected"],
+        [
+            [None, TypeError],
+            [nan, TypeError],
+            [True, TypeError],
+        ],
     )
     def test_exception(self, value, expected):
         with pytest.raises(expected):
@@ -213,7 +227,12 @@ class Test_Distinct:
         assert_query_item(Distinct(value), expected)
 
     @pytest.mark.parametrize(
-        ["value", "expected"], [[None, TypeError], [nan, TypeError], [True, TypeError]]
+        ["value", "expected"],
+        [
+            [None, TypeError],
+            [nan, TypeError],
+            [True, TypeError],
+        ],
     )
     def test_exception(self, value, expected):
         with pytest.raises(expected):
