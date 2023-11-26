@@ -2,12 +2,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Union
 
 import typepy
 
 from ._func import validate_table_name
-from .query import And, Attr, Or, Table, Value, Where, WhereQuery
+from .query import And, Attr, Or, Set, Table, Value, Where, WhereQuery
 
 
 class SqlQuery:
@@ -16,7 +16,9 @@ class SqlQuery:
     """
 
     @classmethod
-    def make_update(cls, table: str, set_query: str, where: Optional[WhereQuery] = None) -> str:
+    def make_update(
+        cls, table: str, set_query: Union[str, Sequence[Set]], where: Optional[WhereQuery] = None
+    ) -> str:
         """
         Make UPDATE query.
 
@@ -32,11 +34,16 @@ class SqlQuery:
             |raises_validate_table_name|
         """
 
+        if isinstance(set_query, str):
+            norm_set_query = set_query
+        else:
+            norm_set_query = ", ".join([query.to_query() for query in set_query])
+
         validate_table_name(table)
-        if typepy.is_null_string(set_query):
+        if typepy.is_null_string(norm_set_query):
             raise ValueError("SET query is null")
 
-        query_list = [f"UPDATE {Table(table):s}", f"SET {set_query:s}"]
+        query_list = [f"UPDATE {Table(table):s}", f"SET {norm_set_query:s}"]
         if where and isinstance(where, (str, Where, And, Or)):
             query_list.append(f"WHERE {where:s}")
 

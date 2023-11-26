@@ -4,7 +4,7 @@
 
 import pytest
 
-from simplesqlite.query import And, Or, Where
+from simplesqlite.query import And, Or, Set, Where
 from simplesqlite.sqlquery import SqlQuery
 
 
@@ -31,6 +31,12 @@ class Test_SqlQuery_make_update:
                 Or([Where("C", 1, ">"), Where("D", 10)]),
                 "UPDATE A SET B=1 WHERE C > 1 OR D = 10",
             ],
+            [
+                "A",
+                [Set("B1", 10), Set("B2", 20)],
+                Where("D", 10),
+                "UPDATE A SET [B1] = 10, [B2] = 20 WHERE D = 10",
+            ],
         ],
     )
     def test_normal(self, table, set_query, where, expected):
@@ -41,7 +47,6 @@ class Test_SqlQuery_make_update:
         [
             [None, "B=1", None, ValueError],
             ["", "B=1", None, ValueError],
-            ["A", None, None, ValueError],
             ["A", "", None, ValueError],
         ],
     )

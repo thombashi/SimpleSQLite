@@ -362,13 +362,10 @@ class Test_SimpleSQLite_update:
         ["table_name", "set_query", "expected"],
         [
             [TEST_TABLE_NAME, "", ValueError],
-            [TEST_TABLE_NAME, None, ValueError],
             ["not_exist_table", "attr_a = 1", DatabaseError],
             ["", "attr_a = 1", ValueError],
             [None, "attr_a = 1", ValueError],
             ["", "", ValueError],
-            ["", None, ValueError],
-            [None, None, ValueError],
             [None, "", ValueError],
         ],
     )

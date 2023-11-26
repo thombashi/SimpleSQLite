@@ -38,6 +38,7 @@ from .query import (
     InsertMany,
     QueryItem,
     Select,
+    Set,
     Table,
     Value,
     WhereQuery,
@@ -683,14 +684,17 @@ class SimpleSQLite:
         return len(records)
 
     def update(
-        self, table_name: str, set_query: str, where: Optional[WhereQuery] = None
+        self,
+        table_name: str,
+        set_query: Union[str, Sequence[Set]],
+        where: Optional[WhereQuery] = None,
     ) -> Optional[Cursor]:
         """Execute an UPDATE query.
 
         Args:
             table_name (|str|):
                 Table name of executing the query.
-            set_query (|str|):
+            set_query (Union[str, Sequence[Set]]):
                 ``SET`` clause for the update query.
             where (|arg_where_type| , optional):
                 ``WHERE`` clause for the update query.
