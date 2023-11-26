@@ -500,6 +500,24 @@ class InsertMany(QueryItem):
         )
 
 
+class Set(QueryItem):
+    """
+    SET query clause.
+    """
+
+    def __init__(self, key: Union[str, Column], value: Any) -> None:
+        if isinstance(key, Column):
+            norm_key = key.get_column_name()
+        else:
+            norm_key = key
+
+        self.__lhs = Attr(norm_key)
+        self.__rhs = Value(value)
+
+    def to_query(self) -> str:
+        return f"{self.__lhs} = {self.__rhs}"
+
+
 def make_index_name(table_name: str, attr_name: str) -> str:
     import hashlib
 

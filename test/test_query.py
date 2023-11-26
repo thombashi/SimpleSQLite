@@ -18,6 +18,7 @@ from simplesqlite.query import (
     InsertMany,
     Or,
     Select,
+    Set,
     Table,
     Value,
     Where,
@@ -415,6 +416,20 @@ class Test_InsertMany:
     def test_exception(self, table, attrs, expected):
         with pytest.raises(expected):
             InsertMany(table, attrs)
+
+
+class Test_Set:
+    @pytest.mark.parametrize(
+        ["key", "value", "expected"],
+        [
+            ["abc", 0, "abc = 0"],
+            ["abc", "te st", "abc = 'te st'"],
+            ["abc", None, "abc = NULL"],
+            ["abc", False, "abc = 'False'"],
+        ],
+    )
+    def test_normal(self, key, value, expected):
+        assert_query_item(Set(key, value), expected)
 
 
 class Test_make_index_name:
