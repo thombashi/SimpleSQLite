@@ -31,6 +31,7 @@ inf = float("inf")
 
 
 def assert_query_item(item, expected):
+    print(f"got: {item}\nexpected: {expected}")
     assert item.to_query() == expected
     assert str(item) == expected
     assert f"{item}" == expected
