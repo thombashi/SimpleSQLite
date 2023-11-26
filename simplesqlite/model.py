@@ -6,7 +6,7 @@ import re
 import warnings
 from collections import OrderedDict
 from sqlite3 import Cursor
-from typing import Any, Dict, Generator, List, Optional, Sequence, Set, Type, cast
+from typing import Any, Dict, Generator, List, Optional, Sequence, Set, Type, Union, cast
 
 import typepy
 from sqliteschema import SQLiteTableSchema
@@ -179,6 +179,12 @@ class Model:
             cls.__connection.insert(cls.get_table_name(), record, list(record.keys()))
         except TableNotFoundError as e:
             raise RuntimeError(f"{e}: execute 'create' method before insert")
+
+    @classmethod
+    def update(
+        cls, set_query: Union[str, Sequence[Set]], where: Optional[WhereQuery] = None
+    ) -> None:
+        cls.__connection.update(cls.get_table_name(), set_query=set_query, where=where)
 
     @classmethod
     def commit(cls) -> None:
