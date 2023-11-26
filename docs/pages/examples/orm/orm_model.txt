@@ -8,46 +8,43 @@
         class Sample(Model):
             foo_id = Integer(primary_key=True)
             name = Text(not_null=True, unique=True)
-            value = Real()
+            value = Real(default=0)
 
 
-        def main():
+        def main() -> None:
             con = connect_memdb()
 
             Sample.attach(con)
             Sample.create()
             Sample.insert(Sample(name="abc", value=0.1))
             Sample.insert(Sample(name="xyz", value=1.11))
-            Sample.insert(Sample(name="bar", value=2.22))
+            Sample.insert(Sample(name="bar"))
 
             print(Sample.fetch_schema().dumps())
             print("records:")
             for record in Sample.select():
-                print("    {}".format(record))
-
-            return 0
+                print(f"    {record}")
 
 
         if __name__ == "__main__":
-            sys.exit(main())
+            main()
 
 :Output:
     .. code-block:: none
 
         .. table:: sample
 
-            +---------+-------+-----------+--------+------+-----+
-            |Attribute| Type  |PRIMARY KEY|NOT NULL|UNIQUE|Index|
-            +=========+=======+===========+========+======+=====+
-            |foo_id   |INTEGER|X          |        |      |     |
-            +---------+-------+-----------+--------+------+-----+
-            |name     |TEXT   |           |X       |X     |     |
-            +---------+-------+-----------+--------+------+-----+
-            |value    |REAL   |           |        |      |     |
-            +---------+-------+-----------+--------+------+-----+
-
+            +--------+---------+----------+-----+---------+-------+-------+
+            | Field  |  Type   | Nullable | Key | Default | Index | Extra |
+            +========+=========+==========+=====+=========+=======+=======+
+            | foo_id | INTEGER | YES      | PRI | NULL    |   X   |       |
+            +--------+---------+----------+-----+---------+-------+-------+
+            | name   | TEXT    | NO       | UNI |         |   X   |       |
+            +--------+---------+----------+-----+---------+-------+-------+
+            | value  | REAL    | YES      |     | 0       |       |       |
+            +--------+---------+----------+-----+---------+-------+-------+
 
         records:
-            Sample: foo_id=1, name=abc, value=0.1
-            Sample: foo_id=2, name=xyz, value=1.11
-            Sample: foo_id=3, name=bar, value=2.22
+            Sample (foo_id=1, name=abc, value=0.1)
+            Sample (foo_id=2, name=xyz, value=1.11)
+            Sample (foo_id=3, name=bar, value=0.0)

@@ -51,7 +51,7 @@ def write_examples(maker):
     )
 
 
-def main():
+def main() -> None:
     maker = ReadmeMaker(
         PROJECT_NAME,
         OUTPUT_DIR,
