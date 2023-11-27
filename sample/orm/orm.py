@@ -45,7 +45,7 @@ def main() -> None:
     Foo.insert(Foo(name="dd", value=3.3, nullable="hoge"))
 
     record = Foo(name="bb")
-    record.value = 1.1
+    record.value = 1.1  # type: ignore
     Foo.insert(record)
 
     print(Hoge.fetch_schema().dumps())
