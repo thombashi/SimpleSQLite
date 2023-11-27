@@ -233,16 +233,23 @@ class Model:
         return record
 
     def __init__(self, **kwargs: Any) -> None:
-        self.__no_value_columns: Set[str] = set()
-
         for attr_name in self.get_attr_names():
             value = kwargs.get(attr_name)
             if value is None:
                 value = kwargs.get(self.attr_to_column(attr_name))
-                if value is None:
-                    self.__no_value_columns.add(attr_name)
 
             setattr(self, attr_name, value)
+
+        self.__update_no_value_columns()
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name == "_Model__no_value_columns":
+            # avoid infinite recursion
+            super().__setattr__(name, value)
+            return
+
+        super().__setattr__(name, value)
+        self.__update_no_value_columns()
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, type(self)):
@@ -261,6 +268,16 @@ class Model:
             name=type(self).__name__,
             attributes=", ".join([f"{key}={value}" for key, value in self.as_dict().items()]),
         )
+
+    def __update_no_value_columns(self) -> None:
+        self.__no_value_columns: Set[str] = set()
+
+        for attr_name in self.get_attr_names():
+            value = getattr(self, attr_name)
+            if value is None:
+                value = getattr(self, self.attr_to_column(attr_name))
+                if value is None:
+                    self.__no_value_columns.add(attr_name)
 
     @classmethod
     def __validate_connection(cls) -> None:
