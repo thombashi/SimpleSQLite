@@ -62,5 +62,5 @@ setup-ci:
 
 .PHONY: setup
 setup: setup-ci
-	@$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test] releasecmd
-	@$(PYTHON) -m pip check
+	$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test] releasecmd
+	-$(PYTHON) -m pip check
