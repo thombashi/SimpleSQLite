@@ -22,7 +22,7 @@ class Hoge(Model):
 
 
 class Foo(Model):
-    foo_id = Integer(not_null=True)
+    foo_id = Integer(primary_key=True)
     name = Text(not_null=True)
     value = Real(not_null=True)
     blob = Blob()
@@ -40,10 +40,13 @@ def main() -> None:
 
     Foo.attach(con)
     Foo.create()
-    Foo.insert(Foo(foo_id=11, name="aq", value=0.1))
-    Foo.insert(Foo(foo_id=22, name="bb", value=1.1))
-    Foo.insert(Foo(foo_id=33, name="cc", value=2.2, nullable=None))
-    Foo.insert(Foo(foo_id=44, name="dd", value=3.3, nullable="hoge"))
+    Foo.insert(Foo(name="aq", value=0.1))
+    Foo.insert(Foo(name="cc", value=2.2, nullable=None))
+    Foo.insert(Foo(name="dd", value=3.3, nullable="hoge"))
+
+    record = Foo(name="bb")
+    record.value = 1.1
+    Foo.insert(record)
 
     print(Hoge.fetch_schema().dumps())
     table_name = Hoge.get_table_name()
