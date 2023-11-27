@@ -34,6 +34,10 @@ clean:
 docs:
 	@$(PYTHON) -m tox -e docs
 
+.PHONY: run-sample
+run-sample:
+	find sample/ -name "*.py" | \grep -v sample_create_table_from_gs.py | xargs -I{} $(PYTHON) {}
+
 .PHONY: idocs
 idocs:
 	@$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade .
