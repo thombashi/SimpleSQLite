@@ -20,14 +20,14 @@ class Column(metaclass=abc.ABCMeta):
 
     def __init__(
         self,
-        name: Optional[str] = None,
+        attr_name: Optional[str] = None,
         not_null: bool = False,
         primary_key: bool = False,
         unique: bool = False,
         autoincrement: bool = False,
         default: Any = None,
     ) -> None:
-        self.__column_name = name
+        self.__column_name = attr_name
         self.__not_null = not_null
         self.__primary_key = primary_key
         self.__unique = unique
