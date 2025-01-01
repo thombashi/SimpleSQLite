@@ -26,7 +26,8 @@ build: clean
 
 .PHONY: check
 check:
-	@$(PYTHON) -m tox -e lint
+	$(PYTHON) -m tox -e lint
+	$(PYTHON) -m tox -e lint-examples
 
 .PHONY: clean
 clean:
