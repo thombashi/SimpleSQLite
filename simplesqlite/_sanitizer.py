@@ -30,7 +30,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     __RENAME_TEMPLATE = "rename_{:s}"
 
     @property
-    def _type_hints(self) -> Optional[list[TypeHint]]:
+    def _type_hints(self) -> list[TypeHint]:
         if self.__is_type_inference:
             return self._tabledata.dp_extractor.column_type_hints
 
@@ -40,7 +40,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         if self.__upper_headers:
             return [typepy.String for _ in self.__upper_headers]
 
-        return None
+        return []
 
     def __init__(
         self,
@@ -71,6 +71,9 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
         self.__is_type_inference = is_type_inference
 
     def _preprocess_table_name(self) -> str:
+        if self._tabledata.table_name is None:
+            raise NameValidationError("table name must not be None")
+
         try:
             new_name = pv.sanitize_filename(
                 self._tabledata.table_name, replacement_text="_", null_value_handler=raise_error

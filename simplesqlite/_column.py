@@ -13,7 +13,7 @@ class Column(metaclass=abc.ABCMeta):
 
     @property
     @abc.abstractmethod
-    def typepy_class(self) -> AbstractType:
+    def typepy_class(self) -> type[AbstractType]:
         raise NotImplementedError
 
     @property

@@ -12,7 +12,7 @@ def main() -> None:
     con = simplesqlite.SimpleSQLite("sample.sqlite", "w")
 
     loader = ptr.GoogleSheetsTableLoader(credentials_file)
-    loader.title = "samplebook"
+    loader.title = "samplebook"  # type: ignore
 
     for table_data in loader.load():
         con.create_table_from_tabledata(table_data)

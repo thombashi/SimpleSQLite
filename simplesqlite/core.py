@@ -341,8 +341,7 @@ class SimpleSQLite:
         if self.debug_query or self.global_debug_query:
             logger.debug(query)
 
-        if self.__is_profile:
-            exec_start_time = time.time()
+        exec_start_time = time.time()
 
         assert self.connection  # to avoid type check error
 
@@ -455,7 +454,7 @@ class SimpleSQLite:
         if result is None:
             return pandas.DataFrame()
 
-        return pandas.DataFrame(result.fetchall(), columns=columns)
+        return pandas.DataFrame(result.fetchall(), columns=pandas.Index(columns))
 
     def select_as_tabledata(
         self,
@@ -1515,7 +1514,7 @@ class SimpleSQLite:
         loader.headers = attr_names
         loader.delimiter = delimiter
         loader.quotechar = quotechar
-        loader.encoding = encoding
+        loader.encoding = encoding  # type: ignore
         for table_data in loader.load():
             self.__create_table_from_tabledata(
                 table_data, primary_key, add_primary_key_column, index_attrs
@@ -1725,7 +1724,7 @@ class SimpleSQLite:
             attr_description_list.append(f"{primary_key} INTEGER PRIMARY KEY AUTOINCREMENT")
 
         for col, value_type in sorted(self.__extract_col_type_from_tabledata(table_data).items()):
-            attr_name = table_data.headers[col]
+            attr_name = str(table_data.headers[col])
             attr_description = f"{Attr(attr_name)} {value_type:s}"
             if attr_name == primary_key:
                 attr_description += " PRIMARY KEY"

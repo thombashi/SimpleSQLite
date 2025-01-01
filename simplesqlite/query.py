@@ -157,7 +157,7 @@ class AttrList(list, QueryItemInterface):
     """
 
     @classmethod
-    def sanitize(self, names: Sequence[str]) -> list[str]:
+    def sanitize(cls, names: Sequence[str]) -> list[str]:
         return [Attr.sanitize(name) for name in names]
 
     def __init__(self, names: Sequence[str], operation: str = "") -> None:

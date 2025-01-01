@@ -133,9 +133,11 @@ class Model:
     def select(cls, where: Optional[WhereQuery] = None, extra: Optional[str] = None) -> Generator:
         cls.__validate_connection()
         assert cls.__connection  # to avoid type check error
+        assert cls.__connection.connection  # to avoid type check error
+
+        stash_row_factory = cls.__connection.connection.row_factory
 
         try:
-            stash_row_factory = cls.__connection.connection.row_factory  # type: ignore
             cls.__connection.set_row_factory(dict_factory)
 
             result = cls.__connection.select(
@@ -292,7 +294,7 @@ class Model:
         if value is None and not column.not_null:
             return
 
-        column.typepy_class(value).validate()
+        column.typepy_class(value, strict_level=typepy.StrictLevel.MIN).validate()
 
     @classmethod
     def __is_attr(cls, attr_name: str) -> bool:
