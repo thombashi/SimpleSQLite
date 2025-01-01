@@ -6,11 +6,13 @@ from typepy.type import AbstractType
 
 
 class Column(metaclass=abc.ABCMeta):
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def sqlite_datatype(self) -> str:
         return ""
 
-    @abc.abstractproperty
+    @property
+    @abc.abstractmethod
     def typepy_class(self) -> AbstractType:
         raise NotImplementedError
 
