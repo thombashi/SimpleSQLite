@@ -2,13 +2,15 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from typing import Final
+
 import sqliteschema
 import tabledata
 
 from ._null_logger import NullLogger  # type: ignore
 
 
-MODULE_NAME = "simplesqlite"
+MODULE_NAME: Final = "simplesqlite"
 
 
 try:

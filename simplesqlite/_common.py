@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Final, Optional
 
 from dataproperty.typing import TypeHint
 from sqliteschema import SchemaHeader
@@ -9,7 +9,11 @@ from typepy import Integer, RealNumber, String
 if TYPE_CHECKING:
     from simplesqlite import SimpleSQLite  # noqa
 
-_sqlitetype_to_typepy = {"INTEGER": Integer, "REAL": RealNumber, "TEXT": String}
+_sqlitetype_to_typepy: Final = {
+    "INTEGER": Integer,
+    "REAL": RealNumber,
+    "TEXT": String,
+}
 
 
 def extract_table_metadata(

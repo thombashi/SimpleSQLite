@@ -9,7 +9,7 @@ import sqlite3
 from collections import OrderedDict, defaultdict
 from collections.abc import Sequence
 from sqlite3 import Connection, Cursor
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Callable, Final, List, Optional, Union, cast
 
 import pathvalidate
 import typepy
@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     import pandas
 
 
-MEMORY_DB_NAME = ":memory:"
+MEMORY_DB_NAME: Final = ":memory:"
 
 
 class SimpleSQLite:

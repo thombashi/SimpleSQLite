@@ -5,7 +5,7 @@
 import abc
 import re
 from collections.abc import Sequence
-from typing import Any, Optional, Union
+from typing import Any, Final, Optional, Union
 
 import typepy
 from pathvalidate import ascii_symbols, unprintable_ascii_chars
@@ -55,8 +55,8 @@ class Table(QueryItem):
         "'string length'"
     """
 
-    __RE_NEED_BRACKET = re.compile("[{:s}]|^[0-9]+".format(re.escape("%()-+/.,")))
-    __RE_NEED_QUOTE = re.compile(r"[\s]+")
+    __RE_NEED_BRACKET: Final = re.compile("[{:s}]|^[0-9]+".format(re.escape("%()-+/.,")))
+    __RE_NEED_QUOTE: Final = re.compile(r"[\s]+")
 
     def to_query(self) -> str:
         name = self._value
@@ -88,11 +88,11 @@ class Attr(QueryItem):
         'SUM(key)'
     """
 
-    __RE_NEED_QUOTE = re.compile("[{:s}]".format(re.escape("[]_")))
-    __RE_NEED_BRACKET = re.compile(
+    __RE_NEED_QUOTE: Final = re.compile("[{:s}]".format(re.escape("[]_")))
+    __RE_NEED_BRACKET: Final = re.compile(
         r"[{:s}0-9\s]".format(re.escape("%(){}-+/.;:`'\"\0\\*?<>|!#&=~^@"))
     )
-    __RE_SANITIZE = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
+    __RE_SANITIZE: Final = re.compile("[{:s}\n\r]".format(re.escape("'\",")))
 
     @classmethod
     def sanitize(cls, name: str) -> str:

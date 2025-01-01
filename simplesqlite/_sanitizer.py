@@ -4,7 +4,7 @@
 
 from collections import Counter
 from collections.abc import Sequence
-from typing import Optional
+from typing import Final, Optional
 
 import pathvalidate as pv
 import typepy
@@ -27,7 +27,7 @@ from .query import Attr, AttrList
 
 
 class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
-    __RENAME_TEMPLATE = "rename_{:s}"
+    __RENAME_TEMPLATE: Final = "rename_{:s}"
 
     @property
     def _type_hints(self) -> list[TypeHint]:

@@ -3,14 +3,15 @@
 """
 
 import os.path
+from typing import Final
 
 import setuptools
 
 
-MODULE_NAME = "SimpleSQLite"
-REPOSITORY_URL = f"https://github.com/thombashi/{MODULE_NAME:s}"
-REQUIREMENT_DIR = "requirements"
-ENCODING = "utf8"
+MODULE_NAME: Final = "SimpleSQLite"
+REPOSITORY_URL: Final = f"https://github.com/thombashi/{MODULE_NAME:s}"
+REQUIREMENT_DIR: Final = "requirements"
+ENCODING: Final = "utf8"
 
 pkg_info: dict[str, str] = {}
 
