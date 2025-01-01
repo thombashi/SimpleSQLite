@@ -2,7 +2,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import simplesqlite.query
+import simplesqlite.query  # type: ignore
 
 from .__version__ import __author__, __copyright__, __email__, __license__, __version__
 from ._func import append_table, copy_table
@@ -21,6 +21,11 @@ from .error import (
 
 
 __all__ = (
+    "__author__",
+    "__copyright__",
+    "__email__",
+    "__license__",
+    "__version__",
     "AttributeNotFoundError",
     "DatabaseError",
     "NameValidationError",
