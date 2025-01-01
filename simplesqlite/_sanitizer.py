@@ -3,7 +3,8 @@
 """
 
 from collections import Counter
-from typing import List, Optional, Sequence
+from collections.abc import Sequence
+from typing import Optional
 
 import pathvalidate as pv
 import typepy
@@ -29,7 +30,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     __RENAME_TEMPLATE = "rename_{:s}"
 
     @property
-    def _type_hints(self) -> Optional[List[TypeHint]]:
+    def _type_hints(self) -> Optional[list[TypeHint]]:
         if self.__is_type_inference:
             return self._tabledata.dp_extractor.column_type_hints
 
@@ -136,7 +137,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
     def _normalize_header(self, header: str) -> str:
         return self.__RENAME_TEMPLATE.format(header)
 
-    def _normalize_headers(self) -> List[str]:
+    def _normalize_headers(self) -> list[str]:
         if typepy.is_empty_sequence(self._tabledata.headers):
             try:
                 return [
@@ -180,7 +181,7 @@ class SQLiteTableDataSanitizer(AbstractTableDataNormalizer):
 
         return attr_name_list
 
-    def _normalize_rows(self, normalize_headers: Sequence[str]) -> List:
+    def _normalize_rows(self, normalize_headers: Sequence[str]) -> list:
         return RecordConvertor.to_records(normalize_headers, self._tabledata.rows)
 
     def __get_default_header(self, col_idx: int) -> str:

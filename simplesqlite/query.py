@@ -4,7 +4,8 @@
 
 import abc
 import re
-from typing import Any, List, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import Any, Optional, Union
 
 import typepy
 from pathvalidate import ascii_symbols, unprintable_ascii_chars
@@ -156,7 +157,7 @@ class AttrList(list, QueryItemInterface):
     """
 
     @classmethod
-    def sanitize(self, names: Sequence[str]) -> List[str]:
+    def sanitize(self, names: Sequence[str]) -> list[str]:
         return [Attr.sanitize(name) for name in names]
 
     def __init__(self, names: Sequence[str], operation: str = "") -> None:

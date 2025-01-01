@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import Any, List
+from typing import Any
 
 import pytablereader
 import xlsxwriter
@@ -15,7 +15,7 @@ def main() -> None:
     workbook = xlsxwriter.Workbook(file_path)
 
     worksheet = workbook.add_worksheet("samplesheet1")
-    table: List[List[Any]] = [
+    table: list[list[Any]] = [
         ["", "", "", ""],
         ["", "a", "b", "c"],
         ["", 1, 1.1, "a"],

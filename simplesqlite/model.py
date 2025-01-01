@@ -5,8 +5,9 @@
 import re
 import warnings
 from collections import OrderedDict
+from collections.abc import Generator, Sequence
 from sqlite3 import Cursor
-from typing import Any, Dict, Generator, List, Optional, Sequence, Set, Type, Union, cast
+from typing import Any, Optional, Union, cast
 
 import typepy
 from sqliteschema import SQLiteTableSchema
@@ -23,7 +24,7 @@ from .query import WhereQuery
 __all__ = ("Integer", "Real", "Text", "Blob", "Model", "Column")
 
 
-def dict_factory(cursor: Cursor, row: Sequence) -> Dict:
+def dict_factory(cursor: Cursor, row: Sequence) -> dict:
     record = {}
 
     for idx, col in enumerate(cursor.description):
@@ -38,7 +39,7 @@ class Integer(Column):
         return "INTEGER"
 
     @property
-    def typepy_class(self) -> Type[AbstractType]:
+    def typepy_class(self) -> type[AbstractType]:
         return typepy.Integer
 
 
@@ -48,7 +49,7 @@ class Real(Column):
         return "REAL"
 
     @property
-    def typepy_class(self) -> Type[AbstractType]:
+    def typepy_class(self) -> type[AbstractType]:
         return typepy.RealNumber
 
 
@@ -58,7 +59,7 @@ class Text(Column):
         return "TEXT"
 
     @property
-    def typepy_class(self) -> Type[AbstractType]:
+    def typepy_class(self) -> type[AbstractType]:
         return typepy.String
 
 
@@ -68,7 +69,7 @@ class Blob(Column):
         return "BLOB"
 
     @property
-    def typepy_class(self) -> Type[AbstractType]:
+    def typepy_class(self) -> type[AbstractType]:
         return typepy.Bytes
 
 
@@ -76,7 +77,7 @@ class Model:
     __connection: SimpleSQLite
     __is_hidden = False
     __table_name: Optional[str] = None
-    __attr_names: List[str] = []
+    __attr_names: list[str] = []
 
     @classmethod
     def attach(cls, database_src: SimpleSQLite, is_hidden: bool = False) -> None:
@@ -100,7 +101,7 @@ class Model:
         return cls.__table_name
 
     @classmethod
-    def get_attr_names(cls) -> List[str]:
+    def get_attr_names(cls) -> list[str]:
         if cls.__attr_names:
             return cls.__attr_names
 
@@ -221,7 +222,7 @@ class Model:
     def attr_to_column(cls, attr_name: str) -> str:
         return cls._get_col(attr_name).get_column_name()
 
-    def as_dict(self) -> Dict:
+    def as_dict(self) -> dict:
         record = OrderedDict()
         for attr_name in self.get_attr_names():
             value = getattr(self, attr_name)
@@ -270,7 +271,7 @@ class Model:
         )
 
     def __update_no_value_columns(self) -> None:
-        self.__no_value_columns: Set[str] = set()
+        self.__no_value_columns: set[str] = set()
 
         for attr_name in self.get_attr_names():
             value = getattr(self, attr_name)

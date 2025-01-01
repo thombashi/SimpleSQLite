@@ -2,9 +2,10 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+from collections.abc import Sequence
 from datetime import datetime
 from decimal import Decimal
-from typing import Any, Callable, Dict, List, Sequence, Union
+from typing import Any, Callable, Union
 
 from ._logger import logger
 
@@ -35,7 +36,7 @@ class RecordConvertor:
         return value
 
     @classmethod
-    def to_record(cls, attr_names: Sequence[str], values: Union[Sequence, Dict]) -> List:
+    def to_record(cls, attr_names: Sequence[str], values: Union[Sequence, dict]) -> list:
         """
         Convert values to a record to be inserted into a database.
 
@@ -54,7 +55,7 @@ class RecordConvertor:
 
         datetime_converter = default_datetime_converter
 
-        if isinstance(values, Dict):
+        if isinstance(values, dict):
             return [
                 cls.__to_sqlite_element(values.get(attr_name), attr_name, datetime_converter)
                 for attr_name in attr_names
@@ -69,7 +70,7 @@ class RecordConvertor:
         raise TypeError(f"cannot convert from {type(values)} to list")
 
     @classmethod
-    def to_records(cls, attr_names: Sequence[str], value_matrix: Sequence) -> List:
+    def to_records(cls, attr_names: Sequence[str], value_matrix: Sequence) -> list:
         """
         Convert a value matrix to records to be inserted into a database.
 

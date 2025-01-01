@@ -4,14 +4,13 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from typing import Type
 
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
 from simplesqlite.query import Set, Where
 
 
-def print_all_records(model: Type[Model]) -> None:
+def print_all_records(model: type[Model]) -> None:
     for record in model.select():
         print(record)
 

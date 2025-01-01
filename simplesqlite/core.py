@@ -7,8 +7,9 @@ import os
 import re
 import sqlite3
 from collections import OrderedDict, defaultdict
+from collections.abc import Sequence
 from sqlite3 import Connection, Cursor
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Sequence, Tuple, Union, cast
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union, cast
 
 import pathvalidate
 import typepy
@@ -148,8 +149,8 @@ class SimpleSQLite:
         self.__mode: Optional[str] = None
         self.__delayed_connection_path: Optional[str] = None
 
-        self.__dict_query_count: Dict[str, int] = defaultdict(int)
-        self.__dict_query_totalexectime: Dict[str, float] = defaultdict(float)
+        self.__dict_query_count: dict[str, int] = defaultdict(int)
+        self.__dict_query_totalexectime: dict[str, float] = defaultdict(float)
 
     def __init__(
         self,
@@ -311,7 +312,7 @@ class SimpleSQLite:
             self.drop_table(table)
 
     def execute_query(
-        self, query: Union[str, QueryItem], caller: Optional[Tuple] = None
+        self, query: Union[str, QueryItem], caller: Optional[tuple] = None
     ) -> Optional[Cursor]:
         """
         Send arbitrary SQLite query to the database.
@@ -462,7 +463,7 @@ class SimpleSQLite:
         columns: Optional[Sequence[str]] = None,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-        type_hints: Optional[Dict[str, TypeHint]] = None,
+        type_hints: Optional[dict[str, TypeHint]] = None,
     ) -> TableData:
         """
         Get data in the database and return fetched data as a
@@ -608,7 +609,7 @@ class SimpleSQLite:
     def insert_many(
         self,
         table_name: str,
-        records: Sequence[Union[Dict, Sequence]],
+        records: Sequence[Union[dict, Sequence]],
         attr_names: Optional[Sequence[str]] = None,
     ) -> int:
         """
@@ -781,7 +782,7 @@ class SimpleSQLite:
         table_name: str,
         where: Optional[WhereQuery] = None,
         extra: Optional[str] = None,
-    ) -> List:
+    ) -> list:
         result = self.select(select=select, table_name=table_name, where=where, extra=extra)
         if result is None:
             return []
@@ -790,7 +791,7 @@ class SimpleSQLite:
 
     def fetch_table_names(
         self, include_system_table: bool = False, include_view: bool = True
-    ) -> List[str]:
+    ) -> list[str]:
         """
         :return: List of table names in the database.
         :rtype: list
@@ -821,7 +822,7 @@ class SimpleSQLite:
             include_system_table=include_system_table, include_view=include_view
         )
 
-    def fetch_view_names(self) -> List[str]:
+    def fetch_view_names(self) -> list[str]:
         """
         :return: List of table names in the database.
         :rtype: list
@@ -831,7 +832,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_view_names()
 
-    def fetch_attr_names(self, table_name: str) -> List[str]:
+    def fetch_attr_names(self, table_name: str) -> list[str]:
         """
         :return: List of attribute names in the table.
         :rtype: list
@@ -870,7 +871,7 @@ class SimpleSQLite:
 
         return self.schema_extractor.fetch_table_schema(table_name).get_attr_names()
 
-    def fetch_attr_type(self, table_name: str) -> Dict[str, str]:
+    def fetch_attr_type(self, table_name: str) -> dict[str, str]:
         """
         :return:
             Dictionary of attribute names and attribute types in the table.
@@ -894,7 +895,7 @@ class SimpleSQLite:
         match = re.search("[(].*[)]", query)
         assert match  # to avoid type check error
 
-        def get_entry(items: List[str]) -> List[str]:
+        def get_entry(items: list[str]) -> list[str]:
             key = " ".join(items[:-1])
             value = items[-1]
 
@@ -920,12 +921,12 @@ class SimpleSQLite:
 
         return self.fetch_value(select="COUNT(*)", table_name=table_name, where=where)
 
-    def fetch_data_types(self, table_name: str) -> Dict[str, TypeHint]:
+    def fetch_data_types(self, table_name: str) -> dict[str, TypeHint]:
         _, _, type_hints = extract_table_metadata(self, table_name)
 
         return type_hints
 
-    def get_profile(self, profile_count: int = 50) -> List[Any]:
+    def get_profile(self, profile_count: int = 50) -> list[Any]:
         """
         Get profile of query execution time.
 
@@ -977,7 +978,7 @@ class SimpleSQLite:
 
         return [SqliteProfile(*profile) for profile in result.fetchall()]
 
-    def fetch_sqlite_master(self) -> List[Dict]:
+    def fetch_sqlite_master(self) -> list[dict]:
         """
         Get sqlite_master table information as a list of dictionaries.
 
@@ -1705,11 +1706,11 @@ class SimpleSQLite:
 
     def __extract_attr_descs_from_tabledata(
         self, table_data: TableData, primary_key: Optional[str], add_primary_key_column: bool
-    ) -> List[str]:
+    ) -> list[str]:
         if primary_key and not add_primary_key_column and primary_key not in table_data.headers:
             raise ValueError("primary key must be one of the values of attributes")
 
-        attr_description_list: List[str] = []
+        attr_description_list: list[str] = []
 
         if add_primary_key_column:
             if not primary_key:
@@ -1734,7 +1735,7 @@ class SimpleSQLite:
         return attr_description_list
 
     @staticmethod
-    def __extract_col_type_from_tabledata(table_data: TableData) -> Dict:
+    def __extract_col_type_from_tabledata(table_data: TableData) -> dict:
         """
         Extract data type name for each column as SQLite names.
 
