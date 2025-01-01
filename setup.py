@@ -65,7 +65,6 @@ setuptools.setup(
     },
     python_requires=">=3.7",
     install_requires=install_requires,
-    tests_require=tests_requires,
     extras_require={
         "docs": docs_requires,
         "logging": ["loguru>=0.4.1,<1"],
