@@ -81,9 +81,7 @@ def append_table(src_con: "SimpleSQLite", dst_con: "SimpleSQLite", table_name: s
                     source and destination attribute is different from each other
                     src: {}
                     dst: {}
-                    """.format(
-                        src_attrs, dst_attrs
-                    )
+                    """.format(src_attrs, dst_attrs)
                 )
             )
 

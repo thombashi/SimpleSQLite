@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-
 from simplesqlite import connect_memdb
 from simplesqlite.model import Blob, Integer, Model, Real, Text
 from simplesqlite.query import Set, Where
