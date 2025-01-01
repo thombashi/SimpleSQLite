@@ -2,7 +2,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-import simplesqlite.query  # type: ignore
+import simplesqlite.query  # noqa: F401
 
 from .__version__ import __author__, __copyright__, __email__, __license__, __version__
 from ._func import append_table, copy_table

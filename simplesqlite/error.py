@@ -5,7 +5,7 @@
 import sqlite3
 from typing import Any, Optional
 
-from tabledata import NameValidationError  # noqa: W0611
+from tabledata import NameValidationError  # noqa: F401
 
 
 class DatabaseError(sqlite3.DatabaseError):
