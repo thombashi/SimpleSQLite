@@ -335,18 +335,21 @@ class SimpleSQLite:
         import time
 
         self.check_connection()
-        if typepy.is_null_string(query):
+
+        queryStr = str(query)
+
+        if typepy.is_null_string(queryStr):
             return None
 
         if self.debug_query or self.global_debug_query:
-            logger.debug(query)
+            logger.debug(queryStr)
 
         exec_start_time = time.time()
 
         assert self.connection  # to avoid type check error
 
         try:
-            result = self.connection.execute(str(query))
+            result = self.connection.execute(queryStr)
         except (sqlite3.OperationalError, sqlite3.IntegrityError) as e:
             if caller is None:
                 caller = logging.getLogger().findCaller()
@@ -358,7 +361,7 @@ class SimpleSQLite:
                         "failed to execute query at {:s}({:d}) {:s}".format(
                             file_path, line_no, func_name
                         ),
-                        f"  - query: {MultiByteStrDecoder(query).unicode_str}",
+                        f"  - query: {MultiByteStrDecoder(queryStr).unicode_str}",
                         f"  - msg:   {e}",
                         f"  - db:    {self.database_path}",
                     ]
@@ -366,10 +369,10 @@ class SimpleSQLite:
             )
 
         if self.__is_profile:
-            self.__dict_query_count[str(query)] += 1
+            self.__dict_query_count[queryStr] += 1
 
             elapse_time = time.time() - exec_start_time
-            self.__dict_query_totalexectime[str(query)] += elapse_time
+            self.__dict_query_totalexectime[queryStr] += elapse_time
 
         return result
 

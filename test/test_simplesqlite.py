@@ -151,6 +151,18 @@ class Test_SimpleSQLite_select:
         result = con.select(select="*", table_name="view1")
         assert result is not None
 
+    def test_execute_query(self, con):
+        from simplesqlite.query import Select
+
+        result = con.execute_query(Select("*", TEST_TABLE_NAME))
+        assert result is not None
+
+    def test_exception_query(self, con):
+        from simplesqlite.query import Select
+
+        with pytest.raises(OperationalError):
+            con.execute_query(Select("*", "invalid_table"))
+
     @pytest.mark.parametrize(
         ["attr", "table_name", "expected"],
         [
