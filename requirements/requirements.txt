@@ -1,4 +1,4 @@
-DataProperty>=1.0.1,<2
+DataProperty>=1.0.2,<2
 mbstrdecoder>=1.0.0,<2
 pathvalidate>=2.5.2,<4
 sqliteschema>=1.4.0,<3
