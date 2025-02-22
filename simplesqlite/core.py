@@ -198,6 +198,15 @@ class SimpleSQLite:
     def __exit__(self, exc_type, exc_value, traceback) -> None:  # type: ignore
         self.close()
 
+    def __fspath__(self) -> str:
+        if not self.database_path:
+            raise ValueError("database is not connected")
+
+        if self.database_path == MEMORY_DB_NAME:
+            raise ValueError("database is in-memory")
+
+        return self.database_path
+
     def is_connected(self) -> bool:
         """
         :return: |True| if the connection to a database is valid.

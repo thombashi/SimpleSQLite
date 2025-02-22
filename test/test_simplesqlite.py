@@ -125,6 +125,13 @@ class Test_SimpleSQLite_init:
             SimpleSQLite(str(p), mode).connection
 
 
+class Test_SimpleSQLite_fpath:
+    def test_normal_path(self, tmpdir):
+        p = tmpdir.join("test.sqlite3")
+        db_path = str(p)
+        assert os.fspath(SimpleSQLite(db_path, "w"))
+
+
 class Test_SimpleSQLite_is_connected:
     def test_normal(self, con):
         assert con.is_connected()
