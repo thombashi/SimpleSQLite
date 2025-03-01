@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/thombashi/SimpleSQLite/discussions
+    about: Please ask and answer questions here.
+  - name: Documentation
+    url: https://simplesqlite.rtfd.io/
+    about: Please check the documentation before creating an issue.
