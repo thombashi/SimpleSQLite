@@ -435,11 +435,9 @@ class Test_SimpleSQLite_fetch_attr_names:
     def test_normal(self, con, value, expected):
         assert con.fetch_attr_names(value) == expected
 
-    def test_normal_w_mysql_style_schema(self):
-        database_path = "mysql_style_schema.sqlite3"
-
-        if os.path.exists(database_path):
-            os.remove(database_path)
+    def test_normal_w_mysql_style_schema(self, tmpdir):
+        p = tmpdir.join("mysql_style_schema.sqlite3")
+        database_path = str(p)
 
         con = sqlite3.connect(database_path)
         cur = con.cursor()
