@@ -56,3 +56,9 @@ class OperationalError(sqlite3.OperationalError):
         self.__message = kwargs.pop("message", None)
 
         super().__init__(*args)
+
+    def __str__(self) -> str:
+        if not self.message:
+            return ""
+
+        return str(self.message)
