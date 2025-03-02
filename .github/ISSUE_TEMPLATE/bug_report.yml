@@ -63,11 +63,9 @@ body:
       label: Your Environment
       description: "Include as many relevant details about the environment you experienced the bug in"
       placeholder: |
-        Please execute the following command and past the output:
+        Please execute the following commands and past the output here:
 
-        ```
         pip install envinfopy[markdown]
         python -m envinfopy --format=markdown SimpleSQLite sqliteschema
-        ```
     validations:
       required: true
